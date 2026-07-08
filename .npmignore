@@ -1,0 +1,5 @@
+tests/
+*.test.js
+.git/
+.github/
+node_modules/

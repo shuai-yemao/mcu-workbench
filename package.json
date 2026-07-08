@@ -3,7 +3,20 @@
   "version": "0.1.0",
   "description": "嵌入式开发生命周期全覆盖的 Claude Code 插件",
   "main": "index.js",
-  "keywords": ["claude-code", "embedded", "mcu", "stm32", "esp32"],
+  "scripts": {
+    "test": "jest",
+    "build": "echo 'Build complete'"
+  },
+  "keywords": [
+    "claude-code",
+    "embedded",
+    "mcu",
+    "stm32",
+    "esp32",
+    "bsp",
+    "driver",
+    "firmware"
+  ],
   "author": "MCU-Workbench Team",
   "license": "MIT",
   "dependencies": {},
