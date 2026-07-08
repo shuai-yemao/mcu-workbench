@@ -290,6 +290,194 @@ const SKILLS = {
     description: '嵌入式调试框架设计',
     category: 'review',
     platforms: ['all']
+  },
+
+  // === 新增嵌入式技能包 ===
+  'dsp-module': {
+    name: 'DSP 模块',
+    description: '数字信号处理模块',
+    category: 'dsp',
+    platforms: ['all']
+  },
+  'fatfs-module': {
+    name: 'FatFS 文件系统',
+    description: 'FatFS 嵌入式文件系统',
+    category: 'storage',
+    platforms: ['all']
+  },
+  'fft-module': {
+    name: 'FFT 算法',
+    description: '快速傅里叶变换算法',
+    category: 'dsp',
+    platforms: ['all']
+  },
+  'firmware-sign': {
+    name: '固件签名',
+    description: '固件安全签名验证',
+    category: 'security',
+    platforms: ['all']
+  },
+  'gang-flash': {
+    name: '批量烧录',
+    description: '多设备批量烧录',
+    category: 'flash',
+    platforms: ['all']
+  },
+  'gps-module': {
+    name: 'GPS 模块',
+    description: 'GPS 定位模块驱动',
+    category: 'communication',
+    platforms: ['all']
+  },
+  'linker-scatter': {
+    name: '链接脚本',
+    description: '链接脚本/分散加载文件',
+    category: 'build',
+    platforms: ['all']
+  },
+  'lora-module': {
+    name: 'LoRa 模块',
+    description: 'LoRa 远程通信模块',
+    category: 'communication',
+    platforms: ['all']
+  },
+  'lowpower-design': {
+    name: '低功耗设计',
+    description: '嵌入式低功耗设计',
+    category: 'design',
+    platforms: ['all']
+  },
+  'lvgl-module': {
+    name: 'LVGL GUI',
+    description: 'LVGL 图形界面库',
+    category: 'gui',
+    platforms: ['all']
+  },
+  'map-analyzer': {
+    name: 'Map 文件分析',
+    description: '编译输出 Map 文件分析',
+    category: 'debug',
+    platforms: ['all']
+  },
+  'modbus-debug': {
+    name: 'Modbus 调试',
+    description: 'Modbus 协议调试',
+    category: 'communication',
+    platforms: ['all']
+  },
+  'motor-control': {
+    name: '电机控制',
+    description: '电机驱动控制',
+    category: 'peripheral',
+    platforms: ['all']
+  },
+  'mqtt-module': {
+    name: 'MQTT 协议',
+    description: 'MQTT 物联网协议',
+    category: 'communication',
+    platforms: ['all']
+  },
+  'option-bytes': {
+    name: '选项字节',
+    description: 'MCU 选项字节配置',
+    category: 'knowledge',
+    platforms: ['stm32']
+  },
+  'ota-package': {
+    name: 'OTA 打包',
+    description: 'OTA 固件打包工具',
+    category: 'ota',
+    platforms: ['all']
+  },
+  'ota-update-system': {
+    name: 'OTA 更新系统',
+    description: 'OTA 空中升级系统',
+    category: 'ota',
+    platforms: ['all']
+  },
+  'ozone-module': {
+    name: 'Ozone 调试',
+    description: 'Ozone J-Link 调试器',
+    category: 'debug',
+    platforms: ['all']
+  },
+  'pcb-analysis': {
+    name: 'PCB 分析',
+    description: 'PCB 电路板分析',
+    category: 'hardware',
+    platforms: ['all']
+  },
+  'peripheral-driver': {
+    name: '外设驱动',
+    description: '通用外设驱动框架',
+    category: 'peripheral',
+    platforms: ['all']
+  },
+  'rsa-module': {
+    name: 'RSA 加密',
+    description: 'RSA 非对称加密',
+    category: 'security',
+    platforms: ['all']
+  },
+  'rtt-monitor': {
+    name: 'RTT 监控',
+    description: 'SEGGER RTT 实时监控',
+    category: 'debug',
+    platforms: ['all']
+  },
+  'serial-monitor': {
+    name: '串口监控',
+    description: '串口数据监控分析',
+    category: 'debug',
+    platforms: ['all']
+  },
+  'sram-module': {
+    name: 'SRAM 模块',
+    description: 'SRAM 外部存储驱动',
+    category: 'storage',
+    platforms: ['all']
+  },
+  'static-analysis': {
+    name: '静态分析',
+    description: '代码静态分析检查',
+    category: 'review',
+    platforms: ['all']
+  },
+  'systemview-module': {
+    name: 'SystemView',
+    description: 'SEGGER SystemView 调试',
+    category: 'debug',
+    platforms: ['all']
+  },
+  'usb-module': {
+    name: 'USB 模块',
+    description: 'USB 通信模块',
+    category: 'communication',
+    platforms: ['all']
+  },
+  'visa-debug': {
+    name: 'VISA 调试',
+    description: 'VISA 仪器通信调试',
+    category: 'debug',
+    platforms: ['all']
+  },
+  'watchdog-module': {
+    name: '看门狗',
+    description: '看门狗定时器',
+    category: 'peripheral',
+    platforms: ['all']
+  },
+  'wifi-module': {
+    name: 'WiFi 模块',
+    description: 'WiFi 无线通信模块',
+    category: 'communication',
+    platforms: ['esp32']
+  },
+  'ymodem-module': {
+    name: 'Ymodem 协议',
+    description: 'Ymodem 文件传输协议',
+    category: 'communication',
+    platforms: ['all']
   }
 };
 
