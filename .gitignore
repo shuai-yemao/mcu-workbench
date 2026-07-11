@@ -5,6 +5,157 @@ node_modules/
 *.log
 npm-debug.log*
 
+# Whitelist Claude config - 系统文件
+!/.claude/
+/.claude/*
+!/.claude/plans/
+!/.claude/plans/*.md
+!/.claude/plans/archive/
+!/.claude/plans/archive/*.md
+
+# Claude 核心文件
+!/.claude/SOUL.md
+!/.claude/AGENTS.md
+!/.claude/CLAUDE.md
+!/.claude/README.md
+!/.claude/USER.md
+
+# Agent 定义
+!/.claude/agents/
+/.claude/agents/*
+!/.claude/agents/*.md
+
+# Workflow 核心
+!/.claude/workflows/
+/.claude/workflows/*
+!/.claude/workflows/*.js
+!/.claude/workflows/domains/
+/.claude/workflows/domains/*
+!/.claude/workflows/domains/*.js
+!/.claude/workflows/__tests__/
+/.claude/workflows/__tests__/*
+!/.claude/workflows/__tests__/*.js
+!/.claude/workflows/__tests__/*.test.js
+
+# 记忆系统
+!/.claude/memory/
+/.claude/memory/*
+!/.claude/memory/*.md
+
+# Homunculus 持续学习
+!/.claude/homunculus/
+/.claude/homunculus/*
+!/.claude/homunculus/homunculus-config.yml
+!/.claude/homunculus/instincts/
+/.claude/homunculus/instincts/*
+!/.claude/homunculus/instincts/*.md
+!/.claude/homunculus/instincts/personal/
+/.claude/homunculus/instincts/personal/*
+!/.claude/homunculus/instincts/personal/*.md
+!/.claude/homunculus/instincts/projects/
+/.claude/homunculus/instincts/projects/*
+!/.claude/homunculus/instincts/projects/*.md
+!/.claude/homunculus/evolved/
+/.claude/homunculus/evolved/*
+!/.claude/homunculus/evolved/*.md
+!/.claude/homunculus/evolved/INDEX.md
+
+# 规则体系
+!/.claude/rules/
+/.claude/rules/*
+!/.claude/rules/INDEX.md
+!/.claude/rules/security/
+!/.claude/rules/workflow/
+!/.claude/rules/embedded/
+!/.claude/rules/privacy/
+
+# 参考文档（按需加载）
+!/.claude/reference/
+/.claude/reference/*
+!/.claude/reference/*.md
+
+# Skills 技能包 - 白名单整个目录
+!/.claude/skills/
+
+# Plugins 插件系统
+!/.claude/plugins/
+/.claude/plugins/*
+!/.claude/plugins/plugin-loader.js
+!/.claude/plugins/plugin-registry.json
+!/.claude/plugins/official/
+/.claude/plugins/official/*
+!/.claude/plugins/official/*/
+/.claude/plugins/official/*/*
+!/.claude/plugins/official/*/plugin.json
+!/.claude/plugins/official/*/index.js
+!/.claude/plugins/official/*/README.md
+!/.claude/plugins/community/
+/.claude/plugins/community/*
+!/.claude/plugins/local/
+/.claude/plugins/local/*
+!/.claude/plugins/marketplaces/
+/.claude/plugins/marketplaces/*
+!/.claude/plugins/marketplaces/mcu-workbench/
+/.claude/plugins/marketplaces/mcu-workbench/*
+!/.claude/plugins/marketplaces/mcu-workbench/commands/
+/.claude/plugins/marketplaces/mcu-workbench/commands/*
+!/.claude/plugins/marketplaces/mcu-workbench/commands/*.js
+!/.claude/plugins/marketplaces/mcu-workbench/lib/
+/.claude/plugins/marketplaces/mcu-workbench/lib/*
+!/.claude/plugins/marketplaces/mcu-workbench/lib/*.js
+!/.claude/plugins/marketplaces/mcu-workbench/skills/
+/.claude/plugins/marketplaces/mcu-workbench/skills/*
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/
+/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/
+/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/*
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/SKILL.md
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/references/
+/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/references/*
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/references/*.md
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/scripts/
+/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/scripts/*
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/scripts/*.py
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/scripts/*.js
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/agents/
+/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/agents/*
+!/.claude/plugins/marketplaces/mcu-workbench/skills/embedded/*/agents/*.yaml
+!/.claude/plugins/marketplaces/mcu-workbench/skills/registry.js
+!/.claude/plugins/marketplaces/mcu-workbench/skills/loader.js
+!/.claude/plugins/marketplaces/mcu-workbench/package.json
+!/.claude/plugins/marketplaces/mcu-workbench/index.js
+!/.claude/plugins/marketplaces/mcu-workbench/README.md
+
+# 项目记忆
+!/.claude/projects/
+/.claude/projects/*
+!/.claude/projects/C--Users-zhang/
+/.claude/projects/C--Users-zhang/*
+!/.claude/projects/C--Users-zhang/memory/
+/.claude/projects/C--Users-zhang/memory/*
+!/.claude/projects/C--Users-zhang/memory/*.md
+
+# 根目录重复文件（正本在 .claude/ 下）
+/SOUL.md
+/AGENTS.md
+
+# 排除敏感文件
+/.claude/.env.secrets
+/.claude/sessions/
+/.claude/settings.local.json
+
+# Secrets & credentials
+.env*
+*.secret
+settings.json
+
+# Runtime data
+history.jsonl
+
+# Build artifacts
+installer/Chip-System-Setup.exe
+installer/files/skills/
+
 # OS
 .DS_Store
 Thumbs.db
