@@ -25,12 +25,21 @@ Treat this skill as the working playbook for CubeMX-based STM32 projects.
 - Prioritize hardware constraints, interrupt safety, and regeneration safety over local code convenience.
 - Do not modify CubeMX-generated initialization files directly when the same change belongs in the `.ioc` configuration.
 
-## 杈圭晫瀹氫箟
+## 边界定义
 
-### 涓嶈婵€娲?- 鐢ㄦ埛鐨勭洰鏍囪姱鐗囦笉鏄?STM32 绯诲垪锛圗SP32銆乶RF銆丟D32銆丯XP i.MX RT 绛夛級鈫?鏌ユ壘瀵瑰簲骞冲彴鐨勫紑鍙戞寚鍗?- 鐢ㄦ埛闇€瑕佺殑鏄８瀵勫瓨鍣ㄦ搷浣滄垨 LL 搴撳紑鍙戯紙闈?HAL锛?- 鐢ㄦ埛鐨勯」鐩湭浣跨敤 CubeMX 鐢熸垚浠ｇ爜
-- 鐢ㄦ埛鍙渶瑕佹煡闃呯壒瀹?HAL API 鐨勫弬鑰冩墜鍐岋紙浣跨敤 hal-quick-reference.md 鍗冲彲锛?
-### 涓嶈鍋?- **绂佹**淇敼 CubeMX 鐢熸垚鐨勯潪 USER CODE 鍖哄煙浠ｇ爜锛堜細琚?CubeMX 閲嶆柊鐢熸垚瑕嗙洊锛?- **绂佹**鍦ㄤ腑鏂洖璋冧腑璋冪敤闃诲寮?HAL 鍑芥暟锛氬寘鎷絾涓嶉檺浜?`HAL_Delay`銆乣HAL_UART_Transmit`锛堝惈 `HAL_MAX_DELAY`锛夈€乣HAL_I2C_Master_Transmit` 绛夈€侷SR 鍐呭彧鍏佽缃爣蹇椾綅锛屽疄闄呴€氫俊蹇呴』鍦ㄤ换鍔?涓诲惊鐜腑鎵ц銆傝繚鍙嶆瑙勫垯灏嗗鑷?HAL 鐘舵€佹満鍗℃锛坓State/RxState 姘镐箙閿佹鍦?BUSY 鐘舵€侊級锛屼笖鍚屼紭鍏堢骇 ISR 鍐呰疆璇?TXE/TC 鍙兘姘镐箙闃诲
-- **绂佹**寤鸿浣跨敤 `HAL_Init()` 浠ュ鐨勬椂閽熼厤缃柟寮忥紙鏃堕挓鏍戦€氳繃 CubeMX 绠＄悊锛?- **绂佹**缁曞紑 HAL 鐩存帴鎿嶄綔澶栬瀵勫瓨鍣紙闄ら潪鍦?critical section 涓湁鎬ц兘纭渶姹傦紝鎴?STM32F1 鐨?GPIO PULLUP 鍦?HAL 涓棤娉曠敓鏁堝繀椤荤洿鎺ュ啓 CRL/BSRR锛?
-### 涓嶈纰?- **涓嶈Е纰?* `.ioc` 鏂囦欢锛氬彧寤鸿閰嶇疆椤癸紝涓嶇洿鎺ヤ慨鏀?XML
-- **涓嶈Е纰?* CubeMX 鐢熸垚鐨勯潪 USER CODE 鍖哄煙
-- **涓嶈Е纰?* CMSIS Core 鏂囦欢锛坈ore_cm4.h 绛夌郴缁熷ご鏂囦欢锛?
+### 不该激活
+- 用户的目标芯片不是 STM32 系列（ESP32、nRF、GD32、NXP i.MX RT 等）→ 查找对应平台的开发指南
+- 用户需要的是寄存器操作或 LL 库开发（非 HAL）
+- 用户的项目未使用 CubeMX 生成代码
+- 用户只需要查阅特定 HAL API 的参考手册（使用 hal-quick-reference.md 即可）
+
+### 不该做
+- **禁止**修改 CubeMX 生成的非 USER CODE 区域代码（会被 CubeMX 重新生成覆盖）
+- **禁止**在中断回调中调用阻塞式 HAL 函数：包括但不限于 `HAL_Delay`、`HAL_UART_Transmit`（含 `HAL_MAX_DELAY`）、`HAL_I2C_Master_Transmit` 等。ISR 内只允许置标志位，实际通信必须在任务/主循环中执行。违反此规则将导致 HAL 状态机卡死（xState/RxState 永久锁定在 BUSY 状态），且同优先级 ISR 内轮询 TXE/TC 可能永久阻塞
+- **禁止**建议使用 `HAL_Init()` 以外的时钟配置方式（时钟树通过 CubeMX 管理）
+- **禁止**绕过 HAL 直接操作外设寄存器（除非在 critical section 中有性能硬需求，或 STM32F1 的 GPIO PULLUP 在 HAL 中无法生效必须直接写 CRL/BSRR）
+
+### 不该碰
+- **不触碰** `.ioc` 文件：只建议配置项，不直接修改 XML
+- **不触碰** CubeMX 生成的非 USER CODE 区域
+- **不触碰** CMSIS Core 文件（core_cm4.h 等系统头文件）
