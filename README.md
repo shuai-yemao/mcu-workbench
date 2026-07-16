@@ -26,6 +26,19 @@
 /mcu monitor --port COM3
 ```
 
+### BSP 分层与 Unity 测试技能
+
+插件会自动加载 `skills/embedded/` 下的技能。新增的四个技能根据 STM32F411CEU6_AHT21 工程中的 Driver、Handler、Adapter 和 Unity 实践整理，适用于新外设移植、平台绑定和目标板测试：
+
+| 技能 | 用途 |
+|------|------|
+| `bsp-peripheral-driver` | 设计可注入依赖、可回滚、可测试的 BSP 外设 Driver |
+| `bsp-peripheral-handler` | 管理多实例外设、队列/线程/事件和资源生命周期 |
+| `embedded-adapter` | 将 BSP 抽象接口绑定到 MCU 外设、RTOS、时基和中断服务 |
+| `embedded-unity-testing` | 从测试设计文档生成 Unity Mock 测试并验证 Keil/RTT 日志 |
+
+这些技能与已有的 `peripheral-driver` 互补：`peripheral-driver` 侧重通用外设代码适配和骨架生成，`bsp-peripheral-driver` 侧重依赖注入、生命周期、错误回滚和单元测试边界。
+
 ## 支持平台
 
 | 平台 | 架构 | 状态 |

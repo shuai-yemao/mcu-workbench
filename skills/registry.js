@@ -413,6 +413,30 @@ const SKILLS = {
     category: 'peripheral',
     platforms: ['all']
   },
+  'bsp-peripheral-driver': {
+    name: 'BSP 外设 Driver',
+    description: '依赖注入、生命周期与错误回滚驱动设计',
+    category: 'peripheral',
+    platforms: ['all']
+  },
+  'bsp-peripheral-handler': {
+    name: 'BSP 外设 Handler',
+    description: '多实例外设管理与资源生命周期设计',
+    category: 'peripheral',
+    platforms: ['all']
+  },
+  'embedded-adapter': {
+    name: '嵌入式 Adapter',
+    description: 'BSP 抽象接口到 MCU 与 RTOS 的平台适配',
+    category: 'design',
+    platforms: ['all']
+  },
+  'embedded-unity-testing': {
+    name: '嵌入式 Unity 测试',
+    description: 'Driver、Handler 与 Adapter 的 Unity 单元测试',
+    category: 'testing',
+    platforms: ['all']
+  },
   'rsa-module': {
     name: 'RSA 加密',
     description: 'RSA 非对称加密',

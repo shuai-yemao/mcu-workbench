@@ -1,0 +1,7 @@
+interface:
+  display_name: "嵌入式 Unity 测试"
+  short_description: "设计并验证 Driver、Handler、Adapter 的嵌入式 Unity 单元测试"
+  default_prompt: "使用 $embedded-unity-testing 为嵌入式模块生成 Unity 测试矩阵并完成 RTT 验证。"
+
+policy:
+  allow_implicit_invocation: true
