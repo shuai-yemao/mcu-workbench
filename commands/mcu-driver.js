@@ -35,3 +35,6 @@ module.exports = {
   ],
   handler: generateDriver
 };
+
+// 保留早期 Node 原型的可测试函数接口；Claude Code 不使用此导出。
+module.exports.generateDriver = generateDriver;

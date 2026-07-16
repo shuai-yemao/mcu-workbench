@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "echo 'Build complete'"
+    "build": "echo 'Build complete'",
+    "validate:plugin": "node scripts/validate-plugin.js",
+    "report:skills": "node scripts/report-skills.js"
   },
   "keywords": [
     "claude-code",

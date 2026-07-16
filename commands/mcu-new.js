@@ -102,3 +102,6 @@ module.exports = {
   ],
   handler: createProject
 };
+
+// 保留早期 Node 原型的可测试函数接口；Claude Code 不使用此导出。
+module.exports.createProject = createProject;
