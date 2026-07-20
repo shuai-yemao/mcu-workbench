@@ -8,6 +8,10 @@ const SKILL_CATALOG = [
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
   ['workflow-architecture', 'embedded-architect', 'workflow', '嵌入式分层架构设计'],
   ['workflow-code-porting', 'code-porting', 'workflow', '跨 MCU、SDK 或工具链的代码移植'],
+  ['embedded-ai-collab', 'embedded-ai-collab', 'workflow', '嵌入式 AI 协作编程入口 — 5 阶段工作流编排'],
+  ['embedded-ai-coding-standard', 'embedded-ai-coding-standard', 'workflow', '嵌入式 C AI 编码规范 — 命名、模板、五大原则'],
+  ['embedded-ai-prompt-templates', 'embedded-ai-prompt-templates', 'workflow', '嵌入式 AI Prompt 模板集 — 逐函数生成与审查'],
+  ['embedded-ai-code-review', 'embedded-ai-code-review', 'workflow', '嵌入式 AI 代码审查清单 — 四层检查与反模式'],
 
   // 平台层：MCU、内核、厂商框架和存储布局。
   ['platform-cortex-registers', 'arm-core-registers', 'platform', 'ARM Cortex-M 核心寄存器与故障诊断'],
