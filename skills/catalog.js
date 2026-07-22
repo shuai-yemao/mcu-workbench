@@ -12,6 +12,7 @@ const SKILL_CATALOG = [
   ['embedded-ai-coding-standard', 'embedded-ai-coding-standard', 'workflow', '嵌入式 C AI 编码规范 — 命名、模板、五大原则'],
   ['embedded-ai-prompt-templates', 'embedded-ai-prompt-templates', 'workflow', '嵌入式 AI Prompt 模板集 — 逐函数生成与审查'],
   ['embedded-ai-code-review', 'embedded-ai-code-review', 'workflow', '嵌入式 AI 代码审查清单 — 四层检查与反模式'],
+  ['project-integration', 'embedded-project-integration', 'workflow', '嵌入式项目集成审计与指导 — 五层模型 + 8步路线图'],
 
   // 平台层：MCU、内核、厂商框架和存储布局。
   ['platform-cortex-registers', 'arm-core-registers', 'platform', 'ARM Cortex-M 核心寄存器与故障诊断'],
