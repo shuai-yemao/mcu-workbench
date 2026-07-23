@@ -2,7 +2,7 @@
  * MCU-Workbench 的唯一技能目录。
  * `id` 同时是 Claude Code 调用名、SKILL.md 的 name 和目录名。
  */
-const SKILL_CATALOG = [
+const LEGACY_SKILL_CATALOG = [
   // 工作流：决定如何开始或如何在多个层之间交接。
   ['workflow-router', 'embedded', 'workflow', '嵌入式请求分诊与最小 skill 编排'],
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
@@ -107,15 +107,180 @@ const SKILL_CATALOG = [
   legacyId,
   layer,
   description,
-  path: `skills/${layer}/${id}`
+  path: `skills/${layer}/${id}`,
+  canonical: false
 }));
 
+const CANONICAL_DEFINITIONS = [
+  ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
+  ['app-architecture', 'workflow', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
+  ['os-abstraction', 'rtos', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
+  ['bsp-adapter', 'bsp', 'BSP Wrapper、BSP Port、函数表与平台绑定'],
+  ['bsp-hal-driver', 'bsp', '器件协议、初始化、读写与睡眠唤醒 hal_driver'],
+  ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
+  ['core-mcu', 'platform', 'MCU 内部外设、初始化、中断与 DMA 组织'],
+  ['driver-vendor', 'platform', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],
+  ['middleware-communication', 'middleware', 'MQTT、BLE、CAN、Modbus、WiFi 等通信能力'],
+  ['middleware-storage', 'middleware', 'FatFs、SFUD、Flash 与文件系统接入'],
+  ['middleware-algorithms', 'middleware', 'DSP、FFT、电机控制及通用算法中间件'],
+  ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
+];
+
+const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
+  .filter((skill) => ['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(skill.id))
+  .map((skill) => ({ ...skill, canonical: true }));
+
+const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
+  ...EXISTING_CANONICAL_SKILLS,
+  ...CANONICAL_DEFINITIONS.map(([id, layer, description]) => ({
+    id,
+    legacyId: id,
+    layer,
+    description,
+    path: `skills/${layer}/${id}`,
+    canonical: true
+  }))
+].map((skill) => [skill.id, skill]));
+
+const CANONICAL_ORDER = [
+  'workflow-router', 'workflow-project-integration', 'app-architecture',
+  'os-abstraction', 'rtos-freertos', 'bsp-adapter', 'bsp-hal-driver',
+  'bsp-handler', 'core-mcu', 'driver-vendor', 'middleware-lvgl',
+  'middleware-communication', 'middleware-storage', 'middleware-algorithms',
+  'software-system'
+];
+
+const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => CANONICAL_DEFINITIONS_BY_ID[id]);
+
+const TUTOR_ENTRY = {
+  id: 'workflow-learning-tutor',
+  legacyId: 'learning-tutor',
+  layer: 'workflow',
+  description: '嵌入式代码学习与 Obsidian 笔记辅导',
+  path: 'skills/workflow/workflow-learning-tutor',
+  canonical: false
+};
+
+const SKILL_CATALOG = [
+  ...CANONICAL_SKILLS,
+  ...LEGACY_SKILL_CATALOG.filter((skill) => !CANONICAL_SKILLS.some((canonical) => canonical.id === skill.id)),
+  TUTOR_ENTRY
+];
+
 const SKILL_BY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.id, skill]));
+const SKILL_BY_CANONICAL_ID = Object.fromEntries(CANONICAL_SKILLS.map((skill) => [skill.id, skill]));
 const SKILL_BY_LEGACY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.legacyId, skill]));
 
+const MIGRATION_MAP = {
+  'workflow-architecture': 'workflow-project-integration',
+  'project-integration': 'workflow-project-integration',
+  'embedded-architect': 'workflow-project-integration',
+  'embedded-project-integration': 'workflow-project-integration',
+  'workflow-code-porting': 'workflow-project-integration',
+  'code-porting': 'workflow-project-integration',
+  'bsp-device-adaptation': 'bsp-adapter',
+  'bsp-platform-adapter': 'bsp-adapter',
+  'peripheral-driver': 'bsp-adapter',
+  'embedded-adapter': 'bsp-adapter',
+  'bsp-device-driver': 'bsp-hal-driver',
+  'bsp-peripheral-driver': 'bsp-hal-driver',
+  'bsp-device-service': 'bsp-handler',
+  'bsp-peripheral-handler': 'bsp-handler',
+  'platform-cortex-registers': 'core-mcu',
+  'platform-cortex-interrupts': 'core-mcu',
+  'platform-cortex-memory': 'core-mcu',
+  'platform-mcu-architecture': 'core-mcu',
+  'platform-peripheral-registers': 'core-mcu',
+  'platform-option-bytes': 'core-mcu',
+  'platform-sram': 'core-mcu',
+  'platform-internal-flash': 'core-mcu',
+  'platform-stm32-hal': 'driver-vendor',
+  'platform-stm32-spl': 'driver-vendor',
+  'arm-core-registers': 'core-mcu',
+  'arm-interrupt-exception': 'core-mcu',
+  'arm-memory-architecture': 'core-mcu',
+  'chip-architecture': 'core-mcu',
+  'mcu-peripheral-registers': 'core-mcu',
+  'option-bytes': 'core-mcu',
+  'sram-module': 'core-mcu',
+  'flash-module': 'core-mcu',
+  'stm32-hal-development': 'driver-vendor',
+  'stm32-spl-development': 'driver-vendor',
+  'bus-i2c': 'core-mcu',
+  'bus-spi': 'core-mcu',
+  'bus-uart': 'core-mcu',
+  'peripheral-adc': 'core-mcu',
+  'peripheral-dma': 'core-mcu',
+  'peripheral-motor-control': 'core-mcu',
+  'peripheral-timer': 'core-mcu',
+  'i2c-bus': 'core-mcu',
+  'spi-bus': 'core-mcu',
+  'uart-module': 'core-mcu',
+  'adc-module': 'core-mcu',
+  'dma-module': 'core-mcu',
+  'motor-control': 'core-mcu',
+  'timer-module': 'core-mcu',
+  'protocol-ble': 'middleware-communication',
+  'protocol-can': 'middleware-communication',
+  'protocol-cellular': 'middleware-communication',
+  'protocol-gps': 'middleware-communication',
+  'protocol-lora': 'middleware-communication',
+  'protocol-modbus': 'middleware-communication',
+  'protocol-mqtt': 'middleware-communication',
+  'protocol-usb': 'middleware-communication',
+  'protocol-wifi': 'middleware-communication',
+  'protocol-ymodem': 'middleware-communication',
+  'ble-module': 'middleware-communication',
+  'can-debug': 'middleware-communication',
+  'cellular-module': 'middleware-communication',
+  'gps-module': 'middleware-communication',
+  'lora-module': 'middleware-communication',
+  'modbus-debug': 'middleware-communication',
+  'mqtt-module': 'middleware-communication',
+  'usb-module': 'middleware-communication',
+  'wifi-module': 'middleware-communication',
+  'ymodem-module': 'middleware-communication',
+  'middleware-dsp': 'middleware-algorithms',
+  'middleware-fft': 'middleware-algorithms',
+  'dsp-module': 'middleware-algorithms',
+  'fft-module': 'middleware-algorithms',
+  'middleware-fatfs': 'middleware-storage',
+  'middleware-sfud': 'middleware-storage',
+  'fatfs-module': 'middleware-storage',
+  'sfud-module': 'middleware-storage',
+  'system-bootloader': 'software-system',
+  'system-low-power': 'software-system',
+  'system-watchdog': 'software-system',
+  'security-aes': 'software-system',
+  'security-crc': 'software-system',
+  'security-firmware-signing': 'software-system',
+  'security-rsa': 'software-system',
+  'bootloader-design': 'software-system',
+  'lowpower-design': 'software-system',
+  'watchdog-module': 'software-system',
+  'aes-module': 'software-system',
+  'crc-module': 'software-system',
+  'firmware-sign': 'software-system',
+  'rsa-module': 'software-system'
+};
+
 function resolveSkillId(id) {
+  if (SKILL_BY_CANONICAL_ID[id]) return id;
+  if (MIGRATION_MAP[id]) return MIGRATION_MAP[id];
+  if (SKILL_BY_LEGACY_ID[id]) {
+    const entry = SKILL_BY_LEGACY_ID[id];
+    return entry.canonical ? entry.id : (MIGRATION_MAP[entry.id] || entry.id);
+  }
   if (SKILL_BY_ID[id]) return id;
-  return SKILL_BY_LEGACY_ID[id] ? SKILL_BY_LEGACY_ID[id].id : null;
+  return null;
 }
 
-module.exports = { SKILL_CATALOG, SKILL_BY_ID, SKILL_BY_LEGACY_ID, resolveSkillId };
+module.exports = {
+  SKILL_CATALOG,
+  CANONICAL_SKILLS,
+  MIGRATION_MAP,
+  SKILL_BY_ID,
+  SKILL_BY_CANONICAL_ID,
+  SKILL_BY_LEGACY_ID,
+  resolveSkillId
+};

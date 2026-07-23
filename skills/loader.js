@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { SKILL_CATALOG, resolveSkillId } = require('./catalog');
+const { CANONICAL_SKILLS, resolveSkillId } = require('./catalog');
 
 const PLUGIN_ROOT = path.resolve(__dirname, '..');
 
@@ -21,7 +21,7 @@ function parseSkillMeta(content) {
 }
 
 function loadSkillsFromPlugin() {
-  return Object.fromEntries(SKILL_CATALOG.map((skill) => {
+  return Object.fromEntries(CANONICAL_SKILLS.map((skill) => {
     const skillFile = getSkillFile(skill);
     if (!fs.existsSync(skillFile)) return [skill.id, null];
 
@@ -41,13 +41,13 @@ function loadSkillsFromPlugin() {
 function getSkillContent(skillName) {
   const resolved = resolveSkillId(skillName);
   if (!resolved) return null;
-  const skill = SKILL_CATALOG.find((entry) => entry.id === resolved);
+  const skill = CANONICAL_SKILLS.find((entry) => entry.id === resolved);
   const skillFile = getSkillFile(skill);
   return fs.existsSync(skillFile) ? fs.readFileSync(skillFile, 'utf8') : null;
 }
 
 function listAvailableSkills() {
-  return SKILL_CATALOG.map((skill) => skill.id);
+  return CANONICAL_SKILLS.map((skill) => skill.id);
 }
 
 module.exports = {

@@ -72,7 +72,12 @@ function summarize(catalog) {
     const prefix = skill.id.split('-')[0];
     countByPrefix[prefix] = (countByPrefix[prefix] || 0) + 1;
   }
-  return { count: catalog.length, countByLayer, countByPrefix };
+  return {
+    count: catalog.length,
+    canonicalCount: catalog.filter((skill) => skill.canonical).length,
+    countByLayer,
+    countByPrefix
+  };
 }
 
 function validatePlugin() {
@@ -125,7 +130,7 @@ function validatePlugin() {
   const activeText = findTextFiles(path.join(ROOT, 'skills'))
     .map((file) => ({ file, content: fs.readFileSync(file, 'utf8') }));
   for (const skill of SKILL_CATALOG) {
-    if (skill.legacyId === skill.id || ['embedded', 'devlog'].includes(skill.legacyId)) continue;
+    if (!skill.canonical || skill.legacyId === skill.id || ['embedded', 'devlog'].includes(skill.legacyId)) continue;
     const oldName = new RegExp(`(?<![A-Za-z0-9-])${skill.legacyId}(?![A-Za-z0-9-])`);
     for (const text of activeText) {
       if (oldName.test(text.content)) {

@@ -265,7 +265,7 @@ description: |
 GR5526 SDK `graphics_lvgl_831_gpu_demo_360p` 工程路径：
 
 ```
-G:\BaiduNetdiskDownload\嵌入式\立芯嵌入式资料\GR5526_SDK_v1.0.3_V2\
+GR5526 SDK 工程目录（由用户在当前环境提供）
 GR5526_SDK_v1.0.3\projects\peripheral\graphics\graphics_lvgl_831_gpu_demo_360p\
 ```
 

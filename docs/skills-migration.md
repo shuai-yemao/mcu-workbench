@@ -86,3 +86,25 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 | `pcb-analysis` | `hardware-pcb-analysis` | hardware |
 | `visa-debug` | `hardware-visa-debug` | hardware |
 
+## 软件方向重分类（兼容入口）
+
+下面的 15 个名称是当前软件架构的 canonical skill。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
+
+| Canonical skill | 合并/交接的旧入口 |
+|---|---|
+| `workflow-router` | `embedded` |
+| `workflow-project-integration` | `workflow-architecture`、`project-integration`、`code-porting` |
+| `app-architecture` | APP 新入口，无旧目录 |
+| `os-abstraction` | OSAL 新入口；`rtos-freertos` 保留为 FreeRTOS 专用实现 |
+| `bsp-adapter` | `bsp-device-adaptation`、`bsp-platform-adapter` |
+| `bsp-hal-driver` | `bsp-device-driver` |
+| `bsp-handler` | `bsp-device-service` |
+| `core-mcu` | `platform-*`（厂商 HAL/SPL 除外）、`bus-*`、`peripheral-*` |
+| `driver-vendor` | `platform-stm32-hal`、`platform-stm32-spl` |
+| `middleware-lvgl` | `middleware-lvgl` |
+| `middleware-communication` | `protocol-*` |
+| `middleware-storage` | `middleware-fatfs`、`middleware-sfud` |
+| `middleware-algorithms` | `middleware-dsp`、`middleware-fft` |
+| `software-system` | `system-*`、`security-*` |
+
+`operations`、`hardware` 及其旧入口不属于本轮软件架构重分类，保持原目录和调用方式。

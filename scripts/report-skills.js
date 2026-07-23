@@ -1,27 +1,25 @@
 #!/usr/bin/env node
 
-const { SKILL_CATALOG } = require('../skills/catalog');
+const { SKILL_CATALOG, CANONICAL_SKILLS } = require('../skills/catalog');
 
-function countBy(getKey) {
-  return SKILL_CATALOG.reduce((counts, skill) => {
-    const key = getKey(skill);
+function countBy(items, getKey) {
+  return items.reduce((counts, item) => {
+    const key = getKey(item);
     counts[key] = (counts[key] || 0) + 1;
     return counts;
   }, {});
 }
 
-console.log(`# MCU-Workbench Skills 统计（${SKILL_CATALOG.length} 项）\n`);
-console.log('## 架构层统计\n');
-for (const [layer, count] of Object.entries(countBy((skill) => skill.layer)).sort()) {
+console.log(`# MCU-Workbench Skills 统计：${CANONICAL_SKILLS.length} 个 canonical，${SKILL_CATALOG.length} 个含兼容目录\n`);
+console.log('## Canonical 入口\n');
+for (const skill of CANONICAL_SKILLS) console.log(`- ${skill.id}: ${skill.description}`);
+console.log('\n## 全部目录按层级\n');
+for (const [layer, count] of Object.entries(countBy(SKILL_CATALOG, (skill) => skill.layer)).sort()) {
   console.log(`- ${layer}: ${count}`);
 }
-console.log('\n## 命名前缀统计\n');
-for (const [prefix, count] of Object.entries(countBy((skill) => skill.id.split('-')[0])).sort()) {
-  console.log(`- ${prefix}: ${count}`);
-}
-console.log('\n## 旧名迁移\n');
-console.log('| 旧名 | 新名 | 架构层 |');
-console.log('|---|---|---|');
-for (const skill of SKILL_CATALOG) {
-  console.log(`| ${skill.legacyId} | ${skill.id} | ${skill.layer} |`);
+console.log('\n## 迁移入口\n');
+console.log('| 旧名称 | 解析结果 |');
+console.log('|---|---|');
+for (const skill of SKILL_CATALOG.filter((entry) => !entry.canonical && entry.legacyId !== entry.id)) {
+  console.log(`| ${skill.legacyId} | ${skill.id} |`);
 }

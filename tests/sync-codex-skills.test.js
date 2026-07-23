@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { SKILL_CATALOG } = require('../skills/catalog');
+const { CANONICAL_SKILLS } = require('../skills/catalog');
 const { syncCodexSkills } = require('../scripts/sync-codex-skills');
 
 describe('Codex skill synchronization', () => {
@@ -25,14 +25,14 @@ describe('Codex skill synchronization', () => {
 
     const summary = syncCodexSkills({ target, backupRoot });
 
-    expect(summary.total).toBe(79);
+    expect(summary.total).toBe(15);
     expect(summary.renamed).toBe(1);
-    expect(summary.added).toBe(77);
-    expect(summary.replaced).toBe(2);
+    expect(summary.added).toBe(14);
+    expect(summary.replaced).toBe(1);
     expect(fs.existsSync(path.join(target, 'embedded'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'workflow-router', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'embedded', 'SKILL.md'))).toBe(true);
-    for (const skill of SKILL_CATALOG) {
+    for (const skill of CANONICAL_SKILLS) {
       const installed = fs.readFileSync(path.join(target, skill.id, 'SKILL.md'), 'utf8');
       const source = fs.readFileSync(path.join(__dirname, '..', skill.path, 'SKILL.md'), 'utf8');
       expect(installed).toBe(source);
@@ -42,8 +42,8 @@ describe('Codex skill synchronization', () => {
   test('dry run reports the migration without creating a target directory', () => {
     const target = path.join(temporaryRoot, 'skills');
     const summary = syncCodexSkills({ target, dryRun: true });
-    expect(summary.total).toBe(79);
-    expect(summary.added).toBe(79);
+    expect(summary.total).toBe(15);
+    expect(summary.added).toBe(15);
     expect(fs.existsSync(target)).toBe(false);
   });
 });

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { SKILL_CATALOG } = require('../skills/catalog');
+const { CANONICAL_SKILLS } = require('../skills/catalog');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -44,7 +44,7 @@ function skillSource(skill) {
 
 function buildPlan(target) {
   const resolvedTarget = path.resolve(target);
-  const plan = SKILL_CATALOG.map((skill) => {
+  const plan = CANONICAL_SKILLS.map((skill) => {
     const source = skillSource(skill);
     const destination = path.join(resolvedTarget, skill.id);
     const legacy = path.join(resolvedTarget, skill.legacyId);
