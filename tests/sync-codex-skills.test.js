@@ -25,13 +25,16 @@ describe('Codex skill synchronization', () => {
 
     const summary = syncCodexSkills({ target, backupRoot });
 
-    expect(summary.total).toBe(15);
-    expect(summary.renamed).toBe(1);
-    expect(summary.added).toBe(14);
-    expect(summary.replaced).toBe(1);
+    expect(summary.total).toBe(22);
+    expect(summary.renamed).toBe(2);
+    expect(summary.added).toBe(20);
+    expect(summary.replaced).toBe(2);
     expect(fs.existsSync(path.join(target, 'embedded'))).toBe(false);
+    expect(fs.existsSync(path.join(target, 'debug-gdb-openocd'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'workflow-router', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(target, 'tools-debug', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'embedded', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(summary.backup, 'debug-gdb-openocd', 'SKILL.md'))).toBe(true);
     for (const skill of CANONICAL_SKILLS) {
       const installed = fs.readFileSync(path.join(target, skill.id, 'SKILL.md'), 'utf8');
       const source = fs.readFileSync(path.join(__dirname, '..', skill.path, 'SKILL.md'), 'utf8');
@@ -42,8 +45,24 @@ describe('Codex skill synchronization', () => {
   test('dry run reports the migration without creating a target directory', () => {
     const target = path.join(temporaryRoot, 'skills');
     const summary = syncCodexSkills({ target, dryRun: true });
-    expect(summary.total).toBe(15);
-    expect(summary.added).toBe(15);
+    expect(summary.total).toBe(22);
+    expect(summary.added).toBe(22);
     expect(fs.existsSync(target)).toBe(false);
+  });
+
+  test('reports a conflict when a canonical directory and a legacy alias coexist', () => {
+    const target = path.join(temporaryRoot, 'skills');
+    fs.mkdirSync(path.join(target, 'tools-debug'), { recursive: true });
+    fs.mkdirSync(path.join(target, 'debug-gdb-openocd'), { recursive: true });
+
+    expect(() => syncCodexSkills({ target, dryRun: true })).toThrow(/both exist/);
+  });
+
+  test('reports a conflict when multiple legacy aliases coexist', () => {
+    const target = path.join(temporaryRoot, 'skills');
+    fs.mkdirSync(path.join(target, 'debug-gdb-openocd'), { recursive: true });
+    fs.mkdirSync(path.join(target, 'cmbacktrace-debug'), { recursive: true });
+
+    expect(() => syncCodexSkills({ target, dryRun: true })).toThrow(/Multiple legacy directories/);
   });
 });

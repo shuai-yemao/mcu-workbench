@@ -14,7 +14,7 @@
     "./skills/middleware/",
     "./skills/system/",
     "./skills/interface/",
-    "./skills/operations/",
+    "./skills/tools/",
     "./skills/security/",
     "./skills/hardware/"
   ]

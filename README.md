@@ -1,33 +1,54 @@
 # MCU-Workbench
 
-面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发插件。软件方向采用 15 个 canonical skills，旧目录在迁移期间保留并提供兼容解析。
+面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发插件。
 
-## 软件 Skills
+## 插件结构
 
-| 方向 | Canonical skills |
-|---|---|
-| 工作流 | `workflow-router`、`workflow-project-integration`、`app-architecture` |
-| OS | `os-abstraction`、`rtos-freertos` |
-| BSP | `bsp-adapter`、`bsp-hal-driver`、`bsp-handler` |
-| MCU/厂商 | `core-mcu`、`driver-vendor` |
-| Middleware | `middleware-lvgl`、`middleware-communication`、`middleware-storage`、`middleware-algorithms` |
-| 系统 | `software-system` |
+```text
+skills/
+├─ workflow/       # 路由、项目集成、APP 架构
+├─ rtos/           # OS 抽象与 FreeRTOS
+├─ bsp/            # BSP Adapter、hal_driver、Handler
+├─ platform/       # MCU Core 与厂商 Driver
+├─ middleware/     # LVGL、通信、存储、算法
+├─ system/         # 跨层系统能力
+├─ hardware/       # PCB、仪器和硬件分析
+└─ tools/          # 构建、烧录、链接、调试、观测、质量、发布
 
-架构契约是：Adapter 只存在于 OS 和 BSP；Adapter 由 Wrapper 与 Port 组成；Core、Middleware、Driver 不设置 Adapter。完整迁移关系见 [docs/skills-migration.md](docs/skills-migration.md)。
+archive/
+├─ software-legacy/ # 旧软件架构入口
+└─ tools-legacy/    # 旧工具入口
+```
+
+## Canonical skills
+
+软件方向 15 个主入口，加上工具方向 7 个主入口，共 22 个 canonical skills：
+
+```text
+workflow-router workflow-project-integration app-architecture
+os-abstraction rtos-freertos
+bsp-adapter bsp-hal-driver bsp-handler
+core-mcu driver-vendor
+middleware-lvgl middleware-communication middleware-storage middleware-algorithms
+software-system
+tools-build tools-flash tools-linker tools-debug
+tools-observability tools-quality tools-release
+```
+
+Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。
+
+## 工具方向
+
+`skills/tools/` 按用途保留 7 个主入口。原 29 个工具目录及全部 references、scripts、assets 已归档到 `archive/tools-legacy/`，旧调用名仍可解析到新的 `tools-*` 入口。
+
+硬件方向本轮不重构，仍保留在 `skills/hardware/`。
+
+完整迁移关系见 [docs/skills-migration.md](docs/skills-migration.md)。
 
 ## 验证
 
 ```powershell
-npm install --no-package-lock
 npm test -- --runInBand
 npm run validate:plugin
+claude plugin validate .
 ```
-
-## Codex 同步
-
-```powershell
-node scripts/sync-codex-skills.js --dry-run
-node scripts/sync-codex-skills.js
-```
-
-同步脚本只安装 15 个 canonical 入口，并在替换前创建备份；旧目录不会从仓库删除。

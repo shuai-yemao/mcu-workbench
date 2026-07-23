@@ -1,27 +1,45 @@
 # Skills 导航
 
-## 软件架构入口
+## Active 层级
+
+| 层级 | 主职责 |
+|---|---|
+| `workflow` | 请求路由、工程集成和 APP 架构 |
+| `rtos` | OSAL、OS Wrapper、OS Port、FreeRTOS |
+| `bsp` | BSP Wrapper、BSP Port、hal_driver、Handler |
+| `platform` | MCU Core 与厂商 Driver |
+| `middleware` | LVGL、通信、存储、算法 |
+| `system` | Bootloader、低功耗、看门狗、安全 |
+| `hardware` | PCB、仪器和硬件分析 |
+| `tools` | 构建、烧录、链接、调试、观测、质量、发布 |
+
+## 工具主入口
+
+```text
+tools-build          构建
+tools-flash          烧录
+tools-linker         链接与内存
+tools-debug          调试与故障诊断
+tools-observability  日志与运行时观测
+tools-quality        质量与验证
+tools-release        发布与 OTA
+```
+
+每个工具主入口只保留用途和选择流程；具体平台资料放在 `references/<旧入口>/GUIDE.md`，脚本放在同一命名空间下。
+
+## 软件调用链
 
 ```text
 APP
-├─ app-architecture
-├─ middleware-lvgl / middleware-communication / middleware-storage / middleware-algorithms
-├─ os-abstraction → rtos-freertos
-└─ bsp-handler → bsp-adapter → bsp-hal-driver → core-mcu → driver-vendor
+├─ OS Wrapper → OS Port → FreeRTOS/其他 OS
+├─ BSP Wrapper → BSP Port → hal_driver
+└─ Middleware API
+
+hal_driver → Core → Driver
 ```
 
-`workflow-router` 负责分诊，`workflow-project-integration` 负责跨层审计与集成路线，`software-system` 负责 Bootloader、低功耗、看门狗和安全等跨层能力。
+Core、Middleware、Driver 不创建 Adapter。
 
-### Adapter 边界
+## 归档
 
-- OS：`osal_*` Wrapper → `os_impl_*` Port → 具体 RTOS/裸机。
-- BSP：`drv_adapter_*` Wrapper → `drv_adapter_port_*` Port → `hal_driver`。
-- Core、Middleware、Driver：使用原生配置/API，不创建 Adapter。
-
-### GR5526 LVGL 验收
-
-以 `graphics_lvgl_831_gpu_demo_360p.uvprojx` 检查 `main`、Manager、Task、LVGL、OSAL、Display/Flash/Touch Wrapper/Port/hal_driver 和 SDK Core/Driver 调用链。证据映射见 [workflow-project-integration references](workflow/workflow-project-integration/references/gr5526-lvgl-mapping.md)。
-
-## 兼容与迁移
-
-旧 skill 目录暂不删除。catalog 保存旧目录用于校验，`resolveSkillId()` 将已合并入口路由到 canonical skill；完整矩阵见 [docs/skills-migration.md](../docs/skills-migration.md)。
+`archive/software-legacy/` 和 `archive/tools-legacy/` 不属于 active manifest，只保留原始内容和兼容迁移依据。

@@ -19,14 +19,11 @@ function parseArgs(argv) {
     if (argument === '--dry-run') options.dryRun = true;
     else if (argument === '--target') options.target = argv[++index];
     else if (argument === '--backup-root') options.backupRoot = argv[++index];
-    else if (argument === '--help' || argument === '-h') {
-      return { ...options, help: true };
-    } else {
-      throw new Error(`未知参数：${argument}`);
-    }
+    else if (argument === '--help' || argument === '-h') return { ...options, help: true };
+    else throw new Error(`Unknown argument: ${argument}`);
   }
 
-  if (!options.target) throw new Error('--target 需要一个目录');
+  if (!options.target) throw new Error('--target requires a directory');
   if (!options.backupRoot) {
     options.backupRoot = path.join(path.dirname(path.resolve(options.target)), 'mcu-workbench-skill-backups');
   }
@@ -47,22 +44,33 @@ function buildPlan(target) {
   const plan = CANONICAL_SKILLS.map((skill) => {
     const source = skillSource(skill);
     const destination = path.join(resolvedTarget, skill.id);
-    const legacy = path.join(resolvedTarget, skill.legacyId);
-    if (!fs.existsSync(source)) throw new Error(`仓库 skill 不存在：${source}`);
-    if (!isInside(resolvedTarget, destination) || !isInside(resolvedTarget, legacy)) {
-      throw new Error(`目标路径越界：${skill.id}`);
+    const aliases = [skill.legacyId, ...(skill.aliases || [])]
+      .filter((alias, index, all) => alias && alias !== skill.id && all.indexOf(alias) === index);
+
+    if (!fs.existsSync(source)) throw new Error(`Repository skill missing: ${source}`);
+    if (!isInside(resolvedTarget, destination)
+      || aliases.some((alias) => !isInside(resolvedTarget, path.join(resolvedTarget, alias)))) {
+      throw new Error(`Target path escapes sync directory: ${skill.id}`);
     }
-    const legacyExists = fs.existsSync(legacy);
+
     const destinationExists = fs.existsSync(destination);
-    if (legacy !== destination && legacyExists && destinationExists) {
-      throw new Error(`同时发现旧目录和新目录，请先手工处理：${skill.legacyId} / ${skill.id}`);
+    const existingAliases = aliases
+      .map((alias) => path.join(resolvedTarget, alias))
+      .filter((aliasPath) => fs.existsSync(aliasPath));
+    if (destinationExists && existingAliases.length) {
+      throw new Error(`New and legacy directories both exist: ${skill.id} / ${existingAliases.map((aliasPath) => path.basename(aliasPath)).join(', ')}`);
     }
+    if (existingAliases.length > 1) {
+      throw new Error(`Multiple legacy directories exist: ${existingAliases.map((aliasPath) => path.basename(aliasPath)).join(', ')}`);
+    }
+
+    const existingAlias = existingAliases[0] || null;
     return {
       skill,
       source,
       destination,
-      existing: destinationExists ? destination : (legacyExists ? legacy : null),
-      rename: legacyExists && legacy !== destination
+      existing: destinationExists ? destination : existingAlias,
+      rename: Boolean(existingAlias && !destinationExists)
     };
   });
   return { target: resolvedTarget, plan };
@@ -74,7 +82,7 @@ function timestamp() {
 
 function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
   const { target: resolvedTarget, plan } = buildPlan(target || path.join(os.homedir(), '.agents', 'skills'));
-  const changes = plan.filter((entry) => entry.existing || fs.existsSync(entry.destination) === false);
+  const changes = plan.filter((entry) => entry.existing || !fs.existsSync(entry.destination));
   const summary = {
     target: resolvedTarget,
     total: plan.length,
@@ -101,7 +109,7 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
 
   for (const entry of changes) {
     const staging = path.join(resolvedTarget, `.${entry.skill.id}.sync-${process.pid}`);
-    if (!isInside(resolvedTarget, staging)) throw new Error(`临时路径越界：${entry.skill.id}`);
+    if (!isInside(resolvedTarget, staging)) throw new Error(`Temporary path escapes sync directory: ${entry.skill.id}`);
     if (fs.existsSync(staging)) fs.rmSync(staging, { recursive: true, force: true });
     fs.cpSync(entry.source, staging, { recursive: true });
     if (entry.existing) fs.rmSync(entry.existing, { recursive: true, force: true });
@@ -113,12 +121,12 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
 
 function formatSummary(summary) {
   const lines = [
-    `Codex skills 同步完成：${summary.total} 个`,
-    `目标目录：${summary.target}`,
-    `重命名：${summary.renamed}，新增：${summary.added}，替换：${summary.replaced}`
+    `Codex skills sync complete: ${summary.total}`,
+    `Target: ${summary.target}`,
+    `Renamed: ${summary.renamed}, added: ${summary.added}, replaced: ${summary.replaced}`
   ];
-  if (summary.backup) lines.push(`备份目录：${summary.backup}`);
-  if (summary.dryRun) lines.push('仅预览，未修改文件。');
+  if (summary.backup) lines.push(`Backup: ${summary.backup}`);
+  if (summary.dryRun) lines.push('Dry run; no files changed.');
   return lines.join('\n');
 }
 
@@ -126,12 +134,12 @@ if (require.main === module) {
   try {
     const options = parseArgs(process.argv.slice(2));
     if (options.help) {
-      console.log('用法：node scripts/sync-codex-skills.js [--dry-run] [--target <目录>] [--backup-root <目录>]');
+      console.log('Usage: node scripts/sync-codex-skills.js [--dry-run] [--target <directory>] [--backup-root <directory>]');
       process.exit(0);
     }
     console.log(formatSummary(syncCodexSkills(options)));
   } catch (error) {
-    console.error(`Codex skills 同步失败：${error.message}`);
+    console.error(`Codex skills sync failed: ${error.message}`);
     process.exit(1);
   }
 }

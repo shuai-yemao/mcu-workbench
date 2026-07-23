@@ -2,7 +2,7 @@
  * MCU-Workbench 的唯一技能目录。
  * `id` 同时是 Claude Code 调用名、SKILL.md 的 name 和目录名。
  */
-const LEGACY_SKILL_CATALOG = [
+const LEGACY_SKILL_ENTRIES = [
   // 工作流：决定如何开始或如何在多个层之间交接。
   ['workflow-router', 'embedded', 'workflow', '嵌入式请求分诊与最小 skill 编排'],
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
@@ -102,14 +102,30 @@ const LEGACY_SKILL_CATALOG = [
   ['security-rsa', 'rsa-module', 'security', 'RSA 非对称加密'],
   ['hardware-pcb-analysis', 'pcb-analysis', 'hardware', 'PCB 原理图与网表分析'],
   ['hardware-visa-debug', 'visa-debug', 'hardware', 'VISA/SCPI 仪器通信调试']
-].map(([id, legacyId, layer, description]) => ({
-  id,
-  legacyId,
-  layer,
-  description,
-  path: `skills/${layer}/${id}`,
-  canonical: false
-}));
+];
+
+const ARCHIVED_SOFTWARE_LAYERS = new Set([
+  'workflow', 'rtos', 'bsp', 'platform', 'middleware', 'system', 'interface', 'security'
+]);
+
+const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, description]) => {
+  const isToolsSkill = layer === 'operations';
+  const isArchived = (ARCHIVED_SOFTWARE_LAYERS.has(layer)
+    && !['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(id))
+    || isToolsSkill;
+  const activeLayer = isToolsSkill ? 'tools' : layer;
+  return {
+    id,
+    legacyId,
+    layer: activeLayer,
+    description,
+    archived: isArchived,
+    path: isArchived
+      ? (isToolsSkill ? `archive/tools-legacy/${id}` : `archive/software-legacy/${layer}/${id}`)
+      : `skills/${activeLayer}/${id}`,
+    canonical: false
+  };
+});
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
@@ -126,13 +142,66 @@ const CANONICAL_DEFINITIONS = [
   ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
 ];
 
+const TOOL_CANONICAL_DEFINITIONS = [
+  ['tools-build', 'tools', 'CMake、ESP-IDF、IAR、Keil 和 PlatformIO 构建'],
+  ['tools-flash', 'tools', 'ESP-IDF、J-Link、OpenOCD、Keil 和批量烧录'],
+  ['tools-linker', 'tools', 'Keil、GCC、IAR 链接脚本与内存布局'],
+  ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
+  ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
+  ['tools-quality', 'tools', '代码审查、Map、静态分析和 Unity 测试'],
+  ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证']
+];
+
 const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
   .filter((skill) => ['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(skill.id))
   .map((skill) => ({ ...skill, canonical: true }));
 
+const TOOL_ALIASES = {
+  'tools-build': [
+    'tool-build-cmake', 'build-cmake', 'tool-build-esp-idf', 'build-idf',
+    'tool-build-iar', 'build-iar', 'tool-build-keil', 'build-keil',
+    'tool-build-platformio', 'build-platformio'
+  ],
+  'tools-flash': [
+    'tool-flash-esp-idf', 'flash-idf', 'tool-flash-gang', 'gang-flash',
+    'tool-flash-jlink', 'flash-jlink', 'tool-flash-keil', 'flash-keil',
+    'tool-flash-openocd', 'flash-openocd', 'tool-flash-platformio', 'flash-platformio'
+  ],
+  'tools-linker': ['tool-linker-scatter', 'linker-scatter'],
+  'tools-debug': [
+    'debug-crash-backtrace', 'cmbacktrace-debug', 'debug-diagnostic-framework',
+    'embedded-debugger-framework', 'debug-gdb-openocd', 'debug-ozone', 'ozone-module',
+    'debug-platformio', 'debug-rtos', 'rtos-debug'
+  ],
+  'tools-observability': [
+    'observability-elog', 'elog-module', 'observability-rtt-monitor', 'rtt-monitor',
+    'observability-rtt-porting', 'segger-rtt-module', 'observability-serial-monitor',
+    'serial-monitor', 'observability-systemview', 'systemview-module'
+  ],
+  'tools-quality': [
+    'quality-code-review', 'embedded-reviewer', 'quality-map-analysis', 'map-analyzer',
+    'quality-static-analysis', 'static-analysis', 'quality-unity-testing', 'embedded-unity-testing'
+  ],
+  'tools-release': [
+    'release-ota-package', 'ota-package', 'release-ota-update', 'ota-update-system'
+  ]
+};
+
+const TOOL_MIGRATION_MAP = Object.fromEntries(
+  Object.entries(TOOL_ALIASES).flatMap(([target, aliases]) => aliases.map((alias) => [alias, target]))
+);
+
 const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
   ...EXISTING_CANONICAL_SKILLS,
   ...CANONICAL_DEFINITIONS.map(([id, layer, description]) => ({
+    id,
+    legacyId: id,
+    layer,
+    description,
+    path: `skills/${layer}/${id}`,
+    canonical: true
+  })),
+  ...TOOL_CANONICAL_DEFINITIONS.map(([id, layer, description]) => ({
     id,
     legacyId: id,
     layer,
@@ -147,17 +216,22 @@ const CANONICAL_ORDER = [
   'os-abstraction', 'rtos-freertos', 'bsp-adapter', 'bsp-hal-driver',
   'bsp-handler', 'core-mcu', 'driver-vendor', 'middleware-lvgl',
   'middleware-communication', 'middleware-storage', 'middleware-algorithms',
-  'software-system'
+  'software-system', 'tools-build', 'tools-flash', 'tools-linker',
+  'tools-debug', 'tools-observability', 'tools-quality', 'tools-release'
 ];
 
-const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => CANONICAL_DEFINITIONS_BY_ID[id]);
+const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => ({
+  ...CANONICAL_DEFINITIONS_BY_ID[id],
+  aliases: TOOL_ALIASES[id] || []
+}));
 
 const TUTOR_ENTRY = {
   id: 'workflow-learning-tutor',
   legacyId: 'learning-tutor',
   layer: 'workflow',
   description: '嵌入式代码学习与 Obsidian 笔记辅导',
-  path: 'skills/workflow/workflow-learning-tutor',
+  archived: true,
+  path: 'archive/software-legacy/workflow/workflow-learning-tutor',
   canonical: false
 };
 
@@ -261,7 +335,8 @@ const MIGRATION_MAP = {
   'aes-module': 'software-system',
   'crc-module': 'software-system',
   'firmware-sign': 'software-system',
-  'rsa-module': 'software-system'
+  'rsa-module': 'software-system',
+  ...TOOL_MIGRATION_MAP
 };
 
 function resolveSkillId(id) {

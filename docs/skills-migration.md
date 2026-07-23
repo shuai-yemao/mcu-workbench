@@ -88,7 +88,7 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 
 ## 软件方向重分类（兼容入口）
 
-下面的 15 个名称是当前软件架构的 canonical skill。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
+下面的 15 个名称是当前软件架构的 canonical skill；工具方向另有 7 个 canonical skill，合计 22 个。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
@@ -107,4 +107,32 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 | `middleware-algorithms` | `middleware-dsp`、`middleware-fft` |
 | `software-system` | `system-*`、`security-*` |
 
-`operations`、`hardware` 及其旧入口不属于本轮软件架构重分类，保持原目录和调用方式。
+工具方向已从旧 `operations/` 目录独立为 `skills/tools/`；硬件方向本轮不重构，继续使用 `skills/hardware/`。
+
+## 硬件与工具提取
+
+当前已将硬件和工具从软件架构重分类中独立出来：
+
+| 来源 | 当前路径 | 数量 | 状态 |
+|---|---|---:|---|
+| 原 `hardware/` | `skills/hardware/` | 2 | active，待重构 |
+| 原 `operations/` | `archive/tools-legacy/` | 29 | archived，保留兼容解析 |
+| 旧软件层（workflow/platform/interface/bsp/middleware/system/security） | `archive/software-legacy/` | 51 | archived，不由 manifest 加载 |
+
+工具 29 个入口包含 `tool-*` 构建/烧录/链接、`debug-*`、`observability-*`、`quality-*` 和 `release-*`。原调用名保留，catalog 路径切换到 `skills/tools/`。
+
+> 说明：旧工具目录已归档；当前 active 工具入口位于 `skills/tools/`，硬件目录保持不变。
+
+## 工具方向重分类
+
+| Canonical skill | 旧入口范围 | 数量 |
+|---|---|---:|
+| `tools-build` | `tool-build-*`、`build-*` | 5 |
+| `tools-flash` | `tool-flash-*`、`flash-*`、`gang-flash` | 6 |
+| `tools-linker` | `tool-linker-scatter`、`linker-scatter` | 1 |
+| `tools-debug` | `debug-*`、CmBacktrace、RTOS 调试别名 | 6 |
+| `tools-observability` | `observability-*`、ELOG/RTT/SystemView 别名 | 5 |
+| `tools-quality` | `quality-*`、审查/Map/MISRA/Unity 别名 | 4 |
+| `tools-release` | `release-*`、OTA 别名 | 2 |
+
+29 个旧工具目录位于 `archive/tools-legacy/`；7 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。
