@@ -97,6 +97,12 @@ npm run cli -- build --target stm32f4
 
 构建和烧录默认只生成命令；确认路径和工具链后显式追加 `--execute` 才会运行外部命令。完整用法见 [docs/node-cli.md](docs/node-cli.md)。
 
+## Codex 适配
+
+本仓库同时提供 `.codex-plugin/plugin.json`，与 Claude Code 共用 `skills/` 和 catalog。Codex 适配说明、canonical Skill 同步和校验命令见 [docs/codex-adaptation.md](docs/codex-adaptation.md)。
+
+安装启用后可在 Codex Composer 中使用 `@mcu-workbench` 快捷触发插件。
+
 ## 开发与发布检查
 
 ```powershell

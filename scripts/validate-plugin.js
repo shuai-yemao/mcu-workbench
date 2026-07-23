@@ -33,6 +33,7 @@ const EXPECTED_AGENTS = new Set([
   'knowledge-engineer'
 ]);
 const FORBIDDEN_AGENT_KEYS = new Set(['hooks', 'mcpServers', 'permissionMode']);
+const FORBIDDEN_CODEX_KEYS = new Set(['agents', 'hooks', 'mcpServers']);
 
 function parseAgentFrontmatter(frontmatter) {
   const lines = frontmatter.split(/\r?\n/);
@@ -108,6 +109,21 @@ function validateAgents(errors) {
   return { count: files.length, names: names.sort() };
 }
 
+function validateCodexManifest(errors) {
+  const manifestPath = path.join(ROOT, '.codex-plugin', 'plugin.json');
+  if (!fs.existsSync(manifestPath)) return false;
+  const manifest = readJson('.codex-plugin/plugin.json', errors);
+  if (!manifest) return false;
+  if (manifest.name !== 'mcu-workbench') errors.push('codex manifest: name 必须为 mcu-workbench');
+  if (manifest.skills !== './skills/') errors.push('codex manifest: skills 必须为 ./skills/');
+  if (!manifest.interface || manifest.interface.displayName !== 'MCU-Workbench') errors.push('codex manifest: 缺少 interface.displayName');
+  if (!manifest.interface || !manifest.interface.shortDescription) errors.push('codex manifest: 缺少 interface.shortDescription');
+  if (!manifest.interface || !manifest.interface.longDescription) errors.push('codex manifest: 缺少 interface.longDescription');
+  for (const key of FORBIDDEN_CODEX_KEYS) if (Object.prototype.hasOwnProperty.call(manifest, key)) errors.push(`codex manifest: 当前适配禁止字段 ${key}`);
+  if (!fs.existsSync(path.join(ROOT, 'skills'))) errors.push('codex manifest: skills 目录不存在');
+  return true;
+}
+
 function findSkillDirectories(root) {
   const result = [];
   if (!fs.existsSync(root)) return result;
@@ -164,6 +180,7 @@ function summarize(catalog) {
 function validatePlugin() {
   const errors = [];
   const agentSummary = validateAgents(errors);
+  const codexManifest = validateCodexManifest(errors);
   const manifest = readJson('.claude-plugin/plugin.json', errors);
   if (manifest) {
     if (manifest.name !== 'mcu-workbench') errors.push('manifest: name 必须为 mcu-workbench');
@@ -232,7 +249,7 @@ function validatePlugin() {
     }
   }
 
-  return { errors, summary: { ...summarize(SKILL_CATALOG), agents: agentSummary.count, agentNames: agentSummary.names } };
+  return { errors, summary: { ...summarize(SKILL_CATALOG), agents: agentSummary.count, agentNames: agentSummary.names, codexManifest } };
 }
 
 if (require.main === module) {

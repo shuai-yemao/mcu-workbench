@@ -1,0 +1,38 @@
+{
+  "name": "mcu-workbench",
+  "version": "1.0.0",
+  "description": "面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 与工具集。",
+  "author": {
+    "name": "MCU-Workbench Team"
+  },
+  "homepage": "https://github.com/shuai-yemao/mcu-workbench",
+  "repository": "https://github.com/shuai-yemao/mcu-workbench",
+  "license": "MIT",
+  "keywords": [
+    "embedded",
+    "mcu",
+    "stm32",
+    "gr5526",
+    "esp32",
+    "firmware"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "MCU-Workbench",
+    "shortDescription": "嵌入式 MCU 开发 Skills 与工具链",
+    "longDescription": "提供 APP、OS、BSP、Core、Driver、Middleware、构建调试和项目产物管理能力。",
+    "developerName": "MCU-Workbench Team",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Embedded Development",
+      "Firmware Architecture",
+      "Build and Debug"
+    ],
+    "defaultPrompt": [
+      "审计这个嵌入式项目的 APP、OS、BSP 分层",
+      "分析当前 MCU 工程的构建和调试问题",
+      "根据项目证据生成开发日志和验证报告"
+    ],
+    "brandColor": "#0F766E"
+  }
+}

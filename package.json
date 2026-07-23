@@ -11,6 +11,8 @@
     "build": "echo 'Build complete'",
     "cli": "node bin/mcu-workbench.js",
     "agent:artifacts": "node scripts/agent-artifacts.js",
+    "codex:register": "node scripts/register-codex-marketplace.js",
+    "sync:codex": "node scripts/sync-codex-skills.js",
     "validate:plugin": "node scripts/validate-plugin.js",
     "report:skills": "node scripts/report-skills.js"
   },
