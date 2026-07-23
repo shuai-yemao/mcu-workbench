@@ -1,5 +1,6 @@
 const path = require('path');
 const { SKILL_CATALOG, CANONICAL_SKILLS, resolveSkillId } = require('../skills/catalog');
+const { getAllSkills, getSkillAliases, getSkillsByCategory, listSkillNames } = require('../skills/registry');
 const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('../skills/loader');
 const { validatePlugin } = require('../scripts/validate-plugin');
 
@@ -67,6 +68,15 @@ describe('Skills catalog and loader', () => {
     expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(22);
     expect(getSkillContent('workflow-router')).toContain('name: workflow-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-router');
+  });
+
+  test('registry is a compatibility view derived from catalog', () => {
+    expect(Object.keys(getAllSkills())).toHaveLength(SKILL_CATALOG.length);
+    expect(listSkillNames()).toEqual(Object.keys(getAllSkills()));
+    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(36);
+    expect(getSkillAliases()['build-keil']).toBe('tools-build');
+    expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
+    expect(getSkillAliases()['embedded']).toBe('workflow-router');
   });
 
   test('plugin filesystem, frontmatter and manifest validate', () => {

@@ -18,6 +18,9 @@ module.exports = {
       throw new Error('Platform is required');
     }
 
-    return await flashFirmware(process.cwd(), platform, device);
+    return await flashFirmware(process.cwd(), platform, device, {
+      execute: Boolean(options.execute),
+      logger: options.quiet ? () => {} : console.log
+    });
   }
 };

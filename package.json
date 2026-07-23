@@ -3,9 +3,13 @@
   "version": "0.1.0",
   "description": "嵌入式开发生命周期全覆盖的 Claude Code 插件",
   "main": "index.js",
+  "bin": {
+    "mcu-workbench": "bin/mcu-workbench.js"
+  },
   "scripts": {
     "test": "jest",
     "build": "echo 'Build complete'",
+    "cli": "node bin/mcu-workbench.js",
     "validate:plugin": "node scripts/validate-plugin.js",
     "report:skills": "node scripts/report-skills.js"
   },

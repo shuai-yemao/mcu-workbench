@@ -9,6 +9,9 @@ async function createProject(options) {
   if (!name) {
     throw new Error('Name is required');
   }
+  if (!/^[a-z0-9][a-z0-9_-]*$/i.test(name)) {
+    throw new Error('Name must contain only letters, numbers, hyphens, or underscores');
+  }
 
   const config = getPlatformConfig(platform);
   const projectPath = path.join(process.cwd(), name);
@@ -73,13 +76,13 @@ RTOS: ${rtos}
 ## Build
 
 \`\`\`bash
-/mcu build --target ${platform}
+mcu-workbench build --target ${platform}
 \`\`\`
 
 ## Flash
 
 \`\`\`bash
-/mcu flash --device stlink
+mcu-workbench flash --platform ${platform} --device stlink
 \`\`\`
 `
   );

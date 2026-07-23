@@ -5,6 +5,7 @@ const mcuFlash = require('./commands/mcu-flash');
 const mcuDebug = require('./commands/mcu-debug');
 const { loadSkillsFromPlugin, getSkillContent, listAvailableSkills } = require('./skills/loader');
 const { SKILLS, getSkillsByCategory, getSkillsByPlatform } = require('./skills/registry');
+const cli = require('./lib/cli');
 
 module.exports = {
   name: 'mcu-workbench',
@@ -27,6 +28,8 @@ module.exports = {
     getByCategory: getSkillsByCategory,
     getByPlatform: getSkillsByPlatform
   },
+
+  cli,
 
   async init(context) {
     const loadedSkills = loadSkillsFromPlugin();

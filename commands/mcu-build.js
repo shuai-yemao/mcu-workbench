@@ -14,6 +14,10 @@ module.exports = {
       throw new Error('Target platform is required');
     }
 
-    return await buildProject(process.cwd(), target);
+    return await buildProject(process.cwd(), target, {
+      clean: Boolean(clean),
+      execute: Boolean(options.execute),
+      logger: options.quiet ? () => {} : console.log
+    });
   }
 };

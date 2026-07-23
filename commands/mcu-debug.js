@@ -1,7 +1,8 @@
 const { getPlatformConfig } = require('../lib/platform');
 
 async function startDebug(options) {
-  const { device, platform, gdbPort = 3333 } = options;
+  const { device, platform } = options;
+  const gdbPort = Number(options.gdbPort === undefined ? 3333 : options.gdbPort);
 
   if (!device) {
     throw new Error('Debug device is required');
@@ -10,15 +11,23 @@ async function startDebug(options) {
   if (!platform) {
     throw new Error('Platform is required');
   }
+  if (!/^[a-z0-9_-]+$/i.test(device)) {
+    throw new Error('Debug device must contain only letters, numbers, hyphens, or underscores');
+  }
+  if (!Number.isInteger(Number(gdbPort)) || Number(gdbPort) < 1 || Number(gdbPort) > 65535) {
+    throw new Error('GDB port must be an integer between 1 and 65535');
+  }
 
   const config = getPlatformConfig(platform);
 
   const openocdCmd = `openocd -f interface/${device}.cfg -f target/${config.openOcdTarget}.cfg`;
   const gdbCmd = `arm-none-eabi-gdb build/firmware.elf -ex "target remote :${gdbPort}"`;
 
-  console.log(`Starting debug session...`);
-  console.log(`OpenOCD: ${openocdCmd}`);
-  console.log(`GDB: ${gdbCmd}`);
+  if (!options.quiet) {
+    console.log(`Starting debug session...`);
+    console.log(`OpenOCD: ${openocdCmd}`);
+    console.log(`GDB: ${gdbCmd}`);
+  }
 
   return {
     success: true,
@@ -29,9 +38,12 @@ async function startDebug(options) {
 }
 
 async function startMonitor(options) {
-  const { port = 'COM3', baudRate = 115200 } = options;
+  const port = options.port === undefined ? 'COM3' : options.port;
+  const baudRate = Number(options.baudRate === undefined ? 115200 : options.baudRate);
 
-  console.log(`Starting serial monitor on ${port} @ ${baudRate}...`);
+  if (!options.quiet) {
+    console.log(`Starting serial monitor on ${port} @ ${baudRate}...`);
+  }
 
   return {
     success: true,

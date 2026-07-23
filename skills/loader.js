@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { CANONICAL_SKILLS, resolveSkillId } = require('./catalog');
+const { CANONICAL_SKILLS, SKILL_BY_CANONICAL_ID, resolveSkillId } = require('./catalog');
 
 const PLUGIN_ROOT = path.resolve(__dirname, '..');
 
@@ -41,7 +41,8 @@ function loadSkillsFromPlugin() {
 function getSkillContent(skillName) {
   const resolved = resolveSkillId(skillName);
   if (!resolved) return null;
-  const skill = CANONICAL_SKILLS.find((entry) => entry.id === resolved);
+  const skill = SKILL_BY_CANONICAL_ID[resolved];
+  if (!skill) return null;
   const skillFile = getSkillFile(skill);
   return fs.existsSync(skillFile) ? fs.readFileSync(skillFile, 'utf8') : null;
 }

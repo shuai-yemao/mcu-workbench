@@ -52,3 +52,15 @@ npm test -- --runInBand
 npm run validate:plugin
 claude plugin validate .
 ```
+
+## Node CLI
+
+仓库同时提供正式的 `mcu-workbench` CLI，用于项目骨架、BSP 模板、平台查询和构建/烧录命令计划：
+
+```powershell
+npm run cli -- --help
+npm run cli -- platforms
+npm run cli -- build --target stm32f4
+```
+
+构建和烧录默认只生成命令；确认路径和工具链后显式追加 `--execute` 才会运行外部命令。完整用法见 [docs/node-cli.md](docs/node-cli.md)。
