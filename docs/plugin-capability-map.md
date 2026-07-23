@@ -4,6 +4,8 @@
 
 ## 1. 插件组成
 
+除 Skills 和 Node CLI 外，插件根目录 `agents/` 提供 7 个按职责调用的 Claude Code Custom Agents。它们共享 canonical Skills，但不替代 Skills；Agent 负责把输入、证据、变更、测试和交接写入稳定产物协议。详见 [Agent team](agents.md)。
+
 当前插件由两条相互独立的能力链组成：
 
 | 能力链 | 入口 | 主要内容 | 当前定位 |
@@ -15,9 +17,9 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 共 104 项：
+当前 catalog 共 105 项：
 
-- 22 个 canonical skills；
+- 23 个 canonical skills；
 - 80 个软件和工具归档入口；
 - 2 个硬件 active 入口。
 
@@ -61,6 +63,7 @@
 | `tools-observability` | ELOG、RTT、串口、SystemView | 采集日志、追踪和运行时证据 |
 | `tools-quality` | 代码审查、Map、静态分析、Unity | 输出质量问题、证据和回归结果 |
 | `tools-release` | OTA 打包、升级、回滚和发布验证 | 接收构建产物和质量结果 |
+| `tools-learning-tutor` | 基于项目代码提问、理解检查和 Obsidian 笔记生成 | 接收项目路径、模块范围和用户回答 |
 
 推荐工具交接顺序：
 
@@ -122,7 +125,7 @@ tools-release
 
 1. CLI 是否需要继续扩展真实调试和串口监控进程管理。
 2. `catalog.js`、`registry.js`、`loader.js` 的最终职责边界。
-3. `workflows/embedded-ai-collab` 是否纳入 active 工作流体系。
+3. 旧 `embedded-ai-collab` 已归档；后续 workflow 扩展遵循 [workflows.md](workflows.md)。
 4. Node 生成器的目录结构是否需要完全对齐当前 APP/OS/BSP/Middleware 架构。
 
 CLI 使用说明见 [docs/node-cli.md](node-cli.md)。

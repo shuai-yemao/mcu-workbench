@@ -149,7 +149,8 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
   ['tools-quality', 'tools', '代码审查、Map、静态分析和 Unity 测试'],
-  ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证']
+  ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
+  ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
 ];
 
 const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
@@ -184,7 +185,8 @@ const TOOL_ALIASES = {
   ],
   'tools-release': [
     'release-ota-package', 'ota-package', 'release-ota-update', 'ota-update-system'
-  ]
+  ],
+  'tools-learning-tutor': ['workflow-learning-tutor', 'learning-tutor']
 };
 
 const TOOL_MIGRATION_MAP = Object.fromEntries(
@@ -217,7 +219,8 @@ const CANONICAL_ORDER = [
   'bsp-handler', 'core-mcu', 'driver-vendor', 'middleware-lvgl',
   'middleware-communication', 'middleware-storage', 'middleware-algorithms',
   'software-system', 'tools-build', 'tools-flash', 'tools-linker',
-  'tools-debug', 'tools-observability', 'tools-quality', 'tools-release'
+  'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
+  'tools-learning-tutor'
 ];
 
 const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => ({

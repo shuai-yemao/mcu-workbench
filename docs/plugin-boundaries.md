@@ -4,6 +4,8 @@
 
 ## 1. 顶层边界
 
+插件 Agent 是独立于 Skills 的协作入口：定义位于根目录 `agents/`，不加入 `.claude-plugin/plugin.json`；Agent 只能按角色写入指定产物目录，并通过 `.mcu-workbench/runs/` 交接证据。角色矩阵见 [agents.md](agents.md)。
+
 | 区域 | 负责内容 | 不负责内容 | 当前入口 |
 |---|---|---|---|
 | Plugin manifest | 声明 active skill 层级 | 不实现业务逻辑 | `.claude-plugin/plugin.json` |
@@ -11,7 +13,7 @@
 | References | 技术变体、案例、厂商差异 | 不替代主 Skill 的核心流程 | `references/` |
 | Scripts | 可重复的检查、分析、生成或采集 | 不隐藏关键决策和权限 | 各 Skill 的 `scripts/` |
 | Node CLI | 项目生成、模板渲染、命令计划和显式工具执行 | 不自动代表 Claude Code command | `bin/`、`lib/cli.js`、`commands/`、`lib/` |
-| Archive | 历史入口、迁移和兼容依据 | 不作为 active skill 加载 | `archive/`、`legacy/` |
+| Archive | 历史入口、迁移和兼容依据 | 不作为 active skill、workflow 或 Agent 加载 | `archive/`、`legacy/` |
 
 ## 2. 软件架构层边界
 
@@ -45,6 +47,7 @@ Core、Middleware、Driver 不设置 Adapter。
 | `tools-observability` | RTT/ELOG/串口/SystemView 数据 | 运行时证据和时间线 | `tools-debug`、`tools-quality` |
 | `tools-quality` | 源码、Map、静态分析、测试结果 | 缺陷、等级、证据和回归结果 | `tools-build`、`tools-release` |
 | `tools-release` | 构建产物、签名信息、质量结果 | OTA 包、升级、回滚和发布记录 | `software-system`、项目集成 |
+| `tools-learning-tutor` | 项目代码、已有笔记和用户回答 | 学习笔记、Q&A、薄弱点和未验证项 | `workflow-project-integration` 或对应软件层 Skill |
 
 工具 Skill 不负责定义软件架构层，只负责工具链工作流和验证证据。
 
@@ -79,12 +82,6 @@ Core、Middleware、Driver 不设置 Adapter。
 4. “工具分析通过”不代表目标硬件已完成板级验证。
 5. “归档入口可解析”不代表归档内容仍属于 active plugin。
 
-## 7. 下一轮决策输入
+## 7. Workflow 生命周期
 
-在继续重构前，需要先回答：
-
-1. CLI 是否需要增加真实调试和串口监控进程管理。
-2. Skills 是否需要直接调用统一 CLI 或只调用自身脚本。
-3. 是否要把 `workflows/` 纳入 manifest 或迁移为 workflow Skill。
-4. 是否建立统一的输入、输出、证据和错误码协议。
-5. 是否为真实 GR5526/STM32 工程建立端到端验收场景。
+当前 active workflow 只有 `workflow-router` 和 `workflow-project-integration`；旧 `embedded-ai-collab` 位于 `archive/workflows-legacy/`。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。

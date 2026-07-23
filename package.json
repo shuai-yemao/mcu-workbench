@@ -10,6 +10,7 @@
     "test": "jest",
     "build": "echo 'Build complete'",
     "cli": "node bin/mcu-workbench.js",
+    "agent:artifacts": "node scripts/agent-artifacts.js",
     "validate:plugin": "node scripts/validate-plugin.js",
     "report:skills": "node scripts/report-skills.js"
   },

@@ -88,7 +88,7 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 
 ## 软件方向重分类（兼容入口）
 
-下面的 15 个名称是当前软件架构的 canonical skill；工具方向另有 7 个 canonical skill，合计 22 个。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
+下面的 15 个名称是当前软件架构的 canonical skill；工具方向另有 8 个 canonical skill，合计 23 个。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
@@ -134,5 +134,6 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 | `tools-observability` | `observability-*`、ELOG/RTT/SystemView 别名 | 5 |
 | `tools-quality` | `quality-*`、审查/Map/MISRA/Unity 别名 | 4 |
 | `tools-release` | `release-*`、OTA 别名 | 2 |
+| `tools-learning-tutor` | `workflow-learning-tutor`、`learning-tutor` | 2 |
 
-29 个旧工具目录位于 `archive/tools-legacy/`；7 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。
+29 个旧工具目录位于 `archive/tools-legacy/`；8 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。

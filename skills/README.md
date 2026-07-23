@@ -23,6 +23,7 @@ tools-debug          调试与故障诊断
 tools-observability  日志与运行时观测
 tools-quality        质量与验证
 tools-release        发布与 OTA
+tools-learning-tutor 项目提问与 Obsidian 学习笔记
 ```
 
 每个工具主入口只保留用途和选择流程；具体平台资料放在 `references/<旧入口>/GUIDE.md`，脚本放在同一命名空间下。

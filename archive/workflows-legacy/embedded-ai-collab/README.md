@@ -1,4 +1,6 @@
-# 嵌入式 AI 协作编程工作流
+# 嵌入式 AI 协作编程工作流（归档）
+
+> 本目录仅保留历史实现，不属于 active plugin workflow。当前协作由 `embedded-lead` 及专业 Agent 完成，流程规范见 [`docs/workflows.md`](../../../docs/workflows.md)。
 
 ## 概述
 
