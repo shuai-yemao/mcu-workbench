@@ -51,6 +51,8 @@ Core、Middleware、Driver 不设置 Adapter。
 
 工具 Skill 不负责定义软件架构层，只负责工具链工作流和验证证据。
 
+源码仓库、项目文件和层间调用证据统一登记在[软件分层知识图谱](../skills/workflow/workflow-project-integration/references/software-architecture-knowledge-graph.md)；逐层 Skill 只引用对应证据，不复制上游源码。
+
 ## 4. Catalog、Registry、Loader 边界
 
 | 模块 | 应承担的唯一责任 | 当前状态 |

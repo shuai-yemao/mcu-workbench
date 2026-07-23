@@ -13,6 +13,8 @@ description: 负责嵌入式代码审查、Map 分析、静态分析、MISRA 和
 
 代码审查、Map 分析、静态分析和 Unity 的原始资料分别保留在 `references/quality-*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。
 
+Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
+
 ## 输出
 
 输出可复现命令、问题等级、证据文件、基线差异和修复后的回归结果。构建产物由 [`tools-build`](../tools-build/SKILL.md) 提供，发布验证交接 [`tools-release`](../tools-release/SKILL.md)。

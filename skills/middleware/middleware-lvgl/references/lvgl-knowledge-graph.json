@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-23",
+  "sources": [
+    {
+      "id": "lvgl-100ask",
+      "repository": "https://github.com/100askTeam/100ask_lvgl_docs",
+      "branch": "master",
+      "commit": "84d7f584dc4f167709f1d8bc8abb91ca941b1c1a",
+      "role": "中文文档、示例和源码快照",
+      "version": "9.3.0-dev"
+    },
+    {
+      "id": "lvgl-upstream",
+      "repository": "https://github.com/lvgl/lvgl",
+      "branch": "master",
+      "commit": "c4424b27d63db752aa75f9fdffe30c6467b55ad1",
+      "role": "官方源码和配置参考",
+      "version": "9.6.0-dev"
+    },
+    {
+      "id": "gr5526-fixture",
+      "repository": "user-provided-local-project",
+      "branch": null,
+      "commit": null,
+      "role": "GR5526 LVGL 8.3.x 验收夹具",
+      "version": "8.3.x"
+    }
+  ],
+  "versions": [
+    {
+      "id": "lvgl-8.3",
+      "range": "8.3.x",
+      "source_id": "gr5526-fixture",
+      "api_generation": "v8",
+      "project_fit": "GR5526 LVGL 8.3.1 工程"
+    },
+    {
+      "id": "lvgl-9.3",
+      "range": "9.3.x",
+      "source_id": "lvgl-100ask",
+      "api_generation": "v9",
+      "project_fit": "100ask 文档和源码快照"
+    },
+    {
+      "id": "lvgl-9-latest",
+      "range": "9.x",
+      "source_id": "lvgl-upstream",
+      "api_generation": "v9",
+      "project_fit": "官方 master，当前 9.6.0-dev"
+    }
+  ],
+  "nodes": [
+    {"id": "docs-intro", "kind": "document", "label": "Introduction", "path": "docs/intro", "source_id": "lvgl-100ask"},
+    {"id": "docs-base-widget", "kind": "document", "label": "Base Widget", "path": "docs/details/base-widget", "source_id": "lvgl-100ask"},
+    {"id": "docs-widgets", "kind": "document", "label": "Widgets", "path": "docs/details/widgets", "source_id": "lvgl-100ask"},
+    {"id": "docs-main-components", "kind": "document", "label": "Main Components", "path": "docs/details/main-components", "source_id": "lvgl-100ask"},
+    {"id": "docs-integration", "kind": "document", "label": "Integration", "path": "docs/details/integration", "source_id": "lvgl-100ask"},
+    {"id": "docs-debugging", "kind": "document", "label": "Debugging", "path": "docs/details/debugging", "source_id": "lvgl-100ask"},
+    {"id": "docs-libs", "kind": "document", "label": "Third-party Libraries", "path": "docs/details/libs", "source_id": "lvgl-100ask"},
+    {"id": "docs-examples", "kind": "document", "label": "Examples", "path": "examples", "source_id": "lvgl-100ask"},
+    {"id": "src-core", "kind": "source-module", "label": "Core", "path": "src/core", "source_id": "lvgl-upstream"},
+    {"id": "src-display", "kind": "source-module", "label": "Display", "path": "src/display", "source_id": "lvgl-upstream"},
+    {"id": "src-draw", "kind": "source-module", "label": "Draw", "path": "src/draw", "source_id": "lvgl-upstream"},
+    {"id": "src-indev", "kind": "source-module", "label": "Input", "path": "src/indev", "source_id": "lvgl-upstream"},
+    {"id": "src-osal", "kind": "source-module", "label": "OSAL", "path": "src/osal", "source_id": "lvgl-upstream"},
+    {"id": "src-widgets", "kind": "source-module", "label": "Widgets", "path": "src/widgets", "source_id": "lvgl-upstream"},
+    {"id": "src-layouts", "kind": "source-module", "label": "Layouts", "path": "src/layouts", "source_id": "lvgl-upstream"},
+    {"id": "src-themes", "kind": "source-module", "label": "Themes", "path": "src/themes", "source_id": "lvgl-upstream"},
+    {"id": "src-font", "kind": "source-module", "label": "Fonts", "path": "src/font", "source_id": "lvgl-upstream"},
+    {"id": "src-image", "kind": "source-module", "label": "Images", "path": "src/image", "source_id": "lvgl-upstream"},
+    {"id": "src-fs", "kind": "source-module", "label": "File System", "path": "src/fs", "source_id": "lvgl-upstream"},
+    {"id": "src-libs", "kind": "source-module", "label": "Libraries", "path": "src/libs", "source_id": "lvgl-upstream"},
+    {"id": "src-drivers", "kind": "source-module", "label": "Drivers", "path": "src/drivers", "source_id": "lvgl-upstream"},
+    {"id": "app-ui", "kind": "project-layer", "label": "APP UI", "path": "app/ui", "source_id": "gr5526-fixture"},
+    {"id": "os-wrapper", "kind": "project-layer", "label": "OS Wrapper", "path": "os/wrapper", "source_id": "gr5526-fixture"},
+    {"id": "bsp-wrapper", "kind": "project-layer", "label": "BSP Wrapper", "path": "bsp/wrapper", "source_id": "gr5526-fixture"},
+    {"id": "bsp-port", "kind": "project-layer", "label": "BSP Port", "path": "bsp/port", "source_id": "gr5526-fixture"},
+    {"id": "bsp-hal-driver", "kind": "project-layer", "label": "BSP hal_driver", "path": "bsp/hal_driver", "source_id": "gr5526-fixture"},
+    {"id": "core-mcu", "kind": "project-layer", "label": "Core", "path": "core", "source_id": "gr5526-fixture"},
+    {"id": "vendor-driver", "kind": "project-layer", "label": "Driver", "path": "driver", "source_id": "gr5526-fixture"}
+  ],
+  "edges": [
+    {"id": "intro-to-core", "from": "docs-intro", "to": "src-core", "relation": "explains"},
+    {"id": "base-to-core", "from": "docs-base-widget", "to": "src-core", "relation": "explains"},
+    {"id": "widgets-to-widgets", "from": "docs-widgets", "to": "src-widgets", "relation": "documents"},
+    {"id": "main-to-display", "from": "docs-main-components", "to": "src-display", "relation": "documents"},
+    {"id": "main-to-indev", "from": "docs-main-components", "to": "src-indev", "relation": "documents"},
+    {"id": "main-to-draw", "from": "docs-main-components", "to": "src-draw", "relation": "documents"},
+    {"id": "integration-to-osal", "from": "docs-integration", "to": "src-osal", "relation": "documents"},
+    {"id": "integration-to-drivers", "from": "docs-integration", "to": "src-drivers", "relation": "documents"},
+    {"id": "examples-to-widgets", "from": "docs-examples", "to": "src-widgets", "relation": "demonstrates"},
+    {"id": "app-to-api", "from": "app-ui", "to": "src-core", "relation": "calls-public-api"},
+    {"id": "display-to-wrapper", "from": "src-display", "to": "bsp-wrapper", "relation": "flushes-through"},
+    {"id": "input-to-wrapper", "from": "src-indev", "to": "bsp-wrapper", "relation": "reads-through"},
+    {"id": "tick-to-wrapper", "from": "src-osal", "to": "os-wrapper", "relation": "uses"},
+    {"id": "wrapper-to-port", "from": "bsp-wrapper", "to": "bsp-port", "relation": "binds-to"},
+    {"id": "port-to-hal", "from": "bsp-port", "to": "bsp-hal-driver", "relation": "calls"},
+    {"id": "hal-to-core", "from": "bsp-hal-driver", "to": "core-mcu", "relation": "uses"},
+    {"id": "core-to-driver", "from": "core-mcu", "to": "vendor-driver", "relation": "uses"}
+  ]
+}

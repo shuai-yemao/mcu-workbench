@@ -20,6 +20,8 @@ Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 提供 `o
 3. 实现 Wrapper，再由 Port 注入具体 OS；用 Fake/Mock 验证上层。
 4. 只有出现具体 FreeRTOS 配置时交接 [`rtos-freertos`](../rtos-freertos/SKILL.md)。
 
+接口验收矩阵见 [`osal-contract.md`](references/osal-contract.md)。
+
 ## 禁止
 
 不在 OSAL 中放 BSP 设备协议，不让 APP 或 Middleware 绕过 Wrapper 调用原生 RTOS。

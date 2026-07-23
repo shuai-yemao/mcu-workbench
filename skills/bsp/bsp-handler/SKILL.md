@@ -15,3 +15,5 @@ Handler 面向产品场景管理一个或多个器件实例，负责生命周期
 4. 将板级绑定交给 [`bsp-adapter`](../bsp-adapter/SKILL.md)，器件原语交给 [`bsp-hal-driver`](../bsp-hal-driver/SKILL.md)。
 
 GR5526 可用 `app_power_manager.c`、显示/触摸任务和 Flash 缓存验收睡眠唤醒与资源释放。
+
+实例、缓存、事件和恢复记录见 [`handler-evidence.md`](references/handler-evidence.md)。
