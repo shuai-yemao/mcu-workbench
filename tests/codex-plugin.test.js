@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
 const { validatePlugin } = require('../scripts/validate-plugin');
+const { validateClaudeManifestSkillPaths } = require('../scripts/validators/manifest');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -27,5 +28,15 @@ describe('Codex plugin adapter', () => {
     const result = validatePlugin();
     expect(result.errors).toEqual([]);
     expect(result.summary.codexManifest).toBe(true);
+  });
+
+  test('Claude manifest validation rejects missing skill directories', () => {
+    const errors = [];
+    validateClaudeManifestSkillPaths(
+      { skills: ['./skills/workflow/', './skills/not-real/'] },
+      new Set(['workflow', 'not-real']),
+      errors
+    );
+    expect(errors).toContain('manifest: skills 路径不存在 ./skills/not-real/');
   });
 });

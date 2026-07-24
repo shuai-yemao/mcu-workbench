@@ -29,13 +29,14 @@ mcu-workbench platforms
 ```powershell
 mcu-workbench new --name demo --platform stm32f4 --rtos freertos
 mcu-workbench driver --peripheral oled --platform stm32f4 --write --output .
-mcu-workbench build --target stm32f4
-mcu-workbench build --target stm32f4 --clean --execute
+mcu-workbench build --platform stm32f4
+mcu-workbench build --platform stm32f4 --clean --execute
 mcu-workbench flash --platform stm32f4 --device stlink --execute
 mcu-workbench skills --category tools
 ```
 
 `--json` 可用于脚本集成。错误写入 stderr，成功返回 0；命令失败返回 1。
+`build --target` 仍作为兼容别名可用，新脚本请使用 `build --platform`。
 
 ## 设计边界
 

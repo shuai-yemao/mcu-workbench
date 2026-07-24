@@ -76,7 +76,7 @@ RTOS: ${rtos}
 ## Build
 
 \`\`\`bash
-mcu-workbench build --target ${platform}
+mcu-workbench build --platform ${platform}
 \`\`\`
 
 ## Flash

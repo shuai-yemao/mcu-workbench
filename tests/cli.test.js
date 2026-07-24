@@ -10,19 +10,33 @@ function captureCli(argv) {
 
 describe('CLI', () => {
   test('parses command aliases and dashed options', () => {
-    expect(parseArgs(['mcu-build', '--target', 'stm32f4', '--gdb-port=3334'])).toEqual({
+    expect(parseArgs(['mcu-build', '--platform', 'stm32f4', '--gdb-port=3334'])).toEqual({
       command: 'build',
-      options: { target: 'stm32f4', gdbPort: '3334' }
+      options: { platform: 'stm32f4', gdbPort: '3334' }
     });
   });
 
   test('prints a JSON build plan without executing tools', async () => {
-    const { result, output } = await captureCli(['build', '--target', 'stm32f4', '--json']);
+    const { result, output } = await captureCli(['build', '--platform', 'stm32f4', '--json']);
     expect(result.exitCode).toBe(0);
     const json = JSON.parse(output.find((entry) => entry.stream === 'stdout').line);
     expect(json.success).toBe(true);
     expect(json.command).toContain('cmake');
     expect(output.filter((entry) => entry.stream === 'stderr')).toHaveLength(0);
+  });
+
+  test('keeps --target as a build compatibility alias', async () => {
+    const { result, output } = await captureCli(['build', '--target', 'stm32f4', '--json']);
+    expect(result.exitCode).toBe(0);
+    const json = JSON.parse(output.find((entry) => entry.stream === 'stdout').line);
+    expect(json.success).toBe(true);
+    expect(json.command).toContain('cmake');
+  });
+
+  test('rejects conflicting build platform aliases', async () => {
+    const { result, output } = await captureCli(['build', '--platform', 'stm32f4', '--target', 'esp32']);
+    expect(result.exitCode).toBe(1);
+    expect(output.some((entry) => entry.line.includes('Cannot use both --platform and --target with different values'))).toBe(true);
   });
 
   test('lists only active skills by default and archived entries with --all', async () => {
