@@ -14,5 +14,6 @@ description: 设计 FatFs、SFUD、Flash 存储、磨损处理和文件系统接
 先确定介质与容量，再定义读写粒度、同步策略和恢复路径；FatFs/SFUD/裸 Flash 的差异放入 references。需要后台刷写时交给 OS Wrapper 创建的任务或队列。
 
 Flash/KV/时序存储读取 [`flash-storage-sources.md`](references/flash-storage-sources.md)，区分 Middleware 公共存储 API 与 BSP 器件协议。
+FatFs、SFUD 的移植步骤、配置和参考资料见 [`capability-index.md`](references/capability-index.md)。
 
 交接：Flash 器件协议交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)，板级绑定交给 [`bsp-adapter`](../../bsp/bsp-adapter/SKILL.md)。

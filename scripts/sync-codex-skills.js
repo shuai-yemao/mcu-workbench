@@ -80,6 +80,26 @@ function timestamp() {
   return new Date().toISOString().replace(/[:.]/g, '-');
 }
 
+function wait(milliseconds) {
+  if (milliseconds <= 0) return;
+  Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
+}
+
+function renameWithRetry(source, destination, { retries = 4, delayMs = 25 } = {}) {
+  let lastError;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      fs.renameSync(source, destination);
+      return;
+    } catch (error) {
+      lastError = error;
+      if (!['EPERM', 'EBUSY'].includes(error.code) || attempt === retries) throw error;
+      wait(delayMs * (attempt + 1));
+    }
+  }
+  throw lastError;
+}
+
 function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
   const { target: resolvedTarget, plan } = buildPlan(target || path.join(os.homedir(), '.agents', 'skills'));
   const changes = plan.filter((entry) => entry.existing || !fs.existsSync(entry.destination));
@@ -113,7 +133,7 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
     if (fs.existsSync(staging)) fs.rmSync(staging, { recursive: true, force: true });
     fs.cpSync(entry.source, staging, { recursive: true });
     if (entry.existing) fs.rmSync(entry.existing, { recursive: true, force: true });
-    fs.renameSync(staging, entry.destination);
+    renameWithRetry(staging, entry.destination);
   }
 
   return summary;
@@ -144,4 +164,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildPlan, parseArgs, syncCodexSkills };
+module.exports = { buildPlan, parseArgs, renameWithRetry, syncCodexSkills };

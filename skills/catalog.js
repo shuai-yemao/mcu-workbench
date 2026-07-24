@@ -339,6 +339,12 @@ const MIGRATION_MAP = {
   'crc-module': 'software-system',
   'firmware-sign': 'software-system',
   'rsa-module': 'software-system',
+  'workflow-devlog': 'tools-learning-tutor',
+  'devlog': 'tools-learning-tutor',
+  'embedded-ai-collab': 'workflow-project-integration',
+  'embedded-ai-coding-standard': 'tools-quality',
+  'embedded-ai-prompt-templates': 'workflow-project-integration',
+  'embedded-ai-code-review': 'tools-quality',
   ...TOOL_MIGRATION_MAP
 };
 

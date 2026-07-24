@@ -1,10 +1,23 @@
-# Skills 名称迁移表
+# Skills 迁移与归档能力表
 
-本表记录从旧目录和旧调用名迁移到统一命名体系的完整映射。新命名为 `层级-领域[-具体对象]`，目录与 frontmatter `name` 完全一致。
+本文件同时记录旧调用名、历史归档目录与当前 canonical 入口。目录与 frontmatter `name` 完全一致；当前解析规则以 `skills/catalog.js` 的 `MIGRATION_MAP` 为唯一事实来源。
 
-Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名>` 改为 `/mcu-workbench:<新名>`。仓库内部 Node 查询接口仍能识别旧名，便于外部工具逐步升级。
+Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名>` 改为 `/mcu-workbench:<当前 canonical 名>`。仓库内部 Node 查询接口仍能识别旧名，便于外部工具逐步升级。
 
-| 旧名 | 新名 | 架构层 |
+## 归档能力物化
+
+归档不是运行时依赖。每一份归档 `SKILL.md`、其 `references/`、`scripts/` 和 `assets/` 已被转移为目标 canonical Skill 的 active `references/capabilities/<能力主题>/`，并由目标 Skill 的 `references/capability-index.md` 选择性加载。主入口保持简短，只承担边界、路由和验收；命中具体技术时再读取完整能力资料。
+
+```powershell
+npm run migrate:capabilities       # 检查 80 份已转移能力及索引是否完整
+node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐缺失资料
+```
+
+目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-abstraction`、`rtos-freertos`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；它们不应凭空创建“旧版迁移资料”。
+
+原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-project-integration`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
+
+| 旧名 | 历史归档目录 | 原架构层 |
 |---|---|---|
 | `embedded` | `workflow-router` | workflow |
 | `devlog` | `workflow-devlog` | workflow |

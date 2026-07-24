@@ -16,3 +16,4 @@ description: 负责 Keil scatter、GCC linker script、IAR icf、内存布局和
 3. 输出修改后的区域/段策略和重新链接验证命令。
 
 详细模板见 [`tool-linker-scatter`](references/tool-linker-scatter/GUIDE.md)；构建命令交接 [`tools-build`](../tools-build/SKILL.md)。
+scatter/linker 的完整语法、样例和故障处理见 [`capability-index.md`](references/capability-index.md)。

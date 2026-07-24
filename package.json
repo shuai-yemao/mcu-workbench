@@ -13,6 +13,7 @@
     "agent:artifacts": "node scripts/agent-artifacts.js",
     "codex:register": "node scripts/register-codex-marketplace.js",
     "sync:codex": "node scripts/sync-codex-skills.js",
+    "migrate:capabilities": "node scripts/materialize-skill-capabilities.js --check",
     "validate:plugin": "node scripts/validate-plugin.js",
     "report:skills": "node scripts/report-skills.js"
   },

@@ -2,7 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
-const { syncCodexSkills } = require('../scripts/sync-codex-skills');
+const { renameWithRetry, syncCodexSkills } = require('../scripts/sync-codex-skills');
 
 describe('Codex skill synchronization', () => {
   let temporaryRoot;
@@ -64,5 +64,30 @@ describe('Codex skill synchronization', () => {
     fs.mkdirSync(path.join(target, 'cmbacktrace-debug'), { recursive: true });
 
     expect(() => syncCodexSkills({ target, dryRun: true })).toThrow(/Multiple legacy directories/);
+  });
+
+  test('retries transient Windows directory rename locks', () => {
+    const source = path.join(temporaryRoot, 'staging');
+    const destination = path.join(temporaryRoot, 'destination');
+    fs.mkdirSync(source);
+    const originalRename = fs.renameSync;
+    let attempts = 0;
+    jest.spyOn(fs, 'renameSync').mockImplementation((from, to) => {
+      attempts += 1;
+      if (attempts < 3) {
+        const error = new Error('temporary lock');
+        error.code = 'EPERM';
+        throw error;
+      }
+      return originalRename(from, to);
+    });
+
+    try {
+      renameWithRetry(source, destination, { retries: 3, delayMs: 0 });
+      expect(attempts).toBe(3);
+      expect(fs.existsSync(destination)).toBe(true);
+    } finally {
+      fs.renameSync.mockRestore();
+    }
   });
 });

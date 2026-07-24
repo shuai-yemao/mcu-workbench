@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { SKILL_CATALOG, resolveSkillId, SKILL_BY_CANONICAL_ID } = require('../skills/catalog');
+const { buildCapabilityMigrationPlan, materializeSkillCapabilities } = require('./materialize-skill-capabilities');
 
 const ROOT = path.resolve(__dirname, '..');
 const NAME_PATTERN = /^[a-z][a-z0-9]*(?:-[a-z0-9]+){1,3}$/;
@@ -11,6 +12,7 @@ const LVGL_SKILL_ROOT = path.join(ROOT, 'skills', 'middleware', 'middleware-lvgl
 const LVGL_GRAPH_PATH = path.join(LVGL_SKILL_ROOT, 'references', 'lvgl-knowledge-graph.json');
 const ARCH_GRAPH_ROOT = path.join(ROOT, 'skills', 'workflow', 'workflow-project-integration', 'references');
 const ARCH_GRAPH_PATH = path.join(ARCH_GRAPH_ROOT, 'software-architecture-knowledge-graph.json');
+const TUTOR_SKILL_ROOT = path.join(ROOT, 'skills', 'tools', 'tools-learning-tutor');
 
 function readJson(relativePath, errors) {
   try {
@@ -285,6 +287,41 @@ function validateSoftwareArchitectureGraph(errors) {
   return graph;
 }
 
+function validateLearningTutorReferences(errors) {
+  const requiredFiles = [
+    'SKILL.md',
+    'references/learning-modes.md',
+    'references/project-scan-and-evidence.md',
+    'references/question-bank.md',
+    'references/note-template.md',
+    'references/coverage-checklist.md',
+    'references/obsidian-write-protocol.md',
+    'references/session-state.md'
+  ];
+  for (const relative of requiredFiles) {
+    if (!fs.existsSync(path.join(TUTOR_SKILL_ROOT, relative))) {
+      errors.push(`tools-learning-tutor: 缺少 ${relative}`);
+    }
+  }
+
+  const skillPath = path.join(TUTOR_SKILL_ROOT, 'SKILL.md');
+  if (!fs.existsSync(skillPath)) return;
+  const content = fs.readFileSync(skillPath, 'utf8');
+  for (const reference of requiredFiles.slice(1)) {
+    if (!content.includes(`references/${path.basename(reference)}`)) {
+      errors.push(`tools-learning-tutor: SKILL.md 未直接链接 ${reference}`);
+    }
+  }
+
+  const capabilityAnchors = [
+    'tutor', 'code-audit', 'note-refresh', 'project-note',
+    '逐节', 'Q&A', 'Mermaid', 'WikiLink', 'Obsidian', '未验证', '薄弱点'
+  ];
+  for (const anchor of capabilityAnchors) {
+    if (!content.includes(anchor)) errors.push(`tools-learning-tutor: 主入口缺少能力标记 ${anchor}`);
+  }
+}
+
 function validateLocalMarkdownLinks(skillFile, content, errors) {
   const directory = path.dirname(skillFile);
   const links = [...content.matchAll(/\]\(([^)]+)\)/g)].map((match) => match[1].trim());
@@ -295,6 +332,34 @@ function validateLocalMarkdownLinks(skillFile, content, errors) {
     const resolved = path.resolve(directory, target.replace(/\\/g, '/'));
     if (!resolved.startsWith(ROOT + path.sep) || !fs.existsSync(resolved)) {
       errors.push(`${path.relative(ROOT, skillFile)}: 本地链接不存在或越界（${link}）`);
+    }
+  }
+}
+
+function validateCapabilityMigration(errors) {
+  const result = materializeSkillCapabilities({ write: false });
+  for (const message of result.errors) errors.push(`capability migration: ${message}`);
+  for (const message of result.missing) errors.push(`capability migration: 缺少已内化资料 ${message}`);
+  for (const targetId of result.staleIndexes) errors.push(`capability migration: ${targetId}/capability-index.md 缺失或过期`);
+  for (const message of result.staleLegacyPaths) errors.push(`capability migration: ${message} 未清理`);
+
+  const { groups } = buildCapabilityMigrationPlan();
+  for (const [targetId, entries] of groups) {
+    const target = SKILL_BY_CANONICAL_ID[targetId];
+    if (!target) continue;
+    const skillPath = path.join(ROOT, target.path, 'SKILL.md');
+    const skillContent = fs.readFileSync(skillPath, 'utf8');
+    if (!skillContent.includes('references/capability-index.md')) {
+      errors.push(`capability migration: ${targetId}/SKILL.md 未链接 references/capability-index.md`);
+    }
+    const indexPath = path.join(ROOT, target.path, 'references', 'capability-index.md');
+    if (fs.existsSync(indexPath)) {
+      validateLocalMarkdownLinks(indexPath, fs.readFileSync(indexPath, 'utf8'), errors);
+    }
+    for (const entry of entries) {
+      if (!fs.existsSync(path.join(entry.destination, 'GUIDE.md'))) {
+        errors.push(`capability migration: ${targetId} 缺少 ${entry.source.id}/GUIDE.md`);
+      }
     }
   }
 }
@@ -321,6 +386,8 @@ function validatePlugin() {
   const codexManifest = validateCodexManifest(errors);
   validateLvglReferences(errors);
   validateSoftwareArchitectureGraph(errors);
+  validateLearningTutorReferences(errors);
+  validateCapabilityMigration(errors);
   const manifest = readJson('.claude-plugin/plugin.json', errors);
   if (manifest) {
     if (manifest.name !== 'mcu-workbench') errors.push('manifest: name 必须为 mcu-workbench');
@@ -405,4 +472,14 @@ if (require.main === module) {
   }
 }
 
-module.exports = { NAME_PATTERN, EXPECTED_AGENTS, parseAgentFrontmatter, summarize, validateLvglReferences, validateSoftwareArchitectureGraph, validatePlugin };
+module.exports = {
+  NAME_PATTERN,
+  EXPECTED_AGENTS,
+  parseAgentFrontmatter,
+  summarize,
+  validateLvglReferences,
+  validateSoftwareArchitectureGraph,
+  validateLearningTutorReferences,
+  validateCapabilityMigration,
+  validatePlugin
+};
