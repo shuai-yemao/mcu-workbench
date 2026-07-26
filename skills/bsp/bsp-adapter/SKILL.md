@@ -1,26 +1,20 @@
 ---
 name: bsp-adapter
-description: 设计 BSP Wrapper、BSP Port、函数表、平台绑定和 Mock 替换边界。
+description: Use when binding BSP Driver or Handle interfaces to Core, GPIO, buses, timebase, RTOS, or exposing them through BSP Port and Wrapper.
 ---
 
 # BSP Adapter
 
-## 两段式边界
+先读取共享 [`BSP 架构专用契约`](../references/bsp-architecture-contract.md)。采用 Port 优先、Wrapper 后置：`APP/Middleware → Wrapper → Port`；Port 内部构造 Driver、构造 Handle、注册 Driver Ops，并完成就绪门控。
 
-`Wrapper` 定义设备无关的 `drv_adapter_*` API、状态和错误码；`Port` 通过函数表把 Wrapper 绑定到目标板的 `hal_driver`。上层只调用 Wrapper，不能直接拿函数表或 Port 符号。
+## Port
 
-## 工作流
+为每个抽象函数建立“抽象函数 → 平台 API → 参数/状态转换 → 阻塞与 ISR 限制”映射表。Port 注入 Core、总线、GPIO、tick、OS 和 Driver Ops；生产 Port 与 Fake Port 使用同形函数表。显示类 Port 还必须说明像素缓冲的所有者、可访问上下文及 flush 完成前后的有效期。
 
-1. 从设备用例提取最小读写、初始化和电源接口。
-2. 设计函数表，明确同步/异步、缓存、超时和 ISR 约束。
-3. 编写 Wrapper 分发与注册，编写 Port 的板级绑定和 Mock。
-4. 把器件协议实现交给 [`bsp-hal-driver`](../bsp-hal-driver/SKILL.md)，多实例和资源交给 [`bsp-handler`](../bsp-handler/SKILL.md)。
+## Wrapper
 
-Wrapper/Port 的证据和 GR5526 验收项见 [`bsp-layer-evidence.md`](references/bsp-layer-evidence.md)。
-器件适配、平台绑定、Mock 与完整脚本见 [`capability-index.md`](references/capability-index.md)。
+Wrapper 只包含 Port 公共头文件，不能包含 Driver、Handle、HAL、RTOS 或具体总线实现。它提供稳定的上层 API，不持有平台句柄，也不绕过 Port 调用实例内部函数。
 
-## GR5526
+器件协议交给 [`bsp-hal-driver`](../bsp-hal-driver/SKILL.md)，资源/并发交给 [`bsp-handler`](../bsp-handler/SKILL.md)。Wrapper/Port 证据见 [`bsp-layer-evidence.md`](references/bsp-layer-evidence.md)，器件适配和 Fake Port 样例见 [`capability-index.md`](references/capability-index.md)。
 
-检查 `drv_adapter_display.*`、`drv_adapter_port_disp.c`、norflash 和 touchpad 三组 Wrapper/Port；确认 Port 调用具体驱动而不是反向调用 APP。
-
-共享契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。
+全局分层见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。

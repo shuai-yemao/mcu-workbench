@@ -115,7 +115,7 @@ const CANONICAL_DEFINITIONS = [
   ['app-architecture', 'workflow', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-abstraction', 'rtos', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
   ['bsp-adapter', 'bsp', 'BSP Wrapper、BSP Port、函数表与平台绑定'],
-  ['bsp-hal-driver', 'bsp', '器件协议、初始化、读写与睡眠唤醒 hal_driver'],
+  ['bsp-hal-driver', 'bsp', 'BSP Driver：器件协议与可注入实例接口'],
   ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
   ['core-mcu', 'platform', 'MCU 内部外设、初始化、中断与 DMA 组织'],
   ['driver-vendor', 'platform', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],

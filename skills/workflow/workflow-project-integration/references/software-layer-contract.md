@@ -7,7 +7,7 @@ APP
 └─ Middleware 公共 API
 
 OS Wrapper → OS Port → FreeRTOS / RT-Thread / 裸机
-BSP Handler → BSP Wrapper → BSP Port → hal_driver → Core → Driver
+BSP Wrapper → BSP Port → Core → Driver
 ```
 
 | 层 | 单一职责 | 允许依赖 | 不负责 |
@@ -23,6 +23,8 @@ BSP Handler → BSP Wrapper → BSP Port → hal_driver → Core → Driver
 
 OS Adapter：`osal_*` Wrapper 定义稳定 API，`os_impl_*` Port 绑定具体 RTOS。
 
-BSP Adapter：`drv_adapter_*` Wrapper 定义设备 API，`drv_adapter_port_*` Port 注入板级函数表；Port 再调用 `hal_driver`，不得反向依赖 Handler。
+BSP Adapter：`drv_adapter_*` Wrapper 定义稳定设备 API，`drv_adapter_port_*` Port 注入板级函数表，并在内部构造 Driver/Handle、注册 Driver Ops；Wrapper 不得反向依赖 Driver、Handle、HAL 或 RTOS。
+
+BSP 的接口、装配、生命周期和验收细节见 [`BSP 架构专用契约`](../../../bsp/references/bsp-architecture-contract.md)。Handle 通过泛化 Driver Ops 调用实例 `pf_*`，不要求“Handler 必然经 Wrapper 调 Driver”。
 
 Core、Middleware、Driver 没有 Adapter 目录、命名或调用层。需要移植时使用其原生配置或厂商实现。

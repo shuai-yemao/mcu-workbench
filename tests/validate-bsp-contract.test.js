@@ -56,4 +56,36 @@ describe('validateBspContract', () => {
       expect.stringContaining('FromISR')
     ]));
   });
+
+  test('enforces Port composition and keeps Wrapper independent from implementation layers', () => {
+    const { validateBspContract } = require('../scripts/validate-bsp-contract');
+    const result = validateBspContract({
+      portSource: path.join(FIXTURE_ROOT, 'st7789', 'bad-adapter-boundary', 'bsp_display_port.c'),
+      wrapperSource: path.join(FIXTURE_ROOT, 'st7789', 'bad-adapter-boundary', 'bsp_display_wrapper.c'),
+      apiPolicy: 'instance_only'
+    });
+
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.stringContaining('Port must construct the Driver'),
+      expect.stringContaining('Port must construct the Handle'),
+      expect.stringContaining('Port must register Driver Ops'),
+      expect.stringContaining('Wrapper must not include Driver, Handle, HAL, or RTOS headers')
+    ]));
+  });
+
+  test('parses the documented command-line file arguments', () => {
+    const { parseArgs } = require('../scripts/validate-bsp-contract');
+    expect(parseArgs([
+      '--driver-header', 'driver.h', '--driver-source', 'driver.c',
+      '--handler-header', 'handle.h', '--handler-source', 'handle.c',
+      '--port-source', 'port.c', '--wrapper-source', 'wrapper.c',
+      '--api-policy', 'instance_only'
+    ])).toMatchObject({ apiPolicy: 'instance_only', driverHeader: expect.stringContaining('driver.h') });
+  });
+
+  test('reports a missing four-level acceptance record when requested', () => {
+    const { validateBspContract } = require('../scripts/validate-bsp-contract');
+    expect(validateBspContract({ acceptancePath: path.join(FIXTURE_ROOT, 'st7789', 'missing-acceptance.md') }).errors)
+      .toEqual([expect.stringContaining('Acceptance record not found')]);
+  });
 });

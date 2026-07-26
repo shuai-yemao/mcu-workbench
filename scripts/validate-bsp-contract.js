@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const FORBIDDEN_DRIVER_INCLUDE = /#\s*include\s*[<"][^>"]*(?:stm32|hal|freertos|cmsis_os)[^>"]*[>"]/i;
 
 function readFile(filePath) {
@@ -29,6 +30,19 @@ function validateHandler(options, errors) {
   }
 }
 
+function validateAdapter(options, errors) {
+  const port = readFile(options.portSource);
+  const wrapper = readFile(options.wrapperSource);
+  if (port) {
+    if (!/_driver_inst\s*\(/.test(port)) errors.push('Port must construct the Driver.');
+    if (!/_handle_inst\s*\(/.test(port)) errors.push('Port must construct the Handle.');
+    if (!/_register_driver\s*\(/.test(port)) errors.push('Port must register Driver Ops.');
+  }
+  if (wrapper && /#\s*include\s*[<"][^>"]*(?:driver|handle|hal|freertos|cmsis_os|stm32)[^>"]*[>"]/i.test(wrapper)) {
+    errors.push('Wrapper must not include Driver, Handle, HAL, or RTOS headers.');
+  }
+}
+
 function validateBspContract(options = {}) {
   const errors = [];
   if (options.apiPolicy === 'instance_only' && (options.driverHeader || options.driverSource)) {
@@ -46,7 +60,33 @@ function validateBspContract(options = {}) {
     if (!/\bpf_[a-zA-Z0-9_]+\b/.test(header)) errors.push('Driver header must declare pf_* instance operations.');
   }
   if (options.handlerHeader || options.handlerSource) validateHandler(options, errors);
+  if (options.portSource || options.wrapperSource) validateAdapter(options, errors);
+  if (options.acceptancePath && !fs.existsSync(options.acceptancePath)) {
+    errors.push(`Acceptance record not found: ${options.acceptancePath}`);
+  }
   return { errors };
 }
 
-module.exports = { validateBspContract };
+function parseArgs(argv) {
+  const names = {
+    '--driver-header': 'driverHeader', '--driver-source': 'driverSource',
+    '--handler-header': 'handlerHeader', '--handler-source': 'handlerSource',
+    '--port-source': 'portSource', '--wrapper-source': 'wrapperSource', '--acceptance': 'acceptancePath', '--api-policy': 'apiPolicy'
+  };
+  const options = {};
+  for (let index = 0; index < argv.length; index += 2) {
+    if (!names[argv[index]] || !argv[index + 1]) throw new Error(`Unknown or incomplete argument: ${argv[index] || ''}`.trim());
+    options[names[argv[index]]] = argv[index] === '--api-policy' ? argv[index + 1] : path.resolve(argv[index + 1]);
+  }
+  return options;
+}
+
+if (require.main === module) {
+  const result = validateBspContract(parseArgs(process.argv.slice(2)));
+  if (result.errors.length) {
+    console.error(result.errors.join('\n'));
+    process.exitCode = 1;
+  }
+}
+
+module.exports = { validateBspContract, parseArgs };
