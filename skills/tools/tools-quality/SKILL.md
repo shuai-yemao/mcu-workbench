@@ -16,6 +16,35 @@ description: 负责嵌入式代码审查、Map 分析、静态分析、MISRA 和
 Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
 AI 协作编码规范、审查清单与质量工具完整流程见 [`capability-index.md`](references/capability-index.md)。
 
+## 三级验证闭环
+
+```mermaid
+flowchart LR
+    A[Mock/命令序列测试] --> B[真实板 RTT 日志]
+    B --> C[逻辑分析仪波形]
+    C --> A
+```
+
+| 层级 | 工具 | 验证什么 | 局限 |
+|------|------|---------|------|
+| 第一级 | Mock / PC 测试 | 协议状态机、边界条件、错误注入 | 不验证时序、硬件行为 |
+| 第二级 | 目标板 + RTT/串口日志 | 真实寄存器、真实延时、真实错误码 | 不验证电平时序、中断耗时 |
+| 第三级 | 逻辑分析仪 / DWT | 电平时序、ISR 耗时、DMA 行为 | 不验证软件逻辑正确性 |
+
+**关键原则**：
+
+- 三层结论必须交叉验证
+- 复杂环境（真实板）通过不代表简单环境（Mock）通过
+- 简单环境（Mock）通过也不代表复杂环境（真实板）通过
+- 改了任何一层都要回其他两层重测
+
+### 实施建议
+
+1. **Mock 测试**：在 PC 上注入 Fake IIC/SPI/Timebase/IRQ/DMA，跑 Driver/Handler 全部状态机
+2. **RTT 日志**：在目标板打印关键状态转换、错误码、耗时
+3. **逻辑分析仪**：捕获 I2C/SPI 波形、GPIO 翻转、INT/DMA 时序
+4. **DWT 周期计数器**：测量 ISR 耗时，验证 < 5μs 等硬实时约束
+
 ## 输出
 
 输出可复现命令、问题等级、证据文件、基线差异和修复后的回归结果。构建产物由 [`tools-build`](../tools-build/SKILL.md) 提供，发布验证交接 [`tools-release`](../tools-release/SKILL.md)。

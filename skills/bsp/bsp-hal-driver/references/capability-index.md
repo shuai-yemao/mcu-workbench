@@ -5,3 +5,5 @@
 | 能力主题 | 详细资料 |
 | --- | --- |
 | 平台无关的单器件 BSP Driver | [完整流程与资源](capabilities/bsp-device-driver/GUIDE.md) |
+| 高频 IMU（MPU6050）Driver 模式 | [DMA 双缓冲 + 中断上下半部分离](capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md) |
+| 外部 Flash（W25Qxx）Driver 模式 | [页对齐 + 写使能锁 + 忙状态轮询](capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md) |
