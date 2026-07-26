@@ -14,7 +14,8 @@ description: 负责嵌入式代码审查、Map 分析、静态分析、MISRA 和
 代码审查、Map 分析、静态分析和 Unity 的原始资料分别保留在 `references/quality-*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。
 
 Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
-AI 协作编码规范、审查清单与质量工具完整流程见 [`capability-index.md`](references/capability-index.md)。
+AI 生成代码的项目风格解析和专项审查交给 [`tools-ai-code-quality`](../tools-ai-code-quality/SKILL.md)；本 Skill 保留通用代码审查、Map、静态分析和 Unity 测试。
+其余质量工具的完整资料见 [`capability-index.md`](references/capability-index.md)。
 
 ## 输出
 

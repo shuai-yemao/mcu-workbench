@@ -26,6 +26,8 @@ description: 为嵌入式请求选择一个最小主 skill，并明确必要的�
 | Display/Flash/Touch 绑定 | `bsp-adapter` | `bsp-hal-driver`, `core-mcu` |
 | 多实例、缓存、睡眠恢复 | `bsp-handler` | `bsp-adapter`, `os-abstraction` |
 | MQTT/BLE/CAN 等 | `middleware-communication` | `bsp-adapter` |
+| AI 协作开发、逐函数生成、嵌入式 Prompt | `workflow-ai-collab` | `tools-ai-code-quality`、对应层 skill |
+| AI 生成代码的风格解析或独立审查 | `tools-ai-code-quality` | `tools-quality`、`tools-build` |
 | FreeRTOS 原生配置/Port | `rtos-freertos` | `os-abstraction` |
 | CMSIS、STM32 HAL、ESP-IDF Driver | `core-mcu` 或 `driver-vendor` | `bsp-adapter` / `tools-build` |
 | CMake/ESP-IDF 构建 | `tools-build` | `tools-linker` / `tools-quality` |

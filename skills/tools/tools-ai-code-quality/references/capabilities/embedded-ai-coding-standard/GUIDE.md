@@ -2,6 +2,7 @@
 name: embedded-ai-coding-standard
 description: 嵌入式 C 编码规范 — 命名规则、头文件模板、函数结构、核心原则。当用户要求写嵌入式 C 代码、STM32 驱动、BSP 层、传感器驱动时必须加载此技能作为编码约束。
 version: "1.0.0"
+migration_status: compare-only
 ---
 
 # 嵌入式 C 编码规范

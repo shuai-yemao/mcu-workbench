@@ -68,6 +68,20 @@ function renderCapabilityIndex(target, entries) {
   const compareOnlyRows = compareOnlyEntries
     .sort((left, right) => left.source.id.localeCompare(right.source.id))
     .map((entry) => `| ${entry.source.description} | [旧版 GUIDE](capabilities/${entry.source.id}/GUIDE.md)，仅用于迁移比对，不作为 active reference 读取。 |`);
+  if (!activeEntries.length) {
+    return [
+      '# 内化能力索引',
+      '',
+      `\`${target.id}\` 的现行流程由主 SKILL.md 及其直接 references 定义。以下旧资料仅用于迁移比对。`,
+      '',
+      '## 迁移比对资料',
+      '',
+      '| 能力主题 | 使用边界 |',
+      '| --- | --- |',
+      ...compareOnlyRows,
+      ''
+    ].join('\n');
+  }
   return [
     '# 内化能力索引',
     '',

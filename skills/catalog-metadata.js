@@ -111,6 +111,7 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
+  ['workflow-ai-collab', 'workflow', '项目风格优先的嵌入式 AI 协作、逐函数生成与验证编排'],
   ['app-architecture', 'workflow', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-abstraction', 'rtos', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
   ['bsp-adapter', 'bsp', 'BSP Wrapper、BSP Port、函数表与平台绑定'],
@@ -131,6 +132,7 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
   ['tools-quality', 'tools', '代码审查、Map、静态分析和 Unity 测试'],
+  ['tools-ai-code-quality', 'tools', '项目代码风格解析、AI 生成约束与独立审查'],
   ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
   ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
 ];

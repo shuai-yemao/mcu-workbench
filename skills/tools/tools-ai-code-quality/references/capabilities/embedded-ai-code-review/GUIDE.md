@@ -2,6 +2,7 @@
 name: embedded-ai-code-review
 description: 嵌入式 AI 生成代码审查清单 — 四层检查（语法/规范/逻辑/安全）+ 反模式警示。当用户需要对 AI 生成的嵌入式 C 代码进行审查时使用。
 version: "1.0.0"
+migration_status: compare-only
 ---
 
 # 嵌入式 AI 代码审查清单
