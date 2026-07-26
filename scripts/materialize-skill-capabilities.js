@@ -40,10 +40,18 @@ function buildCapabilityMigrationPlan() {
   return { groups, errors };
 }
 
-function renderCapabilityIndex(target, entries) {
+function renderCapabilityIndex(target, entries, currentIndex = null) {
   const rows = entries
     .sort((left, right) => left.source.id.localeCompare(right.source.id))
     .map((entry) => `| ${entry.source.description} | [完整流程与资源](capabilities/${entry.source.id}/GUIDE.md) |`);
+  // 保留现有 capability-index.md 中已存在的非迁移条目（例如新增的设备模式参考）
+  const extraRows = [];
+  if (currentIndex) {
+    const currentRows = currentIndex.split('\n').filter((line) => line.startsWith('| ') && !line.startsWith('| 能力主题') && !line.startsWith('| ---'));
+    for (const row of currentRows) {
+      if (!rows.includes(row)) extraRows.push(row);
+    }
+  }
   return [
     '# 内化能力索引',
     '',
@@ -52,6 +60,7 @@ function renderCapabilityIndex(target, entries) {
     '| 能力主题 | 详细资料 |',
     '| --- | --- |',
     ...rows,
+    ...extraRows,
     ''
   ].join('\n');
 }
@@ -94,8 +103,8 @@ function materializeSkillCapabilities({ write = false } = {}) {
         }
       }
     }
-    const expectedIndex = renderCapabilityIndex(target, entries);
     const currentIndex = fs.existsSync(capabilityIndex) ? fs.readFileSync(capabilityIndex, 'utf8') : null;
+    const expectedIndex = renderCapabilityIndex(target, entries, currentIndex);
     if (currentIndex !== expectedIndex) {
       staleIndexes.push(target.id);
       if (write) fs.writeFileSync(capabilityIndex, expectedIndex, 'utf8');
