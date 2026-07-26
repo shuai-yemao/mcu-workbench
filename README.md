@@ -99,6 +99,31 @@ npm run cli -- build --target stm32f4
 
 构建和烧录默认只生成命令；确认路径和工具链后显式追加 `--execute` 才会运行外部命令。完整用法见 [docs/node-cli.md](docs/node-cli.md)。
 
+## OpenCode 适配
+
+本分支新增 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 23 个 canonical skill 工具和一个路由工具。
+
+### 本地安装
+
+```powershell
+opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
+```
+
+安装后 `C:\Users\zhang\.opencode\opencode.json` 会新增 plugin 路径。重启 OpenCode 后，可用以下工具：
+
+- `mcu_workbench_route`：根据请求推荐最合适的 skill
+- `mcu_workbench_<skill_id>`：读取对应 SKILL.md 的内容摘要
+
+### 示例
+
+```text
+调用 mcu_workbench_route，请求 "STM32 HAL GPIO 初始化"
+```
+
+```text
+调用 mcu_workbench_core_mcu，question "Cortex-M4 中断优先级分组"
+```
+
 ## Codex 适配
 
 本仓库同时提供 `.codex-plugin/plugin.json`，与 Claude Code 共用 `skills/` 和 catalog。Codex 适配说明、canonical Skill 同步和校验命令见 [docs/codex-adaptation.md](docs/codex-adaptation.md)。
