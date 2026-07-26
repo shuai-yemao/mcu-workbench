@@ -40,10 +40,34 @@ function buildCapabilityMigrationPlan() {
   return { groups, errors };
 }
 
+function isCompareOnlyCapability(entry) {
+  const guidePath = path.join(entry.destination, 'GUIDE.md');
+  if (!fs.existsSync(guidePath)) return false;
+  const guide = fs.readFileSync(guidePath, 'utf8');
+  return /^migration_status:\s*compare-only\s*$/m.test(guide);
+}
+
 function renderCapabilityIndex(target, entries) {
-  const rows = entries
+  const activeEntries = entries.filter((entry) => !isCompareOnlyCapability(entry));
+  const compareOnlyEntries = entries.filter(isCompareOnlyCapability);
+  const rows = activeEntries
     .sort((left, right) => left.source.id.localeCompare(right.source.id))
     .map((entry) => `| ${entry.source.description} | [完整流程与资源](capabilities/${entry.source.id}/GUIDE.md) |`);
+  if (!compareOnlyEntries.length) {
+    return [
+      '# 内化能力索引',
+      '',
+      `以下资料已经成为 \`${target.id}\` 的 active references。仅在请求命中对应技术或工作流时读取相关条目；主入口仍负责边界、路由和验收。`,
+      '',
+      '| 能力主题 | 详细资料 |',
+      '| --- | --- |',
+      ...rows,
+      ''
+    ].join('\n');
+  }
+  const compareOnlyRows = compareOnlyEntries
+    .sort((left, right) => left.source.id.localeCompare(right.source.id))
+    .map((entry) => `| ${entry.source.description} | [旧版 GUIDE](capabilities/${entry.source.id}/GUIDE.md)，仅用于迁移比对，不作为 active reference 读取。 |`);
   return [
     '# 内化能力索引',
     '',
@@ -52,6 +76,12 @@ function renderCapabilityIndex(target, entries) {
     '| 能力主题 | 详细资料 |',
     '| --- | --- |',
     ...rows,
+    '',
+    '## 迁移比对资料',
+    '',
+    '| 能力主题 | 使用边界 |',
+    '| --- | --- |',
+    ...compareOnlyRows,
     ''
   ].join('\n');
 }
@@ -135,4 +165,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildCapabilityMigrationPlan, materializeSkillCapabilities, parseArgs, renderCapabilityIndex };
+module.exports = { buildCapabilityMigrationPlan, isCompareOnlyCapability, materializeSkillCapabilities, parseArgs, renderCapabilityIndex };

@@ -28,7 +28,7 @@ describe('archived capability transfer into active skills', () => {
     ]));
   });
 
-  test('stores every transferred source as an active capability reference', () => {
+  test('stores every transferred source as an indexed capability reference', () => {
     const result = materializeSkillCapabilities({ write: false });
     const { groups } = buildCapabilityMigrationPlan();
 
@@ -46,6 +46,10 @@ describe('archived capability transfer into active skills', () => {
       for (const entry of entries) {
         expect(fs.existsSync(path.join(entry.destination, 'GUIDE.md'))).toBe(true);
         expect(index).toContain(`capabilities/${entry.source.id}/GUIDE.md`);
+      }
+      if (targetId === 'tools-learning-tutor') {
+        expect(index).toContain('迁移比对资料');
+        expect(index).toContain('不作为 active reference 读取');
       }
     }
   });

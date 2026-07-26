@@ -5,4 +5,9 @@
 | 能力主题 | 详细资料 |
 | --- | --- |
 | 嵌入式开发记录与可追溯交接 | [完整流程与资源](capabilities/workflow-devlog/GUIDE.md) |
-| 嵌入式代码学习与 Obsidian 笔记辅导 | [完整流程与资源](capabilities/workflow-learning-tutor/GUIDE.md) |
+
+## 迁移比对资料
+
+| 能力主题 | 使用边界 |
+| --- | --- |
+| 嵌入式代码学习与 Obsidian 笔记辅导 | [旧版 GUIDE](capabilities/workflow-learning-tutor/GUIDE.md)，仅用于迁移比对，不作为 active reference 读取。 |
