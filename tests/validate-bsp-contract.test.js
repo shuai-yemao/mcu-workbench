@@ -41,4 +41,19 @@ describe('validateBspContract', () => {
       expect.stringContaining('pf_*')
     ]));
   });
+
+  test('enforces Handler Ops registration and ISR deferral boundaries', () => {
+    const { validateBspContract } = require('../scripts/validate-bsp-contract');
+    const result = validateBspContract({
+      handlerHeader: path.join(FIXTURE_ROOT, 'mpu6050', 'bad-handler-boundary', 'bsp_imu_handle.h'),
+      handlerSource: path.join(FIXTURE_ROOT, 'mpu6050', 'bad-handler-boundary', 'bsp_imu_handle.c'),
+      apiPolicy: 'instance_only'
+    });
+
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.stringContaining('handler_driver_ops_t'),
+      expect.stringContaining('must not include a concrete Driver'),
+      expect.stringContaining('FromISR')
+    ]));
+  });
 });
