@@ -1,8 +1,14 @@
 {
   "name": "mcu-workbench",
   "version": "0.1.0",
-  "description": "嵌入式开发生命周期全覆盖的 Claude Code 插件",
+  "description": "嵌入式开发生命周期全覆盖的 Claude Code / OpenCode 插件",
   "main": "index.js",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "import": "./opencode.mjs"
+    }
+  },
   "bin": {
     "mcu-workbench": "bin/mcu-workbench.js"
   },
@@ -19,6 +25,8 @@
   },
   "keywords": [
     "claude-code",
+    "opencode",
+    "opencode-plugin",
     "embedded",
     "mcu",
     "stm32",
@@ -29,7 +37,9 @@
   ],
   "author": "MCU-Workbench Team",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.18.5"
+  },
   "devDependencies": {
     "jest": "^29.0.0"
   }
