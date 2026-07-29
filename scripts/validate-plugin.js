@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+const path = require('path');
+
 const { SKILL_CATALOG } = require('../skills/catalog');
 const { ROOT, NAME_PATTERN, readJson, summarize } = require('./validators/common');
 const { EXPECTED_AGENTS, parseAgentFrontmatter, validateAgents } = require('./validators/agents');
@@ -11,6 +13,7 @@ const {
 const { validateLearningTutorReferences } = require('./validators/learning-tutor');
 const { validateCapabilityMigration } = require('./validators/capability-migration');
 const { validateSkillCatalogAndFilesystem } = require('./validators/skill-catalog');
+const { validateSkillLinks } = require('../lib/skill-links');
 
 function validatePlugin() {
   const errors = [];
@@ -27,6 +30,10 @@ function validatePlugin() {
     if (!Array.isArray(manifest.skills)) errors.push('manifest: skills 必须为数组');
   }
   validateSkillCatalogAndFilesystem(manifest, errors);
+  const links = validateSkillLinks({ root: path.join(ROOT, 'skills'), boundaryRoot: ROOT });
+  for (const finding of links.findings) {
+    errors.push(`${finding.file}:${finding.line}: ${finding.ruleId} ${finding.target}`);
+  }
 
   return {
     errors,

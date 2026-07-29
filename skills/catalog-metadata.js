@@ -111,10 +111,11 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
+  ['workflow-ai-collab', 'workflow', '项目风格优先的嵌入式 AI 协作、逐函数生成与验证编排'],
   ['app-architecture', 'workflow', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-abstraction', 'rtos', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
   ['bsp-adapter', 'bsp', 'BSP Wrapper、BSP Port、函数表与平台绑定'],
-  ['bsp-hal-driver', 'bsp', '器件协议、初始化、读写与睡眠唤醒 hal_driver'],
+  ['bsp-hal-driver', 'bsp', 'BSP Driver：器件协议与可注入实例接口'],
   ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
   ['core-mcu', 'platform', 'MCU 内部外设、初始化、中断与 DMA 组织'],
   ['driver-vendor', 'platform', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],
@@ -131,6 +132,7 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
   ['tools-quality', 'tools', '代码审查、Map、静态分析和 Unity 测试'],
+  ['tools-ai-code-quality', 'tools', '项目代码风格解析、AI 生成约束与独立审查'],
   ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
   ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
 ];

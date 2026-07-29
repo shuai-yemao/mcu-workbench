@@ -26,7 +26,7 @@ description: 依据项目证据设计软件分层、审计工程集成关系并�
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
 - 上层调用下层时，调用下层 Adapter 的 Wrapper；Middleware 仅通过公共 API 使用 OS/BSP 能力。
 - 本 skill 只输出项目审计、分层设计、迁移路线和下游交接，不直接执行代码移植、AI 协作流程、Prompt 模板生成或具体驱动实现。
-- 命中上述具体能力时，只引用 `references/capability-index.md` 中的证据和产物要求，再交给对应软件层、工具层 skill 或 agent 执行。
+- AI 协作、Prompt 和逐函数生成交给 [`workflow-ai-collab`](../workflow-ai-collab/SKILL.md)；项目风格与 AI 代码审查交给 [`tools-ai-code-quality`](../../tools/tools-ai-code-quality/SKILL.md)。
 
 ## 交接
 

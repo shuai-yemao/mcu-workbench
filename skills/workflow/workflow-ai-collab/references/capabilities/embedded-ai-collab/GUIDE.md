@@ -2,6 +2,7 @@
 name: embedded-ai-collab
 description: 嵌入式 AI 协作编程入口 — 加载编码规范+Prompt模板+审查清单，编排 5 阶段工作流（架构规划→接口设计→AI生成→代码审查→集成验证）。当用户要求写嵌入式代码、开发 STM32 驱动、生成 BSP 层、AI 辅助嵌入式开发时使用。
 version: "1.0.0"
+migration_status: compare-only
 ---
 
 # 嵌入式 AI 协作编程

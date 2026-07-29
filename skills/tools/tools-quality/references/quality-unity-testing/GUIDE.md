@@ -9,7 +9,7 @@ description: 为嵌入式 C 的 Driver、Handler 和 Adapter 设计、实现和�
 
 把单元测试设计文档转成可重复运行的 Unity 测试，并在硬件约束下区分主机/Fake 测试与目标板 RTT 验证。测试代码通过公开接口和注入依赖验证行为，不修改被测模块的业务逻辑来迁就测试。
 
-先读取测试设计文档、被测头文件/实现文件、Adapter 接口、Keil 工程和现有测试入口。AHT21 的单文件测试入口与日志模式见 [references/aht21-unity-pattern.md](references/aht21-unity-pattern.md)。
+先读取测试设计文档、被测头文件/实现文件、Adapter 接口、Keil 工程和现有测试入口。AHT21 的单文件测试入口与日志模式见 [aht21-unity-pattern.md](../capabilities/quality-unity-testing/references/aht21-unity-pattern.md)。
 
 ## 执行流程
 

@@ -28,8 +28,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、列出预设、执行构建，还是仅扫描产物。
-2. 若不确定环境是否就绪，先运行自带脚本 [scripts/cmake_builder.py](scripts/cmake_builder.py) 的 `--detect` 模式确认。
+1. 先阅读 [usage.md](../capabilities/tool-build-cmake/references/usage.md)，确认本次是环境探测、列出预设、执行构建，还是仅扫描产物。
+2. 若不确定环境是否就绪，先运行自带脚本 [cmake_builder.py](../capabilities/tool-build-cmake/scripts/cmake_builder.py) 的 `--detect` 模式确认。
 3. 若存在 CMakePresets.json，使用 `--list-presets` 列出预设，再用 `--preset <name>` 构建。
 4. 若无预设，使用 `--source`、`--build-dir`、`--generator`、`--build-type`、`--toolchain` 手动配置构建。
 5. 读取脚本输出的构建结果和产物扫描报告，重点关注首选产物（ELF > HEX > BIN）和失败分类。

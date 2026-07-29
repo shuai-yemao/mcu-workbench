@@ -40,29 +40,75 @@ function buildCapabilityMigrationPlan() {
   return { groups, errors };
 }
 
+function isCompareOnlyCapability(entry) {
+  const guidePath = path.join(entry.destination, 'GUIDE.md');
+  if (!fs.existsSync(guidePath)) return false;
+  const guide = fs.readFileSync(guidePath, 'utf8');
+  return /^migration_status:\s*compare-only\s*$/m.test(guide);
+}
+
 function renderCapabilityIndex(target, entries, currentIndex = null) {
-  const rows = entries
+  const activeEntries = entries.filter((entry) => !isCompareOnlyCapability(entry));
+  const compareOnlyEntries = entries.filter(isCompareOnlyCapability);
+
+  const activeRows = activeEntries
     .sort((left, right) => left.source.id.localeCompare(right.source.id))
     .map((entry) => `| ${entry.source.description} | [完整流程与资源](capabilities/${entry.source.id}/GUIDE.md) |`);
+
+  const compareOnlyRows = compareOnlyEntries
+    .sort((left, right) => left.source.id.localeCompare(right.source.id))
+    .map((entry) => `| ${entry.source.description} | [旧版 GUIDE](capabilities/${entry.source.id}/GUIDE.md)，仅用于迁移比对，不作为 active reference 读取。 |`);
+
   // 保留现有 capability-index.md 中已存在的非迁移条目（例如新增的设备模式参考）
+  const knownRows = new Set([...activeRows, ...compareOnlyRows]);
   const extraRows = [];
   if (currentIndex) {
-    const currentRows = currentIndex.split('\n').filter((line) => line.startsWith('| ') && !line.startsWith('| 能力主题') && !line.startsWith('| ---'));
+    const currentRows = currentIndex.split('\n').filter(
+      (line) => line.startsWith('| ') && !line.startsWith('| 能力主题') && !line.startsWith('| ---')
+    );
     for (const row of currentRows) {
-      if (!rows.includes(row)) extraRows.push(row);
+      if (!knownRows.has(row)) extraRows.push(row);
     }
   }
-  return [
-    '# 内化能力索引',
-    '',
-    `以下资料已经成为 \`${target.id}\` 的 active references。仅在请求命中对应技术或工作流时读取相关条目；主入口仍负责边界、路由和验收。`,
-    '',
-    '| 能力主题 | 详细资料 |',
-    '| --- | --- |',
-    ...rows,
-    ...extraRows,
-    ''
-  ].join('\n');
+
+  const hasActive = activeEntries.length > 0 || extraRows.length > 0;
+  const hasCompareOnly = compareOnlyEntries.length > 0;
+
+  const parts = ['# 内化能力索引', ''];
+
+  if (hasActive) {
+    parts.push(
+      `以下资料已经成为 \`${target.id}\` 的 active references。仅在请求命中对应技术或工作流时读取相关条目；主入口仍负责边界、路由和验收。`,
+      '',
+      '| 能力主题 | 详细资料 |',
+      '| --- | --- |',
+      ...activeRows,
+      ...extraRows,
+      ''
+    );
+  }
+
+  if (hasCompareOnly) {
+    parts.push(
+      '## 迁移比对资料',
+      '',
+      '以下旧资料仅用于迁移比对。',
+      '',
+      '| 能力主题 | 使用边界 |',
+      '| --- | --- |',
+      ...compareOnlyRows,
+      ''
+    );
+  }
+
+  if (!hasActive && !hasCompareOnly) {
+    parts.push(
+      `当前没有从旧 skill 迁移到 \`${target.id}\` 的 active references。`,
+      ''
+    );
+  }
+
+  return parts.join('\n');
 }
 
 function materializeSkillCapabilities({ write = false } = {}) {
@@ -144,4 +190,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildCapabilityMigrationPlan, materializeSkillCapabilities, parseArgs, renderCapabilityIndex };
+module.exports = { buildCapabilityMigrationPlan, isCompareOnlyCapability, materializeSkillCapabilities, parseArgs, renderCapabilityIndex };

@@ -3,6 +3,7 @@ const os = require('os');
 const path = require('path');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
 const { renameWithRetry, syncCodexSkills } = require('../scripts/sync-codex-skills');
+const { validateSkillLinks } = require('../lib/skill-links');
 
 describe('Codex skill synchronization', () => {
   let temporaryRoot;
@@ -25,9 +26,9 @@ describe('Codex skill synchronization', () => {
 
     const summary = syncCodexSkills({ target, backupRoot });
 
-    expect(summary.total).toBe(23);
+    expect(summary.total).toBe(25);
     expect(summary.renamed).toBe(2);
-    expect(summary.added).toBe(21);
+    expect(summary.added).toBe(23);
     expect(summary.replaced).toBe(2);
     expect(fs.existsSync(path.join(target, 'embedded'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'debug-gdb-openocd'))).toBe(false);
@@ -36,17 +37,23 @@ describe('Codex skill synchronization', () => {
     expect(fs.existsSync(path.join(summary.backup, 'embedded', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'debug-gdb-openocd', 'SKILL.md'))).toBe(true);
     for (const skill of CANONICAL_SKILLS) {
-      const installed = fs.readFileSync(path.join(target, skill.id, 'SKILL.md'), 'utf8');
-      const source = fs.readFileSync(path.join(__dirname, '..', skill.path, 'SKILL.md'), 'utf8');
-      expect(installed).toBe(source);
+      expect(fs.existsSync(path.join(target, skill.id, 'SKILL.md'))).toBe(true);
     }
+    expect(fs.existsSync(path.join(target, '_shared', 'bsp', 'bsp-architecture-contract.md'))).toBe(true);
+
+    const adapter = fs.readFileSync(path.join(target, 'bsp-adapter', 'SKILL.md'), 'utf8');
+    expect(adapter).toContain('../_shared/bsp/bsp-architecture-contract.md');
+    expect(adapter).toContain('../bsp-hal-driver/SKILL.md');
+
+    const links = validateSkillLinks({ root: target, boundaryRoot: target });
+    expect(links.findings).toEqual([]);
   });
 
   test('dry run reports the migration without creating a target directory', () => {
     const target = path.join(temporaryRoot, 'skills');
     const summary = syncCodexSkills({ target, dryRun: true });
-    expect(summary.total).toBe(23);
-    expect(summary.added).toBe(23);
+    expect(summary.total).toBe(25);
+    expect(summary.added).toBe(25);
     expect(fs.existsSync(target)).toBe(false);
   });
 

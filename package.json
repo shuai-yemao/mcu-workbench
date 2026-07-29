@@ -20,6 +20,8 @@
     "codex:register": "node scripts/register-codex-marketplace.js",
     "sync:codex": "node scripts/sync-codex-skills.js",
     "migrate:capabilities": "node scripts/materialize-skill-capabilities.js --check",
+    "validate:architecture": "node scripts/validate-architecture.js",
+    "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",
     "report:skills": "node scripts/report-skills.js"
   },

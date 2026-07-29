@@ -36,8 +36,7 @@ import argparse
 from datetime import datetime
 
 
-# 尝试映射到用户环境的工具路径
-OBSIDIAN_VAULT = "C:/Users/zhang/Documents/Obsidian Vault"
+# 从环境配置定位可选的知识库工具，不绑定本机用户目录
 SCRIPTS_DIR = os.path.join(
     os.environ.get('CHERRYSTUDIO_DATA', ''),
     'Skills', 'knowledge-base-search', 'scripts'

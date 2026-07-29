@@ -2,6 +2,7 @@
 name: embedded-ai-prompt-templates
 description: 嵌入式 C AI Prompt 模板集 — 逐函数生成、批量生成、重构、代码审查的标准 prompt 结构。当用户需要为嵌入式开发构造 AI prompt 时使用。
 version: "1.0.0"
+migration_status: compare-only
 ---
 
 # 嵌入式 AI Prompt 模板
