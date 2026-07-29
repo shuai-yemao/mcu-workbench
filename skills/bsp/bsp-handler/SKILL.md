@@ -5,7 +5,7 @@ description: Use when a BSP device requires instance registration, lifecycle man
 
 # BSP Handle
 
-先读取共享 [`BSP 架构专用契约`](../references/bsp-architecture-contract.md)。Handle 管理实例、缓存、队列、线程、事件与恢复；不重复器件协议，也不访问具体 Driver 成员。
+先读取共享 [`BSP 架构专用契约`](../references/bsp-architecture-contract.md)。Handler 管理设备生命周期、请求串行化、缓存、队列、线程、事件与恢复；不重复器件协议，也不访问具体 Driver 成员。跨设备共享总线互斥不属于 Handler，由 Core Bus 负责。
 
 ## 决策与设计产物
 
@@ -18,3 +18,4 @@ description: Use when a BSP device requires instance registration, lifecycle man
 模块级仅导出 Handle 构造与 Driver 注册函数；其余操作放在实例 `pf_*` 或 `static` 函数中。实例、缓存、事件和恢复证据见 [`handler-evidence.md`](references/handler-evidence.md)，样例见 [`capability-index.md`](references/capability-index.md)。
 
 板级注入交给 [`bsp-adapter`](../bsp-adapter/SKILL.md)，器件协议交给 [`bsp-hal-driver`](../bsp-hal-driver/SKILL.md)。
+共享温湿度案例见 [`bsp-aht21-case.md`](../references/bsp-aht21-case.md)。

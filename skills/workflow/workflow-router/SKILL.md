@@ -33,6 +33,7 @@ description: 为嵌入式请求选择一个最小主 skill，并明确必要的�
 | CMake/ESP-IDF 构建 | `tools-build` | `tools-linker` / `tools-quality` |
 | J-Link/OpenOCD 烧录或调试 | `tools-flash` 或 `tools-debug` | `tools-observability` |
 | RTT、SystemView、EasyLogger 日志 | `tools-observability` | `tools-debug` |
+| 传感器端到端分层改造 | `workflow-project-integration` | `core-mcu`、`bsp-hal-driver`、`bsp-handler`、`bsp-adapter`、`os-abstraction` |
 | AES/PSA Crypto、升级安全 | `software-system` | `tools-release` / `driver-vendor` |
 
 完整边界和源码证据图见 [`workflow-project-integration`](../workflow-project-integration/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-project-integration/references/software-architecture-knowledge-graph.md)。

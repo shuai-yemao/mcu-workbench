@@ -19,3 +19,5 @@ ELOG、RTT、串口和 SystemView 的完整移植、采集与脚本资料见 [`c
 ## 输出
 
 给出采集命令、通道配置、过滤规则、日志证据和丢包/溢出判断。需要根因定位时交接 [`tools-debug`](../tools-debug/SKILL.md)。
+
+固定源码的 EasyLogger/RTT 接线、锁风险与证据格式见 [`debugcomponent-rtt-case.md`](references/debugcomponent-rtt-case.md)。连接观测工具只证明通道可用，不能替代业务或实物验证。

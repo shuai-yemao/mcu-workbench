@@ -18,6 +18,10 @@ description: 设计嵌入式 APP 的 main、Manager、Task、Logic、UI 与 Prof
 
 APP 只能调用 OS Wrapper、BSP Wrapper 和 Middleware 公共 API。禁止直接调用 `xTask*`、厂商 HAL、BSP Port 或 `hal_driver`。
 
+## 设备服务边界
+
+项目未定义独立 Service Platform 时，设备服务暂由 APP 承接，并且只调用 BSP Wrapper。启动文件只编排服务初始化，不能调用 BSP Port 的测试入口。设备回调只发布拥有明确生命周期的快照或系统事件；UI 只能由其所有者任务消费事件后更新。
+
 ## 工作流
 
 1. 从 `main` 还原启动链和初始化顺序。

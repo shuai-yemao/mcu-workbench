@@ -11,6 +11,8 @@ description: 按项目锁定的 LVGL 版本完成 GUI 中间件集成、显示/�
 显示、触摸、按键、背光、DMA 与缓存通过 BSP Wrapper 提供；Tick、任务、锁和等待通过 OS Wrapper 提供。
 LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务规则仍由 `app-architecture` 负责。
 
+设备回调只发布拥有明确生命周期的快照或事件，不能直接操作 LVGL；UI 所有者任务在自己的上下文读取公共服务状态后刷新页面。
+
 ## 选择流程
 
 1. 从工程配置、头文件或构建日志确认 LVGL 版本；只能选择一个版本矩阵条目。

@@ -4,6 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
+const { collectMarkdownFiles, isExternalOrIgnored, localTarget, mapMarkdownLinks } = require('../lib/skill-links');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -37,6 +38,17 @@ function isInside(root, target) {
 
 function skillSource(skill) {
   return path.join(ROOT, skill.path);
+}
+
+function sharedReferencePlan(target) {
+  return fs.readdirSync(path.join(ROOT, 'skills'), { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => ({
+      layer: entry.name,
+      source: path.join(ROOT, 'skills', entry.name, 'references'),
+      destination: path.join(target, '_shared', entry.name)
+    }))
+    .filter((entry) => fs.existsSync(entry.source));
 }
 
 function buildPlan(target) {
@@ -85,6 +97,56 @@ function wait(milliseconds) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 }
 
+function materializedTarget(sourceTarget, target, sharedPlan) {
+  for (const skill of CANONICAL_SKILLS) {
+    const source = skillSource(skill);
+    if (sourceTarget === source || isInside(source, sourceTarget)) {
+      return path.join(target, skill.id, path.relative(source, sourceTarget));
+    }
+  }
+  for (const shared of sharedPlan) {
+    if (sourceTarget === shared.source || isInside(shared.source, sourceTarget)) {
+      return path.join(shared.destination, path.relative(shared.source, sourceTarget));
+    }
+  }
+  return null;
+}
+
+function rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPlan }) {
+  const content = fs.readFileSync(destinationFile, 'utf8');
+  const rewritten = mapMarkdownLinks(content, ({ target: link }) => {
+    if (isExternalOrIgnored(link)) return null;
+    const [pathPart, ...anchorParts] = link.split('#');
+    const normalized = localTarget(pathPart);
+    if (!normalized) return null;
+    const sourceTarget = path.resolve(path.dirname(sourceFile), normalized);
+    const destinationTarget = materializedTarget(sourceTarget, target, sharedPlan);
+    if (!destinationTarget) return null;
+    const relative = path.relative(path.dirname(destinationFile), destinationTarget)
+      .split(path.sep).join('/');
+    const anchor = anchorParts.length ? `#${anchorParts.join('#')}` : '';
+    return `${relative || '.'}${anchor}`;
+  });
+  if (rewritten !== content) fs.writeFileSync(destinationFile, rewritten, 'utf8');
+}
+
+function rewriteMaterializedLinks(target, sharedPlan = sharedReferencePlan(target)) {
+  for (const skill of CANONICAL_SKILLS) {
+    const sourceRoot = skillSource(skill);
+    const destinationRoot = path.join(target, skill.id);
+    for (const sourceFile of collectMarkdownFiles(sourceRoot)) {
+      const destinationFile = path.join(destinationRoot, path.relative(sourceRoot, sourceFile));
+      rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPlan });
+    }
+  }
+  for (const shared of sharedPlan) {
+    for (const sourceFile of collectMarkdownFiles(shared.source)) {
+      const destinationFile = path.join(shared.destination, path.relative(shared.source, sourceFile));
+      rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPlan });
+    }
+  }
+}
+
 function renameWithRetry(source, destination, { retries = 4, delayMs = 25 } = {}) {
   let lastError;
   for (let attempt = 0; attempt <= retries; attempt += 1) {
@@ -102,6 +164,7 @@ function renameWithRetry(source, destination, { retries = 4, delayMs = 25 } = {}
 
 function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
   const { target: resolvedTarget, plan } = buildPlan(target || path.join(os.homedir(), '.agents', 'skills'));
+  const sharedPlan = sharedReferencePlan(resolvedTarget);
   const changes = plan.filter((entry) => entry.existing || !fs.existsSync(entry.destination));
   const summary = {
     target: resolvedTarget,
@@ -110,6 +173,7 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
     added: plan.filter((entry) => !entry.existing).length,
     replaced: plan.filter((entry) => entry.existing).length,
     backup: null,
+    sharedReferences: sharedPlan.length,
     dryRun
   };
 
@@ -124,6 +188,11 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
     for (const entry of existing) {
       fs.cpSync(entry.existing, path.join(backup, path.basename(entry.existing)), { recursive: true });
     }
+    for (const shared of sharedPlan.filter((entry) => fs.existsSync(entry.destination))) {
+      const destination = path.join(backup, '_shared', shared.layer);
+      fs.mkdirSync(path.dirname(destination), { recursive: true });
+      fs.cpSync(shared.destination, destination, { recursive: true });
+    }
     summary.backup = backup;
   }
 
@@ -136,6 +205,13 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
     renameWithRetry(staging, entry.destination);
   }
 
+  for (const shared of sharedPlan) {
+    fs.mkdirSync(path.dirname(shared.destination), { recursive: true });
+    if (fs.existsSync(shared.destination)) fs.rmSync(shared.destination, { recursive: true, force: true });
+    fs.cpSync(shared.source, shared.destination, { recursive: true });
+  }
+  rewriteMaterializedLinks(resolvedTarget, sharedPlan);
+
   return summary;
 }
 
@@ -143,7 +219,8 @@ function formatSummary(summary) {
   const lines = [
     `Codex skills sync complete: ${summary.total}`,
     `Target: ${summary.target}`,
-    `Renamed: ${summary.renamed}, added: ${summary.added}, replaced: ${summary.replaced}`
+    `Renamed: ${summary.renamed}, added: ${summary.added}, replaced: ${summary.replaced}`,
+    `Shared references: ${summary.sharedReferences}`
   ];
   if (summary.backup) lines.push(`Backup: ${summary.backup}`);
   if (summary.dryRun) lines.push('Dry run; no files changed.');
@@ -164,4 +241,10 @@ if (require.main === module) {
   }
 }
 
-module.exports = { buildPlan, parseArgs, renameWithRetry, syncCodexSkills };
+module.exports = {
+  buildPlan,
+  parseArgs,
+  renameWithRetry,
+  rewriteMaterializedLinks,
+  syncCodexSkills
+};

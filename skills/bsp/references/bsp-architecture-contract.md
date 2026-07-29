@@ -5,13 +5,15 @@
 ## 链路与装配
 
 ```text
-APP / Middleware → BSP Wrapper → BSP Port
-
-BSP Port → Driver 构造 → Handle 构造 → Driver 注册
-Handle → Driver Ops → Driver 实例 pf_*
+APP / Middleware
+  → BSP Wrapper
+  → BSP Port
+  → BSP Handler
+  → BSP Driver
+  → Core Bus
 ```
 
-Wrapper 只包含并调用 Port 的公共接口。Port 负责把 Core、GPIO、总线、tick 和 OS 注入 Driver/Handle，并在注册和工作线程就绪后才向 Wrapper 暴露实例。
+Wrapper 只包含并调用 Port 的公共接口。Port 负责构造、注册和注入 Core Bus、OSAL、时基及 Driver Ops，并在 Handler 就绪后才向 Wrapper 暴露实例；Port 不调用 HAL、不实现软件 IIC，也不承载业务状态。Port 的装配方向可以同时指向 Driver 与 Handler，但运行时调用仍遵守上面的链路。
 
 ## Driver 契约
 
@@ -19,7 +21,7 @@ Driver 仅封装器件协议。模块级默认只导出 `bsp_xxx_driver_inst()`�
 
 | 能力 | 南向注入接口 | 使用条件 |
 |---|---|---|
-| SPI/IIC/UART | 总线读写 Ops | 器件通信 |
+| SPI/IIC/UART | 事务级总线读写 Ops | 器件通信；不暴露 START、STOP、ACK 或 SDA 位操作 |
 | tick/delay | timebase Ops | 超时、上电和复位时序 |
 | GPIO | GPIO Ops | CS、复位、背光或数据命令脚 |
 | IRQ/DMA | IRQ/DMA Ops | 中断通知或异步传输 |
@@ -29,7 +31,7 @@ Driver 仅封装器件协议。模块级默认只导出 `bsp_xxx_driver_inst()`�
 
 ## Handle 契约
 
-Handle 通过注册函数接收泛化的 Driver Ops，管理缓存、队列、线程、事件与回调。ISR 只使用 `FromISR` 注入接口投递事件；协议读写、解码和用户回调在任务上下文运行，回调位于锁和临界区外。停止采用“停止投递 → 唤醒 → 自然退出 → 回收”的协作式顺序。
+Handler 通过注册函数接收泛化的 Driver Ops，管理设备生命周期、单设备请求串行化、缓存、队列、线程、事件与回调。跨设备共享总线互斥由 Core Bus 实例负责。ISR 只使用 OSAL 的 ISR 安全接口投递事件；协议读写、解码和用户回调在任务上下文运行，回调位于锁和临界区外。停止采用“停止投递 → 唤醒 → 自然退出 → 回收”的协作式顺序。
 
 ## 验收证据
 
@@ -43,3 +45,5 @@ Handle 通过注册函数接收泛化的 Driver Ops，管理缓存、队列、�
 | 实物 | 观察结果；未完成时明确标记“未验证”及原因 |
 
 静态校验只能证明结构，不能替代下载、运行或实物确认。
+
+温湿度实例和固定源码差异见 [`bsp-aht21-case.md`](bsp-aht21-case.md)。

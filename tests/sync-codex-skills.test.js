@@ -3,6 +3,7 @@ const os = require('os');
 const path = require('path');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
 const { renameWithRetry, syncCodexSkills } = require('../scripts/sync-codex-skills');
+const { validateSkillLinks } = require('../lib/skill-links');
 
 describe('Codex skill synchronization', () => {
   let temporaryRoot;
@@ -36,10 +37,16 @@ describe('Codex skill synchronization', () => {
     expect(fs.existsSync(path.join(summary.backup, 'embedded', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'debug-gdb-openocd', 'SKILL.md'))).toBe(true);
     for (const skill of CANONICAL_SKILLS) {
-      const installed = fs.readFileSync(path.join(target, skill.id, 'SKILL.md'), 'utf8');
-      const source = fs.readFileSync(path.join(__dirname, '..', skill.path, 'SKILL.md'), 'utf8');
-      expect(installed).toBe(source);
+      expect(fs.existsSync(path.join(target, skill.id, 'SKILL.md'))).toBe(true);
     }
+    expect(fs.existsSync(path.join(target, '_shared', 'bsp', 'bsp-architecture-contract.md'))).toBe(true);
+
+    const adapter = fs.readFileSync(path.join(target, 'bsp-adapter', 'SKILL.md'), 'utf8');
+    expect(adapter).toContain('../_shared/bsp/bsp-architecture-contract.md');
+    expect(adapter).toContain('../bsp-hal-driver/SKILL.md');
+
+    const links = validateSkillLinks({ root: target, boundaryRoot: target });
+    expect(links.findings).toEqual([]);
   });
 
   test('dry run reports the migration without creating a target directory', () => {
