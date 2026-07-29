@@ -61,6 +61,13 @@ function runArchitectureValidation({ root, layout, expected } = {}) {
   return { result, comparison, sourceComparison, exitCode };
 }
 
+function normalizeValidationLayout(config) {
+  if (!config) return null;
+  const layout = config.layout || config;
+  const patterns = config.portDeviceProtocolPatterns || layout.portDeviceProtocolPatterns;
+  return patterns ? { ...layout, portDeviceProtocolPatterns: patterns } : layout;
+}
+
 function formatFinding(finding) {
   return `${finding.severity.toUpperCase()} ${finding.ruleId} ${finding.file}:${finding.line} ${finding.message}`;
 }
@@ -71,7 +78,7 @@ function main(argv = process.argv.slice(2)) {
   const expected = options.expect ? readJson(options.expect) : null;
   const outcome = runArchitectureValidation({
     root: options.root,
-    layout: config && (config.layout || config),
+    layout: normalizeValidationLayout(config),
     expected
   });
   if (options.json) console.log(JSON.stringify(outcome, null, 2));
@@ -108,6 +115,7 @@ module.exports = {
   formatFinding,
   main,
   parseArgs,
+  normalizeValidationLayout,
   readGitHead,
   runArchitectureValidation
 };

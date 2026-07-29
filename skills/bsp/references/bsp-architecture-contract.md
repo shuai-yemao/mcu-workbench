@@ -6,16 +6,19 @@
 
 ```text
 APP / Middleware
+  → APP Facade / Task Adapter（可选）
   → BSP Wrapper
-  → BSP Port
+  → BSP Port 回调
   → BSP Handler
   → BSP Driver
   → Core Bus
 ```
 
-Wrapper 只包含并调用 Port 的公共接口，并私有静态拥有 Driver、Handler 和生命周期状态。Port 负责向 Wrapper 提供的装配存储构造、注册和注入 Core Bus、OSAL、时基及 Driver Ops；完成后不得保留 Driver/Handler 引用。Port 的装配方向可以同时指向 Driver 与 Handler，但运行时调用仍遵守上面的链路。
+术语固定如下：`drv_adapter_*.c/.h` 是 BSP Wrapper（历史名 Adapter），`drv_adapter_port_*.c/.h` 是 BSP Port；`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，而不是 BSP Port。
 
-Port 是 BSP 中唯一可直接调用板级 HAL/LL 的层，但调用仅限 GPIO、时钟、DMA、NVIC、总线初始化/反初始化和时基绑定。Port 不得用 HAL 执行器件事务、放置器件协议或缓存状态，也不得实现软件 IIC/SPI 位时序；硬件/软件总线后端及共享锁属于 Core。生产 Port 和 Fake Port 使用同形装配函数表，Fake 注入 Fake Core Bus、时基和 OSAL，而非模拟 HAL。
+Wrapper 仅持有 `xxx_drv_t` 抽象函数表、注册槽位和稳定转发 API；它只包含标准类型和自身声明。Port 持有具体 Driver、Handler 与平台对象，完成 Core Bus、OSAL、时基及 Driver Ops 的装配后，将同形函数表注册到 Wrapper。Port 的装配方向可以同时指向 Driver 与 Handler，但运行时调用仍遵守上面的链路。
+
+Port 是 BSP 中唯一可直接调用板级 HAL/LL 的层，可提供通用的总线、GPIO、时基和 OSAL 资源创建回调。它不得放置设备命令、寄存器语义、协议状态机、软件 IIC/SPI 位时序或 Handler 业务缓存；硬件/软件总线后端及共享锁属于 Core。Port 可创建 Handler 所需任务、队列或同步资源，但任务入口、循环、重试、缓存和回调实现属于 Handler。生产 Port 和 Fake Port 使用同形函数表，Fake 注入 Fake Core Bus、时基和 OSAL。
 
 ## Driver 契约
 

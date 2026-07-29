@@ -4,6 +4,7 @@ const path = require('path');
 
 const {
   compareExpectedSource,
+  normalizeValidationLayout,
   parseArgs,
   runArchitectureValidation
 } = require('../scripts/validate-architecture');
@@ -53,6 +54,16 @@ describe('architecture validation CLI', () => {
       matches: false,
       expectedCommit: 'abcdef',
       actualCommit: null
+    });
+  });
+
+  test('keeps protocol patterns when config separates layout from semantic checks', () => {
+    expect(normalizeValidationLayout({
+      layout: { bspPort: ['^Board/Port/'] },
+      portDeviceProtocolPatterns: [{ id: 'sensor', pattern: 'SENSOR_CMD' }]
+    })).toEqual({
+      bspPort: ['^Board/Port/'],
+      portDeviceProtocolPatterns: [{ id: 'sensor', pattern: 'SENSOR_CMD' }]
     });
   });
 });

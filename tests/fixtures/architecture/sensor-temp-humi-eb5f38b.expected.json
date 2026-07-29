@@ -6,8 +6,8 @@
   },
   "summary": {
     "files": 84,
-    "errors": 48,
-    "warnings": 29
+    "errors": 45,
+    "warnings": 31
   },
   "findings": [
     {
@@ -263,8 +263,8 @@
       "line": 279
     },
     {
-      "ruleId": "BSP_PORT_DEVICE_PROTOCOL_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_BUS_OP",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 285
     },
@@ -275,8 +275,8 @@
       "line": 302
     },
     {
-      "ruleId": "BSP_PORT_DEVICE_PROTOCOL_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_BUS_OP",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 308
     },
@@ -287,25 +287,13 @@
       "line": 363
     },
     {
-      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
-      "severity": "error",
-      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
-      "line": 382
-    },
-    {
-      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
-      "severity": "error",
-      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
-      "line": 726
-    },
-    {
-      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
+      "ruleId": "BSP_PORT_DUPLICATE_DEVICE_CACHE",
       "severity": "error",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 727
     },
     {
-      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
+      "ruleId": "BSP_PORT_DUPLICATE_DEVICE_CACHE",
       "severity": "error",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 728
@@ -321,6 +309,12 @@
       "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 615
+    },
+    {
+      "ruleId": "WRAPPER_PLATFORM_DEPENDENCY",
+      "severity": "error",
+      "file": "Bsp/Wapper/drv_adapter_wapper_temp_humi/Src/drv_adapter_wapper_temp_humi.c",
+      "line": 31
     },
     {
       "ruleId": "CORE_PUBLIC_VENDOR_TYPE",

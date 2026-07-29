@@ -15,6 +15,8 @@ description: Use when implementing, refactoring, or reviewing a BSP device Drive
 4. 默认采用 `instance_only`：模块级仅 `bsp_xxx_driver_inst()`，其余函数为实例函数表或 `static`。兼容例外遵循 [`api-policy.md`](references/api-policy.md)。
 5. 用 Fake Bus/Timebase/GPIO 覆盖成功、超时、重试和回滚路径，并把板级四级证据写入契约规定的位置。
 
+Port 可长期持有具体 Driver 并把其北向回调注册到 Wrapper；这种所有权不允许 Port 复制设备协议、命令常量或状态机。
+
 ## 禁止项
 
 - 包含或调用 HAL、FreeRTOS、CMSIS-OS。

@@ -7,7 +7,7 @@ description: 定义 OSAL、OS Wrapper、OS Port 以及任务、队列、同步�
 
 ## 边界
 
-Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 以 `os_*_impl()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`osal_internal_*.h` 只是 Wrapper 与 Port 的内部边界，不构成第三层。Wrapper 不包含 RTOS 头文件，Port 不承载 BSP 设备协议、业务缓存或设备生命周期。
+Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 以 `os_*_impl()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`osal_internal_*.h` 只是 Wrapper 与 Port 的内部边界，不构成第三层。BSP Port 可使用公开 `osal_*` 创建并注入 Handler 所需资源，但任务入口、任务循环、缓存和设备生命周期逻辑仍归 Handler。
 
 ## 接口族
 
