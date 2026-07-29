@@ -8,6 +8,8 @@
 
 ## 迁移比对资料
 
+以下旧资料仅用于迁移比对。
+
 | 能力主题 | 使用边界 |
 | --- | --- |
 | 嵌入式代码学习与 Obsidian 笔记辅导 | [旧版 GUIDE](capabilities/workflow-learning-tutor/GUIDE.md)，仅用于迁移比对，不作为 active reference 读取。 |

@@ -23,6 +23,6 @@ description: Use when implementing, refactoring, or reviewing a BSP device Drive
 
 状态机、错误恢复和交接证据见 [`hal-driver-evidence.md`](references/hal-driver-evidence.md)；器件样例见 [`capability-index.md`](references/capability-index.md)。
 共享温湿度案例见 [`bsp-aht21-case.md`](../references/bsp-aht21-case.md)。
-跨 skill 通用错误模式与调试教训见 [`../common-error-patterns.md`](../common-error-patterns.md)。
+跨 skill 通用错误模式与调试教训见 [`../references/common-error-patterns.md`](../references/common-error-patterns.md)。
 
 交接：MCU 外设实现交给 [`core-mcu`](../../platform/core-mcu/SKILL.md)，厂商库交给 [`driver-vendor`](../../platform/driver-vendor/SKILL.md)，绑定交给 [`bsp-adapter`](../bsp-adapter/SKILL.md)。
