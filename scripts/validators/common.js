@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { validateMarkdownFileLinks } = require('../../lib/skill-links');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const NAME_PATTERN = /^[a-z][a-z0-9]*(?:-[a-z0-9]+){1,3}$/;
@@ -48,16 +49,13 @@ function findTextFiles(root) {
 }
 
 function validateLocalMarkdownLinks(skillFile, content, errors) {
-  const directory = path.dirname(skillFile);
-  const links = [...content.matchAll(/\]\(([^)]+)\)/g)].map((match) => match[1].trim());
-  for (const link of links) {
-    if (!link || link.startsWith('#') || /^(?:https?:|mailto:)/.test(link)) continue;
-    const target = link.split('#')[0];
-    if (!target || target.includes('$') || target.includes('{')) continue;
-    const resolved = path.resolve(directory, target.replace(/\\/g, '/'));
-    if (!resolved.startsWith(ROOT + path.sep) || !fs.existsSync(resolved)) {
-      errors.push(`${path.relative(ROOT, skillFile)}: 本地链接不存在或越界：${link}`);
-    }
+  void content;
+  for (const finding of validateMarkdownFileLinks({
+    filePath: skillFile,
+    displayRoot: ROOT,
+    boundaryRoot: ROOT
+  })) {
+    errors.push(`${finding.file}:${finding.line}: 本地链接不存在或越界：${finding.target}`);
   }
 }
 

@@ -17,18 +17,23 @@ describe('archived capability transfer into active skills', () => {
     expect(errors).toEqual([]);
     expect(entries).toHaveLength(80);
     expect(groups.get('workflow-project-integration').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
-      'workflow-architecture', 'workflow-code-porting', 'project-integration',
-      'embedded-ai-collab', 'embedded-ai-prompt-templates'
+      'workflow-architecture', 'workflow-code-porting', 'project-integration'
     ]));
     expect(groups.get('tools-quality').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
-      'embedded-ai-coding-standard', 'embedded-ai-code-review', 'quality-code-review'
+      'quality-code-review'
+    ]));
+    expect(groups.get('workflow-ai-collab').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
+      'embedded-ai-collab', 'embedded-ai-prompt-templates'
+    ]));
+    expect(groups.get('tools-ai-code-quality').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
+      'embedded-ai-coding-standard', 'embedded-ai-code-review'
     ]));
     expect(groups.get('tools-learning-tutor').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
       'workflow-devlog', 'workflow-learning-tutor'
     ]));
   });
 
-  test('stores every transferred source as an active capability reference', () => {
+  test('stores every transferred source as an indexed capability reference', () => {
     const result = materializeSkillCapabilities({ write: false });
     const { groups } = buildCapabilityMigrationPlan();
 
@@ -46,6 +51,10 @@ describe('archived capability transfer into active skills', () => {
       for (const entry of entries) {
         expect(fs.existsSync(path.join(entry.destination, 'GUIDE.md'))).toBe(true);
         expect(index).toContain(`capabilities/${entry.source.id}/GUIDE.md`);
+      }
+      if (['tools-learning-tutor', 'workflow-ai-collab', 'tools-ai-code-quality'].includes(targetId)) {
+        expect(index).toContain('迁移比对资料');
+        expect(index).toContain('不作为 active reference 读取');
       }
     }
   });

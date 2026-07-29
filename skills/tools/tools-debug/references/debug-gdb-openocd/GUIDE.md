@@ -29,9 +29,9 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/debug-playbook.md](references/debug-playbook.md) 中的决策树，判断应使用条件断点、普通断点还是 OpenOCD Telnet。
-2. 再阅读 [references/usage.md](references/usage.md)，确认本次是环境探测，还是执行调试会话。
-3. 若不确定环境是否就绪，先运行自带脚本 [scripts/gdb_debugger.py](scripts/gdb_debugger.py) 的 `--detect` 模式确认。
+1. 先阅读 [debug-playbook.md](../capabilities/debug-gdb-openocd/references/debug-playbook.md) 中的决策树，判断应使用条件断点、普通断点还是 OpenOCD Telnet。
+2. 再阅读 [usage.md](../capabilities/debug-gdb-openocd/references/usage.md)，确认本次是环境探测，还是执行调试会话。
+3. 若不确定环境是否就绪，先运行自带脚本 [gdb_debugger.py](../capabilities/debug-gdb-openocd/scripts/gdb_debugger.py) 的 `--detect` 模式确认。
 4. 根据用户意图选择调试模式：`download-and-halt`（默认）、`attach-only` 或 `crash-context`。
 5. 使用 `--elf` 指定符号文件，配合 `--interface` + `--target` 或 `--config` 启动调试。
 6. 读取脚本输出的调试结果，重点关注寄存器状态、回溯帧和 Fault 寄存器（crash-context 模式）。

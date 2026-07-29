@@ -6,6 +6,7 @@ effort: medium
 maxTurns: 24
 skills:
   - workflow-project-integration
+  - workflow-ai-collab
   - app-architecture
   - os-abstraction
   - core-mcu

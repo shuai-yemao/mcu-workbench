@@ -7,6 +7,8 @@ maxTurns: 32
 skills:
   - workflow-router
   - workflow-project-integration
+  - workflow-ai-collab
+  - tools-ai-code-quality
   - tools-learning-tutor
 ---
 

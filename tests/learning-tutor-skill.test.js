@@ -46,8 +46,12 @@ describe('tools-learning-tutor restored capability', () => {
     const coverage = read('coverage-checklist.md');
     const obsidian = read('obsidian-write-protocol.md');
     const session = read('session-state.md');
+    const capabilityIndex = read('capability-index.md');
 
-    expect(questions).toContain('11 节主流程');
+    expect(questions).toContain('栏目权威与提问原则');
+    expect(questions).toContain('用户指定的 Vault 模板优先');
+    expect(questions).toContain('单题循环');
+    expect(questions).not.toContain('11 节主流程');
     expect(skill).toContain('每轮只提出一个问题');
     expect(skill).toContain('不知道');
     expect(questions).toContain('3–6');
@@ -61,6 +65,8 @@ describe('tools-learning-tutor restored capability', () => {
     expect(obsidian).toContain('不覆盖原笔记');
     expect(session).toContain('weak_points');
     expect(session).toContain('next_question');
+    expect(capabilityIndex).toContain('迁移比对资料');
+    expect(capabilityIndex).toContain('不作为 active reference 读取');
   });
 
   test('plugin validator accepts the restored protocol', () => {

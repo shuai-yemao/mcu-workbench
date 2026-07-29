@@ -1,13 +1,13 @@
 # AHT21 Driver 工程参考
 
-来源：`BSP/AHT21/driver/Inc/bsp_aht21_driver.h` 与对应实现文件。
+来源：历史 `BSP/AHT21/driver/Inc/bsp_aht21_driver.h` 与对应实现文件。本页保留器件协议观察，接口设计以共享 BSP 契约为准。
 
 ## 抽象接口
 
 - 当前工程默认 `HARDWARE_IIC=0`，Driver 通过 `iic_driver_interface_t` 使用 `pf_init`、`pf_send_bytes`、`pf_receive_bytes` 和 `pf_read_status` 等软件 I2C 抽象。
 - `timebase_interface_t` 提供 tick 与毫秒延时；启用 RTOS 时，`yield_interface_t` 提供任务让出。
-- `irq_interface_t` 负责锁、解锁、关闭中断和开启中断。
-- `aht21_ops_t` 聚合 I2C、时基、RTOS 和中断依赖；`bsp_aht21_driver_t` 保存实例状态、依赖指针和 `pf_deinst`、`pf_init`、`pf_deinit`、`pf_read_id`、`pf_read_temp`、`pf_read_humidity`、`pf_sleep`、`pf_wakeup` 等操作。
+- 历史接口曾把锁和开关中断注入 Driver；新设计删除该依赖。共享总线互斥归 Core Bus，任务串行化归 Handler。
+- `aht21_ops_t` 只保留事务级 I2C、时基和可选 yield/trace；`bsp_aht21_driver_t` 保存实例状态、依赖指针和器件行为函数。
 
 ## 实例化关注点
 

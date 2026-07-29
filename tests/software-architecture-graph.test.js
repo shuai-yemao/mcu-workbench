@@ -38,5 +38,17 @@ describe('software layered architecture knowledge graph', () => {
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-core').to).toBe('skill-core-mcu');
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-driver').to).toBe('skill-driver-vendor');
     expect(graph.edges.find((edge) => edge.id === 'core-to-driver').relation).toBe('uses-native-api');
+    expect(graph.edges.find((edge) => edge.id === 'bsp-wrapper-to-port')).toEqual(
+      expect.objectContaining({ from: 'bsp-wrapper', to: 'bsp-port' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'bsp-port-to-handler')).toEqual(
+      expect.objectContaining({ from: 'bsp-port', to: 'bsp-handler-contract' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'bsp-handler-to-driver')).toEqual(
+      expect.objectContaining({ from: 'bsp-handler-contract', to: 'bsp-driver-contract' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'bsp-driver-to-core-bus')).toEqual(
+      expect.objectContaining({ from: 'bsp-driver-contract', to: 'core-bus' })
+    );
   });
 });

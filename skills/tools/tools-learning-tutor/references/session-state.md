@@ -9,14 +9,29 @@
   "evidence_files": [],
   "completed_sections": [],
   "current_section": "",
+  "template_source": "user-vault-template|skill-default",
   "confirmed_answers": [],
   "weak_points": [],
+  "misconceptions": [],
+  "mechanism_map": {
+    "trigger_source": "",
+    "participants": [],
+    "selection_conditions": [],
+    "data_or_context": [],
+    "result_consumers": [],
+    "boundaries": []
+  },
   "skipped_sections": [],
   "draft_path": null,
   "obsidian_confirmation": "pending|approved|rejected",
   "unverified_items": [],
-  "next_question": ""
+  "next_question": "",
+  "next_question_section": "",
+  "next_question_reason": "",
+  "question_trace": []
 }
 ```
+
+`question_trace` 的每项至少记录：对应笔记栏目、问题、用户原答、判断、修正后理解、证据和未验证项。`next_question_reason` 说明下一题要补的机制环节或笔记栏目，避免中断后退化为从头泛问。
 
 不要覆盖已有学习会话或笔记。开发日志和交接产物遵循 Agent 的时间戳协议；Obsidian 写入仍必须经过用户确认。

@@ -7,11 +7,11 @@ description: 定义 OSAL、OS Wrapper、OS Port 以及任务、队列、同步�
 
 ## 边界
 
-Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 提供 `os_impl_*` 实现并绑定 FreeRTOS、RT-Thread 或裸机。Wrapper 不包含 RTOS 头文件，Port 不承载业务逻辑。
+Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 以 `os_*_impl()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`osal_internal_*.h` 只是 Wrapper 与 Port 的内部边界，不构成第三层。Wrapper 不包含 RTOS 头文件，Port 不承载业务逻辑。
 
 ## 接口族
 
-任务、队列、信号量、互斥锁、事件、软件定时器、延时、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义。
+任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义。事件、Notify、取消等能力只有在当前 Port 已实现并经过测试时才可加入公共接口。
 
 ## 工作流
 
@@ -27,3 +27,4 @@ Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 提供 `o
 不在 OSAL 中放 BSP 设备协议，不让 APP 或 Middleware 绕过 Wrapper 调用原生 RTOS。
 
 共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。
+固定源码映射案例见 [`osal-freertos-case.md`](references/osal-freertos-case.md)。

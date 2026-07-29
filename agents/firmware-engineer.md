@@ -6,6 +6,8 @@ effort: medium
 maxTurns: 40
 skills:
   - app-architecture
+  - workflow-ai-collab
+  - tools-ai-code-quality
   - os-abstraction
   - rtos-freertos
   - bsp-adapter

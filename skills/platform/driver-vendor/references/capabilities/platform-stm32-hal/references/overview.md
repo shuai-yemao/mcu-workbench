@@ -63,7 +63,7 @@ Hardware Registers
 
 | 文档 | 用途 | 何时阅读 |
 |------|------|---------|
-| **[SKILL.md](../SKILL.md)** | 触发描述、核心工作流 | ⭐ 先读 |
+| **[GUIDE.md](../GUIDE.md)** | 触发描述、核心工作流 | ⭐ 先读 |
 | **[core-guidelines.md](core-guidelines.md)** | 核心原则、最佳实践 | 编写 HAL 代码前 |
 | **[peripheral-driver-guide.md](peripheral-driver-guide.md)** | 外设驱动开发指南（实战经验） | 开发 I2C/SPI/UART 传感器驱动时 |
 | **[hal-quick-reference.md](hal-quick-reference.md)** | HAL 函数速查表 | 忘记函数签名时查阅 |
