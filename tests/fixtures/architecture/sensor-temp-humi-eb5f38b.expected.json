@@ -6,8 +6,8 @@
   },
   "summary": {
     "files": 84,
-    "errors": 49,
-    "warnings": 24
+    "errors": 48,
+    "warnings": 29
   },
   "findings": [
     {
@@ -113,14 +113,14 @@
       "line": 302
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 63
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 164
     },
@@ -215,14 +215,14 @@
       "line": 204
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 243
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 254
     },
@@ -263,7 +263,7 @@
       "line": 279
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
+      "ruleId": "BSP_PORT_DEVICE_PROTOCOL_CALL",
       "severity": "error",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 285
@@ -275,16 +275,40 @@
       "line": 302
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
+      "ruleId": "BSP_PORT_DEVICE_PROTOCOL_CALL",
       "severity": "error",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 308
     },
     {
-      "ruleId": "BSP_PORT_VENDOR_CALL",
-      "severity": "error",
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
       "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
       "line": 363
+    },
+    {
+      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 382
+    },
+    {
+      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 726
+    },
+    {
+      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 727
+    },
+    {
+      "ruleId": "BSP_PORT_PERSISTENT_DEVICE_INSTANCE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 728
     },
     {
       "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",

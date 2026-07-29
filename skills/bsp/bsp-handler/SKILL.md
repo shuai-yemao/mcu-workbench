@@ -10,7 +10,7 @@ description: Use when a BSP device requires instance registration, lifecycle man
 ## 决策与设计产物
 
 - 同步、短且无缓存的操作不创建线程；缓存、长耗时写入、DMA/IRQ、多实例或异步回调才使用队列/线程。
-- 定义 `xxx_handler_driver_ops_t`，由公开注册函数接收 Driver；Handle 只调用泛化 Ops。
+- 定义 `xxx_handler_driver_ops_t`，由公开注册函数接收 Driver；Handler 只调用泛化 Ops，实例存储由 Wrapper 持有、Port 装配，Port 不得保留 Handler/Driver 引用。
 - 在设计记录中写明：队列消息类型、超时单位、线程入口、回调上下文、缓存与指针生命周期。
 - ISR 仅调用 `FromISR` 注入接口投递事件；协议读写、解码和回调在任务上下文完成，回调位于锁/临界区外。
 - 停止顺序固定为：停止投递 → 唤醒线程 → 自然退出 → 回收线程/队列/锁。默认禁止强制删除线程。

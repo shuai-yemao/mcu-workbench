@@ -13,7 +13,9 @@ APP / Middleware
   → Core Bus
 ```
 
-Wrapper 只包含并调用 Port 的公共接口。Port 负责构造、注册和注入 Core Bus、OSAL、时基及 Driver Ops，并在 Handler 就绪后才向 Wrapper 暴露实例；Port 不调用 HAL、不实现软件 IIC，也不承载业务状态。Port 的装配方向可以同时指向 Driver 与 Handler，但运行时调用仍遵守上面的链路。
+Wrapper 只包含并调用 Port 的公共接口，并私有静态拥有 Driver、Handler 和生命周期状态。Port 负责向 Wrapper 提供的装配存储构造、注册和注入 Core Bus、OSAL、时基及 Driver Ops；完成后不得保留 Driver/Handler 引用。Port 的装配方向可以同时指向 Driver 与 Handler，但运行时调用仍遵守上面的链路。
+
+Port 是 BSP 中唯一可直接调用板级 HAL/LL 的层，但调用仅限 GPIO、时钟、DMA、NVIC、总线初始化/反初始化和时基绑定。Port 不得用 HAL 执行器件事务、放置器件协议或缓存状态，也不得实现软件 IIC/SPI 位时序；硬件/软件总线后端及共享锁属于 Core。生产 Port 和 Fake Port 使用同形装配函数表，Fake 注入 Fake Core Bus、时基和 OSAL，而非模拟 HAL。
 
 ## Driver 契约
 

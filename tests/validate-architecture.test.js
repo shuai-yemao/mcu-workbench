@@ -27,7 +27,7 @@ describe('validateArchitectureContract', () => {
     'Core/Port/core_i2c_hw.c': 'int core_i2c_hw_write(void) { return HAL_I2C_Master_Transmit(0, 0, 0, 0, 1); }',
     'Bsp/Driver/sensor_driver.c': '#include "core_i2c.h"\nint sensor_read(void) { return core_i2c_write(0, 0, 10); }',
     'Bsp/Handler/sensor_handler.c': 'int sensor_request(void) { return osal_queue_send(0, 0, 10); }',
-    'Bsp/Port/sensor_port.c': 'int sensor_port_init(void) { return 0; }',
+    'Bsp/Port/sensor_port.c': 'int sensor_port_init(void) { return HAL_I2C_Init(0); }',
     'Bsp/Wrapper/sensor.h': 'int sensor_read_latest(void *value);',
     'Middlewares/os_adapter/shared/src/osal_task.c': 'int osal_task_create(void) { return os_task_create_impl(); }',
     'Middlewares/os_adapter/FreeRTOS/src/os_impl_task.c': 'int os_task_create_impl(void) { return xTaskCreate(0, 0, 0, 0, 0, 0); }'
@@ -36,10 +36,10 @@ describe('validateArchitectureContract', () => {
 
     expect(result).toEqual({
       root: path.resolve(root),
-      summary: { files: 8, errors: 0, warnings: 0 },
+      summary: { files: 8, errors: 0, warnings: 1 },
       errors: [],
-      warnings: [],
-      findings: []
+      warnings: [expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })],
+      findings: [expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })]
     });
   }));
 
@@ -55,7 +55,9 @@ describe('validateArchitectureContract', () => {
       'int i2c_soft_start(void) { return 0; }'
     ].join('\n'),
     'Bsp/Port/sensor_port.c': [
+      'static sensor_driver_t s_driver;',
       'int sensor_port_init(void) { return HAL_I2C_Init(0); }',
+      'int sensor_port_read(void) { return HAL_I2C_Master_Receive(0, 0, 0, 0, 1); }',
       'int sensor_port_start(void) { return i2c_soft_start(0); }'
     ].join('\n'),
     'Bsp/Wrapper/sensor.h': 'typedef struct sensor_driver_t sensor_driver_t;',
@@ -68,6 +70,7 @@ describe('validateArchitectureContract', () => {
   }, (root) => {
     const result = validateArchitectureContract({ root });
     const ruleIds = result.errors.map((finding) => finding.ruleId);
+    const warningRuleIds = result.warnings.map((finding) => finding.ruleId);
 
     expect(ruleIds).toEqual(expect.arrayContaining([
       'CORE_PUBLIC_VENDOR_TYPE',
@@ -76,8 +79,9 @@ describe('validateArchitectureContract', () => {
       'BSP_NATIVE_RTOS',
       'BSP_VENDOR_CALL',
       'BSP_SOFT_I2C_BACKEND',
-      'BSP_PORT_VENDOR_CALL',
+      'BSP_PORT_DEVICE_PROTOCOL_CALL',
       'BSP_PORT_SOFT_I2C_PRIMITIVE',
+      'BSP_PORT_PERSISTENT_DEVICE_INSTANCE',
       'WRAPPER_CONCRETE_TYPE',
       'APP_VENDOR_CALL',
       'MIDDLEWARE_VENDOR_CALL',
@@ -85,6 +89,7 @@ describe('validateArchitectureContract', () => {
       'OS_WRAPPER_NATIVE_RTOS',
       'OS_IMPL_NAMING'
     ]));
+    expect(warningRuleIds).toContain('BSP_PORT_VENDOR_CONFIG_CALL');
     expect(result.findings).toEqual([...result.findings].sort((left, right) => (
       left.file.localeCompare(right.file) || left.line - right.line || left.ruleId.localeCompare(right.ruleId)
     )));
@@ -143,8 +148,8 @@ describe('validateArchitectureContract', () => {
       }
     });
 
-    expect(result.errors).toEqual([
-      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CALL' })
+    expect(result.warnings).toEqual([
+      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })
     ]);
   }));
 
@@ -152,10 +157,72 @@ describe('validateArchitectureContract', () => {
     'Bsp/Port/sensor_port.c': 'int init(void) { return HAL_I2C_Init(0); }'
   }, (root) => {
     const result = validateArchitectureContract({ root, layout: null });
-    expect(result.errors).toEqual([
-      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CALL' })
+    expect(result.warnings).toEqual([
+      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })
     ]);
   }));
+
+  test('allows Port HAL configuration but rejects protocol transactions, bit timing, and persistent device instances', () => withFixture({
+    'Bsp/Port/sensor_port.c': [
+      'static sensor_driver_t s_driver;',
+      'static float s_latest_temperature;',
+      'int init(void) { return HAL_GPIO_Init(0, 0); }',
+      'int read(void) { return HAL_I2C_Master_Transmit(0, 0, 0, 0, 1); }',
+      'int start(void) { return i2c_soft_start(0); }'
+    ].join('\n')
+  }, (root) => {
+    const result = validateArchitectureContract({ root });
+
+    expect(result.errors.map((finding) => finding.ruleId)).toEqual(expect.arrayContaining([
+      'BSP_PORT_DEVICE_PROTOCOL_CALL',
+      'BSP_PORT_SOFT_I2C_PRIMITIVE',
+      'BSP_PORT_PERSISTENT_DEVICE_INSTANCE'
+    ]));
+    expect(result.warnings).toEqual([
+      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL', line: 3 })
+    ]);
+  }));
+
+  test('keeps production and Fake Port assembly contracts interchangeable for one Wrapper', () => {
+    const portContract = 'int sensor_port_bind(sensor_assembly_t *assembly);';
+    const productionPort = [
+      '#include "sensor_port.h"',
+      portContract,
+      'int sensor_port_bind(sensor_assembly_t *assembly) {',
+      '  HAL_GPIO_Init(0, 0);',
+      '  return core_i2c_bind(assembly->bus);',
+      '}'
+    ].join('\n');
+    const fakePort = [
+      '#include "sensor_port.h"',
+      portContract,
+      'int sensor_port_bind(sensor_assembly_t *assembly) {',
+      '  return fake_i2c_bind(assembly->bus);',
+      '}'
+    ].join('\n');
+
+    expect(productionPort).toContain(portContract);
+    expect(fakePort).toContain(portContract);
+    return withFixture({
+      'Bsp/Port/production/sensor_port.c': productionPort,
+      'Bsp/Port/fake/sensor_port.c': fakePort,
+      'Bsp/Wrapper/sensor_wrapper.c': [
+        '#include "sensor_port.h"',
+        'int sensor_wrapper_init(sensor_assembly_t *assembly) {',
+        '  return sensor_port_bind(assembly);',
+        '}'
+      ].join('\n')
+    }, (root) => {
+      const result = validateArchitectureContract({ root });
+      expect(result.errors).toEqual([]);
+      expect(result.warnings).toEqual([
+        expect.objectContaining({
+          file: 'Bsp/Port/production/sensor_port.c',
+          ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL'
+        })
+      ]);
+    });
+  });
 
   test('compares a reviewed finding manifest exactly by rule, severity, file, and line', () => {
     const findings = [{

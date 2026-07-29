@@ -10,7 +10,7 @@ description: Use when implementing, refactoring, or reviewing a BSP device Drive
 ## 固定流程
 
 1. 创建 `bsp_xxx_config.h`，集中地址、时序、能力开关和编译期限制；板级句柄不放入配置头。
-2. 写出南北向接口表：北向为实例 `pf_*`；南向注入事务级总线、tick/delay、GPIO、IRQ、DMA、yield、trace。不得注入 START、STOP、ACK、SDA 方向或临界区等软件 IIC 细节。
+2. 写出南北向接口表：北向为实例 `pf_*`；南向注入事务级总线、tick/delay、GPIO、IRQ、DMA、yield、trace。事务级 Bus Ops 至少说明 read/write/memory read/memory write 的地址、长度、超时单位和错误码；不得注入 START、STOP、ACK、send-byte、SDA 方向或临界区等软件 IIC 细节。
 3. 定义实例状态：`is_inited`、注入 Ops、私有上下文和 `pf_*`；初始化失败回滚，反初始化可重复。
 4. 默认采用 `instance_only`：模块级仅 `bsp_xxx_driver_inst()`，其余函数为实例函数表或 `static`。兼容例外遵循 [`api-policy.md`](references/api-policy.md)。
 5. 用 Fake Bus/Timebase/GPIO 覆盖成功、超时、重试和回滚路径，并把板级四级证据写入契约规定的位置。
