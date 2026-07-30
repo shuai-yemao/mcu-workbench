@@ -56,6 +56,15 @@ describe('embedded architecture skill contracts', () => {
     expect(validator).not.toMatch(/AHT21|bsp_gpio_iic|drv_adapter_temphumi/);
   });
 
+  test('requires file-level delivery tables and evidence handoff', () => {
+    const integration = read('skills/workflow/workflow-project-integration/SKILL.md');
+    expect(integration).toContain('现状表');
+    expect(integration).toContain('边界表');
+    expect(integration).toContain('文件修改表');
+    expect(integration).toContain('验收表');
+    expect(integration).toContain('运行记录');
+  });
+
   test('keeps active capability guides aligned with the canonical contracts', () => {
     const adapterGuide = read(
       'skills/bsp/bsp-adapter/references/capabilities/bsp-platform-adapter/GUIDE.md'
