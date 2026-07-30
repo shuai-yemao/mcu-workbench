@@ -115,6 +115,7 @@ bin/mcu-workbench.js
   → lib/cli.js
   → index.js 兼容 API / commands
   → commands/mcu-new.js
+  → commands/mcu-core.js
   → commands/mcu-driver.js
   → commands/mcu-build.js
   → commands/mcu-flash.js
@@ -131,7 +132,8 @@ bin/mcu-workbench.js
 ### 当前真实行为
 
 - `mcu-new` 会写入项目骨架和 CMakeLists；
-- `mcu-driver` 会读取模板并返回生成文件内容；
+- `core` 返回一类 MCU Core 外设的固定 `.c/.h` 生成内容；
+- `driver` 返回固定 Driver/Handle/Port/Wrapper 切片，不接触既有 `System/**`；
 - `build` 和 `flash` 默认生成计划，传入 `--execute` 才运行外部命令；
 - `mcu-debug` 主要拼接 OpenOCD/GDB 命令；
 - Node CLI 没有通过 `.claude-plugin/plugin.json` 作为 Claude Code command 加载，而是通过 npm `bin` 独立安装。

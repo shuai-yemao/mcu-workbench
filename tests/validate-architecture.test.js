@@ -36,10 +36,10 @@ describe('validateArchitectureContract', () => {
 
     expect(result).toEqual({
       root: path.resolve(root),
-      summary: { files: 8, errors: 0, warnings: 1 },
-      errors: [],
-      warnings: [expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })],
-      findings: [expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })]
+      summary: { files: 8, errors: 1, warnings: 0 },
+      errors: [expect.objectContaining({ ruleId: 'BSP_PORT_HAL_CALL' })],
+      warnings: [],
+      findings: [expect.objectContaining({ ruleId: 'BSP_PORT_HAL_CALL' })]
     });
   }));
 
@@ -70,7 +70,6 @@ describe('validateArchitectureContract', () => {
   }, (root) => {
     const result = validateArchitectureContract({ root });
     const ruleIds = result.errors.map((finding) => finding.ruleId);
-    const warningRuleIds = result.warnings.map((finding) => finding.ruleId);
 
     expect(ruleIds).toEqual(expect.arrayContaining([
       'CORE_PUBLIC_VENDOR_TYPE',
@@ -80,16 +79,13 @@ describe('validateArchitectureContract', () => {
       'BSP_VENDOR_CALL',
       'BSP_SOFT_I2C_BACKEND',
       'BSP_PORT_SOFT_I2C_PRIMITIVE',
+      'BSP_PORT_HAL_CALL',
       'WRAPPER_CONCRETE_TYPE',
       'APP_VENDOR_CALL',
       'MIDDLEWARE_VENDOR_CALL',
       'MIDDLEWARE_NATIVE_RTOS',
       'OS_WRAPPER_NATIVE_RTOS',
       'OS_IMPL_NAMING'
-    ]));
-    expect(warningRuleIds).toEqual(expect.arrayContaining([
-      'BSP_PORT_VENDOR_CONFIG_CALL',
-      'BSP_PORT_VENDOR_BUS_OP'
     ]));
     expect(result.findings).toEqual([...result.findings].sort((left, right) => (
       left.file.localeCompare(right.file) || left.line - right.line || left.ruleId.localeCompare(right.ruleId)
@@ -149,8 +145,8 @@ describe('validateArchitectureContract', () => {
       }
     });
 
-    expect(result.warnings).toEqual([
-      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })
+    expect(result.errors).toEqual([
+      expect.objectContaining({ ruleId: 'BSP_PORT_HAL_CALL' })
     ]);
   }));
 
@@ -158,8 +154,8 @@ describe('validateArchitectureContract', () => {
     'Bsp/Port/sensor_port.c': 'int init(void) { return HAL_I2C_Init(0); }'
   }, (root) => {
     const result = validateArchitectureContract({ root, layout: null });
-    expect(result.warnings).toEqual([
-      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL' })
+    expect(result.errors).toEqual([
+      expect.objectContaining({ ruleId: 'BSP_PORT_HAL_CALL' })
     ]);
   }));
 
@@ -176,11 +172,8 @@ describe('validateArchitectureContract', () => {
 
     expect(result.errors.map((finding) => finding.ruleId)).toEqual(expect.arrayContaining([
       'BSP_PORT_SOFT_I2C_PRIMITIVE',
-      'BSP_PORT_DUPLICATE_DEVICE_CACHE'
-    ]));
-    expect(result.warnings).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL', line: 3 }),
-      expect.objectContaining({ ruleId: 'BSP_PORT_VENDOR_BUS_OP', line: 4 })
+      'BSP_PORT_DUPLICATE_DEVICE_CACHE',
+      'BSP_PORT_HAL_CALL'
     ]));
   }));
 
@@ -222,13 +215,13 @@ describe('validateArchitectureContract', () => {
       ].join('\n')
     }, (root) => {
       const result = validateArchitectureContract({ root });
-      expect(result.errors).toEqual([]);
-      expect(result.warnings).toEqual([
+      expect(result.errors).toEqual([
         expect.objectContaining({
           file: 'Bsp/Port/production/sensor_port.c',
-          ruleId: 'BSP_PORT_VENDOR_CONFIG_CALL'
+          ruleId: 'BSP_PORT_HAL_CALL'
         })
       ]);
+      expect(result.warnings).toEqual([]);
     });
   });
 

@@ -15,7 +15,11 @@ Core 只面向 MCU 内置资源，负责时钟、引脚、外设实例、中断/
 
 ## IIC 后端边界
 
-Core IIC 公共接口提供初始化、释放、read/write、memory read/write、可选 DMA、状态码和带明确单位的超时。Core 拥有 `iic_bus_ops_t`、共享总线锁和硬件/软件后端；Port 可持有平台对象、选择后端并提供通用 HAL 回调，但不能包含器件协议或把自身变成软件时序后端。START、STOP、ACK、逐字节发送、SDA 方向和位时序只属于软件后端私有实现。
+Core IIC 公共接口提供初始化、释放、事务 read/write、memory read/write、可选 DMA/IRQ 启动、取消、状态码和带明确单位的超时；它不是只有读写函数的薄封装。Core 只拥有 `iic_bus_ops_t` 与硬件/软件后端，不拥有锁、任务、业务缓存或设备协议；锁与回调上下文属于 Handle。Port 可持有平台对象并选择后端，但不能包含器件协议或把自身变成软件时序后端。START、STOP、ACK、逐字节发送、SDA 方向和位时序只属于软件后端私有实现。
+
+## 生成契约
+
+`mcu-workbench core --peripheral <name>` 每类外设只生成 `Core/Inc/core_<name>.h` 和 `Core/Src/core_<name>.c`。`iic` 仅是 CLI 输入别名，统一归一化为 `i2c`；公开文件名、API 和文档只能使用 `i2c`。公共头不包含 HAL、FreeRTOS、CMSIS-OS 或厂商类型；使用 `void *backend_context` 隔离平台上下文。
 
 公共头不得暴露 `I2C_HandleTypeDef`、`GPIO_TypeDef`、RTOS 句柄或其他厂商类型。跨设备共享总线互斥由 Core 总线实例负责，但只可调用公开 `osal_mutex_*` 或注入的 lock/unlock Ops，不得调用原生 RTOS API。历史上位于 BSP 的 GPIO 模拟 IIC 应迁移为 Core Software IIC 后端。
 

@@ -12,14 +12,13 @@ describe('Integration Tests', () => {
     expect(projectResult.success).toBe(true);
 
     const driverResult = await generateDriver({
-      peripheral: 'oled',
-      platform: 'stm32f4'
+      deviceType: 'externflash', device: 'W25Q64', core: ['spi'], platform: 'stm32f4'
     });
 
     expect(driverResult.success).toBe(true);
     expect(driverResult.files.length).toBeGreaterThan(0);
 
-    const headerFile = driverResult.files.find(f => f.path.includes('bsp_oled_driver.h'));
-    expect(headerFile.content).toContain('oled_operations_t');
+    const headerFile = driverResult.files.find(f => f.path.includes('bsp_w25q64_driver.h'));
+    expect(headerFile.content).toContain('bsp_w25q64_driver_inst');
   });
 });

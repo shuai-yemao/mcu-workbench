@@ -93,7 +93,8 @@ tools-release
 | Command | 实现位置 | 当前行为 |
 |---|---|---|
 | `mcu-new` | `commands/mcu-new.js` | 创建 App/BSP/System/Core/CMake 项目骨架 |
-| `mcu-driver` | `commands/mcu-driver.js` | 根据外设和平台生成 BSP 驱动及 System Adapter 文件；`--write` 时落盘 |
+| `core` | `commands/mcu-core.js` | 根据平台生成一类 Core 外设的一对 `.c/.h`；`iic` 归一化为 `i2c` |
+| `driver` | `commands/mcu-driver.js` | 根据设备类别、设备、Core 和平台生成 Driver/Handle/Port/Wrapper；不生成 `System/**` |
 | `build` / `mcu-build` | `commands/mcu-build.js` | 默认生成构建计划；`--execute` 时执行 |
 | `flash` / `mcu-flash` | `commands/mcu-flash.js` | 默认生成烧录计划；`--execute` 时执行 |
 | `mcu-debug` | `commands/mcu-debug.js` | 生成 OpenOCD/GDB 命令，不启动真实会话 |

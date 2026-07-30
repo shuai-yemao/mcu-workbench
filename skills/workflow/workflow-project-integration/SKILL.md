@@ -20,6 +20,8 @@ description: 依据项目证据设计软件分层、审计工程集成关系并�
 
 每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与门禁，不代替下游实现。
 
+固件分层交付作为本 Skill 的模式 C：基线、Tools 观测通道、最小系统、OS Adapter、Core、BSP Driver/Handle、Port、Wrapper、集成回归。它扩展模式 A 的审计证据并可映射模式 B 的路线图，但不将 UART 日志定义为软件层，也不在本 Skill 中实现任何一层代码。
+
 ## 分层证据图
 
 先读取 [`software-architecture-knowledge-graph.md`](references/software-architecture-knowledge-graph.md) 和对应 JSON，再按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序审计。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。

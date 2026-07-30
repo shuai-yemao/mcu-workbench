@@ -18,12 +18,16 @@ function getPublicDefinitions(content) {
 function validateHandler(options, errors) {
   const header = readFile(options.handlerHeader);
   const source = readFile(options.handlerSource);
-  if (!/\b[a-zA-Z0-9_]+_handler_driver_ops_t\b/.test(header)) {
-    errors.push('Handler header must declare a handler_driver_ops_t interface.');
+  if (!/\b[a-zA-Z0-9_]+_(?:handler|handle)_driver_ops_t\b/.test(header)) {
+    errors.push('Handle header must declare a handler_driver_ops_t or handle_driver_ops_t interface.');
   }
   if (!/\bis_inited\b/.test(header)) errors.push('Handler header must declare is_inited.');
   if (/^\s*#\s*include\s*[<"][^>"]*driver\.h[>"]/im.test(source)) {
     errors.push('Handler must not include a concrete Driver header.');
+  }
+  const notify = source.match(/\b[a-zA-Z0-9_]+_notify_from_isr\s*\([^)]*\)\s*\{([\s\S]*?)\n\}/);
+  if (notify && (/event_callback|\bcallback\s*\(/.test(notify[1]) || !/event_pending|from_isr/i.test(notify[1]))) {
+    errors.push('Handle ISR notification must defer work without invoking the callback.');
   }
   if (/_ISR\b/.test(source) && !/FromISR/.test(source)) {
     errors.push('Handler ISR entry points must use a FromISR deferral interface.');
@@ -34,9 +38,14 @@ function validateAdapter(options, errors) {
   const port = readFile(options.portSource);
   const wrapper = readFile(options.wrapperSource);
   if (port) {
-    if (!/_driver_inst\s*\(/.test(port)) errors.push('Port must construct the Driver.');
-    if (!/_handle_inst\s*\(/.test(port)) errors.push('Port must construct the Handle.');
-    if (!/_register_driver\s*\(/.test(port)) errors.push('Port must register Driver Ops.');
+    const publicDefinitions = [...port.matchAll(/^(?!\s*static\b)\s*[A-Za-z_]\w*[\w\s*]*\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{/gm)].map((match) => match[1]);
+    if (publicDefinitions.length !== 1 || !/^drv_adapter_port_[a-z0-9_]+_register$/.test(publicDefinitions[0] || '')) {
+      errors.push('Port must export exactly one drv_adapter_port_<type>_register function.');
+    }
+    const staticFunctions = [...port.matchAll(/static[\s\S]*?\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{([\s\S]*?)\n\}/g)];
+    if (staticFunctions.some((match) => /\b(?:bsp_[a-z0-9_]+_driver|core_[a-z0-9_]+)\b/i.test(match[2]))) {
+      errors.push('Port runtime functions must call Handle APIs only.');
+    }
   }
   if (wrapper && /#\s*include\s*[<"][^>"]*(?:driver|handle|hal|freertos|cmsis_os|stm32)[^>"]*[>"]/i.test(wrapper)) {
     errors.push('Wrapper must not include Driver, Handle, HAL, or RTOS headers.');

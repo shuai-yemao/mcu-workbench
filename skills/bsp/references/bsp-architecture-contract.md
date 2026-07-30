@@ -18,7 +18,7 @@ APP / Middleware
 
 Wrapper 仅持有 `xxx_drv_t` 抽象函数表、注册槽位和稳定转发 API；它只包含标准类型和自身声明。Port 持有具体 Driver、Handler 与平台对象，完成 Core Bus、OSAL、时基及 Driver Ops 的装配后，将同形函数表注册到 Wrapper。Port 的装配方向可以同时指向 Driver 与 Handler，但运行时调用仍遵守上面的链路。
 
-Port 是 BSP 中唯一可直接调用板级 HAL/LL 的层，可提供通用的总线、GPIO、时基和 OSAL 资源创建回调。它不得放置设备命令、寄存器语义、协议状态机、软件 IIC/SPI 位时序或 Handler 业务缓存；硬件/软件总线后端及共享锁属于 Core。Port 可创建 Handler 所需任务、队列或同步资源，但任务入口、循环、重试、缓存和回调实现属于 Handler。生产 Port 和 Fake Port 使用同形函数表，Fake 注入 Fake Core Bus、时基和 OSAL。
+Port 完成实例装配而不在生成运行时路径直接调用板级 HAL/LL；通用总线、GPIO、时基和 OSAL 资源通过 Core 后端或注入 Ops 提供。它不得放置设备命令、寄存器语义、协议状态机、软件 IIC/SPI 位时序或 Handler 业务缓存；硬件/软件总线后端及共享锁属于 Core。Port 可创建 Handler 所需任务、队列或同步资源，但任务入口、循环、重试、缓存和回调实现属于 Handler。生产 Port 和 Fake Port 使用同形函数表，Fake 注入 Fake Core Bus、时基和 OSAL。
 
 ## Driver 契约
 

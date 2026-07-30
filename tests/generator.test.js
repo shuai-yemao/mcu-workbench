@@ -1,27 +1,51 @@
-const { generateBspDriver, generateSystemAdapter } = require('../lib/generator');
+const {
+  generateBspDriver,
+  generateCorePeripheral,
+  normalizeCoreList
+} = require('../lib/generator');
 
 describe('Generator Module', () => {
-  test('generateBspDriver returns driver files for oled', async () => {
-    const files = await generateBspDriver('oled', 'stm32f4');
-    expect(Array.isArray(files)).toBe(true);
-    expect(files.length).toBeGreaterThan(0);
-
-    const headerFile = files.find(f => f.path.includes('bsp_oled_driver.h'));
-    expect(headerFile).toBeDefined();
-    expect(headerFile.content).toContain('oled_operations_t');
+  test('normalizes iic and removes duplicate Core selectors', () => {
+    expect(normalizeCoreList(['iic', 'spi', 'i2c'])).toEqual(['i2c', 'spi']);
   });
 
-  test('generateSystemAdapter returns adapter files for stm32f4', async () => {
-    const files = await generateSystemAdapter('stm32f4');
-    expect(Array.isArray(files)).toBe(true);
-
-    const adapterFile = files.find(f => f.path.includes('system_oled.c'));
-    expect(adapterFile).toBeDefined();
-    expect(adapterFile.content).toContain('oled_operations_myown');
+  test('generates exactly one Core C/H pair for an MCU peripheral', async () => {
+    const files = await generateCorePeripheral('iic', 'stm32f4');
+    expect(files.map((file) => file.path)).toEqual([
+      'Core/Inc/core_i2c.h',
+      'Core/Src/core_i2c.c'
+    ]);
+    expect(files[0].content).not.toMatch(/stm32|FreeRTOS|I2C_HandleTypeDef/i);
+    expect(files[1].content).toContain('core_i2c_dma_irq_dispatch');
   });
 
-  test('generateBspDriver throws for unsupported peripheral', async () => {
-    await expect(generateBspDriver('unsupported', 'stm32f4'))
-      .rejects.toThrow('Unsupported peripheral');
+  test('generates the fixed layered BSP output without System files', async () => {
+    const files = await generateBspDriver({
+      deviceType: 'externflash',
+      device: 'W25Q64',
+      cores: ['spi'],
+      platform: 'stm32f4'
+    });
+
+    expect(files).toHaveLength(9);
+    expect(files.map((file) => file.path)).toEqual(expect.arrayContaining([
+      'Bsp/BoardDriver/externflash/Driver/W25Q64/Inc/bsp_w25q64_config.h',
+      'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c',
+      'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c',
+      'Bsp/Wrapper/externflash/Src/drv_adapter_wrapper_externflash.c'
+    ]));
+    expect(files.some((file) => file.path.startsWith('System/'))).toBe(false);
+  });
+
+  test('enforces known device profiles and requires custom opt-in for unknown devices', async () => {
+    await expect(generateBspDriver({
+      deviceType: 'sensor', device: 'MPU6050', cores: ['spi'], platform: 'stm32f4'
+    })).rejects.toThrow('requires --device-type sensor and --core i2c');
+    await expect(generateBspDriver({
+      deviceType: 'sensor', device: 'CUSTOM01', cores: ['i2c'], platform: 'stm32f4'
+    })).rejects.toThrow('Unknown device');
+    await expect(generateBspDriver({
+      deviceType: 'sensor', device: 'CUSTOM01', cores: ['i2c'], platform: 'stm32f4', allowCustomDevice: true
+    })).resolves.toHaveLength(9);
   });
 });

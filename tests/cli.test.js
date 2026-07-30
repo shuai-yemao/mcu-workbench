@@ -16,6 +16,21 @@ describe('CLI', () => {
     });
   });
 
+  test('parses repeatable --core and the mcu-core implementation alias', () => {
+    expect(parseArgs(['mcu-core', '--peripheral', 'iic', '--platform', 'stm32f4'])).toEqual({
+      command: 'core', options: { peripheral: 'iic', platform: 'stm32f4' }
+    });
+    expect(parseArgs(['driver', '--device-type', 'externflash', '--device', 'W25Q64', '--core', 'spi', '--core', 'dma'])).toEqual({
+      command: 'driver', options: { deviceType: 'externflash', device: 'W25Q64', core: ['spi', 'dma'] }
+    });
+  });
+
+  test('returns a stable usage exit code and migration message for old driver parameters', async () => {
+    const { result, output } = await captureCli(['driver', '--peripheral', 'oled', '--platform', 'stm32f4']);
+    expect(result.exitCode).toBe(2);
+    expect(output.some((entry) => entry.line.includes('MCUWB_E_DEPRECATED_PERIPHERAL'))).toBe(true);
+  });
+
   test('prints a JSON build plan without executing tools', async () => {
     const { result, output } = await captureCli(['build', '--platform', 'stm32f4', '--json']);
     expect(result.exitCode).toBe(0);

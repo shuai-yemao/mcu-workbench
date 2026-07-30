@@ -66,9 +66,7 @@ describe('validateBspContract', () => {
     });
 
     expect(result.errors).toEqual(expect.arrayContaining([
-      expect.stringContaining('Port must construct the Driver'),
-      expect.stringContaining('Port must construct the Handle'),
-      expect.stringContaining('Port must register Driver Ops'),
+      expect.stringContaining('Port must export exactly one'),
       expect.stringContaining('Wrapper must not include Driver, Handle, HAL, or RTOS headers')
     ]));
   });

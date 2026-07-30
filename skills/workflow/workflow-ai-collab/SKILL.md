@@ -17,6 +17,8 @@ description: 基于目标项目真实风格协作生成、重构或审查嵌入�
 4. **独立审查**：由 `verification-engineer` 使用 `tools-ai-code-quality` 区分风格、功能和安全问题。
 5. **验证与交接**：由 `toolchain-engineer` 复现构建；需要板级证据时交给 `hardware-integration`；`embedded-lead` 汇总证据和未决项。
 
+对分层外设生成，阶段计划必须在生成前列出四张表：现状表、边界表、文件修改表、验收表。每层生成后先经独立审查和 `tools-quality` 门禁，再进入下一层；Core 与 BSP Driver/Handle/Port/Wrapper 分开生成和验证。
+
 ## 执行证据协议
 
 每次执行命令前，先在运行记录中声明 `tool_root`、`firmware_root` 和该命令的绝对 `cwd`；记录命令、退出码、产物绝对路径与 SHA-256、证据等级（静态/主机/目标/实物）和重试次数。工具仓库与固件仓库不共享相对路径，禁止用错误工作目录下的“路径不存在”替代代码失败。

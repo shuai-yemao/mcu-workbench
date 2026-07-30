@@ -7,7 +7,7 @@ version: "1.0.0"
 # 格式检查
 
 > 基于 `.clang-format` 对嵌入式 C 代码进行自动化格式检查。
-> 检查项与 `embedded-ai-coding-standard` 保持一致：4 空格缩进、行宽 ≤80、函数 `{` 换行、if/for `{` 同行、指针 `*` 靠变量名等。
+> 检查项与 `embedded-ai-coding-standard` 的生成档保持一致：4 空格缩进、行宽 ≤160、K&R 大括号、if/for `{` 同行、指针 `*` 靠变量名等。
 
 ## 前置条件
 
@@ -54,8 +54,8 @@ find drivers test \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} +
 | 检查项 | clang-format 配置键 | 编码规范对应 |
 |--------|---------------------|-------------|
 | 4 空格缩进 | `IndentWidth: 4`, `UseTab: Never` | 硬性约束 #1 |
-| 行宽 ≤80 | `ColumnLimit: 80` | 硬性约束 #2 |
-| 函数 `{` 换行 | `AfterFunction: true` | 排版细节 #3 |
+| 行宽 ≤160 | `ColumnLimit: 160` | 长分层 API 的可读性上限 |
+| K&R 函数 `{` 同行 | `AfterFunction: false` | 排版细节 #3 |
 | if/for `{` 同行 | `AfterControlStatement: false` | 排版细节 #4 |
 | 枚举/结构体 `{` 换行 | `AfterEnum: true`, `AfterStruct: true` | 排版细节 #5 |
 | 二元运算符空格 | `SpaceBeforeAssignmentOperators: true` | 排版细节 #6 |

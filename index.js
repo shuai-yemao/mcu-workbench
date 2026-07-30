@@ -1,4 +1,5 @@
 const mcuNew = require('./commands/mcu-new');
+const mcuCore = require('./commands/mcu-core');
 const mcuDriver = require('./commands/mcu-driver');
 const mcuBuild = require('./commands/mcu-build');
 const mcuFlash = require('./commands/mcu-flash');
@@ -14,6 +15,7 @@ module.exports = {
 
   commands: [
     mcuNew,
+    mcuCore,
     mcuDriver,
     mcuBuild,
     mcuFlash,
