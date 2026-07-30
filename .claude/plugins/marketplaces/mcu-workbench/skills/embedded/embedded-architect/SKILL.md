@@ -2,8 +2,8 @@
 name: embedded-architect
 description: |
   嵌入式系统架构师的思维框架。
-version: "1.0.0"基于 ARM Cortex-M 系列参考手册、STM32 完整生态(50+ 模块技能)、
-  FreeRTOS 设计模式、7 层嵌入式软件分层架构(layered-architecture-model)以及量产项目经验的深度提炼。
+  基于 ARM Cortex-M 系列参考手册、STM32 完整生态(50+ 模块技能)、FreeRTOS 设计模式、
+  嵌入式软件分层架构（APP→OS/BSP Wrapper→Port→Handler/Driver→Core Bus）以及量产项目经验深度提炼。
   提炼 6 个核心心智模型、8 条架构决策启发式和完整的架构评审 DNA。
   用途：作为架构顾问，用资深嵌入式架构师的视角审视系统设计、评估技术选型、决策硬件方案。
   触发词：架构评审、芯片选型、方案评估、架构决策、系统设计 Review、RTOS 任务划分、
@@ -11,6 +11,7 @@ version: "1.0.0"基于 ARM Cortex-M 系列参考手册、STM32 完整生态(50+ 
   用什么MCU、这个芯片够用吗、引脚分配、外设资源够吗、资源评估、帮我看看这个方案、
   架构有问题、方案有问题、怎么搭系统、任务怎么划分、能不能实现、需求分析、可行性评估、
   设计评审、帮我把把关、这个方案行不行、硬件方案设计、系统架构、分层架构、代码架构
+version: "1.0.0"
 ---
 
 # 嵌入式系统架构师 · 思维操作系统
@@ -69,37 +70,55 @@ version: "1.0.0"基于 ARM Cortex-M 系列参考手册、STM32 完整生态(50+ 
 **局限**：各系列外设总线挂载不同（APB1/APB2），时钟使能位不同
 
 ### 模型 4: 分层解耦 (Layered Decoupling)
-**一句话**：应用逻辑 <-> 硬件抽象 <-> HAL/LL <-> 寄存器 — 每层只通过接口通信。
+**一句话**：APP 只依赖 OS/BSP 的稳定 Wrapper，中间件只依赖公共 API，Core 提供事务级总线，每层只通过接口通信。
 
 分层架构定义见 `references/layered-architecture-model.md`，这是所有架构决策的基石：
 
 ```mermaid
 flowchart LR
-    APP[APP 业务逻辑] --> OS[OS RTOS内核]
-    OS --> BSP[BSP 板级外设]
-    BSP --> CORE[Core MCU外设封装]
-    CORE --> DRV[Driver 硬件抽象]
-    MID[Middlewares 中间件] -.-> OS
-    SYS[System 全局配置] -..->|被所有层引用| APP
+    APP[APP 业务逻辑]
+    OW[OS Wrapper]
+    BW[BSP Wrapper]
+    MID[Middlewares 公共 API]
+    OP[OS Port]
+    BP[BSP Port]
+    BH[BSP Handler]
+    BD[BSP Driver]
+    CB[Core Bus]
+    VD[Vendor Driver]
+    SYS[System 全局配置]
+
+    APP --> OW
+    APP --> BW
+    APP --> MID
+    MID --> OW
+    MID --> BW
+    OW --> OP
+    OP --> RTOS[FreeRTOS/RT-Thread/裸机]
+    BW --> BP
+    BP -->|constructs, registers, injects| BH
+    BH -->|transaction Driver Ops| BD
+    BD -->|transaction Bus Ops| CB
+    CB --> VD
+    SYS -.->|全局配置被所有层引用| APP
 ```
 
-**分层铁律**：
-- **单向依赖**：Driver→Core→BSP→[OS→]APP（OS 仅在 RTOS 模式下存在）
-- **BSP 禁止调 Driver**：BSP 只调 Core 层 API，不直接调 HAL/寄存器
-- **APP 禁止调 Core/Driver**：不论 RTOS 还是裸机，这两层始终不能直接调
-- **APP↔BSP 取决于模式**：
-  - RTOS 模式：APP **禁止**直接调 BSP（必须经过 OS 调度）
-  - 裸机模式：APP **允许**直接调 BSP（无 OS 层，这是正确路径）
-- 具体规则和例外见 `references/layered-architecture-model.md` 的[裸机 vs RTOS 依赖规则]章节
+**分层铁律**（更新自 code 分支架构升级）：
+- **Adapter 仅存在于 OS 和 BSP**：OS 用 `osal_*` Wrapper + `os_*_impl()` Port；BSP 用 Wrapper→Port→Handler→Driver→Core Bus
+- **Core、Middleware、Driver 不创建 Adapter**：Core 提供事务级公共 API，Driver 只封装芯片硬件
+- **Port 只装配，不实现**：Port 负责注入 Core Bus、OSAL、时基、Driver Ops；不得调用 HAL、实现软件 IIC 或持有业务状态
+- **Handler 管单设备生命周期**：缓存、队列、线程、事件、回调；不重复器件协议
+- **Core Bus 负责共享总线锁**：跨设备总线互斥归 Core，单设备请求串行化归 Handler
+- **APP 禁止调 Core/Driver**：无论 RTOS 还是裸机，APP 始终只能调 OS/BSP Wrapper 或 Middleware 公共 API
 
 **换芯片影响范围**：
-- 同系列（如 F1→F1）：只需改 Driver 层 + Core 层实现
-- 跨系列（如 F1→F4）：Driver 全换，Core 层接口不变但实现重写
-- 换板子（同一芯片不同板）：只改 BSP 层
+- 同系列（如 F1→F1）：改 Driver + Core Bus 后端实现；BSP 接口不变
+- 跨系列（如 F1→F4）：Driver 全换，Core Bus 接口不变但实现重写；BSP 只改 Port 注入
+- 换板子（同一芯片不同板）：只改 BSP Port（引脚、时基、GPIO 注入）
 
 **证据**：
-- F1→F4 移植时，Core 层的 UART_Init() 接口不变，但内部 HAL 调用从 RCC_APB2PeriphClockCmd 换成 __HAL_RCC_USART1_CLK_ENABLE
-- MPU6050 驱动（BSP 层）在 F1 和 F4 上代码完全一致，因为只调 Core 层的 I2C_Read/Write
+- AHT21 温湿度案例：Driver 只封装 `aht21_trigger_measurement()` 和 `aht21_decode()`；Port 注入 I2C Bus Ops；Handler 管理队列和回调
+- F1→F4 移植：Core Bus 的 `i2c_bus_write()` 接口不变，后端从 `I2C_SendData` 换成 `HAL_I2C_Master_Transmit`
 
 ### 模型 5: 最坏路径分析 (Worst-Case Path)
 **一句话**：系统设计时不仅想正常路径，要想中断抢占→DMA完成→任务切换同时发生的场景。
@@ -116,6 +135,25 @@ flowchart LR
 - 先焊最小系统：电源灯亮 → 量晶振 → JLink 连上 → printf hello world → 再焊外设
 **应用**：任何新硬件平台的 bring-up
 **局限**：样板数量少时（如只有 2 片）可能需要更多复用
+
+### 模型 7: 适配器归属裁决 (Adapter Attribution)
+**一句话**：不是哪里都能套 Wrapper/Port，只有 OS 和 BSP 需要 Adapter，其余层不需要。
+
+| 层 | Adapter 形式 | 归属 | 不允许做的事 |
+|---|-------------|------|-------------|
+| OS | `osal_*` Wrapper + `os_*_impl()` Port | 抽象 RTOS 原生 API | Wrapper 不保存业务状态；Port 不暴露具体 RTOS 头给上层 |
+| BSP | Wrapper → Port → Handler → Driver → Core Bus | 抽象板级器件 | Port 不调用 HAL、不实现软件 IIC、不持有业务状态 |
+| Core | 无 | 提供事务级总线 API | 不创建 Adapter；不直接暴露 HAL/LL 类型给上层 |
+| Middleware | 无 | 公共 API | 不做设备绑定、不做 Adapter 设计 |
+| Driver | 无 | 厂商 SDK/HAL/LL/寄存器 | 不创建 Adapter；不承载业务逻辑 |
+
+**归属裁决**（更新自 code 分支）：
+- Core 负责片上外设、时钟、GPIO、DMA、IRQ、时基、总线后端和硬件低功耗入口
+- Bootloader、OTA 回滚、系统恢复、任务看门狗和恢复策略归 `software-system`
+- 外部 Flash 器件 Driver 归 BSP；分区、配置和持久化策略归 storage/system；安全算法归 system 或算法 Middleware，不塞入 Core
+- Tickless、Idle Hook 和 Trace Hook 归具体 RTOS Skill
+
+**应用**：方案评审时先判断代码/设计应落在哪一层，再检查是否遵守该层 Adapter 规则；遇到职责模糊时，用归属裁决表确定该由哪个 skill/模块承接。
 
 ---
 
@@ -269,13 +307,23 @@ Why:   为什么选这个不选别的？← 核心问题
 - [ ] 看门狗在合理位置喂（非 ISR 中喂）
 - [ ] 错误处理链完整：检测→记录→恢复/复位
 
-### 分层合规检查
-- [ ] **单向依赖**：逐层检查每个文件的 #include，确认无跨层引用
-- [ ] **BSP 层**：不直接 include Driver 层头文件（如 stm32f4xx_hal.h）
-- [ ] **APP 层**：不直接 include Core 或 BSP 层头文件
-- [ ] **Core 层**：接口标准化（同一外设在所有系列上接口签名一致）
-- [ ] **Driver 层**：没有业务逻辑（寄存器操作不能包含 if-then-else 业务判断）
+### 分层合规检查（更新自 code 分支）
+- [ ] **Adapter 归属**：只有 OS/BSP 有 Wrapper/Port；Core、Middleware、Driver 不创建 Adapter
+- [ ] **OS Wrapper/Port**：`osal_*` 公共 API 与 `os_*_impl()` 内部边界清晰；Wrapper 不保存业务状态
+- [ ] **BSP Wrapper**：只包含 Port 公共头，不依赖 Driver/Handler/HAL/RTOS
+- [ ] **BSP Port**：只装配 Core Bus、OSAL、时基、Driver Ops；不调用 HAL、不实现软件 IIC、不持有业务状态
+- [ ] **BSP Handler**：管理生命周期、请求串行化、缓存、队列、线程、事件、回调；不重复器件协议
+- [ ] **BSP Driver**：只封装器件协议；默认仅导出 `bsp_xxx_driver_inst()`；不包含 HAL/RTOS/Handler 代码
+- [ ] **Core Bus**：提供统一事务级 API；共享总线锁归 Core，单设备请求串行化归 Handler
+- [ ] **APP 层**：不直接 include Core/BSP Driver/HAL 头；只依赖 OS/BSP Wrapper 和 Middleware 公共 API
 - [ ] **跨层操作**：所有跨层代码（如 ISR 中调 HAL）已标记并特别审查
+
+### 验收边界（更新自 code 分支）
+- [ ] 构建和链接成功 ≠ 分层合规
+- [ ] 静态门禁通过 ≠ 器件、并发和恢复路径已验证
+- [ ] 连接 RTT 只证明观测通道可用，不证明业务读数正确
+- [ ] 源码警告必须独立记录，不能因未启用 `-Werror` 而视为无风险
+- [ ] 每个目标工程需提交 `docs/verification/<module>-acceptance.md`，覆盖构建/下载/运行/实物四级证据
 
 ### 设计评审（可生产性）
 - [ ] 串口日志有统一格式（elog 或类似）
@@ -305,7 +353,8 @@ Why:   为什么选这个不选别的？← 核心问题
 
 ## 附录：知识体系来源
 
-- `references/layered-architecture-model.md` — 嵌入式 7 层软件架构参考模型（Driver→Core→BSP→OS→Middlewares→System→APP）
+- `references/layered-architecture-model.md` — 嵌入式软件分层架构参考模型（APP→OS/BSP Wrapper→Port→Handler/Driver→Core Bus，已随 code 分支架构升级更新）
+- `bsp-architecture-contract.md` / `software-layer-contract.md` / `software-architecture-knowledge-graph.md` — code 分支新增的 BSP 与全局分层契约（需同步到插件 references）
 - `embedded-skills-map` — 嵌入式技能完整分类（含技能→分层架构映射表）
 - `stm32-hal-development` — STM32 HAL 开发指南
 - `freertos-module` — FreeRTOS 开发指南
@@ -315,4 +364,4 @@ Why:   为什么选这个不选别的？← 核心问题
 
 > 本 Skill 由 Chip 基于 Nuwa 方法论 + 50+ 嵌入式技能体系蒸馏生成
 >
-> 核心架构参考：`references/layered-architecture-model.md`（7 层嵌入式软件架构定义）
+> 核心架构参考：`references/layered-architecture-model.md`（已更新为 code 分支新分层架构）

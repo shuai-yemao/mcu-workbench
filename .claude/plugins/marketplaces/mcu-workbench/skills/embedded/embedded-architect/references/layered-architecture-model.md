@@ -1,16 +1,20 @@
 # 嵌入式软件分层架构参考模型
 
-> 本文件定义嵌入式软件的标准 7 层架构，作为所有相关 skill（driver开发/代码审查/架构评审/移植）的共享参考依据。
+> 本文件定义嵌入式软件的分层架构（APP → OS/BSP Wrapper → Port → Handler/Driver → Core Bus），
+> 作为所有相关 skill（driver 开发/代码审查/架构评审/移植）的共享参考依据。
 > 所有代码生成、审查、移植工作必须遵循此分层规则，**禁止跨层操作**。
 >
 > **关键区分**：裸机（无 RTOS）和 RTOS 两种模式下，层间连接方式不同——详见"裸机 vs RTOS 依赖规则"章节。
+>
+> **更新说明**：本文件已随 code 分支架构升级更新，引入 BSP Wrapper/Port/Handler/Driver/Core Bus 五子层、
+> OS Wrapper/Port 两层抽象，以及 Adapter 归属规则。
 
-## 架构全景
+## 架构全景（已更新为 code 分支新架构）
 
 ```mermaid
 flowchart TB
     subgraph APP[APP 层 — 业务逻辑]
-        APP_TASKS[用户任务/算法/交互]
+        APP_TASKS[main / manager / task / logic / ui / profile]
     end
 
     subgraph SYS[System 层 — 全局配置]
@@ -24,19 +28,21 @@ flowchart TB
         OTHER[其他通用库]
     end
 
-    subgraph OS[OS 层 — RTOS 内核<br/>仅RTOS模式存在]
-        SCHED[任务调度器]
-        SYNC[信号量/互斥锁/队列]
-        MEM[内存管理堆]
+    subgraph OS[OS 层 — 抽象]
+        OW[OS Wrapper: osal_*]
+        OP[OS Port: os_*_impl()]
+        SCHED[RTOS 内核]
     end
 
     subgraph BSP[BSP 层 — 板级外设]
-        MPU6050[MPU6050 驱动]
-        W25Q[W25Q Flash 驱动]
-        LCD[LCD 显示屏驱动]
+        BW[BSP Wrapper]
+        BP[BSP Port]
+        BH[BSP Handler]
+        BD[BSP Driver]
     end
 
     subgraph CORE[Core 层 — MCU 外设封装]
+        CB[Core Bus 事务级 API]
         ADC_INIT[ADC 初始化与读取]
         TIM_PWM[TIM PWM 配置]
         UART_IO[USART 收发封装]
@@ -48,19 +54,35 @@ flowchart TB
         CLOCK[时钟系统配置]
     end
 
-    DRV -- "仅→" --> CORE
-    CORE -- "仅→" --> BSP
+    APP --> OW
+    APP --> BW
+    APP --> MID
+    MID --> OW
+    MID --> BW
 
-    %% 裸机模式：APP 直接调 BSP
-    BSP -.->|裸机模式| APP
-    %% RTOS 模式：APP 通过 OS 调 BSP
-    BSP -->|RTOS模式| OS
-    OS -->|RTOS模式| APP
+    OW --> OP
+    OP --> SCHED
 
-    MID -.->|通常经过 OS| APP
-    MID -.->|也可直接供 APP 调用| APP
+    BW --> BP
+    BP -->|constructs, registers, injects| BH
+    BH -->|transaction Driver Ops| BD
+    BD -->|transaction Bus Ops| CB
+
+    CB --> HAL
+    CB --> REG_OPS
+
     SYS -..->|全局配置被所有层引用| APP
 ```
+
+## 关键架构升级点
+
+1. **Adapter 仅存在于 OS 和 BSP**：Core、Middleware、Driver 不创建 Wrapper/Port 调用层。
+2. **BSP 拆分为 5 个子层**：Wrapper → Port → Handler → Driver → Core Bus。
+3. **Core Bus 是事务级总线抽象**：硬件后端绑定 HAL/LL/CMSIS；软件后端仅在私有实现中使用 GPIO 和微秒时基。
+4. **共享总线锁归 Core Bus**：跨设备总线互斥由 Core 负责；单设备请求串行化归 Handler。
+5. **Port 只装配，不实现**：Port 注入 Core Bus、OSAL、时基、Driver Ops；不调用 HAL、不实现软件 IIC、不持有业务状态。
+6. **Driver 只封装器件协议**：默认仅导出 `bsp_xxx_driver_inst()`；其余为实例 `pf_*` 或 `static`。
+7. **Handler 管理单设备生命周期**：缓存、队列、线程、事件、回调；不重复器件协议。
 
 ## 逐层定义
 
@@ -95,105 +117,99 @@ void HAL_GPIO_Init(GPIO_TypeDef *GPIOx, GPIO_InitTypeDef *GPIO_Init)
 
 ---
 
-### Core 层（MCU 外设封装层）
+### Core 层（MCU 外设封装层 / Core Bus）
 
 | 属性 | 内容 |
 |------|------|
-| **定义** | 面向 MCU 编程，初始化 MCU 内部外设，包含 main.c |
-| **代表** | ADC_init()/TIM_PWM_Start()/UART_Send() 等封装函数 |
-| **职责** | 统一外设接口，使上层开发无需关注芯片硬件差异 |
-| **约束** | 调用 Driver 层 API，对常用外设进行高层封装，**标准化接口** |
-| **换芯片** | 接口不变但实现需要重写（因为 Driver 层变了） |
-| **通信** | 调用 Driver 层，为 BSP 层提供服务 |
+| **定义** | 面向 MCU 编程，提供事务级 Core Bus API；内部用 Driver 层实现总线后端 |
+| **代表** | `i2c_bus_write()` / `i2c_bus_read()` / `spi_bus_xfer()` / `uart_bus_send()` |
+| **职责** | 统一片上外设的事务级接口；管理共享总线锁；隐藏 HAL/LL/寄存器差异 |
+| **约束** | **不创建 Adapter**；公共 API 不暴露 HAL/LL/RTOS 类型；事务级而非位级 |
+| **换芯片** | Core Bus 接口不变，后端实现重写 |
+| **通信** | 内部调用 Driver 层；为 BSP Driver 提供事务级 Bus Ops |
 
 ```c
-// Core 层示例: 统一 UART 接口封装
-// 文件: Core/Src/uart_core.c
+// Core 层示例: I2C Core Bus 事务级接口
+// 文件: Core/Src/i2c_bus.c
 
-// ── Core 层接口（BSP 层的调用入口）──
-void UART_Init(uint32_t baudrate)
+int32_t i2c_bus_write(i2c_bus_handle_t bus, uint8_t addr,
+                      const uint8_t *data, uint16_t len, uint32_t timeout_ms)
 {
-    // 调用 Driver 层 HAL API
-    huart.Instance = USART1;
-    huart.Init.BaudRate = baudrate;
-    huart.Init.WordLength = UART_WORDLENGTH_8B;
-    huart.Init.StopBits = UART_STOPBITS_1;
-    huart.Init.Parity = UART_PARITY_NONE;
-    HAL_UART_Init(&huart);
-}
-
-void UART_Send(uint8_t *data, uint16_t len)
-{
-    HAL_UART_Transmit(&huart, data, len, HAL_MAX_DELAY);
+    // 内部可能调用 HAL_I2C_Master_Transmit 或 LL 实现
+    // 对上层只暴露事务级 write，不暴露 START/STOP/ACK 细节
+    return HAL_I2C_Master_Transmit(&bus->hi2c, addr << 1, data, len, timeout_ms);
 }
 ```
 
-**面向对象映射**：`UART_Init()/UART_Send()` = 类的公开方法，隐藏了 `huart` 句柄（私有成员）
+**面向对象映射**：`i2c_bus_write()` = 类的公开方法，`HAL_I2C_Master_Transmit` = 私有实现
 
 ---
 
 ### BSP 层（板级外设驱动层）
 
-| 属性 | 内容 |
-|------|------|
-| **定义** | 面向板上外设编程（如 MPU6050、W25Q、LCD） |
-| **代表** | MPU6050_ReadAccel() / W25Q_WritePage() |
-| **职责** | 调用 Core 层 API 封装外设的操作流程（初始化→发送指令→接收数据→校验→转换） |
-| **约束** | **不与 Driver 层交互**，只调用 Core 层 |
-| **换板子** | 同一芯片的不同板卡需单独适配 BSP 层 |
-| **通信** | 调用 Core 层 API |
-| **调用者** | **RTOS 模式**：被 OS 层任务调用（通过 xTaskCreate 创建的任务函数） |
-| | **裸机模式**：被 APP 层 main 循环直接调用（此时 APP=BSP 是允许的架构路径） |
+BSP 现在明确拆分为 5 个子层，所有器件交互都遵循统一链路：
+
+```text
+APP / Middleware → BSP Wrapper → BSP Port → BSP Handler → BSP Driver → Core Bus
+```
+
+| 子层 | 职责 | 禁止 |
+|------|------|------|
+| **Wrapper** | 稳定的上层设备 API | 不得包含 Driver/Handler/HAL/RTOS 头；不持有平台句柄 |
+| **Port** | 装配：注入 Core Bus、OSAL、时基、Driver Ops；就绪门控 | 不调用 HAL、不实现软件 IIC、不持有业务状态 |
+| **Handler** | 单设备生命周期、请求串行化、缓存、队列、线程、事件、回调 | 不重复器件协议；不直接访问 Driver 内部成员 |
+| **Driver** | 器件协议封装（命令、时序、解码） | 不包含 HAL/RTOS/Handler；默认仅导出 `bsp_xxx_driver_inst()` |
+| **Core Bus** | 共享总线事务与跨设备互斥 | 不承载业务语义 |
 
 ```c
-// BSP 层示例: MPU6050 驱动
-// 文件: BSP/MPU6050/mpu6050.c
+// BSP Driver 示例: AHT21 协议封装（不包含 HAL）
+// 文件: BSP/aht21/bsp_aht21_driver.c
 
-void MPU6050_Init(void)
+static int32_t pf_trigger_measurement(bsp_aht21_instance_t *inst)
 {
-    uint8_t data = 0x00;
-    // 调用 Core 层 I2C API（不直接调用 HAL_I2C_Master_Transmit）
-    I2C_Write(MPU6050_ADDR, MPU6050_REG_PWR_MGMT_1, &data, 1);
+    uint8_t cmd[3] = {0xAC, 0x33, 0x00};
+    return inst->ops.i2c_write(inst->bus, AHT21_ADDR, cmd, 3, AHT21_TIMEOUT_MS);
 }
 
-float MPU6050_ReadTemperature(void)
+bsp_aht21_instance_t *bsp_aht21_driver_inst(const bsp_aht21_ops_t *ops,
+                                             i2c_bus_handle_t bus)
 {
-    uint8_t buf[2];
-    // 调用 Core 层 I2C API
-    I2C_Read(MPU6050_ADDR, MPU6050_REG_TEMP_H, buf, 2);
-    // 数据转换（业务语义）
-    int16_t raw = (buf[0] << 8) | buf[1];
-    return (raw / 340.0f) + 36.53f;
+    // 分配/注册实例，注入 ops 和 bus
 }
 ```
 
-**面向对象映射**：`MPU6050_Init()/MPU6050_ReadTemperature()` = 类方法，`I2C_Read/Write` = 依赖注入接口
+**面向对象映射**：Driver 的 `pf_*` = 实例方法；`ops` = 依赖注入接口
 
 ---
 
-### OS 层（实时操作系统层）
+### OS 层（实时操作系统抽象层）
 
 | 属性 | 内容 |
 |------|------|
-| **定义** | 提供多任务调度、资源管理、同步互斥能力 |
-| **代表** | FreeRTOS / RT-Thread / ThreadX |
-| **职责** | 调度器、信号量/互斥锁/队列、内存管理（堆）、避免死锁和优先级反转 |
-| **约束** | 调用 OS API 时要考虑死锁问题和优先级反转问题 |
-| **通信** | 调用 BSP 层驱动，为 APP 层和 Middlewares 层提供任务调度服务 |
+| **定义** | 通过 Wrapper/Port 抽象 RTOS 原生 API |
+| **代表** | `osal_task_create()` / `osal_mutex_lock()` / `osal_queue_send()` |
+| **职责** | 提供任务、队列、信号量、互斥锁、定时器、延时、时基、内存、临界区的稳定 API |
+| **约束** | Wrapper 只暴露项目需要且 Port 已实现的最小 API；`osal_internal_*.h` 只是两层内部边界 |
+| **通信** | `Caller → osal_task_create() → os_task_create_impl() → native RTOS API` |
 
 ```c
-// OS 层示例: 创建任务
-// 文件: OS/Tasks/task_definitions.c
+// OS Wrapper 示例
+// 文件: OS/osal_task.h
 
-void Task_SensorRead(void *params)
+osal_status_t osal_task_create(osal_task_t *task,
+                               const char *name,
+                               osal_task_entry_t entry,
+                               void *arg,
+                               uint32_t stack_depth,
+                               osal_priority_t priority);
+
+// OS Port 示例（FreeRTOS 实现）
+// 文件: OS/Port/FreeRTOS/osal_task_impl.c
+
+osal_status_t os_task_create_impl(osal_task_t *task, ...)
 {
-    MPU6050_Init();  // 调用 BSP 层
-    while (1)
-    {
-        float temp = MPU6050_ReadTemperature();  // 调用 BSP 层
-        xQueueSend(temp_queue, &temp, portMAX_DELAY);  // RTOS 通信
-        vTaskDelay(pdMS_TO_TICKS(100));
-    }
+    return xTaskCreate(entry, name, stack_depth, arg, priority, &task->handle)
+           == pdPASS ? OSAL_OK : OSAL_ERR_NO_MEM;
 }
 ```
 
@@ -206,8 +222,8 @@ void Task_SensorRead(void *params)
 | **定义** | 项目间通用的外设抽象程序，模块化设计可快速开发 |
 | **代表** | LVGL（GUI）、MQTT（通信）、FatFs（文件系统）、mbedTLS（加密） |
 | **职责** | 提供跨项目复用的功能模块 |
-| **约束** | 通过 OS 层运行，底层依赖通过移植接口接入 |
-| **通信** | 调用 OS 层 API（任务/内存/锁），或直接通过移植接口访问 BSP/Core |
+| **约束** | **不创建 Adapter**；通过 OS Wrapper 或 BSP Wrapper 接入底层；只暴露公共 API |
+| **通信** | 调用 OS Wrapper API；必要时通过 BSP Wrapper 访问设备 |
 
 ---
 
@@ -227,12 +243,12 @@ void Task_SensorRead(void *params)
 
 | 属性 | 内容 |
 |------|------|
-| **定义** | 结合实际需求的业务逻辑实现，task 文件存放位置 |
+| **定义** | 结合实际需求的业务逻辑实现，main/manager/task/logic/ui/profile 文件存放位置 |
 | **代表** | 人机交互界面、物联网通信协议、机械臂运动算法 |
-| **职责** | 调用 OS 层和 Middlewares 层完成逻辑算法，保证代码独立性 |
+| **职责** | 调用 OS Wrapper、BSP Wrapper 和 Middleware 公共 API 完成逻辑算法 |
 | **换项目** | 业务逻辑完全可替换，底层驱动不变 |
-| **约束（RTOS）** | **只调用 OS 层和 Middlewares 层**，不直接访问 BSP/Core/Driver |
-| **约束（裸机）** | **可调用 BSP 层**（无 OS 层），但不能直接调 Core/Driver |
+| **约束（RTOS）** | **只调用 OS Wrapper、BSP Wrapper 和 Middleware 公共 API**，不直接访问 BSP Port/Handler/Driver/Core/Driver |
+| **约束（裸机）** | **可调用 BSP Wrapper**（无 OS 层），但不能直接调 BSP Port/Handler/Driver/Core/Driver |
 
 ```c
 // ── RTOS 模式 ──
@@ -243,14 +259,15 @@ void App_TempReportTask(void *params)
     while (1)
     {
         float temp;
-        // ✅ 正确: 通过 OS 层队列获取数据（间接访问 BSP）
-        xQueueReceive(temp_queue, &temp, portMAX_DELAY);
+        // ✅ 正确: 通过 OS Wrapper 队列获取数据（Handler 投递）
+        osal_queue_receive(&temp_queue, &temp, OSAL_WAIT_FOREVER);
 
         // ✅ 正确: 调用中间件发送
-        MQTT_Publish("sensor/temp", &temp, sizeof(temp), 0);
+        mqtt_publish("sensor/temp", &temp, sizeof(temp), 0);
 
-        // ❌ 禁止 (RTOS 模式): 直接调用 BSP 层
-        // MPU6050_ReadTemperature();  // 跨层！不经过 OS 调度
+        // ❌ 禁止 (RTOS 模式): 直接调用 BSP Driver/Handler 或 HAL
+        // mpu6050_read_temperature(&temp);  // 跨层！
+        // HAL_I2C_Master_Transmit(...);       // 跨两层！
     }
 }
 
@@ -264,19 +281,21 @@ int main(void)
     UART_Init(115200);
     I2C_Init(100000);
 
-    // 初始化 (BSP 层)
-    MPU6050_Init();  // 直接调用 BSP — 裸机模式下允许
+    // 初始化 (BSP Wrapper)
+    sensor_temp_init();  // 裸机模式下允许
 
     while (1)
     {
-        // ✅ 正确 (裸机): APP 直接调 BSP
-        float temp = MPU6050_ReadTemperature();
+        // ✅ 正确 (裸机): APP 直接调 BSP Wrapper
+        float temp;
+        sensor_temp_read(&temp);
 
         // ✅ 正确: 通过 Core 层 API 发送
         UART_Send((uint8_t*)&temp, sizeof(temp));
 
-        // ❌ 禁止: 直接调 Driver 层
-        // HAL_UART_Transmit(&huart1, (uint8_t*)&temp, sizeof(temp), 1000);
+        // ❌ 禁止: 直接调 BSP Driver / Core / Driver
+        // bsp_aht21_driver_inst(...);
+        // HAL_UART_Transmit(...);
 
         HAL_Delay(1000);  // 通过 Core 层延时
     }
@@ -289,58 +308,70 @@ int main(void)
 
 ### 裸机 vs RTOS 依赖规则
 
-**关键区分**：OS 层在裸机模式下**不存在**，所以 APP→BSP 的连接方式取决于是否有 RTOS。
+**关键区分**：OS 层在裸机模式下**不存在**，APP 只能依赖 BSP Wrapper 和 Middleware。
 
 ```mermaid
 flowchart LR
     subgraph RTOS[RTOS 模式]
-        RTOS_A[APP] --> RTOS_OS[OS 层] --> RTOS_B[BSP]
+        RTOS_A[APP] --> RTOS_OW[OS Wrapper]
+        RTOS_A --> RTOS_BW[BSP Wrapper]
+        RTOS_OW --> RTOS_OP[OS Port] --> RTOS_K[RTOS 内核]
+        RTOS_BW --> RTOS_BP[BSP Port] --> RTOS_BH[Handler] --> RTOS_BD[Driver] --> RTOS_CB[Core Bus]
     end
     subgraph BM[裸机模式]
-        BM_A[APP] --> BM_B[BSP]
+        BM_A[APP] --> BM_BW[BSP Wrapper] --> BM_BP[BSP Port] --> BM_BH[Handler] --> BM_BD[Driver] --> BM_CB[Core Bus]
     end
 ```
 
 | 连接 | RTOS 模式 | 裸机模式 |
 |------|-----------|---------|
-| APP→BSP | **禁止**（必须经过 OS 调度） | **允许**（无 OS 层，直接调用） |
-| APP→Core | 禁止 | 禁止 |
-| BSP→Driver | 禁止 | 禁止 |
-| APP→Driver | 禁止 | 禁止 |
+| APP→BSP Wrapper | 允许 | 允许 |
+| APP→BSP Port/Handler/Driver/Core | 禁止 | 禁止 |
+| APP→OS Wrapper | 允许 | 不存在 |
+| APP→Middleware 公共 API | 允许 | 允许 |
+| APP→Core/Driver | 禁止 | 禁止 |
+| BSP Driver→Core Bus | 允许 | 允许 |
+| BSP Port→HAL | 禁止 | 禁止 |
+| Core Bus→Driver HAL | 允许 | 允许 |
 
 ### 依赖方向（单向）
 
 ```
-RTOS 模式：Driver → Core → BSP → OS → APP
-裸机模式：Driver → Core → BSP → APP
-                   ↑
-              Middlewares
-                   ↑
-            System (全局配置)
+RTOS 模式：
+  Vendor Driver → Core Bus → BSP Driver → BSP Handler → BSP Port → BSP Wrapper → APP
+                                       ↗ OS Wrapper → OS Port → RTOS
+  Middleware 公共 API → APP / OS Wrapper / BSP Wrapper
+
+裸机模式：
+  Vendor Driver → Core Bus → BSP Driver → BSP Handler → BSP Port → BSP Wrapper → APP
+  Middleware 公共 API → APP / BSP Wrapper
 ```
 
 **核心原则**：
-- **Driver → Core → BSP** 这条链在任何模式下都固定不变
-- BSP **始终**不能直接调 Driver
-- OS 层仅在 RTOS 模式下存在，裸机时可直接跳过
-- APP 在 RTOS 模式下必须通过 OS 访问 BSP；在裸机模式下可直接调 BSP
+- **Vendor Driver → Core Bus → BSP Driver → Handler → Port → Wrapper** 这条调用链在任何模式下都固定不变
+- **BSP Port 始终不能调用 HAL 或实现软件 IIC**
+- **Handler 不重复器件协议，Core Bus 不承载业务语义**
+- OS 层仅在 RTOS 模式下存在，裸机时 APP 直接调 BSP Wrapper
+- APP 始终禁止调 Core/Driver；RTOS 模式下 APP 也禁止调 BSP Port/Handler/Driver
 
 ### 禁止行为
 
 | 违规 | 后果 | 正确做法 |
 |------|------|---------|
-| BSP 直接调用 HAL | 换芯片时 BSP 也要改，失去分层意义 | BSP → Core API → Driver HAL |
-| APP 直接调用 Core | 跳过 BSP 层的板级适配，换板子时 APP 也要改 | APP → BSP → Core |
-| APP 直接调用 Driver | 完全绕过所有抽象层，芯片换不了 | APP → BSP → Core → Driver |
-| Core 直接包含业务逻辑 | 外设驱动与业务耦合，复用性差 | Core 只做外设封装，不包含业务 |
-| ISR 中调 BSP/APP 函数 | ISR 不受 RTOS 管理，可能死锁 | ISR 仅做标志位或 fromISR API |
+| BSP Port 调用 HAL | Port 只做装配，不应包含平台实现 | Port 注入 Core Bus Ops，由 Core Bus 后端调用 HAL |
+| BSP Driver 包含 HAL/RTOS | Driver 只封装器件协议 | Driver 只注入事务级 Bus Ops、GPIO Ops、timebase Ops |
+| BSP Handler 直接访问 Driver 内部 | 破坏封装，无法替换器件 | Handler 只调用泛化 Driver Ops (`pf_*`) |
+| APP 直接调用 Core/Driver | 完全绕过所有抽象层，芯片换不了 | APP → OS/BSP Wrapper → Port → ... |
+| Core 直接暴露 HAL/LL 类型 | 上层被迫依赖具体芯片 | Core 公共 API 只使用项目自定义类型 |
+| Middleware 创建 Adapter | 中间件应提供公共 API，不做设备绑定 | Middleware → OS/BSP Wrapper |
+| ISR 中调 BSP/APP 函数 | ISR 不受 RTOS 管理，可能死锁 | ISR 仅做标志位或 FromISR API |
 
 ### 允许的例外
 
 - **中断服务函数**：ISR 可以调用 Driver 层（寄存器操作）和 Core 层（外设操作），**但需标记为跨层操作并特别审查**
 - **System 层**：全局宏和配置可以被任何层引用
 - **调试阶段**：printf 直接从任意层到 UART（通过 `_write` syscall），正式版本应约束
-- **裸机 APP → BSP**：这是架构允许的正确路径，不是违规——只要项目中确实没有 OS 层
+- **裸机 APP → BSP Wrapper**：这是架构允许的正确路径，不是违规——只要项目中确实没有 OS 层
 
 ---
 
@@ -405,15 +436,20 @@ SensorOps_t MPU6050_Ops = { MPU6050_Init, MPU6050_ReadTemp, NULL };
 
 ## 架构在技能中的映射
 
-| 技能 | 对应层 | 说明 |
-|------|--------|------|
+| 技能 | 对应层/子层 | 说明 |
+|------|------------|------|
 | `stm32-hal-development` | Driver | HAL 库使用指南 |
 | `mcu-peripheral-registers` | Driver | 寄存器级操作 |
 | `arm-core-registers` | Driver | Cortex-M 内核寄存器 |
-| `i2c-bus` / `spi-bus` / `uart-module` 等 | Driver + Core | 总线协议 + MCU 外设封装 |
-| `peripheral-driver` | BSP | 板级外设驱动 |
-| `freertos-module` | OS | RTOS 内核 |
-| `fatfs-module` | Middlewares | 文件系统中间件 |
-| `code-porting` | 跨层 | 涉及 Driver/Core/BSP 三层的修改 |
+| `i2c-bus` / `spi-bus` / `uart-module` 等 | Core Bus | 事务级总线 API 与总线协议 |
+| `core-mcu` | Core | MCU 外设封装与总线后端 |
+| `bsp-hal-driver` | BSP Driver | 器件协议封装 |
+| `bsp-handler` | BSP Handler | 生命周期、并发、缓存、事件 |
+| `bsp-adapter` | BSP Wrapper/Port | 板级绑定与依赖注入 |
+| `bsp-platform-adapter` | BSP Port | 平台适配与 Fake Port |
+| `os-abstraction` | OS Wrapper/Port | OSAL 抽象 |
+| `rtos-freertos` | OS Port/RTOS | FreeRTOS 原生配置 |
+| `fatfs-module` / `middleware-*` | Middlewares | 文件系统/通信/GUI/算法中间件 |
+| `workflow-project-integration` | 跨层 | 现有工程架构审计与迁移 |
 | `embedded-architect` | 全层 | 所有层的架构决策 |
-| `embedded-code-reviewer-framework` | 全层 | 所有层的代码审查 |
+| `embedded-reviewer` | 全层 | 所有层的代码与方案审查 |
