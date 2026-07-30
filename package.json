@@ -17,6 +17,7 @@
     "build": "echo 'Build complete'",
     "cli": "node bin/mcu-workbench.js",
     "agent:artifacts": "node scripts/agent-artifacts.js",
+    "build:codex-compat": "node scripts/build-codex-compat.js",
     "codex:register": "node scripts/register-codex-marketplace.js",
     "sync:codex": "node scripts/sync-codex-skills.js",
     "migrate:capabilities": "node scripts/materialize-skill-capabilities.js --check",
