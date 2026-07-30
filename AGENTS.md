@@ -1,75 +1,64 @@
-# Repository Guidelines
+# AGENTS.md — MCU-Workbench OpenCode 集成
 
-## Project Identity & Scope
+插件根目录的 `agents/*.md` 同时面向 OpenCode 和 Claude Code。OpenCode 通过 `opencode.mjs` 将 7 个 agent 暴露为可调用工具；Claude Code 自动发现 `agents/` 目录。
 
-- This repository is `mcu-workbench` (`shuai-yemao/mcu-workbench`), a Claude Code / OpenCode plugin for STM32 / ESP32 / Cortex-M embedded development.
-- The workspace root is `C:\Users\zhang` (the user's home directory). Many files and folders here are personal and **not** part of the plugin. Treat `README.md`, `package.json`, and `.claude-plugin/plugin.json` as the project boundary.
-- Because the root is a home directory, `git status` will show many untracked personal files. Stage only plugin-related files.
+## Agent 团队
 
-## Project Structure
+| Agent | 角色 | 工具 ID | 写入范围 |
+|---|---|---|---|
+| `embedded-lead` | 分诊、编排、最终汇总 | `mcu_agent_embedded_lead` | `.mcu-workbench/`、`docs/devlog/` |
+| `system-architect` | 软件分层与迁移 | `mcu_agent_system_architect` | `docs/architecture/` |
+| `firmware-engineer` | APP/OS/BSP/Core 集成实现 | `mcu_agent_firmware_engineer` | 项目固件目录与配置 |
+| `hardware-integration` | 板级连接与测量证据 | `mcu_agent_hardware_integration` | `hardware/`、`docs/verification/` |
+| `toolchain-engineer` | 构建、烧录、链接、调试、观测 | `mcu_agent_toolchain_engineer` | 工具配置、`docs/verification/` |
+| `verification-engineer` | 测试、质量、回归验证 | `mcu_agent_verification_engineer` | 测试目录、`docs/verification/` |
+| `knowledge-engineer` | 日志、学习笔记、知识整理 | `mcu_agent_knowledge_engineer` | `docs/devlog/`、`docs/notes/` |
 
-- `skills/{workflow,rtos,bsp,platform,middleware,system,tools,hardware}/` — active plugin skills.
-  - `skills/catalog.js` is the single source of truth for canonical IDs, aliases, layers, and archive paths.
-  - `skills/registry.js` is a compatibility facade; `skills/loader.js` loads active skill content.
-  - Other top-level directories under `skills/` (e.g., `lark-*`, `obsidian-to-feishu`, `frontend-design`) are unrelated personal projects, not plugin skills.
-- `archive/` — legacy skills and compatibility material; not loaded by the plugin manifest.
-- `commands/` and `lib/` — Node API and CLI implementation; `bin/mcu-workbench.js` is the npm CLI entry point.
-- `agents/` — Claude Code custom agents (7 roles). See `docs/agents.md` for role boundaries and handoff rules.
-- `templates/` — C/H templates for the CLI generator.
-- `tests/` — Jest tests (`*.test.js`).
-- `scripts/` — validation and Codex sync tools.
-- `docs/` — architecture, migration, CLI, and plugin docs.
-- `.claude-plugin/plugin.json` — Claude Code plugin manifest.
-- `opencode.mjs` — OpenCode plugin entry.
+## 在 OpenCode 中使用
 
-## Build, Test, and Development Commands
+### Agent 工具
 
-Run from the repo root. Run `npm install` first if `node_modules/` is missing or tests fail with a Jest-not-found error.
+OpenCode 加载插件后，每个 agent 以独立 tool 形式暴露。直接调用 tool 即可获取该 agent 的完整系统提示词和工作流说明。
 
-```powershell
-npm install                    # Install dependencies before first test/validation
-npm test -- --runInBand        # Run the full Jest suite
-npm run cli -- --help          # Inspect CLI commands
-npm run validate:plugin        # Validate manifest, catalog, agents, skill files, and internal links
-npm run validate:architecture  # Validate firmware architecture contract (requires --root <dir>)
-npm run validate:links         # Validate skill internal links
-npm run migrate:capabilities   # Check migrated capability references are complete
-npm run report:skills          # Print catalog statistics
-claude plugin validate .       # Validate the Claude plugin manifest
-git diff --check               # Check whitespace errors
+**路由工具** `mcu_workbench_agent_route`：
+根据用户的嵌入式需求推荐最合适的 agent，返回 agent 信息及其系统提示词。
+
+### 开发工作流
+
+推荐的标准流程：
+
+```
+embedded-lead → system-architect → firmware-engineer → verification-engineer
+                    ↓
+            hardware-integration / toolchain-engineer
+                    ↓
+              knowledge-engineer
 ```
 
-`npm run build` is currently a placeholder. The CLI `build` and `flash` commands are dry-run by default; append `--execute` only after reviewing the generated command.
+1. 先用 `embedded-lead` 分析需求和项目状态
+2. `system-architect` 设计软件分层和接口
+3. `firmware-engineer` 实现固件代码
+4. `hardware-integration` 验证板级连接
+5. `toolchain-engineer` 管理构建/烧录/调试
+6. `verification-engineer` 执行测试和回归
+7. `knowledge-engineer` 整理开发日志和笔记
 
-## Coding Style & Naming Conventions
+## Agent 交接规范
 
-- CommonJS JavaScript, two-space indentation, semicolons, focused functions.
-- `camelCase` for variables/functions; kebab-case for skill IDs and directories (e.g., `tools-learning-tutor`).
-- Skill `SKILL.md` files require YAML frontmatter whose `name` matches the catalog ID.
-- Keep architecture-specific details in a skill's `references/` rather than duplicating canonical entry points.
+每次交接需包含：
+- Summary — 完成的工作摘要
+- Evidence — 文件路径、命令输出、测量数据
+- Changed files — 修改的文件列表
+- Tests — 测试结果
+- Artifacts — 输出产物路径
+- Blockers — 阻塞项
+- Next handoff — 下一个交接目标
 
-## Testing Guidelines
+## 运行产物
 
-- Tests use Jest and are named `*.test.js`.
-- Add or update tests for every catalog, loader, CLI, command, or agent change.
-- Run the full suite with `npm test -- --runInBand`.
-- Tests may create temporary `integration-test/` and `test-project/` directories; remove them before committing.
+```powershell
+node scripts/agent-artifacts.js init --project . --project-id <name> --mcu <chip> --toolchain <tool>
+node scripts/agent-artifacts.js record --project . --agent <name> --task "<desc>" --status completed --evidence <path> --artifact <path>
+```
 
-## Agent Team & Run Artifacts
-
-- Custom agents live in `agents/` and are discovered by Claude Code. Invoke via `@mcu-workbench:<agent-name>`.
-- Use `npm run agent:artifacts -- init ...` to initialize a project's `.mcu-workbench/` state, and `record ...` to append a run. See `docs/agents.md` for role write boundaries and required handoff fields.
-- Agents must not overwrite existing run records; each run uses a unique timestamp.
-
-## Commit & Pull Request Guidelines
-
-- Use short, imperative Conventional Commit-style subjects: `feat:`, `fix:`, `docs:`, `refactor:`, etc.
-- Keep commits focused.
-- PRs should describe affected skills or CLI behavior, list validation commands and results, call out catalog/manifest changes, and include example CLI output when user-facing behavior changes.
-
-## Security & Configuration Tips
-
-- Do not commit credentials, tokens, generated firmware, or local Vault paths.
-- Keep external build/flash execution opt-in (`--execute`).
-- Validate user-provided platform/device values.
-- Review generated files before using `--write` or `--execute`.
+协议目录：`.mcu-workbench/project.json`、`.mcu-workbench/runs/*.json`、`docs/architecture/`、`docs/verification/`、`docs/devlog/`、`docs/notes/`

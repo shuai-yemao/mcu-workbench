@@ -1,8 +1,26 @@
 # MCU-Workbench Agent Team
 
-插件根目录的 `agents/*.md` 是 Claude Code 自动发现的 Custom Agents。当前团队由 7 个角色组成；没有默认主 agent，调用由用户或任务编排决定。
+插件根目录的 `agents/*.md` 同时面向 OpenCode 和 Claude Code。OpenCode 通过 `opencode.mjs` 将 7 个 agent 暴露为可调用工具；Claude Code 自动发现 `agents/` 目录。
 
-## 调用
+当前团队由 7 个角色组成；没有默认主 agent，调用由用户或任务编排决定。
+
+## OpenCode 调用
+
+在 OpenCode 中，每个 agent 以独立 tool 形式暴露：
+
+| Agent | 工具 ID |
+|---|---|
+| `embedded-lead` | `mcu_agent_embedded_lead` |
+| `system-architect` | `mcu_agent_system_architect` |
+| `firmware-engineer` | `mcu_agent_firmware_engineer` |
+| `hardware-integration` | `mcu_agent_hardware_integration` |
+| `toolchain-engineer` | `mcu_agent_toolchain_engineer` |
+| `verification-engineer` | `mcu_agent_verification_engineer` |
+| `knowledge-engineer` | `mcu_agent_knowledge_engineer` |
+
+路由工具 `mcu_workbench_agent_route` 可根据需求推荐最合适的 agent。
+
+## Claude Code 调用
 
 ```powershell
 claude --plugin-dir .
