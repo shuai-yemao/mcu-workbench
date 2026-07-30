@@ -24,6 +24,9 @@ describe('AI collaboration skills', () => {
     expect(collaboration).toContain('需求与证据');
     expect(collaboration).toContain('逐函数生成');
     expect(collaboration).toContain('独立审查');
+    expect(collaboration).toContain('tool_root');
+    expect(collaboration).toContain('firmware_root');
+    expect(collaboration).toContain('绝对 `cwd`');
     expect(styleProfile).toContain('用户明确要求');
     expect(styleProfile).toContain('.editorconfig');
     expect(styleProfile).toContain('.clang-format');

@@ -5,7 +5,8 @@ const path = require('path');
 
 const RUN_FIELDS = [
   'run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files',
-  'tests', 'artifacts', 'blockers', 'handoff'
+  'tests', 'artifacts', 'blockers', 'handoff', 'working_directories',
+  'commands', 'attempts'
 ];
 const STATUSES = new Set(['planned', 'in_progress', 'completed', 'blocked']);
 
@@ -126,6 +127,9 @@ function writeRunRecord(options = {}) {
     artifacts: values(options, 'artifacts'),
     blockers: values(options, 'blockers'),
     handoff: values(options, 'handoff'),
+    working_directories: values(options, 'workingDirectories'),
+    commands: values(options, 'commands'),
+    attempts: values(options, 'attempts'),
     created_at: new Date().toISOString()
   };
   fs.writeFileSync(runPath, `${JSON.stringify(record, null, 2)}\n`, 'utf8');
@@ -167,7 +171,10 @@ function main(argv = process.argv.slice(2)) {
     tests: values(args, 'test'),
     artifacts: values(args, 'artifact'),
     blockers: values(args, 'blocker'),
-    handoff: values(args, 'handoff')
+    handoff: values(args, 'handoff'),
+    workingDirectories: values(args, 'working-directory'),
+    commands: values(args, 'command'),
+    attempts: values(args, 'attempt')
   });
   console.log(`recorded ${path.relative(projectRoot, result.path)}`);
   return result;

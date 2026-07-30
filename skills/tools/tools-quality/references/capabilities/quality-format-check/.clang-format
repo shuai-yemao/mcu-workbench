@@ -12,8 +12,9 @@ IndentCaseLabels: true            # switch-case 缩进
 IndentPPDirectives: None          # #ifdef 等不缩进
 
 # Line width
-ColumnLimit: 80
+ColumnLimit: 160
 AllowShortBlocksOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
@@ -21,10 +22,10 @@ AllowShortLoopsOnASingleLine: false
 # Brace style
 BreakBeforeBraces: Custom
 BraceWrapping:
-  AfterFunction: true              # 函数大括号换行
+  AfterFunction: false             # K&R：函数大括号同行
   AfterControlStatement: false    # if/for/while 大括号同行
-  AfterEnum: true                  # 枚举/结构体大括号换行
-  AfterStruct: true
+  AfterEnum: false                 # K&R：枚举/结构体大括号同行
+  AfterStruct: false
   BeforeElse: false
 
 # Spacing

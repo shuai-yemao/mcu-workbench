@@ -31,10 +31,15 @@ describe('agent artifact protocol', () => {
       tests: ['npm test'],
       artifacts: ['docs/architecture/layers.md'],
       blockers: [],
-      handoff: ['firmware-engineer']
+      handoff: ['firmware-engineer'],
+      workingDirectories: ['C:/tools/mcu-workbench', 'D:/firmware'],
+      commands: ['npm run validate:architecture', 'cmake --build --preset Debug'],
+      attempts: ['attempt-1: format command used wrong cwd; corrected']
     });
     const record = JSON.parse(fs.readFileSync(result.path, 'utf8'));
-    for (const field of ['run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files', 'tests', 'artifacts', 'blockers', 'handoff']) expect(record[field]).toBeDefined();
+    for (const field of ['run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files', 'tests', 'artifacts', 'blockers', 'handoff', 'working_directories', 'commands', 'attempts']) expect(record[field]).toBeDefined();
+    expect(record.working_directories).toEqual(['C:/tools/mcu-workbench', 'D:/firmware']);
+    expect(record.attempts).toHaveLength(1);
     const metadata = JSON.parse(fs.readFileSync(path.join(root, '.mcu-workbench', 'project.json'), 'utf8'));
     expect(metadata.active_agents).toContain('system-architect');
     expect(() => writeRunRecord({ projectRoot: root, runId: '20260723T120000Z-system-architect-audit', agent: 'system-architect', task: 'audit layers', status: 'completed' })).toThrow(/already exists/);

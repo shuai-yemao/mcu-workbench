@@ -70,7 +70,8 @@ Core、Middleware、Driver 不设置 Adapter。
 | 模块 | 当前责任 | 与 Skills 的关系 |
 |---|---|---|
 | `commands/mcu-new.js` | 生成项目骨架 | 不等同于 `workflow-project-integration` |
-| `commands/mcu-driver.js` | 生成 BSP 模板 | 不等同于 `bsp-hal-driver` 或 `bsp-handler` |
+| `commands/mcu-core.js` | 生成单类 MCU Core `.c/.h` | 不等同于 `core-mcu` 的完整工程审计 |
+| `commands/mcu-driver.js` | 生成 BSP Driver/Handle/Port/Wrapper 切片 | 不等同于 `bsp-hal-driver` 或 `bsp-handler` |
 | `lib/builder.js` | 生成构建命令；`--execute` 时运行 | 不等同于 `tools-build` 的完整工具链路 |
 | `lib/flasher.js` | 生成烧录命令；`--execute` 时运行 | 不等同于 `tools-flash` 的完整校验流程 |
 | `lib/platform.js` | 原型平台配置 | 不等同于 `driver-vendor` 或 `core-mcu` |
