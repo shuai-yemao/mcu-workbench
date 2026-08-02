@@ -8,13 +8,13 @@ skills:
   - app-architecture
   - workflow-ai-collab
   - tools-quality
-  - os-abstraction
-  - rtos-freertos
-  - bsp-adapter
+  - os-adapter
+  - os-runtime
+  - bsp-port
   - bsp-hal-driver
   - bsp-handler
   - core-mcu
-  - driver-vendor
+  - mcu-platform
   - middleware-lvgl
   - middleware-communication
   - middleware-storage

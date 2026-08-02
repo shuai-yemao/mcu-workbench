@@ -13,22 +13,22 @@
 
 ```bash
 # 扫描开源驱动代码
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py --scan ./downloaded_driver/
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py --scan ./downloaded_driver/
 
 # 适配开源驱动到 BSP 规范
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py \
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py \
   --adapt ./downloaded_driver/ \
   --device at24c02 --handle hi2c1 \
   --output ./Hardware/bsp_at24c02/
 
 # 生成 BSP 骨架文件
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py \
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py \
   --scaffold --device sht30 --bus i2c \
   --handle hi2c1 --addr 0x44 \
   --output ./Hardware/bsp_sht30/
 
 # 列出已记录的设备
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py --list-devices
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py --list-devices
 ```
 
 ## 常见模式
@@ -36,7 +36,7 @@ python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py --list-devices
 ### 1. 扫描分析
 
 ```bash
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py --scan ./mpu6050_lib/
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py --scan ./mpu6050_lib/
 ```
 
 输出适配建议报告：检测到的函数签名、HAL 调用模式、命名风格、include 依赖和适配难度评估。
@@ -44,7 +44,7 @@ python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py --scan ./mpu6050
 ### 2. 适配开源库
 
 ```bash
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py \
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py \
   --adapt ./mpu6050_lib/ \
   --device mpu6050 --handle hi2c1 \
   --output ./Hardware/bsp_mpu6050/
@@ -55,7 +55,7 @@ python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py \
 ### 3. 生成 BSP 骨架
 
 ```bash
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py \
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py \
   --scaffold --device my_sensor --bus i2c \
   --handle hi2c1 --addr 0x44 \
   --output ./Hardware/bsp_my_sensor/
@@ -66,7 +66,7 @@ python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py \
 ### 4. 查看已记录设备
 
 ```bash
-python3 skills/bsp/bsp-device-adaptation/scripts/bsp_adapter.py --list-devices
+python3 skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py --list-devices
 ```
 
 列出 `device-adaptation.md` 中记录的设备、总线类型、推荐方案和适配难度。

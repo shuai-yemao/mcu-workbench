@@ -137,6 +137,12 @@ describe('validateArchitectureContract', () => {
   test('requires OS Wrapper public calls to forward to their matching internal implementation', () => withFixture({
     'OS/Wrapper/osal_task.c': 'int osal_task_create(void) { return unrelated_call(); }',
     'OS/Wrapper/osal_queue.c': 'int osal_queue_create(void) { return os_queue_create_impl(); }',
+    'OS/Wrapper/osal_timer.c': [
+      'int osal_timer_create(int invalid) {',
+      '  if (invalid) { return -1; }',
+      '  return os_timer_create_impl();',
+      '}'
+    ].join('\n'),
     'Middlewares/os_adapter/shared/src/osal_mutex.c': 'int osal_mutex_create(void) { return os_mutex_create_impl(); }',
     'OS/Port/freertos_task.c': 'int os_task_create_impl(void) { return xTaskCreate(0, 0, 0, 0, 0, 0); }'
   }, (root) => {
@@ -148,6 +154,29 @@ describe('validateArchitectureContract', () => {
       expect.objectContaining({ file: 'OS/Wrapper/osal_queue.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' }),
       expect.objectContaining({ file: 'Middlewares/os_adapter/shared/src/osal_mutex.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' }),
       expect.objectContaining({ file: 'OS/Port/freertos_task.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+    expect(errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_timer.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+  }));
+
+  test('requires Port injections on the registration path rather than in dead static helpers', () => withFixture({
+    'Bsp/Port/sensor_port.c': [
+      'static void sensor_inject_everything(void) {',
+      '  sensor_driver_register_core_ops(&core_ops);',
+      '  sensor_driver_register_mcu_ops(&mcu_ops);',
+      '  sensor_handler_register_osal_ops(&osal_ops);',
+      '  sensor_handler_register_driver(&driver_ops);',
+      '}',
+      'int sensor_port_register(void) { return 0; }'
+    ].join('\n')
+  }, (root) => {
+    const ruleIds = validateArchitectureContract({ root }).errors.map((finding) => finding.ruleId);
+    expect(ruleIds).toEqual(expect.arrayContaining([
+      'BSP_PORT_CORE_OPS_INJECTION',
+      'BSP_PORT_MCU_OPS_INJECTION',
+      'BSP_PORT_OS_WRAPPER_OPS_INJECTION',
+      'BSP_PORT_HAL_DRIVER_OPS_INJECTION'
     ]));
   }));
 

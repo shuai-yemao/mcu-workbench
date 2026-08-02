@@ -118,4 +118,12 @@ describe('embedded architecture skill contracts', () => {
     expect(freertosMap).toContain('os_task_create_impl');
     expect(freertosMap).not.toContain('os_impl_task_create');
   });
+
+  test('keeps repository-relative BSP adapter script paths valid', () => {
+    const usagePath = 'skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/references/usage.md';
+    const usage = read(usagePath);
+    for (const [, scriptPath] of usage.matchAll(/python3\s+([^\s]+\.py)/g)) {
+      expect(fs.existsSync(path.join(ROOT, scriptPath))).toBe(true);
+    }
+  });
 });

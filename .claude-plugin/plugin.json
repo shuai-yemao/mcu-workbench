@@ -12,7 +12,6 @@
     "./skills/bsp/",
     "./skills/core/",
     "./skills/mcu/",
-    "./skills/platform/",
     "./skills/middleware/",
     "./skills/system/",
     "./skills/interface/",
