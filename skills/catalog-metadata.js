@@ -53,7 +53,6 @@ const LEGACY_SKILL_ENTRIES = [
   ['bsp-platform-adapter', 'embedded-adapter', 'bsp', 'BSP 依赖到 HAL/RTOS 的平台适配'],
 
   // RTOS 与中间件。
-  ['rtos-freertos', 'freertos-module', 'rtos', 'FreeRTOS 集成与使用'],
   ['middleware-dsp', 'dsp-module', 'middleware', '嵌入式数字信号处理'],
   ['middleware-fatfs', 'fatfs-module', 'middleware', 'FatFs 文件系统'],
   ['middleware-fft', 'fft-module', 'middleware', '快速傅里叶变换'],
@@ -113,12 +112,14 @@ const CANONICAL_DEFINITIONS = [
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
   ['workflow-ai-collab', 'workflow', '项目风格优先的嵌入式 AI 协作、逐函数生成与验证编排'],
   ['app-architecture', 'workflow', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
-  ['os-abstraction', 'rtos', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
-  ['bsp-adapter', 'bsp', 'BSP Wrapper、BSP Port、函数表与平台绑定'],
+  ['os-adapter', 'os', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
+  ['os-runtime', 'os', '具体 RTOS 或裸机运行时的配置、Port 与调度诊断'],
+  ['bsp-wrapper', 'bsp', 'BSP Wrapper 的平台无关函数表注册与稳定转发入口'],
+  ['bsp-port', 'bsp', 'BSP Port 的平台对象绑定、Core 后端选择与资源注入'],
   ['bsp-hal-driver', 'bsp', 'BSP Driver：器件协议与可注入实例接口'],
   ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
-  ['core-mcu', 'platform', 'MCU 内部外设、初始化、中断与 DMA 组织'],
-  ['driver-vendor', 'platform', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],
+  ['core-mcu', 'core', 'MCU 内部外设、初始化、中断与 DMA 组织'],
+  ['mcu-platform', 'mcu', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],
   ['middleware-communication', 'middleware', 'MQTT、BLE、CAN、Modbus、WiFi 等通信能力'],
   ['middleware-storage', 'middleware', 'FatFs、SFUD、Flash 与文件系统接入'],
   ['middleware-algorithms', 'middleware', 'DSP、FFT、电机控制及通用算法中间件'],
@@ -131,8 +132,7 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-linker', 'tools', 'Keil、GCC、IAR 链接脚本与内存布局'],
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
-  ['tools-quality', 'tools', '代码审查、Map、静态分析和 Unity 测试'],
-  ['tools-ai-code-quality', 'tools', '项目代码风格解析、AI 生成约束与独立审查'],
+  ['tools-quality', 'tools', '代码审查、AI 代码约束、Map、静态分析和 Unity 测试'],
   ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
   ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
 ];
@@ -169,10 +169,24 @@ const TOOL_ALIASES = {
   'tools-learning-tutor': ['workflow-learning-tutor', 'learning-tutor']
 };
 
+const CANONICAL_ALIASES = {
+  'os-adapter': ['os-abstraction'],
+  'os-runtime': ['rtos-freertos', 'freertos-module'],
+  'bsp-port': [
+    'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter',
+    'peripheral-driver', 'embedded-adapter'
+  ],
+  'mcu-platform': [
+    'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
+    'stm32-hal-development', 'stm32-spl-development'
+  ]
+};
+
 module.exports = {
   LEGACY_SKILL_ENTRIES,
   ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
   TOOL_CANONICAL_DEFINITIONS,
-  TOOL_ALIASES
+  TOOL_ALIASES,
+  CANONICAL_ALIASES
 };

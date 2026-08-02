@@ -13,9 +13,11 @@ npm run migrate:capabilities       # 检查 80 份已转移能力及索引是否
 node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐缺失资料
 ```
 
-目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-abstraction`、`rtos-freertos`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；它们不应凭空创建“旧版迁移资料”。
+目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-adapter`、`os-runtime`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；它们不应凭空创建“旧版迁移资料”。
 
-原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-project-integration`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
+`os-abstraction` 与 `rtos-freertos` 仅在兼容映射中解析到这两个当前 OS 入口。
+
+原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-ai-collab`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
 
 | 旧名 | 历史归档目录 | 原架构层 |
 |---|---|---|
@@ -101,19 +103,21 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-下面的 15 个名称是当前软件架构的 canonical skill；工具方向另有 8 个 canonical skill，合计 23 个。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
+当前状态为 **107 catalog / 25 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
 | `workflow-router` | `embedded` |
 | `workflow-project-integration` | `workflow-architecture`、`project-integration`、`code-porting` |
 | `app-architecture` | APP 新入口，无旧目录 |
-| `os-abstraction` | OSAL 新入口；`rtos-freertos` 保留为 FreeRTOS 专用实现 |
-| `bsp-adapter` | `bsp-device-adaptation`、`bsp-platform-adapter` |
+| `os-adapter` | `os-abstraction`（兼容映射） |
+| `os-runtime` | `rtos-freertos`、`freertos-module`（兼容映射） |
+| `bsp-wrapper` | 无旧入口；提供函数表与稳定转发 |
+| `bsp-port` | `bsp-adapter`、`bsp-device-adaptation`、`bsp-platform-adapter`（兼容映射） |
 | `bsp-hal-driver` | `bsp-device-driver` |
 | `bsp-handler` | `bsp-device-service` |
 | `core-mcu` | `platform-*`（厂商 HAL/SPL 除外）、`bus-*`、`peripheral-*` |
-| `driver-vendor` | `platform-stm32-hal`、`platform-stm32-spl` |
+| `mcu-platform` | `driver-vendor`、`platform-stm32-hal`、`platform-stm32-spl`（兼容映射） |
 | `middleware-lvgl` | `middleware-lvgl` |
 | `middleware-communication` | `protocol-*` |
 | `middleware-storage` | `middleware-fatfs`、`middleware-sfud` |

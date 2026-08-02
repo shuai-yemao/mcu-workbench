@@ -27,6 +27,6 @@ CMSIS Core/Device 的源码路径和审计顺序见 [`cmsis-core-map.md`](refere
 寄存器、中断、内存、总线和 MCU 外设的完整能力资料见 [`capability-index.md`](references/capability-index.md)。
 硬件 IIC 与软件 IIC 解耦案例见 [`core-iic-backends-case.md`](references/core-iic-backends-case.md)。
 
-交接：厂商 HAL/LL/CMSIS 交给 [`driver-vendor`](../driver-vendor/SKILL.md)，板上器件流程交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)。
+交接：厂商 HAL/LL/CMSIS 交给 [`mcu-platform`](../../mcu/mcu-platform/SKILL.md)，板上器件流程交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)。
 
 共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。

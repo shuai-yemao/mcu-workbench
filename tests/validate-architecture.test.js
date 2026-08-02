@@ -119,6 +119,91 @@ describe('validateArchitectureContract', () => {
     ]);
   }));
 
+  test('recognizes canonical OS and Core paths while retaining legacy layouts', () => withFixture({
+    'OS/Wrapper/osal_task.c': 'int osal_task_create(void) { return xTaskCreate(0, 0, 0, 0, 0, 0); }',
+    'OS/Port/freertos_task.c': 'int os_task_create_impl(void) { return xTaskCreate(0, 0, 0, 0, 0, 0); }',
+    'Core/Public/core_bus.h': '#include "stm32f4xx_hal.h"'
+  }, (root) => {
+    const errors = validateArchitectureContract({ root }).errors;
+    expect(errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_task.c', ruleId: 'OS_WRAPPER_NATIVE_RTOS' }),
+      expect.objectContaining({ file: 'Core/Public/core_bus.h', ruleId: 'CORE_PUBLIC_VENDOR_INCLUDE' })
+    ]));
+    expect(errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Port/freertos_task.c' })
+    ]));
+  }));
+
+  test('requires OS Wrapper public calls to forward to their matching internal implementation', () => withFixture({
+    'OS/Wrapper/osal_task.c': 'int osal_task_create(void) { return unrelated_call(); }',
+    'OS/Wrapper/osal_queue.c': 'int osal_queue_create(void) { return os_queue_create_impl(); }',
+    'OS/Wrapper/osal_timer.c': [
+      'int osal_timer_create(int invalid) {',
+      '  const char *closing_brace = "}";',
+      '  if (invalid) { return -1; }',
+      '  return os_timer_create_impl();',
+      '}'
+    ].join('\n'),
+    'Middlewares/os_adapter/shared/src/osal_mutex.c': 'int osal_mutex_create(void) { return os_mutex_create_impl(); }',
+    'OS/Port/freertos_task.c': 'int os_task_create_impl(void) { return xTaskCreate(0, 0, 0, 0, 0, 0); }'
+  }, (root) => {
+    const errors = validateArchitectureContract({ root }).errors;
+    expect(errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_task.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+    expect(errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_queue.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' }),
+      expect.objectContaining({ file: 'Middlewares/os_adapter/shared/src/osal_mutex.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' }),
+      expect.objectContaining({ file: 'OS/Port/freertos_task.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+    expect(errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_timer.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+  }));
+
+  test('requires Port injections on the registration path rather than in dead static helpers', () => withFixture({
+    'Bsp/Port/sensor_port.c': [
+      'static void sensor_inject_everything(void) {',
+      '  sensor_driver_register_core_ops(&core_ops);',
+      '  sensor_driver_register_mcu_ops(&mcu_ops);',
+      '  sensor_handler_register_osal_ops(&osal_ops);',
+      '  sensor_handler_register_driver(&driver_ops);',
+      '}',
+      'int sensor_port_register(void) { return 0; }'
+    ].join('\n')
+  }, (root) => {
+    const ruleIds = validateArchitectureContract({ root }).errors.map((finding) => finding.ruleId);
+    expect(ruleIds).toEqual(expect.arrayContaining([
+      'BSP_PORT_CORE_OPS_INJECTION',
+      'BSP_PORT_MCU_OPS_INJECTION',
+      'BSP_PORT_OS_WRAPPER_OPS_INJECTION',
+      'BSP_PORT_HAL_DRIVER_OPS_INJECTION'
+    ]));
+  }));
+
+  test('does not count injection helpers reachable only through an always-false branch', () => withFixture({
+    'Bsp/Port/sensor_port.c': [
+      'static void sensor_inject_everything(void) {',
+      '  sensor_driver_register_core_ops(&core_ops);',
+      '  sensor_driver_register_mcu_ops(&mcu_ops);',
+      '  sensor_handler_register_osal_ops(&osal_ops);',
+      '  sensor_handler_register_driver(&driver_ops);',
+      '}',
+      'int sensor_port_register(void) {',
+      '  if (0) { sensor_inject_everything(); }',
+      '  return 0;',
+      '}'
+    ].join('\n')
+  }, (root) => {
+    const ruleIds = validateArchitectureContract({ root }).errors.map((finding) => finding.ruleId);
+    expect(ruleIds).toEqual(expect.arrayContaining([
+      'BSP_PORT_CORE_OPS_INJECTION',
+      'BSP_PORT_MCU_OPS_INJECTION',
+      'BSP_PORT_OS_WRAPPER_OPS_INJECTION',
+      'BSP_PORT_HAL_DRIVER_OPS_INJECTION'
+    ]));
+  }));
+
   test('ignores comments, preserved ISR tokens, and vendored source trees', () => withFixture({
     'Bsp/Handler/sensor_handler.c': [
       '/* unsigned timeout; taskENTER_CRITICAL_FROM_ISR(); */',
@@ -186,6 +271,10 @@ describe('validateArchitectureContract', () => {
       '  return core_i2c_bind(0);',
       '}',
       'int sensor_port_register(void) {',
+      '  sensor_driver_register_core_ops(&core_ops);',
+      '  sensor_driver_register_mcu_ops(&mcu_ops);',
+      '  sensor_handler_register_osal_ops(&osal_ops);',
+      '  sensor_handler_register_driver(&driver_ops);',
       '  sensor_drv_t drv = { sensor_port_init };',
       '  return sensor_wrapper_reg(&drv);',
       '}'
@@ -194,6 +283,10 @@ describe('validateArchitectureContract', () => {
       '#include "sensor_port.h"',
       'int sensor_fake_init(void) { return fake_i2c_bind(0); }',
       'int sensor_port_register(void) {',
+      '  sensor_driver_register_core_ops(&core_ops);',
+      '  sensor_driver_register_mcu_ops(&mcu_ops);',
+      '  sensor_handler_register_osal_ops(&osal_ops);',
+      '  sensor_handler_register_driver(&driver_ops);',
       '  sensor_drv_t drv = { sensor_fake_init };',
       '  return sensor_wrapper_reg(&drv);',
       '}'
@@ -300,6 +393,29 @@ describe('validateArchitectureContract', () => {
       findings: [expected.findings[0], expected.findings[0]]
     }).matches).toBe(false);
   });
+
+  test('enforces Wrapper independence and injection-only BSP implementation roles', () => withFixture({
+    'Bsp/Wrapper/sensor_wrapper.c': '#include "drv_adapter_port_sensor.h"\nint sensor_wrapper(void) { return 0; }',
+    'Bsp/Handler/sensor_handler.c': '#include "core_i2c.h"\nint sensor_handler(void) { return 0; }',
+    'Bsp/Driver/sensor_driver.c': '#include "stm32f4xx_hal.h"\nint sensor_driver(void) { return HAL_I2C_Init(0); }',
+    'Bsp/Port/sensor_port.c': [
+      'int sensor_port_register(void) {',
+      '  return sensor_wrapper_register(0);',
+      '}'
+    ].join('\n')
+  }, (root) => {
+    const ruleIds = validateArchitectureContract({ root }).errors.map((finding) => finding.ruleId);
+
+    expect(ruleIds).toEqual(expect.arrayContaining([
+      'BSP_WRAPPER_CONCRETE_DEPENDENCY',
+      'BSP_HANDLER_INJECTION_DEPENDENCY',
+      'BSP_HAL_DRIVER_CONCRETE_DEPENDENCY',
+      'BSP_PORT_CORE_OPS_INJECTION',
+      'BSP_PORT_MCU_OPS_INJECTION',
+      'BSP_PORT_OS_WRAPPER_OPS_INJECTION',
+      'BSP_PORT_HAL_DRIVER_OPS_INJECTION'
+    ]));
+  }));
 
   test('keeps the pinned source manifest reviewable and exact', () => {
     const manifestPath = path.join(

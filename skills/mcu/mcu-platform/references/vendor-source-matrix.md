@@ -12,4 +12,4 @@
 - STM32 HAL 的 HAL/LL、CMSIS Core、CMSIS Device 必须保持同一兼容矩阵。
 - ESP-IDF 的 Component、Kconfig、CMake 和目标芯片版本必须一起记录。
 - Driver 只提供原生厂商能力，不创建 Adapter、不放业务、不放 OS Wrapper。
-- 外部器件协议交给 `bsp-hal-driver`，板级绑定交给 `bsp-adapter`，MCU 资源编排交给 `core-mcu`。
+- 外部器件协议交给 `bsp-hal-driver`，板级绑定交给 `bsp-port`，MCU 资源编排交给 `core-mcu`。

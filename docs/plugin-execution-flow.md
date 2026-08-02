@@ -60,9 +60,11 @@ flowchart TD
 
 ```text
 “外部 Flash 驱动怎么分层”
-    → bsp-adapter / bsp-hal-driver / bsp-handler
-    → os-abstraction（如果涉及任务和队列）
-    → core-mcu / driver-vendor（如果涉及底层外设）
+    → bsp-wrapper / bsp-port / bsp-hal-driver / bsp-handler
+    → os-adapter / os-runtime（如果涉及任务、队列或 Runtime）
+    → core-mcu / mcu-platform（如果涉及底层外设）
+
+当前 active 目录为 **107 catalog / 25 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
 ```
 
 ### 阶段 3：渐进式读取上下文

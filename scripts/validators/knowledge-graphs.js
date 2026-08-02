@@ -108,8 +108,9 @@ function validateSoftwareArchitectureGraph(errors) {
     if (!edge || !edge.evidence) errors.push('workflow-project-integration: edge 缺少 evidence');
   }
   for (const required of [
-    'skill-app-architecture', 'skill-middleware-communication', 'skill-os-abstraction',
-    'skill-bsp-adapter', 'skill-core-mcu', 'skill-driver-vendor', 'skill-tools-build',
+    'skill-app-architecture', 'skill-middleware-communication', 'skill-os-adapter',
+    'skill-os-runtime', 'skill-bsp-wrapper', 'skill-bsp-port', 'skill-core-mcu',
+    'skill-mcu-platform', 'skill-tools-build',
     'skill-software-system'
   ]) {
     if (!ids.nodeIds.has(required)) errors.push(`workflow-project-integration: 缺少架构节点 ${required}`);

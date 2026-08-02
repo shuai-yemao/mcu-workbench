@@ -37,8 +37,8 @@ LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务
 
 ## 交接与验收
 
-- 设备绑定交给 [`bsp-adapter`](../../bsp/bsp-adapter/SKILL.md)，器件协议交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)。
-- 任务、Tick、互斥和等待交给 [`os-abstraction`](../../rtos/os-abstraction/SKILL.md)。
+- 设备能力只经 [`bsp-wrapper`](../../bsp/bsp-wrapper/SKILL.md)；器件协议交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)。
+- 任务、Tick、互斥和等待交给 [`os-adapter`](../../os/os-adapter/SKILL.md)。
 - 业务页面和业务状态交给 [`app-architecture`](../../workflow/app-architecture/SKILL.md)。
 - 构建、日志、性能和回归证据交给 [`tools-quality`](../../tools/tools-quality/SKILL.md) 或 [`tools-observability`](../../tools/tools-observability/SKILL.md)。
 

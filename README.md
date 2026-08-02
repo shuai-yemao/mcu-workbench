@@ -7,9 +7,9 @@
 ```text
 skills/
 ├─ workflow/       # 路由、项目集成、APP 架构
-├─ rtos/           # OS 抽象与 FreeRTOS
-├─ bsp/            # BSP Adapter、hal_driver、Handler
-├─ platform/       # MCU Core 与厂商 Driver
+├─ os/             # OS Wrapper、Port 与 Runtime
+├─ bsp/            # BSP Wrapper、Port、HAL Driver、Handler
+├─ core/ mcu/      # Core 公共 MCU 能力与厂商平台实现
 ├─ middleware/     # LVGL、通信、存储、算法
 ├─ system/         # 跨层系统能力
 ├─ hardware/       # PCB、仪器和硬件分析
@@ -23,13 +23,13 @@ archive/
 
 ## Canonical skills
 
-软件方向 15 个主入口，加上工具方向 8 个主入口，共 23 个 canonical skills：
+当前目录为 **107 catalog / 25 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-router workflow-project-integration app-architecture
-os-abstraction rtos-freertos
-bsp-adapter bsp-hal-driver bsp-handler
-core-mcu driver-vendor
+os-adapter os-runtime
+bsp-wrapper bsp-port bsp-hal-driver bsp-handler
+core-mcu mcu-platform
 middleware-lvgl middleware-communication middleware-storage middleware-algorithms
 software-system
 tools-build tools-flash tools-linker tools-debug
@@ -101,7 +101,7 @@ npm run cli -- build --target stm32f4
 
 ## OpenCode 适配
 
-本分支新增 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 23 个 canonical skill 工具和一个路由工具。
+本分支新增 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 25 个 canonical skill 工具和一个路由工具。
 
 ### 本地安装
 

@@ -6,7 +6,6 @@ effort: medium
 maxTurns: 30
 skills:
   - tools-quality
-  - tools-ai-code-quality
   - tools-debug
   - tools-observability
   - tools-build

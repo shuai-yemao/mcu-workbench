@@ -7,11 +7,11 @@ maxTurns: 28
 skills:
   - hardware-pcb-analysis
   - hardware-visa-debug
-  - bsp-adapter
+  - bsp-port
   - bsp-hal-driver
   - bsp-handler
   - core-mcu
-  - driver-vendor
+  - mcu-platform
   - tools-debug
   - tools-observability
 ---

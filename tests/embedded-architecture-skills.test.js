@@ -7,14 +7,25 @@ function read(relativePath) {
   return fs.readFileSync(path.join(ROOT, relativePath), 'utf8');
 }
 
+function findMarkdownFiles(root) {
+  const files = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const current = path.join(root, entry.name);
+    if (entry.isDirectory()) files.push(...findMarkdownFiles(current));
+    if (entry.isFile() && entry.name.endsWith('.md')) files.push(current);
+  }
+  return files;
+}
+
 describe('embedded architecture skill contracts', () => {
   const canonicalSkillEntries = [
-    'skills/platform/core-mcu/SKILL.md',
-    'skills/bsp/bsp-adapter/SKILL.md',
+    'skills/core/core-mcu/SKILL.md',
+    'skills/bsp/bsp-wrapper/SKILL.md',
+    'skills/bsp/bsp-port/SKILL.md',
     'skills/bsp/bsp-hal-driver/SKILL.md',
     'skills/bsp/bsp-handler/SKILL.md',
-    'skills/rtos/os-abstraction/SKILL.md',
-    'skills/rtos/rtos-freertos/SKILL.md',
+    'skills/os/os-adapter/SKILL.md',
+    'skills/os/os-runtime/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
     'skills/workflow/workflow-project-integration/SKILL.md'
   ];
@@ -28,10 +39,10 @@ describe('embedded architecture skill contracts', () => {
   });
 
   test('uses the verified two-layer OS naming consistently', () => {
-    const abstraction = read('skills/rtos/os-abstraction/SKILL.md');
-    const contract = read('skills/rtos/os-abstraction/references/osal-contract.md');
-    const freertos = read('skills/rtos/rtos-freertos/SKILL.md');
-    const freertosMap = read('skills/rtos/rtos-freertos/references/freertos-source-map.md');
+    const abstraction = read('skills/os/os-adapter/SKILL.md');
+    const contract = read('skills/os/os-adapter/references/osal-contract.md');
+    const freertos = read('skills/os/os-runtime/SKILL.md');
+    const freertosMap = read('skills/os/os-runtime/references/freertos-source-map.md');
 
     expect(abstraction).toContain('os_*_impl()');
     expect(contract).toContain('osal_task_create() → os_task_create_impl()');
@@ -42,9 +53,9 @@ describe('embedded architecture skill contracts', () => {
   test('publishes all evidence references at their canonical locations', () => {
     for (const relativePath of [
       'skills/workflow/workflow-project-integration/references/ec-s100-architecture-audit.md',
-      'skills/platform/core-mcu/references/core-iic-backends-case.md',
+      'skills/core/core-mcu/references/core-iic-backends-case.md',
       'skills/bsp/references/bsp-aht21-case.md',
-      'skills/rtos/os-abstraction/references/osal-freertos-case.md',
+      'skills/os/os-adapter/references/osal-freertos-case.md',
       'skills/tools/tools-observability/references/debugcomponent-rtt-case.md'
     ]) {
       expect(fs.existsSync(path.join(ROOT, relativePath))).toBe(true);
@@ -54,6 +65,37 @@ describe('embedded architecture skill contracts', () => {
   test('keeps device names out of generic architecture rules', () => {
     const validator = read('lib/architecture-contract.js');
     expect(validator).not.toMatch(/AHT21|bsp_gpio_iic|drv_adapter_temphumi/);
+  });
+
+  test('keeps Middleware algorithms device-free and routes ports through both Wrappers', () => {
+    const algorithms = read('skills/middleware/middleware-algorithms/SKILL.md');
+    expect(algorithms).toContain('BSP Wrapper');
+    expect(algorithms).toContain('OS Wrapper');
+    expect(algorithms).toContain('不直接操作外设');
+  });
+
+  test('keeps public documentation aligned with the 107 catalog and 25 canonical entries', () => {
+    const documents = [
+      'README.md', 'CLAUDE.md', 'docs/skills-migration.md', 'docs/codex-adaptation.md',
+      'docs/plugin-capability-map.md', 'docs/plugin-execution-flow.md'
+    ];
+    for (const relativePath of documents) {
+      const content = read(relativePath);
+      expect(content).toContain('107 catalog / 25 canonical');
+      expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
+      for (const entry of ['os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'core-mcu', 'mcu-platform']) {
+        expect(content).toContain(entry);
+      }
+    }
+  });
+
+  test('lists current OS entries rather than compatibility aliases in migration prose', () => {
+    const migration = read('docs/skills-migration.md');
+    const activeSourceLine = migration.split(/\r?\n/).find((line) => line.includes('没有归档前身'));
+    expect(activeSourceLine).toContain('os-adapter');
+    expect(activeSourceLine).toContain('os-runtime');
+    expect(activeSourceLine).not.toContain('os-abstraction');
+    expect(activeSourceLine).not.toContain('rtos-freertos');
   });
 
   test('requires file-level delivery tables and evidence handoff', () => {
@@ -67,7 +109,7 @@ describe('embedded architecture skill contracts', () => {
 
   test('keeps active capability guides aligned with the canonical contracts', () => {
     const adapterGuide = read(
-      'skills/bsp/bsp-adapter/references/capabilities/bsp-platform-adapter/GUIDE.md'
+      'skills/bsp/bsp-port/references/capabilities/bsp-platform-adapter/GUIDE.md'
     );
     const driverGuide = read(
       'skills/bsp/bsp-hal-driver/references/capabilities/bsp-device-driver/GUIDE.md'
@@ -76,7 +118,7 @@ describe('embedded architecture skill contracts', () => {
       'skills/bsp/bsp-handler/references/capabilities/bsp-device-service/GUIDE.md'
     );
     const freertosMap = read(
-      'skills/rtos/rtos-freertos/references/freertos-source-map.md'
+      'skills/os/os-runtime/references/freertos-source-map.md'
     );
 
     expect(adapterGuide).toContain('不能在 BSP Port 实现');
@@ -85,5 +127,24 @@ describe('embedded architecture skill contracts', () => {
     expect(handlerGuide).toContain('必须先在当前 OSAL Port');
     expect(freertosMap).toContain('os_task_create_impl');
     expect(freertosMap).not.toContain('os_impl_task_create');
+  });
+
+  test('keeps repository-relative BSP adapter script paths valid', () => {
+    const usagePath = 'skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/references/usage.md';
+    const usage = read(usagePath);
+    for (const [, scriptPath] of usage.matchAll(/python3\s+([^\s]+\.py)/g)) {
+      expect(fs.existsSync(path.join(ROOT, scriptPath))).toBe(true);
+    }
+  });
+
+  test('keeps fenced active documentation repository paths valid', () => {
+    for (const documentPath of findMarkdownFiles(path.join(ROOT, 'skills'))) {
+      const content = fs.readFileSync(documentPath, 'utf8');
+      for (const block of content.matchAll(/```[^\r\n]*\r?\n([\s\S]*?)```/g)) {
+        for (const [, repositoryPath] of block[1].matchAll(/(?:^|\s)(skills\/[A-Za-z0-9_./-]+)/g)) {
+          expect(fs.existsSync(path.join(ROOT, repositoryPath))).toBe(true);
+        }
+      }
+    }
   });
 });

@@ -8,9 +8,10 @@
   "license": "MIT",
   "skills": [
     "./skills/workflow/",
-    "./skills/rtos/",
+    "./skills/os/",
     "./skills/bsp/",
-    "./skills/platform/",
+    "./skills/core/",
+    "./skills/mcu/",
     "./skills/middleware/",
     "./skills/system/",
     "./skills/interface/",

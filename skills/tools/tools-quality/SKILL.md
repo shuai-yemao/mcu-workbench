@@ -1,21 +1,30 @@
 ---
 name: tools-quality
-description: 负责嵌入式代码审查、Map 分析、静态分析、MISRA 和 Unity 测试；当用户要求质量门禁、内存占用分析或单元测试时使用。
+description: 负责嵌入式代码审查、AI 生成代码约束、Map 分析、静态分析、MISRA 和 Unity 测试；当用户要求质量门禁、统一代码格式、审查 AI 输出、内存占用分析或单元测试时使用。
 ---
 
 # 质量与验证工具
 
 ## 职责
 
-统一处理代码审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
+统一处理 AI 生成代码审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
 
 ## 变体
 
 代码审查、Map 分析、静态分析、格式检查和 Unity 的原始资料分别保留在 `references/quality-*` 或 `references/capabilities/*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。
 
 Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
-AI 生成代码审查、嵌入式 C 编码规范与 clang-format 基线由本 Skill 统一承接。
+AI 生成代码审查、项目风格 profile 与 clang-format 基线由本 Skill 统一承接。
 其余质量工具的完整资料见 [`capability-index.md`](references/capability-index.md)。
+
+## AI 代码约束与审查
+
+先按 [项目风格 profile](references/style-profile.md) 建立可追溯约束，再按 [生成代码审查门禁](references/review-gates.md) 分开检查风格、功能和安全风险。
+
+1. 风格优先级为：用户明确要求 → `.editorconfig`、`.clang-format`、IDE 或构建配置 → 相邻源码 → 保守 C 默认。
+2. 在生成或重构前说明 profile 的来源和适用目录；审查报告必须把 profile 偏差与功能/安全问题分开分级。
+3. 除非项目或用户明确采用，否则不强制 `ec_*`、变量前缀或全函数 Doxygen；不使用居中横线分隔注释，也不将 80 列作为硬限制。
+4. 先检查编译、接口、错误路径和资源所有权；再检查 ISR/DMA/并发、数组边界及硬件约束；最后报告风格偏差。
 
 ## 三级验证闭环
 

@@ -23,27 +23,33 @@ describe('Codex skill synchronization', () => {
     fs.writeFileSync(path.join(target, 'embedded', 'SKILL.md'), 'legacy router');
     fs.mkdirSync(path.join(target, 'debug-gdb-openocd'), { recursive: true });
     fs.writeFileSync(path.join(target, 'debug-gdb-openocd', 'SKILL.md'), 'legacy debug');
+    fs.mkdirSync(path.join(target, 'bsp-adapter'), { recursive: true });
+    fs.writeFileSync(path.join(target, 'bsp-adapter', 'SKILL.md'), 'legacy adapter');
 
     const summary = syncCodexSkills({ target, backupRoot });
 
     expect(summary.total).toBe(25);
-    expect(summary.renamed).toBe(2);
-    expect(summary.added).toBe(23);
-    expect(summary.replaced).toBe(2);
+    expect(summary.renamed).toBe(3);
+    expect(summary.added).toBe(22);
+    expect(summary.replaced).toBe(3);
     expect(fs.existsSync(path.join(target, 'embedded'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'debug-gdb-openocd'))).toBe(false);
+    expect(fs.existsSync(path.join(target, 'bsp-adapter'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'workflow-router', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(target, 'tools-debug', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(target, 'bsp-wrapper', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(target, 'bsp-port', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'embedded', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'debug-gdb-openocd', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(summary.backup, 'bsp-adapter', 'SKILL.md'))).toBe(true);
     for (const skill of CANONICAL_SKILLS) {
       expect(fs.existsSync(path.join(target, skill.id, 'SKILL.md'))).toBe(true);
     }
     expect(fs.existsSync(path.join(target, '_shared', 'bsp', 'bsp-architecture-contract.md'))).toBe(true);
 
-    const adapter = fs.readFileSync(path.join(target, 'bsp-adapter', 'SKILL.md'), 'utf8');
-    expect(adapter).toContain('../_shared/bsp/bsp-architecture-contract.md');
-    expect(adapter).toContain('../bsp-hal-driver/SKILL.md');
+    const port = fs.readFileSync(path.join(target, 'bsp-port', 'SKILL.md'), 'utf8');
+    expect(port).toContain('../_shared/bsp/bsp-architecture-contract.md');
+    expect(port).toContain('../bsp-hal-driver/SKILL.md');
 
     const links = validateSkillLinks({ root: target, boundaryRoot: target });
     expect(links.findings).toEqual([]);

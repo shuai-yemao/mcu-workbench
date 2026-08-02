@@ -1,43 +1,43 @@
 # 软件层契约
 
 ```text
-APP
-├─ OS Wrapper
-├─ BSP Wrapper
-└─ Middleware 公共 API
+APP ──┬─ OS Wrapper (`osal_*`) → OS Port (`os_*_impl()`) → OS Runtime
+      ├─ BSP Wrapper → BSP Port → BSP Handler → BSP HAL Driver → Core → MCU
+      └─ Middleware Public API
 
-OS Wrapper → OS Port → FreeRTOS / RT-Thread / 裸机
-BSP Wrapper → BSP Port → BSP Handler → BSP Driver → Core Bus → Vendor Driver
+Middleware Port ── OS Wrapper + BSP Wrapper
+OS Port ── BSP Wrapper（仅在需要板级能力时）
 ```
 
-| 层 | 单一职责 | 允许依赖 | 不负责 |
+| 层 | 单一职责 | 允许依赖 | 禁止事项 |
 |---|---|---|---|
-| APP | 业务、UI、连接和应用状态 | OS Wrapper、BSP Wrapper、Middleware API | 直接调用 HAL、管理 RTOS 原生对象 |
-| Middleware | 可复用协议、GUI、存储和算法 | 公共 API、必要的 OS/BSP Wrapper | 设备绑定、Adapter 设计 |
-| OS | 任务、队列、同步、定时和内存抽象 | OS Port | 业务逻辑、器件协议 |
-| BSP | 板上器件协议、实例和设备生命周期 | BSP Port、Handler、Driver、Core Bus | 直接暴露厂商 HAL、实现 MCU 总线位时序 |
-| Core | MCU 内置 GPIO/I2C/SPI/UART/ADC/TIM/DMA/IRQ、时基和总线后端 | Driver、公开 OSAL 或注入锁 Ops | BSP Adapter、业务和外部器件协议 |
-| Driver | 厂商 SDK、CMSIS、HAL/LL/SPL、寄存器访问 | 芯片硬件 | Adapter、项目业务 |
+| APP | 业务、UI、连接和应用状态 | OS Wrapper、BSP Wrapper、Middleware 公共 API | HAL、原生 RTOS、BSP Port、Handler、HAL Driver、Core、MCU |
+| Middleware | 可复用协议、GUI、存储、算法和公共 API | Middleware 公共 API；Port 仅可用 OS Wrapper、BSP Wrapper | 具体设备、BSP Port、Handler、HAL Driver、Core、MCU、原生 RTOS |
+| OS Wrapper | 稳定的 `osal_*` 公共 API、语义转换和错误码 | 内部 OS Port | 业务状态、板级协议、原生 RTOS 调用 |
+| OS Port | `os_*_impl()` 与 FreeRTOS、RT-Thread、裸机 Runtime 的绑定 | OS Runtime；必要时 BSP Wrapper | APP/BSP/Middleware 业务、直接访问 BSP Port/Handler/Driver |
+| BSP Wrapper | 函数表、注册槽位和稳定转发 | 标准类型与自身公共声明 | Port、Handler、HAL Driver、Core、MCU、OS、HAL、RTOS 具体依赖 |
+| BSP Port | 唯一组合根：构造实例、注入 Ops、注册 BSP Public Ops | Core Ops、MCU Ops、OS Wrapper Ops、Driver/Handler 实例、BSP Wrapper 注册口 | 设备协议、业务缓存、任务循环、重试、回调、直接 HAL/RTOS |
+| BSP Handler | 生命周期、任务循环、队列、缓存、重试、回调和请求串行化 | 注入的 OS Wrapper Ops、HAL Driver Ops | Port/Wrapper/Core/MCU/HAL/RTOS 具体实现、设备寄存器协议 |
+| BSP HAL Driver | 外部器件协议与事务级错误映射 | 注入的 Core Ops、MCU Ops | HAL、RTOS、OS Wrapper、Handler、Port、业务状态 |
+| Core | MCU 编程的公共能力：片上总线、GPIO、DMA、IRQ、时基与事务 API | MCU 层；公开 `osal_*` 或注入锁 Ops | 外部器件协议、BSP Adapter、业务状态 |
+| MCU | CMSIS、厂商 HAL/LL/SPL、寄存器、SDK 与芯片专有能力 | 芯片硬件 | APP/BSP/Middleware/OS Wrapper 业务逻辑 |
 
-## Adapter 规则
+## OS 契约
 
-OS Adapter：`osal_*` Wrapper 定义稳定 API，内部通过 `os_*_impl()` 进入 Port，再绑定具体 RTOS。`osal_internal_*.h` 只是两层之间的内部边界。
+`osal_*` 是 APP、BSP、Middleware 与 Middleware Port 唯一可见的 OS API；`os_*_impl()` 是仅供 Wrapper 使用的 OS Port 内部函数；`os-runtime` 负责 FreeRTOS、RT-Thread 或裸机的实际运行时绑定。`osal_internal_*.h` 只表示 Wrapper/Port 的内部边界，不形成第三层。原生 RTOS 头、类型和 API 不得越过 OS Port。
 
-BSP Adapter：Wrapper 定义稳定设备 API，Port 注入 Core Bus、OSAL、时基和 Driver Ops；Wrapper 不得反向依赖 Driver、Handler、HAL 或 RTOS。Port 不实现软件 IIC，也不调用 HAL。
+## BSP 注入顺序
 
-BSP 的接口、装配、生命周期和验收细节见 [`BSP 架构专用契约`](../../../bsp/references/bsp-architecture-contract.md)。Handle 通过泛化 Driver Ops 调用实例 `pf_*`，不要求“Handler 必然经 Wrapper 调 Driver”。
+1. BSP Port 创建 HAL Driver，并注入 Core Ops 与仅表达 Core 无法表达的 MCU Ops。
+2. BSP Port 创建 Handler，并注入 OS Wrapper Ops 与 HAL Driver Ops。
+3. BSP Port 将同形 BSP Public Ops 注册到 BSP Wrapper。
 
-Core、Middleware、Driver 不采用 BSP 的 Wrapper/Port Adapter 调用层。Core 可以用私有 Backend/Port 隔离厂商外设实现，但其公共 API 保持事务级、无厂商和 RTOS 类型。
+生产 Port 与 Fake Port 必须保留相同的 Wrapper 函数表；差异只能位于注入的 Ops。`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不是 BSP Port。
 
-## 归属裁决
+## Core 与 MCU 裁决
 
-- Core 负责片上外设、时钟、GPIO、DMA、IRQ、时基、总线后端和硬件低功耗入口。
-- Bootloader、OTA 回滚、系统恢复、任务看门狗和恢复策略归 [`software-system`](../../../system/software-system/SKILL.md)。
-- 外部 Flash 器件 Driver 归 BSP；分区、配置和持久化策略归 storage/system；安全算法归 system 或算法 Middleware，不塞入 Core。
-- Tickless、Idle Hook 和 Trace Hook 归具体 RTOS Skill。
-
-架构意图、图片表达与固定源码的冲突见 [`ec-s100-architecture-audit.md`](ec-s100-architecture-audit.md)。
+Core 优先表达项目公共 MCU 编程能力。只有芯片独有且无法用 Core 事务/资源 API 表达的能力，才作为 MCU Ops 注入 BSP HAL Driver。CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK 归 MCU；其调用应被 Core 私有后端或受职责约束的 MCU 绑定消化。
 
 ## 验收边界
 
-构建和链接成功不等于分层合规；静态门禁通过也不等于器件、并发和恢复路径已验证；连接 RTT 只证明观测通道可用，不证明业务读数正确。源码警告必须独立记录，不能因未启用 `-Werror` 而视为无风险。
+静态门禁只证明依赖边界。构建、烧录、RTT/串口运行和板上现象分别需要独立记录，不能互相替代。

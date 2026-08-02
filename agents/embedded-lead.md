@@ -8,7 +8,7 @@ skills:
   - workflow-router
   - workflow-project-integration
   - workflow-ai-collab
-  - tools-ai-code-quality
+  - tools-quality
   - tools-learning-tutor
 ---
 

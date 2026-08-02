@@ -1,5 +1,5 @@
 ---
-name: driver-vendor
+name: mcu-platform
 description: 使用 CMSIS、STM32 HAL/LL/SPL、ESP-IDF Driver、寄存器和厂商 SDK。
 ---
 

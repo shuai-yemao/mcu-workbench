@@ -18,4 +18,4 @@ description: 设计 FatFs、SFUD、Flash 存储、磨损处理和文件系统接
 Flash/KV/时序存储读取 [`flash-storage-sources.md`](references/flash-storage-sources.md)，区分 Middleware 公共存储 API 与 BSP 器件协议。
 FatFs、SFUD 的移植步骤、配置和参考资料见 [`capability-index.md`](references/capability-index.md)。
 
-交接：Flash 器件协议交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)，板级绑定交给 [`bsp-adapter`](../../bsp/bsp-adapter/SKILL.md)。
+交接：Flash 器件协议交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)，存储层只经 [`bsp-wrapper`](../../bsp/bsp-wrapper/SKILL.md) 使用设备能力。

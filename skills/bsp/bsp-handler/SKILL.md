@@ -21,4 +21,4 @@ description: Use when a BSP device requires instance registration, lifecycle man
 
 生成 Handle 使用 `bsp_<type>_handle.c/.h`；例如 `bsp_externflash_handle_read_id`。每实例只允许一个回调与上下文，第二次注册必须返回已注册状态而不是静默覆盖。没有缓存、队列、异步、IRQ 延后或多实例需求的器件可省略工作线程，但仍保留同步 Handle API。
 
-板级注入交给 [`bsp-adapter`](../bsp-adapter/SKILL.md)，器件协议交给 [`bsp-hal-driver`](../bsp-hal-driver/SKILL.md)。
+板级注入交给 [`bsp-port`](../bsp-port/SKILL.md)，器件协议交给 [`bsp-hal-driver`](../bsp-hal-driver/SKILL.md)。

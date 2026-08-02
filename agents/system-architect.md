@@ -8,9 +8,9 @@ skills:
   - workflow-project-integration
   - workflow-ai-collab
   - app-architecture
-  - os-abstraction
+  - os-adapter
   - core-mcu
-  - driver-vendor
+  - mcu-platform
   - middleware-lvgl
   - middleware-communication
   - middleware-storage
