@@ -79,6 +79,15 @@ describe('embedded architecture skill contracts', () => {
     }
   });
 
+  test('lists current OS entries rather than compatibility aliases in migration prose', () => {
+    const migration = read('docs/skills-migration.md');
+    const activeSourceLine = migration.split(/\r?\n/).find((line) => line.includes('没有归档前身'));
+    expect(activeSourceLine).toContain('os-adapter');
+    expect(activeSourceLine).toContain('os-runtime');
+    expect(activeSourceLine).not.toContain('os-abstraction');
+    expect(activeSourceLine).not.toContain('rtos-freertos');
+  });
+
   test('requires file-level delivery tables and evidence handoff', () => {
     const integration = read('skills/workflow/workflow-project-integration/SKILL.md');
     expect(integration).toContain('现状表');

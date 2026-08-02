@@ -13,7 +13,9 @@ npm run migrate:capabilities       # 检查 80 份已转移能力及索引是否
 node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐缺失资料
 ```
 
-目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-abstraction`、`rtos-freertos`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；它们不应凭空创建“旧版迁移资料”。
+目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-adapter`、`os-runtime`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；它们不应凭空创建“旧版迁移资料”。
+
+`os-abstraction` 与 `rtos-freertos` 仅在兼容映射中解析到这两个当前 OS 入口。
 
 原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-ai-collab`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
 
