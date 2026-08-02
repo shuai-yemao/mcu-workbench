@@ -32,14 +32,14 @@ description: 依据项目证据设计软件分层、审计工程集成关系并�
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
 - 上层调用下层时，调用下层 Adapter 的 Wrapper；Middleware 仅通过公共 API 使用 OS/BSP 能力。
 - 本 skill 只输出项目审计、分层设计、迁移路线和下游交接，不直接执行代码移植、AI 协作流程、Prompt 模板生成或具体驱动实现。
-- AI 协作、Prompt 和逐函数生成交给 [`workflow-ai-collab`](../workflow-ai-collab/SKILL.md)；项目风格与 AI 代码审查交给 [`tools-ai-code-quality`](../../tools/tools-ai-code-quality/SKILL.md)。
+- AI 协作、Prompt 和逐函数生成交给 [`workflow-ai-collab`](../workflow-ai-collab/SKILL.md)；项目风格与 AI 代码审查交给 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 
 ## 交接
 
 - APP 结构交给 [`app-architecture`](../app-architecture/SKILL.md)。
-- OSAL/RTOS 交给 [`os-abstraction`](../../rtos/os-abstraction/SKILL.md)。
-- 器件链路交给 [`bsp-adapter`](../../bsp/bsp-adapter/SKILL.md)、[`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md) 或 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)。
-- MCU/厂商库交给 [`core-mcu`](../../platform/core-mcu/SKILL.md) 或 [`driver-vendor`](../../platform/driver-vendor/SKILL.md)。
+- OSAL/OS Port 交给 [`os-adapter`](../../os/os-adapter/SKILL.md) 或 [`os-runtime`](../../os/os-runtime/SKILL.md)。
+- 器件链路交给 [`bsp-wrapper`](../../bsp/bsp-wrapper/SKILL.md)、[`bsp-port`](../../bsp/bsp-port/SKILL.md)、[`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md) 或 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)。
+- MCU/厂商库交给 [`core-mcu`](../../core/core-mcu/SKILL.md) 或 [`mcu-platform`](../../mcu/mcu-platform/SKILL.md)。
 
 ## 参考
 

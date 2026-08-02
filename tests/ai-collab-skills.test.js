@@ -9,15 +9,16 @@ describe('AI collaboration skills', () => {
   test('routes every legacy AI collaboration entry to a focused canonical skill', () => {
     expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-ai-collab');
     expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-ai-collab');
-    expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-ai-code-quality');
-    expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-ai-code-quality');
+    expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-quality');
+    expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-quality');
+    expect(resolveSkillId('tools-ai-code-quality')).toBe('tools-quality');
   });
 
   test('uses project evidence for generation, style and review', () => {
     const collaboration = getSkillContent('workflow-ai-collab');
-    const quality = getSkillContent('tools-ai-code-quality');
+    const quality = getSkillContent('tools-quality');
     const styleProfile = fs.readFileSync(
-      path.join(ROOT, 'skills', 'tools', 'tools-ai-code-quality', 'references', 'style-profile.md'),
+      path.join(ROOT, 'skills', 'tools', 'tools-quality', 'references', 'style-profile.md'),
       'utf8'
     );
 

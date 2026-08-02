@@ -7,14 +7,14 @@ description: 基于目标项目真实风格协作生成、重构或审查嵌入�
 
 ## 职责
 
-编排需求澄清、架构接口、逐函数生成、独立审查和验证；不以旧模板覆盖目标项目的命名、注释或格式。项目风格和审查门禁由 [`tools-ai-code-quality`](../../tools/tools-ai-code-quality/SKILL.md) 定义。
+编排需求澄清、架构接口、逐函数生成、独立审查和验证；不以旧模板覆盖目标项目的命名、注释或格式。项目风格和审查门禁由 [`tools-quality`](../../tools/tools-quality/SKILL.md) 定义。
 
 ## 五阶段流程
 
 1. **需求与证据**：确认目标模块、硬件/SDK、接口、构建命令、验收条件和可修改范围。
 2. **架构与接口**：交给 `system-architect` 审查层边界和公开契约；接口未确认前不生成实现。
 3. **逐函数生成**：由 `firmware-engineer` 每次实现一个可验证边界；生成前读取风格 profile 和 [Prompt 契约](references/prompt-contract.md)。
-4. **独立审查**：由 `verification-engineer` 使用 `tools-ai-code-quality` 区分风格、功能和安全问题。
+4. **独立审查**：由 `verification-engineer` 使用 `tools-quality` 区分风格、功能和安全问题。
 5. **验证与交接**：由 `toolchain-engineer` 复现构建；需要板级证据时交给 `hardware-integration`；`embedded-lead` 汇总证据和未决项。
 
 对分层外设生成，阶段计划必须在生成前列出四张表：现状表、边界表、文件修改表、验收表。每层生成后先经独立审查和 `tools-quality` 门禁，再进入下一层；Core 与 BSP Driver/Handle/Port/Wrapper 分开生成和验证。

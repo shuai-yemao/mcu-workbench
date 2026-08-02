@@ -15,7 +15,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-abstraction`、`rtos-freertos`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；它们不应凭空创建“旧版迁移资料”。
 
-原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-project-integration`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
+原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-ai-collab`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
 
 | 旧名 | 历史归档目录 | 原架构层 |
 |---|---|---|

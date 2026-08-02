@@ -132,8 +132,7 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-linker', 'tools', 'Keil、GCC、IAR 链接脚本与内存布局'],
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
-  ['tools-quality', 'tools', '代码审查、Map、静态分析和 Unity 测试'],
-  ['tools-ai-code-quality', 'tools', '项目代码风格解析、AI 生成约束与独立审查'],
+  ['tools-quality', 'tools', '代码审查、AI 代码约束、Map、静态分析和 Unity 测试'],
   ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
   ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
 ];

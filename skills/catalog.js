@@ -65,7 +65,7 @@ const CANONICAL_ORDER = [
   'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
   'middleware-communication', 'middleware-storage', 'middleware-algorithms',
   'software-system', 'tools-build', 'tools-flash', 'tools-linker',
-  'tools-debug', 'tools-observability', 'tools-quality', 'tools-ai-code-quality', 'tools-release',
+  'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
   'tools-learning-tutor'
 ];
 
@@ -193,9 +193,10 @@ const MIGRATION_MAP = {
   'workflow-devlog': 'tools-learning-tutor',
   'devlog': 'tools-learning-tutor',
   'embedded-ai-collab': 'workflow-ai-collab',
-  'embedded-ai-coding-standard': 'tools-ai-code-quality',
+  'embedded-ai-coding-standard': 'tools-quality',
   'embedded-ai-prompt-templates': 'workflow-ai-collab',
-  'embedded-ai-code-review': 'tools-ai-code-quality',
+  'embedded-ai-code-review': 'tools-quality',
+  'tools-ai-code-quality': 'tools-quality',
   ...TOOL_MIGRATION_MAP
 };
 
