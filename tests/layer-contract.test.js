@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const os = require('os');
 const path = require('path');
 const { generateBspDriver, generateCorePeripheral } = require('../lib/generator');
-const { validateLayerContract } = require('../scripts/validate-layer-contract');
+const { parseArgs, validateLayerContract } = require('../scripts/validate-layer-contract');
 
 async function createSlice() {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mcu-layer-contract-'));
@@ -31,9 +31,38 @@ function validate(root) {
 }
 
 describe('generated layer contract validator', () => {
+  test('accepts a no-input self-check invocation for the package validation command', () => {
+    expect(parseArgs(['--self-check'])).toEqual({ selfCheck: true });
+  });
+
   test('accepts a generated Core and BSP slice', async () => {
     const root = await createSlice();
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
+  });
+
+  test('generates the Port as the Core, MCU, OS Wrapper, Driver, Handler, and Wrapper composition root', async () => {
+    const root = await createSlice();
+    const port = await fs.readFile(
+      path.join(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c'),
+      'utf8'
+    );
+
+    expect(port).toContain('bsp_w25q64_driver_register_core_ops');
+    expect(port).toContain('bsp_w25q64_driver_register_mcu_ops');
+    expect(port).toContain('bsp_externflash_handle_register_osal_ops');
+    expect(port).toContain('bsp_externflash_handle_register_driver');
+    expect(port).toContain('drv_adapter_wrapper_externflash_register');
+    expect(validate(root)).toMatchObject({ valid: true, errors: [] });
+  });
+
+  test('rejects a Port that omits a required injected operation table', async () => {
+    const root = await createSlice();
+    await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content
+      .replace(/\s*bsp_w25q64_driver_register_mcu_ops\([^;]+;\n/, '\n'));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_PORT_MCU_OPS_INJECTION' })
+    ]));
   });
 
   test('reports a Core vendor leak, extra Port export, and forbidden Wrapper include', async () => {

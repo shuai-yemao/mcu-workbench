@@ -36,7 +36,7 @@ describe('software layered architecture knowledge graph', () => {
     const relations = new Set(graph.edges.map((edge) => edge.relation));
     expect(relations.has('must-not-call')).toBe(true);
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-core').to).toBe('skill-core-mcu');
-    expect(graph.edges.find((edge) => edge.id === 'app-forbids-driver').to).toBe('skill-driver-vendor');
+    expect(graph.edges.find((edge) => edge.id === 'app-forbids-driver').to).toBe('skill-mcu-platform');
     expect(graph.edges.find((edge) => edge.id === 'core-to-driver').relation).toBe('uses-native-api');
     expect(graph.edges.find((edge) => edge.id === 'bsp-wrapper-to-port')).toEqual(
       expect.objectContaining({ from: 'bsp-wrapper', to: 'bsp-port' })
@@ -49,6 +49,12 @@ describe('software layered architecture knowledge graph', () => {
     );
     expect(graph.edges.find((edge) => edge.id === 'bsp-driver-to-core-bus')).toEqual(
       expect.objectContaining({ from: 'bsp-driver-contract', to: 'core-bus' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'bsp-port-injects-driver')).toEqual(
+      expect.objectContaining({ from: 'skill-bsp-port', to: 'skill-bsp-hal-driver' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'bsp-port-injects-handler')).toEqual(
+      expect.objectContaining({ from: 'skill-bsp-port', to: 'skill-bsp-handler' })
     );
   });
 });

@@ -1,8 +1,15 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
-const { normalizeCorePeripheral, normalizeDevice, normalizeDeviceType } = require('../lib/generator');
+const {
+  generateBspDriver,
+  generateCorePeripheral,
+  normalizeCorePeripheral,
+  normalizeDevice,
+  normalizeDeviceType
+} = require('../lib/generator');
 
 const STANDARD_HEADERS = new Set(['stdbool.h', 'stddef.h', 'stdint.h', 'inttypes.h', 'limits.h', 'stdint.h']);
 
@@ -153,6 +160,37 @@ function validateWrapper(files, errors) {
   }
 }
 
+function validateHalDriver(files, errors) {
+  for (const role of ['driverHeader', 'driverSource']) {
+    const file = files[role];
+    if (!file) continue;
+    const code = maskCommentsAndStrings(file.content);
+    if (/\bHAL_[A-Za-z0-9_]+\s*\(|#\s*include\s*[<"][^>"]*(?:stm32|hal|freertos|rtthread|cmsis_os)[^>"]*[>"]/i.test(code)) {
+      addError(errors, 'LAYER_HAL_DRIVER_CONCRETE_DEPENDENCY', file.relative, 'HAL Driver must use injected Core and MCU Ops rather than HAL or RTOS dependencies.');
+    }
+  }
+  if (files.driverHeader && !/(?:^|_)register_core_ops\s*\(/m.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_CORE_OPS', files.driverHeader.relative, 'HAL Driver must expose Core Ops injection.');
+  }
+  if (files.driverHeader && !/(?:^|_)register_mcu_ops\s*\(/m.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_MCU_OPS', files.driverHeader.relative, 'HAL Driver must expose MCU Ops injection.');
+  }
+}
+
+function validateHandler(files, errors) {
+  for (const role of ['handleHeader', 'handleSource']) {
+    const file = files[role];
+    if (!file) continue;
+    const code = maskCommentsAndStrings(file.content);
+    if (/#\s*include\s*[<"][^>"]*(?:drv_adapter_(?:port|wrapper)|core_|mcu_|stm32|hal|freertos|rtthread|osal_internal)[^>"]*[>"]/i.test(code)) {
+      addError(errors, 'LAYER_HANDLER_CONCRETE_DEPENDENCY', file.relative, 'Handler must use injected OS Wrapper and HAL Driver Ops only.');
+    }
+  }
+  if (files.handleHeader && !/(?:^|_)register_osal_ops\s*\(/m.test(files.handleHeader.content)) {
+    addError(errors, 'LAYER_HANDLER_OS_WRAPPER_OPS', files.handleHeader.relative, 'Handler must expose OS Wrapper Ops injection.');
+  }
+}
+
 function validatePort(files, type, errors) {
   if (!files.portSource) return;
   const expected = `drv_adapter_port_${type}_register`;
@@ -168,6 +206,16 @@ function validatePort(files, type, errors) {
   }
   if (/\bHAL_[A-Za-z0-9_]+\s*\(/.test(maskCommentsAndStrings(files.portSource.content))) {
     addError(errors, 'LAYER_PORT_HAL', files.portSource.relative, 'Generated Port must not directly call HAL APIs.');
+  }
+  const requiredInjections = [
+    ['LAYER_PORT_CORE_OPS_INJECTION', /driver_register_core_ops\s*\(/, 'Port must inject Core Ops into the HAL Driver.'],
+    ['LAYER_PORT_MCU_OPS_INJECTION', /driver_register_mcu_ops\s*\(/, 'Port must inject MCU Ops into the HAL Driver.'],
+    ['LAYER_PORT_OS_WRAPPER_OPS_INJECTION', /handle_register_osal_ops\s*\(/, 'Port must inject OS Wrapper Ops into the Handler.'],
+    ['LAYER_PORT_HAL_DRIVER_OPS_INJECTION', /handle_register_driver\s*\(/, 'Port must inject HAL Driver Ops into the Handler.'],
+    ['LAYER_PORT_WRAPPER_REGISTRATION', /drv_adapter_wrapper_[a-z0-9_]+_register\s*\(/i, 'Port must register BSP public Ops with the Wrapper.']
+  ];
+  for (const [ruleId, pattern, message] of requiredInjections) {
+    if (!pattern.test(files.portSource.content)) addError(errors, ruleId, files.portSource.relative, message);
   }
 }
 
@@ -196,12 +244,15 @@ function validateLayerContract({ root, core, deviceType, device } = {}) {
   validateSections(files, errors);
   validateCore(files, errors);
   validateWrapper(files, errors);
+  validateHalDriver(files, errors);
+  validateHandler(files, errors);
   validatePort(files, type, errors);
   validateHandle(files, type, errors);
   return { root: resolvedRoot, paths, errors, valid: errors.length === 0 };
 }
 
 function parseArgs(argv, cwd = process.cwd()) {
+  if (argv.length === 1 && argv[0] === '--self-check') return { selfCheck: true };
   const options = { root: null, core: null, deviceType: null, device: null, json: false };
   const names = { '--root': 'root', '--core': 'core', '--device-type': 'deviceType', '--device': 'device' };
   for (let index = 0; index < argv.length; index += 1) {
@@ -220,23 +271,41 @@ function parseArgs(argv, cwd = process.cwd()) {
   return options;
 }
 
-function main(argv = process.argv.slice(2)) {
+async function runSelfCheck() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-layer-contract-self-check-'));
+  try {
+    const files = [
+      ...(await generateCorePeripheral('spi', 'stm32f4')),
+      ...(await generateBspDriver({
+        deviceType: 'externflash', device: 'W25Q64', cores: ['spi'], platform: 'stm32f4'
+      }))
+    ];
+    for (const file of files) {
+      const target = path.join(root, file.path);
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.writeFileSync(target, file.content, 'utf8');
+    }
+    return validateLayerContract({ root, core: 'spi', deviceType: 'externflash', device: 'W25Q64' });
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function main(argv = process.argv.slice(2)) {
   const options = parseArgs(argv);
-  const result = validateLayerContract(options);
+  const result = options.selfCheck ? await runSelfCheck() : validateLayerContract(options);
   if (options.json) console.log(JSON.stringify(result, null, 2));
-  else if (result.valid) console.log(`Layer contract valid: ${result.root}`);
+  else if (result.valid) console.log(`Layer contract valid: ${result.root}${options.selfCheck ? ' (generated self-check)' : ''}`);
   else result.errors.forEach((error) => console.error(`${error.ruleId} ${error.file}: ${error.message}`));
   process.exitCode = result.valid ? 0 : 3;
   return result;
 }
 
 if (require.main === module) {
-  try {
-    main();
-  } catch (error) {
+  main().catch((error) => {
     console.error(`Layer validation failed: ${error.message}`);
     process.exitCode = error.code === 'LAYER' || error.code === 'USAGE' ? 3 : 1;
-  }
+  });
 }
 
 module.exports = {
@@ -245,5 +314,8 @@ module.exports = {
   findFunctionDefinitions,
   maskCommentsAndStrings,
   parseArgs,
+  runSelfCheck,
+  validateHalDriver,
+  validateHandler,
   validateLayerContract
 };

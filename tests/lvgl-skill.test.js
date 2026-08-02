@@ -46,8 +46,8 @@ describe('LVGL skill knowledge graph and boundaries', () => {
     expect(content).toMatch(/OS Wrapper/);
     expect(content).toMatch(/不直接调用 FreeRTOS、Core、Driver/);
     expect(content).not.toMatch(/Adapter/);
-    expect(content).toMatch(/bsp-adapter/);
-    expect(content).toMatch(/os-abstraction/);
+    expect(content).toMatch(/bsp-wrapper/);
+    expect(content).toMatch(/os-adapter/);
     expect(content).toMatch(/app-architecture/);
   });
 

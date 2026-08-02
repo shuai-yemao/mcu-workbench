@@ -9,12 +9,13 @@ function read(relativePath) {
 
 describe('embedded architecture skill contracts', () => {
   const canonicalSkillEntries = [
-    'skills/platform/core-mcu/SKILL.md',
-    'skills/bsp/bsp-adapter/SKILL.md',
+    'skills/core/core-mcu/SKILL.md',
+    'skills/bsp/bsp-wrapper/SKILL.md',
+    'skills/bsp/bsp-port/SKILL.md',
     'skills/bsp/bsp-hal-driver/SKILL.md',
     'skills/bsp/bsp-handler/SKILL.md',
-    'skills/rtos/os-abstraction/SKILL.md',
-    'skills/rtos/rtos-freertos/SKILL.md',
+    'skills/os/os-adapter/SKILL.md',
+    'skills/os/os-runtime/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
     'skills/workflow/workflow-project-integration/SKILL.md'
   ];
@@ -28,10 +29,10 @@ describe('embedded architecture skill contracts', () => {
   });
 
   test('uses the verified two-layer OS naming consistently', () => {
-    const abstraction = read('skills/rtos/os-abstraction/SKILL.md');
-    const contract = read('skills/rtos/os-abstraction/references/osal-contract.md');
-    const freertos = read('skills/rtos/rtos-freertos/SKILL.md');
-    const freertosMap = read('skills/rtos/rtos-freertos/references/freertos-source-map.md');
+    const abstraction = read('skills/os/os-adapter/SKILL.md');
+    const contract = read('skills/os/os-adapter/references/osal-contract.md');
+    const freertos = read('skills/os/os-runtime/SKILL.md');
+    const freertosMap = read('skills/os/os-runtime/references/freertos-source-map.md');
 
     expect(abstraction).toContain('os_*_impl()');
     expect(contract).toContain('osal_task_create() → os_task_create_impl()');
@@ -42,9 +43,9 @@ describe('embedded architecture skill contracts', () => {
   test('publishes all evidence references at their canonical locations', () => {
     for (const relativePath of [
       'skills/workflow/workflow-project-integration/references/ec-s100-architecture-audit.md',
-      'skills/platform/core-mcu/references/core-iic-backends-case.md',
+      'skills/core/core-mcu/references/core-iic-backends-case.md',
       'skills/bsp/references/bsp-aht21-case.md',
-      'skills/rtos/os-abstraction/references/osal-freertos-case.md',
+      'skills/os/os-adapter/references/osal-freertos-case.md',
       'skills/tools/tools-observability/references/debugcomponent-rtt-case.md'
     ]) {
       expect(fs.existsSync(path.join(ROOT, relativePath))).toBe(true);
@@ -67,7 +68,7 @@ describe('embedded architecture skill contracts', () => {
 
   test('keeps active capability guides aligned with the canonical contracts', () => {
     const adapterGuide = read(
-      'skills/bsp/bsp-adapter/references/capabilities/bsp-platform-adapter/GUIDE.md'
+      'skills/bsp/bsp-port/references/capabilities/bsp-platform-adapter/GUIDE.md'
     );
     const driverGuide = read(
       'skills/bsp/bsp-hal-driver/references/capabilities/bsp-device-driver/GUIDE.md'
@@ -76,7 +77,7 @@ describe('embedded architecture skill contracts', () => {
       'skills/bsp/bsp-handler/references/capabilities/bsp-device-service/GUIDE.md'
     );
     const freertosMap = read(
-      'skills/rtos/rtos-freertos/references/freertos-source-map.md'
+      'skills/os/os-runtime/references/freertos-source-map.md'
     );
 
     expect(adapterGuide).toContain('不能在 BSP Port 实现');
