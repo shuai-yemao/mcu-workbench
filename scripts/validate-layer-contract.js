@@ -178,6 +178,9 @@ function validateHalDriver(files, errors) {
   if (files.driverSource && !/driver->core_ops\.pf_transaction\s*\(\s*driver->core_ops\.context\s*\)/.test(files.driverSource.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS', files.driverSource.relative, 'HAL Driver must invoke injected Core Ops in its protocol path.');
   }
+  if (files.driverSource && !/driver->mcu_ops\.pf_chip_feature\s*\(\s*driver->mcu_ops\.context\s*\)/.test(files.driverSource.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_MCU_OPS', files.driverSource.relative, 'HAL Driver must invoke injected MCU Ops in its chip-specific protocol path.');
+  }
 }
 
 function validateHandler(files, errors) {
@@ -212,7 +215,8 @@ function validatePort(files, type, errors) {
     if (/\b(?:bsp_[a-z0-9_]+_driver|core_[a-z0-9_]+)\b/i.test(definition.body)) {
       addError(errors, 'LAYER_PORT_RUNTIME_BYPASS', files.portSource.relative, `Port runtime function ${definition.name} must call Handle APIs only.`);
     }
-    if (/port_(?:core|mcu|osal)/i.test(definition.name) && /\breturn\s+0\s*;/.test(definition.body)) {
+    if (/port_(?:core|mcu|osal)/i.test(definition.name)
+      && /\breturn\s+(?:\(\s*[A-Za-z_]\w*\s*\)\s*)*0(?:[uUlL]+)?\s*;/.test(definition.body)) {
       addError(errors, 'LAYER_PORT_STUB_OPS', files.portSource.relative, `Port operation ${definition.name} must bind a real platform operation instead of returning success.`);
     }
   }

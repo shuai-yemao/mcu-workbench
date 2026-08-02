@@ -66,6 +66,8 @@ describe('generated layer contract validator', () => {
     );
 
     expect(driver).toContain('driver->core_ops.pf_transaction(driver->core_ops.context)');
+    const driverMcuCalls = (driver.match(/driver->mcu_ops\.pf_chip_feature\(driver->mcu_ops\.context\)/g) || []).length;
+    expect(driverMcuCalls).toBeGreaterThanOrEqual(1);
     expect(handler).toContain('handle->osal_ops.pf_notify_from_isr(handle->osal_ops.context)');
     expect(handler).toContain('handle->driver_ops.pf_read_id(handle->driver_ops.context, device_id)');
 
@@ -86,9 +88,12 @@ describe('generated layer contract validator', () => {
       .replace('driver->core_ops.pf_transaction(driver->core_ops.context)', 'driver_core_ops_not_used'));
     await mutate(root, 'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c', (content) => content
       .replace('handle->osal_ops.pf_notify_from_isr(handle->osal_ops.context)', 'handler_osal_ops_not_used'));
+    await mutate(root, 'Bsp/BoardDriver/externflash/Driver/W25Q64/Src/bsp_w25q64_driver.c', (content) => content
+      .replace('driver->mcu_ops.pf_chip_feature(driver->mcu_ops.context)', 'driver_mcu_ops_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS' }),
+      expect.objectContaining({ ruleId: 'LAYER_HAL_DRIVER_EFFECTIVE_MCU_OPS' }),
       expect.objectContaining({ ruleId: 'LAYER_HANDLER_EFFECTIVE_OS_WRAPPER_OPS' })
     ]));
   });
@@ -97,6 +102,16 @@ describe('generated layer contract validator', () => {
     const root = await createSlice();
     await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content
       .replace('return externflash_platform_core_transaction(context);', 'return 0;'));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_PORT_STUB_OPS' })
+    ]));
+  });
+
+  test('rejects equivalent unsigned no-op success callbacks in a Port', async () => {
+    const root = await createSlice();
+    await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content
+      .replace('return externflash_platform_mcu_feature(context);', 'return (int32_t)0U;'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_PORT_STUB_OPS' })
