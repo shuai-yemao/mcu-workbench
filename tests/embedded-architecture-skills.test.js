@@ -7,12 +7,12 @@ function read(relativePath) {
   return fs.readFileSync(path.join(ROOT, relativePath), 'utf8');
 }
 
-function findUsageFiles(root) {
+function findMarkdownFiles(root) {
   const files = [];
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     const current = path.join(root, entry.name);
-    if (entry.isDirectory()) files.push(...findUsageFiles(current));
-    if (entry.isFile() && entry.name === 'usage.md') files.push(current);
+    if (entry.isDirectory()) files.push(...findMarkdownFiles(current));
+    if (entry.isFile() && entry.name.endsWith('.md')) files.push(current);
   }
   return files;
 }
@@ -137,12 +137,12 @@ describe('embedded architecture skill contracts', () => {
     }
   });
 
-  test('keeps fenced active usage Python paths repository-relative and valid', () => {
-    for (const usagePath of findUsageFiles(path.join(ROOT, 'skills'))) {
-      const content = fs.readFileSync(usagePath, 'utf8');
+  test('keeps fenced active documentation repository paths valid', () => {
+    for (const documentPath of findMarkdownFiles(path.join(ROOT, 'skills'))) {
+      const content = fs.readFileSync(documentPath, 'utf8');
       for (const block of content.matchAll(/```[^\r\n]*\r?\n([\s\S]*?)```/g)) {
-        for (const [, scriptPath] of block[1].matchAll(/python3\s+(skills\/[^\s]+\.py)/g)) {
-          expect(fs.existsSync(path.join(ROOT, scriptPath))).toBe(true);
+        for (const [, repositoryPath] of block[1].matchAll(/(?:^|\s)(skills\/[A-Za-z0-9_./-]+)/g)) {
+          expect(fs.existsSync(path.join(ROOT, repositoryPath))).toBe(true);
         }
       }
     }

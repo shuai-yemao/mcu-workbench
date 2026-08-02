@@ -44,5 +44,5 @@ python scripts/pio_debugger.py --project-dir /path/to/project --env esp32dev --m
 python skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --env esp32dev
 
 # 2. 调试
-python skills/operations/debug-platformio/scripts/pio_debugger.py --project-dir /path/to/project --env esp32dev --mode download-and-halt
+python skills/tools/tools-debug/references/capabilities/debug-platformio/scripts/pio_debugger.py --project-dir /path/to/project --env esp32dev --mode download-and-halt
 ```
