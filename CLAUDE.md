@@ -15,14 +15,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 24 个嵌入式开发主入口（workflow/rtos/bsp/platform/middleware/system/tools） |
+| **Canonical Skills** | `skills/` | 107 catalog / 25 canonical；当前入口含 os-adapter、os-runtime、bsp-wrapper、bsp-port、core-mcu、mcu-platform |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移、安全层文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
 | **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约、能力迁移 |
 | **测试套件** | `tests/` | 29 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
 | **Claude 插件** | `.claude-plugin/plugin.json` | Claude Code 插件清单 |
-| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 24 个 `mcu_workbench_<skill_id>` 工具 |
+| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 25 个 `mcu_workbench_<skill_id>` 工具 |
 | **Codex 适配** | `.codex-plugin/plugin.json` + `codex/AGENTS.md` | Codex CLI 插件 + 宿主运行约束 |
 | **Codex 兼容桥** | `AGENTS.override.md` | 从 `codex/AGENTS.md` 自动生成的兼容入口 |
 | **归档** | `archive/software-legacy/ tools-legacy/ workflows-legacy/` | 旧版技能与工作流，能力已转移至 canonical skills |
@@ -82,9 +82,9 @@ npm run cli -- build --target stm32f4
 
 ```
 ├─ workflow/    → workflow-router, app-architecture, workflow-project-integration
-├─ rtos/        → os-abstraction, rtos-freertos
-├─ bsp/         → bsp-adapter, bsp-hal-driver, bsp-handler
-├─ platform/    → core-mcu, driver-vendor
+├─ os/          → os-adapter, os-runtime
+├─ bsp/         → bsp-wrapper, bsp-port, bsp-hal-driver, bsp-handler
+├─ core/ mcu/   → core-mcu, mcu-platform
 ├─ middleware/  → middleware-lvgl, middleware-communication, middleware-storage, middleware-algorithms
 ├─ system/      → software-system
 ├─ hardware/    → hardware-pcb-analysis, hardware-visa-debug

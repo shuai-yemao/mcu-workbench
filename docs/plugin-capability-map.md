@@ -17,9 +17,9 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 共 105 项：
+当前 catalog 为 **107 catalog / 25 canonical**：
 
-- 23 个 canonical skills；
+- 25 个 canonical skills；
 - 80 个软件和工具归档入口；
 - 2 个硬件 active 入口。
 
@@ -35,10 +35,10 @@
 
 | 层级 | Canonical skills | 主要职责 |
 |---|---|---|
-| OS | `os-abstraction`、`rtos-freertos` | OSAL、Wrapper、Port、任务、队列、同步和 FreeRTOS 实现 |
-| BSP | `bsp-adapter`、`bsp-hal-driver`、`bsp-handler` | Wrapper/Port、器件 hal_driver、Handler 生命周期和资源管理 |
+| OS | `os-adapter`、`os-runtime` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
+| BSP | `bsp-wrapper`、`bsp-port`、`bsp-hal-driver`、`bsp-handler` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理 |
 | Core | `core-mcu` | MCU 内部外设初始化、中断和 DMA |
-| Driver | `driver-vendor` | CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK |
+| MCU | `mcu-platform` | CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK |
 
 当前架构约束：Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。
 

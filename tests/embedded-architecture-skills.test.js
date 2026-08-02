@@ -64,6 +64,21 @@ describe('embedded architecture skill contracts', () => {
     expect(algorithms).toContain('不直接操作外设');
   });
 
+  test('keeps public documentation aligned with the 107 catalog and 25 canonical entries', () => {
+    const documents = [
+      'README.md', 'CLAUDE.md', 'docs/skills-migration.md', 'docs/codex-adaptation.md',
+      'docs/plugin-capability-map.md', 'docs/plugin-execution-flow.md'
+    ];
+    for (const relativePath of documents) {
+      const content = read(relativePath);
+      expect(content).toContain('107 catalog / 25 canonical');
+      expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
+      for (const entry of ['os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'core-mcu', 'mcu-platform']) {
+        expect(content).toContain(entry);
+      }
+    }
+  });
+
   test('requires file-level delivery tables and evidence handoff', () => {
     const integration = read('skills/workflow/workflow-project-integration/SKILL.md');
     expect(integration).toContain('现状表');

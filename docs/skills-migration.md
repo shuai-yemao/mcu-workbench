@@ -101,19 +101,21 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-下面的 15 个名称是当前软件架构的 canonical skill；工具方向另有 8 个 canonical skill，合计 23 个。旧目录仍保留并登记在 catalog 中；`resolveSkillId()` 和 Codex 同步脚本优先使用 canonical 入口，迁移期间不删除旧目录。
+当前状态为 **107 catalog / 25 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
 | `workflow-router` | `embedded` |
 | `workflow-project-integration` | `workflow-architecture`、`project-integration`、`code-porting` |
 | `app-architecture` | APP 新入口，无旧目录 |
-| `os-abstraction` | OSAL 新入口；`rtos-freertos` 保留为 FreeRTOS 专用实现 |
-| `bsp-adapter` | `bsp-device-adaptation`、`bsp-platform-adapter` |
+| `os-adapter` | `os-abstraction`（兼容映射） |
+| `os-runtime` | `rtos-freertos`、`freertos-module`（兼容映射） |
+| `bsp-wrapper` | 无旧入口；提供函数表与稳定转发 |
+| `bsp-port` | `bsp-adapter`、`bsp-device-adaptation`、`bsp-platform-adapter`（兼容映射） |
 | `bsp-hal-driver` | `bsp-device-driver` |
 | `bsp-handler` | `bsp-device-service` |
 | `core-mcu` | `platform-*`（厂商 HAL/SPL 除外）、`bus-*`、`peripheral-*` |
-| `driver-vendor` | `platform-stm32-hal`、`platform-stm32-spl` |
+| `mcu-platform` | `driver-vendor`、`platform-stm32-hal`、`platform-stm32-spl`（兼容映射） |
 | `middleware-lvgl` | `middleware-lvgl` |
 | `middleware-communication` | `protocol-*` |
 | `middleware-storage` | `middleware-fatfs`、`middleware-sfud` |
