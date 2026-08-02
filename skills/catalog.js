@@ -7,13 +7,14 @@ const {
   ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
   TOOL_CANONICAL_DEFINITIONS,
-  TOOL_ALIASES
+  TOOL_ALIASES,
+  CANONICAL_ALIASES
 } = require('./catalog-metadata');
 
 const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, description]) => {
   const isToolsSkill = layer === 'operations';
   const isArchived = (ARCHIVED_SOFTWARE_LAYERS.has(layer)
-    && !['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(id))
+    && !['workflow-router', 'middleware-lvgl'].includes(id))
     || isToolsSkill;
   const activeLayer = isToolsSkill ? 'tools' : layer;
   return {
@@ -30,7 +31,7 @@ const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, des
 });
 
 const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
-  .filter((skill) => ['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(skill.id))
+  .filter((skill) => ['workflow-router', 'middleware-lvgl'].includes(skill.id))
   .map((skill) => ({ ...skill, canonical: true }));
 
 const TOOL_MIGRATION_MAP = Object.fromEntries(
@@ -60,8 +61,8 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 const CANONICAL_ORDER = [
   'workflow-router', 'workflow-project-integration', 'app-architecture',
   'workflow-ai-collab',
-  'os-abstraction', 'rtos-freertos', 'bsp-adapter', 'bsp-hal-driver',
-  'bsp-handler', 'core-mcu', 'driver-vendor', 'middleware-lvgl',
+  'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
+  'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
   'middleware-communication', 'middleware-storage', 'middleware-algorithms',
   'software-system', 'tools-build', 'tools-flash', 'tools-linker',
   'tools-debug', 'tools-observability', 'tools-quality', 'tools-ai-code-quality', 'tools-release',
@@ -70,7 +71,7 @@ const CANONICAL_ORDER = [
 
 const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => ({
   ...CANONICAL_DEFINITIONS_BY_ID[id],
-  aliases: TOOL_ALIASES[id] || []
+  aliases: [...(TOOL_ALIASES[id] || []), ...(CANONICAL_ALIASES[id] || [])]
 }));
 
 const TUTOR_ENTRY = {
@@ -100,10 +101,14 @@ const MIGRATION_MAP = {
   'embedded-project-integration': 'workflow-project-integration',
   'workflow-code-porting': 'workflow-project-integration',
   'code-porting': 'workflow-project-integration',
-  'bsp-device-adaptation': 'bsp-adapter',
-  'bsp-platform-adapter': 'bsp-adapter',
-  'peripheral-driver': 'bsp-adapter',
-  'embedded-adapter': 'bsp-adapter',
+  'os-abstraction': 'os-adapter',
+  'rtos-freertos': 'os-runtime',
+  'freertos-module': 'os-runtime',
+  'bsp-adapter': 'bsp-port',
+  'bsp-device-adaptation': 'bsp-port',
+  'bsp-platform-adapter': 'bsp-port',
+  'peripheral-driver': 'bsp-port',
+  'embedded-adapter': 'bsp-port',
   'bsp-device-driver': 'bsp-hal-driver',
   'bsp-peripheral-driver': 'bsp-hal-driver',
   'bsp-device-service': 'bsp-handler',
@@ -116,8 +121,9 @@ const MIGRATION_MAP = {
   'platform-option-bytes': 'core-mcu',
   'platform-sram': 'core-mcu',
   'platform-internal-flash': 'core-mcu',
-  'platform-stm32-hal': 'driver-vendor',
-  'platform-stm32-spl': 'driver-vendor',
+  'driver-vendor': 'mcu-platform',
+  'platform-stm32-hal': 'mcu-platform',
+  'platform-stm32-spl': 'mcu-platform',
   'arm-core-registers': 'core-mcu',
   'arm-interrupt-exception': 'core-mcu',
   'arm-memory-architecture': 'core-mcu',
@@ -126,8 +132,8 @@ const MIGRATION_MAP = {
   'option-bytes': 'core-mcu',
   'sram-module': 'core-mcu',
   'flash-module': 'core-mcu',
-  'stm32-hal-development': 'driver-vendor',
-  'stm32-spl-development': 'driver-vendor',
+  'stm32-hal-development': 'mcu-platform',
+  'stm32-spl-development': 'mcu-platform',
   'bus-i2c': 'core-mcu',
   'bus-spi': 'core-mcu',
   'bus-uart': 'core-mcu',

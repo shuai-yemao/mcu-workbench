@@ -1,9 +1,9 @@
 ---
-name: bsp-adapter
+name: bsp-port
 description: Use when binding BSP Driver or Handle interfaces to Core, GPIO, buses, timebase, RTOS, or exposing them through BSP Port and Wrapper.
 ---
 
-# BSP Adapter
+# BSP Port
 
 先读取共享 [`BSP 架构专用契约`](../references/bsp-architecture-contract.md)。`drv_adapter_*.c/.h` 是 BSP Wrapper（历史名 Adapter），`drv_adapter_port_*.c/.h` 是 BSP Port。固定运行时调用链为 `APP → APP Facade（可选）→ Wrapper → Port 回调 → Handler → Driver → Core Bus`；启动时由 Port 把函数表注册到 Wrapper。
 

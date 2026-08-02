@@ -1,5 +1,5 @@
 ---
-name: rtos-freertos
+name: os-runtime
 description: FreeRTOS 专用配置、原生 Port 实现、调度调试和迁移验收。
 ---
 
@@ -7,7 +7,7 @@ description: FreeRTOS 专用配置、原生 Port 实现、调度调试和迁移�
 
 ## 边界
 
-只处理 FreeRTOS 原生配置与 `os_*_impl()` Port：任务、队列、同步、定时器、堆、栈和调度诊断。稳定的项目接口由 [`os-abstraction`](../os-abstraction/SKILL.md) 定义。
+处理具体 RTOS 或裸机运行时的原生配置与 `os_*_impl()` Port：任务、队列、同步、定时器、堆、栈和调度诊断。稳定的项目接口由 [`os-adapter`](../os-adapter/SKILL.md) 定义。
 
 ## 规则
 

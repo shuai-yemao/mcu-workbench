@@ -18,6 +18,6 @@ Bootloader、OTA 回滚、系统恢复、任务看门狗和故障升级属于本
 AES、PSA Crypto 和硬件加速的源码边界见 [`crypto-source-baseline.md`](references/crypto-source-baseline.md)。
 Bootloader、低功耗、看门狗、CRC、AES、RSA 与固件签名的详细流程见 [`capability-index.md`](references/capability-index.md)。
 
-交接：启动与链接交给对应工具 skill，电源/器件控制交给 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)，OS 资源交给 [`os-abstraction`](../../rtos/os-abstraction/SKILL.md)。
+交接：启动与链接交给对应工具 skill，电源/器件控制交给 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)，OS 资源交给 [`os-adapter`](../../os/os-adapter/SKILL.md)。
 
 共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。

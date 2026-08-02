@@ -12,12 +12,12 @@ describe('Skills catalog and loader', () => {
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-router', 'workflow-project-integration', 'app-architecture',
-      'os-abstraction', 'rtos-freertos', 'bsp-adapter', 'bsp-hal-driver',
-      'bsp-handler', 'core-mcu', 'driver-vendor', 'middleware-lvgl',
+      'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port',
+      'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
       'middleware-communication', 'middleware-storage', 'middleware-algorithms',
       'software-system', 'tools-build', 'tools-flash', 'tools-linker',
       'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
-      'tools-learning-tutor', 'workflow-ai-collab', 'tools-ai-code-quality'
+      'tools-learning-tutor', 'workflow-ai-collab'
     ]));
     for (const skill of SKILL_CATALOG) {
       expect(skill.id).toMatch(/^[a-z][a-z0-9]*(?:-[a-z0-9]+){1,3}$/);
@@ -41,12 +41,27 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('map-analyzer')).toBe('tools-quality');
     expect(resolveSkillId('ota-update-system')).toBe('tools-release');
     expect(resolveSkillId('bsp-peripheral-driver')).toBe('bsp-hal-driver');
+    expect(resolveSkillId('os-abstraction')).toBe('os-adapter');
+    expect(resolveSkillId('rtos-freertos')).toBe('os-runtime');
+    expect(resolveSkillId('freertos-module')).toBe('os-runtime');
+    expect(resolveSkillId('bsp-adapter')).toBe('bsp-port');
+    expect(resolveSkillId('bsp-device-adaptation')).toBe('bsp-port');
+    expect(resolveSkillId('bsp-platform-adapter')).toBe('bsp-port');
+    expect(resolveSkillId('peripheral-driver')).toBe('bsp-port');
+    expect(resolveSkillId('embedded-adapter')).toBe('bsp-port');
+    expect(resolveSkillId('driver-vendor')).toBe('mcu-platform');
+    expect(resolveSkillId('platform-stm32-hal')).toBe('mcu-platform');
+    expect(resolveSkillId('platform-stm32-spl')).toBe('mcu-platform');
+    expect(resolveSkillId('stm32-hal-development')).toBe('mcu-platform');
+    expect(resolveSkillId('stm32-spl-development')).toBe('mcu-platform');
+    expect(resolveSkillId('platform-cortex-registers')).toBe('core-mcu');
     expect(resolveSkillId('protocol-mqtt')).toBe('middleware-communication');
     expect(resolveSkillId('middleware-fatfs')).toBe('middleware-storage');
     expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-ai-collab');
     expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-ai-collab');
-    expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-ai-code-quality');
-    expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-ai-code-quality');
+    expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-quality');
+    expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-quality');
+    expect(resolveSkillId('tools-ai-code-quality')).toBe('tools-quality');
     expect(resolveSkillId('not-a-skill')).toBeNull();
   });
 
@@ -76,13 +91,17 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('embedded')).toContain('name: workflow-router');
     expect(getSkillContent('learning-tutor')).toContain('name: tools-learning-tutor');
     expect(getSkillContent('embedded-ai-collab')).toContain('name: workflow-ai-collab');
-    expect(getSkillContent('embedded-ai-coding-standard')).toContain('name: tools-ai-code-quality');
+    expect(getSkillContent('embedded-ai-coding-standard')).toContain('name: tools-quality');
+    expect(getSkillContent('os-abstraction')).toContain('name: os-adapter');
+    expect(getSkillContent('rtos-freertos')).toContain('name: os-runtime');
+    expect(getSkillContent('bsp-adapter')).toContain('name: bsp-port');
+    expect(getSkillContent('driver-vendor')).toContain('name: mcu-platform');
   });
 
   test('registry is a compatibility view derived from catalog', () => {
     expect(Object.keys(getAllSkills())).toHaveLength(SKILL_CATALOG.length);
     expect(listSkillNames()).toEqual(Object.keys(getAllSkills()));
-    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(38);
+    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(37);
     expect(getSkillAliases()['build-keil']).toBe('tools-build');
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
     expect(getSkillAliases()['embedded']).toBe('workflow-router');
@@ -98,16 +117,17 @@ describe('Skills catalog and loader', () => {
     const tools = SKILL_CATALOG.filter((skill) => skill.layer === 'tools' && skill.canonical);
     expect(archived).toHaveLength(80);
     expect(archivedTools).toHaveLength(29);
-    expect(tools).toHaveLength(9);
+    expect(tools).toHaveLength(8);
     expect(archived.filter((skill) => skill.path.startsWith('archive/software-legacy/'))).toHaveLength(51);
     expect(tools.every((skill) => skill.path.startsWith('skills/tools/'))).toBe(true);
   });
 
   test('adapter rule is explicit in canonical software skills', () => {
-    for (const id of ['core-mcu', 'driver-vendor', 'middleware-lvgl', 'middleware-communication', 'middleware-storage', 'middleware-algorithms']) {
+    for (const id of ['core-mcu', 'mcu-platform', 'middleware-lvgl', 'middleware-communication', 'middleware-storage', 'middleware-algorithms']) {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
-    expect(getSkillContent('bsp-adapter')).toMatch(/Wrapper/);
-    expect(getSkillContent('os-abstraction')).toMatch(/Wrapper/);
+    expect(getSkillContent('bsp-wrapper')).toMatch(/Wrapper/);
+    expect(getSkillContent('bsp-port')).toMatch(/Port/);
+    expect(getSkillContent('os-adapter')).toMatch(/Wrapper/);
   });
 });

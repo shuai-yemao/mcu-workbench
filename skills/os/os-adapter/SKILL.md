@@ -1,5 +1,5 @@
 ---
-name: os-abstraction
+name: os-adapter
 description: 定义 OSAL、OS Wrapper、OS Port 以及任务、队列、同步、定时和内存抽象。
 ---
 
@@ -18,7 +18,7 @@ Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 以 `os_*
 1. 先列出调用方需要的最小接口，不复制原生 RTOS API。
 2. 决定句柄生命周期、静态/动态内存和 ISR 边界。
 3. 实现 Wrapper，再由 Port 注入具体 OS；用 Fake/Mock 验证上层。
-4. 只有出现具体 FreeRTOS 配置时交接 [`rtos-freertos`](../rtos-freertos/SKILL.md)。
+4. 只有出现具体 RTOS 或裸机运行时配置时交接 [`os-runtime`](../os-runtime/SKILL.md)。
 
 接口验收矩阵见 [`osal-contract.md`](references/osal-contract.md)。
 
