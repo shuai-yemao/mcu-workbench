@@ -2,6 +2,7 @@ const fs = require('fs').promises;
 const os = require('os');
 const path = require('path');
 const { generateBspDriver, generateCorePeripheral } = require('../lib/generator');
+const { validateArchitectureContract } = require('../lib/architecture-contract');
 const { parseArgs, validateLayerContract } = require('../scripts/validate-layer-contract');
 
 async function createSlice() {
@@ -53,6 +54,53 @@ describe('generated layer contract validator', () => {
     expect(port).toContain('bsp_externflash_handle_register_driver');
     expect(port).toContain('drv_adapter_wrapper_externflash_register');
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
+  });
+
+  test('checks the generated Handler path and requires effective injected Ops calls', async () => {
+    const root = await createSlice();
+    const driver = await fs.readFile(
+      path.join(root, 'Bsp/BoardDriver/externflash/Driver/W25Q64/Src/bsp_w25q64_driver.c'), 'utf8'
+    );
+    const handler = await fs.readFile(
+      path.join(root, 'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c'), 'utf8'
+    );
+
+    expect(driver).toContain('driver->core_ops.pf_transaction(driver->core_ops.context)');
+    expect(handler).toContain('handle->osal_ops.pf_notify_from_isr(handle->osal_ops.context)');
+    expect(handler).toContain('handle->driver_ops.pf_read_id(handle->driver_ops.context, device_id)');
+
+    await mutate(root, 'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c', (content) => (
+      `#include <core_i2c.h>\n${content}`
+    ));
+    expect(validateArchitectureContract({ root }).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        file: 'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c',
+        ruleId: 'BSP_HANDLER_INJECTION_DEPENDENCY'
+      })
+    ]));
+  });
+
+  test('rejects generated sources that retain injected Ops but never call them', async () => {
+    const root = await createSlice();
+    await mutate(root, 'Bsp/BoardDriver/externflash/Driver/W25Q64/Src/bsp_w25q64_driver.c', (content) => content
+      .replace('driver->core_ops.pf_transaction(driver->core_ops.context)', 'driver_core_ops_not_used'));
+    await mutate(root, 'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c', (content) => content
+      .replace('handle->osal_ops.pf_notify_from_isr(handle->osal_ops.context)', 'handler_osal_ops_not_used'));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS' }),
+      expect.objectContaining({ ruleId: 'LAYER_HANDLER_EFFECTIVE_OS_WRAPPER_OPS' })
+    ]));
+  });
+
+  test('rejects a Port that injects a no-op callback instead of a platform binding', async () => {
+    const root = await createSlice();
+    await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content
+      .replace('return externflash_platform_core_transaction(context);', 'return 0;'));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_PORT_STUB_OPS' })
+    ]));
   });
 
   test('rejects a Port that omits a required injected operation table', async () => {

@@ -134,6 +134,23 @@ describe('validateArchitectureContract', () => {
     ]));
   }));
 
+  test('requires OS Wrapper public calls to forward to their matching internal implementation', () => withFixture({
+    'OS/Wrapper/osal_task.c': 'int osal_task_create(void) { return unrelated_call(); }',
+    'OS/Wrapper/osal_queue.c': 'int osal_queue_create(void) { return os_queue_create_impl(); }',
+    'Middlewares/os_adapter/shared/src/osal_mutex.c': 'int osal_mutex_create(void) { return os_mutex_create_impl(); }',
+    'OS/Port/freertos_task.c': 'int os_task_create_impl(void) { return xTaskCreate(0, 0, 0, 0, 0, 0); }'
+  }, (root) => {
+    const errors = validateArchitectureContract({ root }).errors;
+    expect(errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_task.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+    expect(errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: 'OS/Wrapper/osal_queue.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' }),
+      expect.objectContaining({ file: 'Middlewares/os_adapter/shared/src/osal_mutex.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' }),
+      expect.objectContaining({ file: 'OS/Port/freertos_task.c', ruleId: 'OS_WRAPPER_IMPL_FORWARDING' })
+    ]));
+  }));
+
   test('ignores comments, preserved ISR tokens, and vendored source trees', () => withFixture({
     'Bsp/Handler/sensor_handler.c': [
       '/* unsigned timeout; taskENTER_CRITICAL_FROM_ISR(); */',

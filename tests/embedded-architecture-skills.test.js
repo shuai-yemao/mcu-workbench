@@ -57,6 +57,13 @@ describe('embedded architecture skill contracts', () => {
     expect(validator).not.toMatch(/AHT21|bsp_gpio_iic|drv_adapter_temphumi/);
   });
 
+  test('keeps Middleware algorithms device-free and routes ports through both Wrappers', () => {
+    const algorithms = read('skills/middleware/middleware-algorithms/SKILL.md');
+    expect(algorithms).toContain('BSP Wrapper');
+    expect(algorithms).toContain('OS Wrapper');
+    expect(algorithms).toContain('不直接操作外设');
+  });
+
   test('requires file-level delivery tables and evidence handoff', () => {
     const integration = read('skills/workflow/workflow-project-integration/SKILL.md');
     expect(integration).toContain('现状表');
