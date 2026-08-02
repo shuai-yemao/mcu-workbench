@@ -108,6 +108,26 @@ describe('generated layer contract validator', () => {
     ]));
   });
 
+  test('allows a Core call when a static Port callback binds it into Core Ops', async () => {
+    const root = await createSlice();
+    await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content
+      .replace('return externflash_platform_core_transaction(context);', 'return core_spi_transaction(context);'));
+
+    expect(validate(root).errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_PORT_RUNTIME_BYPASS' })
+    ]));
+  });
+
+  test('rejects a static Port runtime helper that bypasses Handle with a Core call', async () => {
+    const root = await createSlice();
+    await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content
+      .replace('return bsp_externflash_handle_read_id(s_externflash_handle, device_id);', 'return core_spi_transaction(device_id);'));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_PORT_RUNTIME_BYPASS' })
+    ]));
+  });
+
   test('rejects equivalent unsigned no-op success callbacks in a Port', async () => {
     const root = await createSlice();
     await mutate(root, 'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c', (content) => content

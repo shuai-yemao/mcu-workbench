@@ -17,22 +17,22 @@
 
 ```bash
 # 探测调试环境
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py --detect
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py --detect
 
 # 下载并停核（默认模式）
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/debug/app.elf \
   --interface stlink \
   --target target/stm32f4x.cfg
 
 # 附着调试（不复位、不加载）
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/debug/app.elf \
   --config board/st_nucleo_f4.cfg \
   --mode attach-only
 
 # 崩溃现场检查
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/debug/app.elf \
   --interface cmsis-dap \
   --target target/stm32f1x.cfg \
@@ -44,7 +44,7 @@ python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
 ### 1. 环境探测
 
 ```bash
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py --detect
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py --detect
 ```
 
 输出 OpenOCD 版本、GDB 版本、已连接探针。
@@ -52,7 +52,7 @@ python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py --detect
 ### 2. download-and-halt（默认）
 
 ```bash
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/app.elf \
   --interface stlink \
   --target target/stm32f4x.cfg
@@ -63,7 +63,7 @@ python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
 ### 3. attach-only
 
 ```bash
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/app.elf \
   --config board/st_nucleo_f4.cfg \
   --mode attach-only
@@ -74,7 +74,7 @@ python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
 ### 4. crash-context
 
 ```bash
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/app.elf \
   --interface stlink \
   --target target/stm32f4x.cfg \
@@ -86,7 +86,7 @@ python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
 ### 5. 指定 GDB 可执行文件
 
 ```bash
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/app.elf \
   --config board/st_nucleo_f4.cfg \
   --gdb /opt/toolchain/bin/arm-none-eabi-gdb

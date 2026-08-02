@@ -7,6 +7,16 @@ function read(relativePath) {
   return fs.readFileSync(path.join(ROOT, relativePath), 'utf8');
 }
 
+function findUsageFiles(root) {
+  const files = [];
+  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
+    const current = path.join(root, entry.name);
+    if (entry.isDirectory()) files.push(...findUsageFiles(current));
+    if (entry.isFile() && entry.name === 'usage.md') files.push(current);
+  }
+  return files;
+}
+
 describe('embedded architecture skill contracts', () => {
   const canonicalSkillEntries = [
     'skills/core/core-mcu/SKILL.md',
@@ -124,6 +134,17 @@ describe('embedded architecture skill contracts', () => {
     const usage = read(usagePath);
     for (const [, scriptPath] of usage.matchAll(/python3\s+([^\s]+\.py)/g)) {
       expect(fs.existsSync(path.join(ROOT, scriptPath))).toBe(true);
+    }
+  });
+
+  test('keeps fenced active usage Python paths repository-relative and valid', () => {
+    for (const usagePath of findUsageFiles(path.join(ROOT, 'skills'))) {
+      const content = fs.readFileSync(usagePath, 'utf8');
+      for (const block of content.matchAll(/```[^\r\n]*\r?\n([\s\S]*?)```/g)) {
+        for (const [, scriptPath] of block[1].matchAll(/python3\s+(skills\/[^\s]+\.py)/g)) {
+          expect(fs.existsSync(path.join(ROOT, scriptPath))).toBe(true);
+        }
+      }
     }
   });
 });

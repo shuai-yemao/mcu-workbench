@@ -41,7 +41,7 @@ python scripts/pio_flasher.py --flash --project-dir /path/to/project --env esp32
 
 ```bash
 # 1. 构建
-python skills/operations/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --env esp32dev
+python skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --env esp32dev
 
 # 2. 烧录
 python skills/operations/tool-flash-platformio/scripts/pio_flasher.py --flash --project-dir /path/to/project --env esp32dev

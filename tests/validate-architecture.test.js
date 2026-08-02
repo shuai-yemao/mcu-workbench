@@ -139,6 +139,7 @@ describe('validateArchitectureContract', () => {
     'OS/Wrapper/osal_queue.c': 'int osal_queue_create(void) { return os_queue_create_impl(); }',
     'OS/Wrapper/osal_timer.c': [
       'int osal_timer_create(int invalid) {',
+      '  const char *closing_brace = "}";',
       '  if (invalid) { return -1; }',
       '  return os_timer_create_impl();',
       '}'
@@ -169,6 +170,29 @@ describe('validateArchitectureContract', () => {
       '  sensor_handler_register_driver(&driver_ops);',
       '}',
       'int sensor_port_register(void) { return 0; }'
+    ].join('\n')
+  }, (root) => {
+    const ruleIds = validateArchitectureContract({ root }).errors.map((finding) => finding.ruleId);
+    expect(ruleIds).toEqual(expect.arrayContaining([
+      'BSP_PORT_CORE_OPS_INJECTION',
+      'BSP_PORT_MCU_OPS_INJECTION',
+      'BSP_PORT_OS_WRAPPER_OPS_INJECTION',
+      'BSP_PORT_HAL_DRIVER_OPS_INJECTION'
+    ]));
+  }));
+
+  test('does not count injection helpers reachable only through an always-false branch', () => withFixture({
+    'Bsp/Port/sensor_port.c': [
+      'static void sensor_inject_everything(void) {',
+      '  sensor_driver_register_core_ops(&core_ops);',
+      '  sensor_driver_register_mcu_ops(&mcu_ops);',
+      '  sensor_handler_register_osal_ops(&osal_ops);',
+      '  sensor_handler_register_driver(&driver_ops);',
+      '}',
+      'int sensor_port_register(void) {',
+      '  if (0) { sensor_inject_everything(); }',
+      '  return 0;',
+      '}'
     ].join('\n')
   }, (root) => {
     const ruleIds = validateArchitectureContract({ root }).errors.map((finding) => finding.ruleId);

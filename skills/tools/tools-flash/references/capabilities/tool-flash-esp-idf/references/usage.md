@@ -14,24 +14,24 @@
 
 ```bash
 # 探测环境和串口
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --detect
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py --detect
 
 # 烧录固件（必须指定串口）
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py \
   --flash --project /path/to/project \
   --port /dev/ttyUSB0
 
 # 指定串口和波特率烧录
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py \
   --flash --project /path/to/project \
   --port /dev/ttyUSB0 --baud 921600
 
 # 擦除 Flash
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py \
   --erase-flash --port /dev/ttyUSB0
 
 # 检测 JTAG 调试配置
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --debug --project /path/to/project
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py --debug --project /path/to/project
 ```
 
 ## 常见模式
@@ -39,7 +39,7 @@ python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --debug --pr
 ### 1. 环境与串口探测
 
 ```bash
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --detect
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py --detect
 ```
 
 输出 `idf.py` 状态和已连接的串口设备列表。
@@ -48,10 +48,10 @@ python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --detect
 
 ```bash
 # 构建（使用 tool-build-esp-idf skill）
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
 
 # 烧录
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --flash --project /repo/fw
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py --flash --project /repo/fw
 
 # 查看串口输出（用户手动执行）
 # idf.py -p /dev/ttyUSB0 monitor
@@ -60,8 +60,8 @@ python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --flash --pr
 ### 3. 擦除后重新烧录
 
 ```bash
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --erase-flash --port /dev/ttyUSB0
-python3 skills/operations/tool-flash-esp-idf/scripts/idf_flasher.py --flash --project /repo/fw --port /dev/ttyUSB0
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py --erase-flash --port /dev/ttyUSB0
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-esp-idf/scripts/idf_flasher.py --flash --project /repo/fw --port /dev/ttyUSB0
 ```
 
 ## 参数说明

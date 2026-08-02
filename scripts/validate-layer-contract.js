@@ -211,8 +211,13 @@ function validatePort(files, type, errors) {
   if (publicDefinitions.length !== 1 || publicDefinitions[0].name !== expected) {
     addError(errors, 'LAYER_PORT_PUBLIC_API', files.portSource.relative, `Port must define exactly one non-static function: ${expected}.`);
   }
+  const coreOpsBindings = new Set(
+    [...files.portSource.content.matchAll(/\bcore_ops\.[A-Za-z_]\w*\s*=\s*([A-Za-z_]\w*)\s*;/g)].map((match) => match[1])
+  );
   for (const definition of definitions.filter((entry) => entry.isStatic)) {
-    if (/\b(?:bsp_[a-z0-9_]+_driver|core_[a-z0-9_]+)\b/i.test(definition.body)) {
+    const callsDriverDirectly = /\bbsp_[a-z0-9_]+_driver\b/i.test(definition.body);
+    const callsCoreDirectly = /\bcore_[a-z0-9_]+\b/i.test(definition.body);
+    if (callsDriverDirectly || (callsCoreDirectly && !coreOpsBindings.has(definition.name))) {
       addError(errors, 'LAYER_PORT_RUNTIME_BYPASS', files.portSource.relative, `Port runtime function ${definition.name} must call Handle APIs only.`);
     }
     if (/port_(?:core|mcu|osal)/i.test(definition.name)
