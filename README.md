@@ -66,9 +66,9 @@ Workflow 层有四个 active 入口：`workflow-requirements-router` 负责需�
 
 ### 需求约束入口
 
-`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。最终输出可审计的需求约束包（RCP），覆盖项目背景、硬件资源、软件环境、FreeRTOS 任务与队列、分层边界、功能/非功能需求、优先级、依赖关系、验收标准和人工确认项，并将唯一正式输入交给下游 Skill。
+`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。最终输出可审计的需求约束包（RCP），覆盖项目背景、硬件资源、软件环境、FreeRTOS 任务与队列、分层边界、功能/非功能需求、优先级、依赖关系、验收标准和人工确认项，并将唯一正式输入（RCP）固定交接给 `workflow-project-integration`，由其完成分层/审计/迁移设计后分发实现层。
 
-RCP 会区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，同时携带证据位置、责任边界与验证边界；下游 Skill 发现新约束时必须回传 Router 更新 RCP，不能静默扩大范围。
+RCP 会区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，同时携带证据位置、责任边界与验证边界；`workflow-project-integration` 发现新约束时必须回传 Router 更新 RCP，不能静默扩大范围。
 
 ### 稳定产物
 

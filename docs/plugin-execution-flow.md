@@ -17,7 +17,7 @@ flowchart TD
     R --> A[分配一个或多个 Agent 分析]
     A --> Q[补齐项目与需求约束]
     Q --> P[生成需求约束包提示词]
-    P --> S[交给下游主 Skill]
+    P --> S[交给 workflow-project-integration]
     S --> G[读取主 SKILL.md]
     G --> Ref[按需读取 references]
     Ref --> Tool[调用 scripts 或项目工具]
@@ -46,22 +46,23 @@ flowchart TD
 
 `workflow-requirements-router` 先分配 `embedded-lead` 和一个或多个专用 Agent，对需求、项目文件和已有证据进行分析；缺少关键事实时向用户提问。必须补齐项目背景、硬件资源、软件环境、FreeRTOS 任务/队列、分层边界、功能与非功能约束、优先级、依赖、验收标准和人工确认项。
 
-### 阶段 3：生成需求约束包并选择主 Skill
+### 阶段 3：生成需求约束包并交接 project-integration
 
-Router 将已确认事实、证据、未决项、Agent 分析和下游提示词组成需求约束包（RCP），再选择一个主 Skill，必要时追加直接交接 Skill。RCP 完成前不生成实现代码。
+Router 将已确认事实、证据、未决项、Agent 分析和下游提示词组成需求约束包（RCP），固定交接给 `workflow-project-integration`（必经分层/审计/迁移门禁）；由其完成分层审查后分发实现层 Skill。RCP 完成前不生成实现代码。
 
 路由规则：
 
 ```text
-一个请求 → 一个需求约束包 → 一个主 Skill
+一个请求 → 一个需求约束包 → workflow-project-integration（必经）
              ↓
-       必要时交接下游 Skill
+       分层审查后分发一个实现层主 Skill
 ```
 
-示例：
+以下示例展示 project-integration 分层审查完成后的分发结果（所有请求均先经过 project-integration 门禁）：
 
 ```text
 “Keil 工程编译失败”
+    → workflow-project-integration（审计门禁）
     → tools-build
     → tools-linker（如果是链接布局问题）
     → tools-quality（如果需要 Map 分析）
@@ -69,6 +70,7 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 
 ```text
 “外部 Flash 驱动怎么分层”
+    → workflow-project-integration（审计门禁）
     → bsp-wrapper / bsp-port / bsp-hal-driver / bsp-handler
     → os-adapter / os-runtime（如果涉及任务、队列或 Runtime）
     → core-mcu / mcu-platform（如果涉及底层外设）
@@ -114,7 +116,7 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 验证命令
 实际结果
 未验证项目
-后续交接 Skill
+必经交接 workflow-project-integration（由其分发实现层 Skill）
 ```
 
 ## 3. Node CLI 执行链

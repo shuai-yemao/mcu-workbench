@@ -1,6 +1,6 @@
 ---
 name: workflow-requirements-router
-description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，交给下游 Skill。
+description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-project-integration。
 ---
 
 # 嵌入式需求约束路由
@@ -54,7 +54,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 ## 阶段三：生成需求约束包
 
-需求约束包（Requirement Constraint Package，RCP）是交给下一个 Skill 的唯一正式输入。它必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
+需求约束包（Requirement Constraint Package，RCP）是交给 workflow-project-integration 的唯一正式输入。它必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
 
 ```text
 需求约束包
@@ -73,17 +73,16 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 └─ 下游提示词：目标 Skill、范围、输入证据、必须遵守、禁止事项、输出和验收
 ```
 
-下游提示词必须明确：主 Skill 只能在 RCP 的范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。
+下游提示词必须明确：workflow-project-integration 只能在 RCP 的范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。
 
-## 主 Skill 选择与交接
+## 必经交接与分发参考
 
-1. 跨层规划、工程审计、迁移顺序和验收路线：主 Skill 为 `workflow-project-integration`。
-2. 最终代码/变更集的独立 Review 编排：主 Skill 为 `workflow-ai-collab`。
-3. 风格规则、静态质量门禁和质量检查工具来源：主 Skill 为 `tools-quality`。
-4. 其他请求按下表选择直接责任 Skill；仅在 RCP 中存在明确输入依赖时追加交接。
-5. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
+1. 所有请求的 RCP 一律交接给 `workflow-project-integration`（必经分层/审计/迁移门禁），Router 不直接交接实现层 Skill。
+2. `workflow-project-integration` 在完成分层审查后按下表分发实现层主 Skill，最多追加两个直接交接 Skill。
+3. 最终代码/变更集的独立 Review 编排由 `workflow-project-integration` 交接给 `workflow-ai-collab`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
+4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
-| 请求事实 | 主 Skill | 可选直接交接 |
+| 请求事实 | 建议实现层主 Skill（由 project-integration 分发） | 可选直接交接 |
 |---|---|---|
 | APP 启动、Task、Manager、UI 结构 | `app-architecture` | `os-adapter`、`middleware-lvgl` |
 | OSAL、任务、队列、同步原语接口 | `os-adapter` | `os-runtime` |
@@ -108,15 +107,16 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 ```text
 状态：分析中 | 待用户确认 | 可交接 | 阻塞
-主 Skill：<唯一 canonical ID；未完成 RCP 时为空>
+必经下游：workflow-project-integration
+建议主 Skill：<由 project-integration 分发的 canonical ID 参考；未完成 RCP 时为空>
 交接 Skill：<0 至 2 个 canonical ID>
 参与 Agent：<embedded-lead + 一个或多个专用 Agent>
 需求约束包：<完整包或稳定产物绝对路径>
 已读证据：<绝对路径、命令或日志位置>
-责任边界：<主 Skill 负责什么；明确不负责什么>
+责任边界：<project-integration 负责分层/审计/迁移与分发；明确不负责什么>
 交接契约：<每个交接的输入、输出、资源所有权>
 验证边界：<需要的静态/主机/构建/目标/实物证据；当前尚未通过的项>
-下一步：<补证问题，或下游 Skill 执行的一项最小动作>
+下一步：<补证问题，或 project-integration 执行的一项最小动作>
 ```
 
 ## 硬约束
@@ -124,6 +124,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 - Adapter 只存在于 OS 和 BSP，且由 Wrapper 与 Port 组成；Core、Middleware、Driver 不创建 Adapter。
 - BSP Wrapper 是平台无关的函数表注册与转发层；BSP Port 才可绑定具体 Driver、Handler 和平台对象。
 - 不使用 Router 实现具体 HAL、器件协议、RTOS、UI 或业务代码。
+- RCP 固定交接给 workflow-project-integration，不直接交接实现层 Skill。
 - 不引用归档 Skill 作为 active 路由目标；只输出 catalog 中的 canonical ID。
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
 

@@ -108,7 +108,8 @@ describe('Skills catalog and loader', () => {
   test('workflow router emits a bounded, canonical routing contract', () => {
     const router = getSkillContent('workflow-requirements-router');
     expect(router).toContain('## 路由单（固定输出）');
-    expect(router).toContain('主 Skill：<唯一 canonical ID；未完成 RCP 时为空>');
+    expect(router).toContain('必经下游：workflow-project-integration');
+    expect(router).toContain('建议主 Skill：<由 project-integration 分发的 canonical ID 参考；未完成 RCP 时为空>');
     expect(router).toContain('交接 Skill：<0 至 2 个 canonical ID>');
     expect(router).toContain('workflow-project-integration');
     expect(router).toContain('workflow-ai-collab');
@@ -129,6 +130,8 @@ describe('Skills catalog and loader', () => {
     ), 'utf8');
     expect(integration).toContain('## 实现方案审查与代码前门禁');
     expect(integration).toContain('需求约束包（RCP）');
+    expect(integration).toContain('唯一接收方');
+    expect(integration).toContain('Router 固定交付需求约束包（RCP）');
     expect(integration).toContain('既有需求实现方案');
     expect(integration).toContain('embedded-lead');
     expect(integration).toContain('system-architect');
