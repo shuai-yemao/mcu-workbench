@@ -50,7 +50,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 
 审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出，作为下一轮唯一正式输入。审查包固定包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接。
 
-只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能进入代码阶段并交给对应层的实现 Skill。代码产物就绪后，把最终代码/变更集与验收清单交接给 [`workflow-ai-collab`](../workflow-ai-collab/SKILL.md) 做最终代码审查；`workflow-ai-collab` 不承担代码生成阶段。下游只能在施工清单、生成约束和验收测试清单的范围内工作；发现新事实必须回传本 Skill 更新审查包。
+只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能进入代码阶段并交给对应层的实现 Skill。代码产物就绪后，把最终代码/变更集与验收清单交接给 [`workflow-final-review`](../workflow-final-review/SKILL.md) 做最终代码审查；`workflow-final-review` 不承担代码生成阶段。下游只能在施工清单、生成约束和验收测试清单的范围内工作；发现新事实必须回传本 Skill 更新审查包。
 
 ## 交付计划最低产物
 
@@ -68,7 +68,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
 - 上层调用下层时，调用下层 Adapter 的 Wrapper；Middleware 仅通过公共 API 使用 OS/BSP 能力。
 - 本 skill 只输出项目审计、分层设计、迁移路线和下游交接，不直接执行代码移植、最终代码审查、Prompt 模板生成或具体驱动实现。
-- 最终代码/变更集的独立 Review 编排交给 [`workflow-ai-collab`](../workflow-ai-collab/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
+- 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 
 ## 交接
 

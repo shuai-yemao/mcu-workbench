@@ -60,7 +60,7 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 
 const CANONICAL_ORDER = [
   'workflow-requirements-router', 'workflow-claude-layering', 'workflow-project-integration', 'app-architecture',
-  'workflow-ai-collab',
+  'workflow-final-review',
   'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
   'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
   'middleware-communication', 'middleware-storage', 'middleware-algorithms',
@@ -193,11 +193,12 @@ const MIGRATION_MAP = {
   'rsa-module': 'software-system',
   'workflow-devlog': 'tools-learning-tutor',
   'devlog': 'tools-learning-tutor',
-  'embedded-ai-collab': 'workflow-ai-collab',
+  'embedded-ai-collab': 'workflow-final-review',
   'embedded-ai-coding-standard': 'tools-quality',
-  'embedded-ai-prompt-templates': 'workflow-ai-collab',
+  'embedded-ai-prompt-templates': 'workflow-final-review',
   'embedded-ai-code-review': 'tools-quality',
   'tools-ai-code-quality': 'tools-quality',
+  'workflow-ai-collab': 'workflow-final-review',
   ...TOOL_MIGRATION_MAP
 };
 

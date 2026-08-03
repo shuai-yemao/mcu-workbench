@@ -12,7 +12,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 以下职责必须分流，不可由需求约束 Router 代办：
 
 - 跨层审计、分层设计、迁移顺序和验收路线：`workflow-project-integration`。
-- 最终代码/变更集的独立 Review 编排：`workflow-ai-collab`。
+- 最终代码/变更集的独立 Review 编排（输出前最后一层门禁）：`workflow-final-review`。
 - 风格规则、静态质量门禁和质量检查工具来源：`tools-quality`。
 
 ## 阶段一：分配 Agent 分析需求
@@ -79,7 +79,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 1. 所有请求的 RCP 一律交接给 `workflow-project-integration`（必经分层/审计/迁移门禁），Router 不直接交接实现层 Skill。
 2. `workflow-project-integration` 在完成分层审查后按下表分发实现层主 Skill，最多追加两个直接交接 Skill。
-3. 最终代码/变更集的独立 Review 编排由 `workflow-project-integration` 交接给 `workflow-ai-collab`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
+3. 最终代码/变更集的独立 Review 编排由 `workflow-project-integration` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
 | 请求事实 | 建议实现层主 Skill（由 project-integration 分发） | 可选直接交接 |

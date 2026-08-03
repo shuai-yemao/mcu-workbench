@@ -29,7 +29,7 @@
 |---|---|---|
 | `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和需求约束包 | 需求约束包 → workflow-project-integration（必经） |
 | `workflow-project-integration` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划 |
-| `workflow-ai-collab` | 最终代码、补丁或 diff 的独立 Review 编排 | 按严重级别分组的审查报告与阻塞项 |
+| `workflow-final-review` | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | 按严重级别分组的审查报告与阻塞项 |
 | `workflow-claude-layering` | 目标工程 Claude 分层规则的扫描、同步与校验 | 受管 CLAUDE.md 区块、路径规则、漂移报告 |
 ### 2.2 APP 软件架构
 

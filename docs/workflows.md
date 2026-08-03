@@ -7,7 +7,7 @@ Workflow 层保留四个职责互斥的 active Skills：
 - `workflow-requirements-router`：需求分析、约束补证、Agent 分配和需求约束包生成；RCP 固定交接给 `workflow-project-integration`。
 - `workflow-claude-layering`：目标工程 Claude 分层规则的扫描、预览同步和漂移校验。
 - `workflow-project-integration`：接收所有请求的 RCP（必经门禁），完成项目审计、分层设计、调用链和迁移路线后分发实现层 Skill。
-- `workflow-ai-collab`：最终代码、补丁或 diff 的独立 Review 编排，交付按严重级别分组的结构化审查报告。
+- `workflow-final-review`：最终代码、补丁或 diff 的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告。
 
 `app-architecture` 是 APP 领域 Skill，不承担跨领域编排。实际团队协作由 `embedded-lead` Agent 负责，专业工作交给对应 Agent，执行记录写入 `.mcu-workbench/runs/`。
 

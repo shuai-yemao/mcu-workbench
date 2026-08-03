@@ -17,7 +17,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 `os-abstraction` 与 `rtos-freertos` 仅在兼容映射中解析到这两个当前 OS 入口。
 
-原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-ai-collab`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
+原先未登记的工作流资料也已指定目标：`workflow-devlog` → `tools-learning-tutor`；`embedded-ai-collab` 和 `embedded-ai-prompt-templates` → `workflow-final-review`；`embedded-ai-coding-standard` 和 `embedded-ai-code-review` → `tools-quality`。
 
 | 旧名 | 历史归档目录 | 原架构层 |
 |---|---|---|

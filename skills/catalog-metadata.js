@@ -111,7 +111,7 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 const CANONICAL_DEFINITIONS = [
   ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
-  ['workflow-ai-collab', 'workflow', '最终代码/变更集的独立 Review 编排，交付按严重级别分组的结构化审查报告'],
+  ['workflow-final-review', 'workflow', '最终代码/变更集的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告'],
   ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-adapter', 'os', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
   ['os-runtime', 'os', '具体 RTOS 或裸机运行时的配置、Port 与调度诊断'],
@@ -182,7 +182,8 @@ const CANONICAL_ALIASES = {
   'mcu-platform': [
     'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
     'stm32-hal-development', 'stm32-spl-development'
-  ]
+  ],
+  'workflow-final-review': ['workflow-ai-collab']
 };
 
 module.exports = {

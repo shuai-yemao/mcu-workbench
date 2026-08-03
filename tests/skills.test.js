@@ -18,7 +18,7 @@ describe('Skills catalog and loader', () => {
       'middleware-communication', 'middleware-storage', 'middleware-algorithms',
       'software-system', 'tools-build', 'tools-flash', 'tools-linker',
       'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
-      'tools-learning-tutor', 'workflow-ai-collab', 'workflow-claude-layering'
+      'tools-learning-tutor', 'workflow-final-review', 'workflow-claude-layering'
     ]));
     expect(CANONICAL_SKILLS.find((skill) => skill.id === 'app-architecture')).toMatchObject({
       layer: 'app',
@@ -63,8 +63,9 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('platform-cortex-registers')).toBe('core-mcu');
     expect(resolveSkillId('protocol-mqtt')).toBe('middleware-communication');
     expect(resolveSkillId('middleware-fatfs')).toBe('middleware-storage');
-    expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-ai-collab');
-    expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-ai-collab');
+    expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-final-review');
+    expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-final-review');
+    expect(resolveSkillId('workflow-ai-collab')).toBe('workflow-final-review');
     expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-quality');
     expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-quality');
     expect(resolveSkillId('tools-ai-code-quality')).toBe('tools-quality');
@@ -97,7 +98,7 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('learning-tutor')).toContain('name: tools-learning-tutor');
-    expect(getSkillContent('embedded-ai-collab')).toContain('name: workflow-ai-collab');
+    expect(getSkillContent('embedded-ai-collab')).toContain('name: workflow-final-review');
     expect(getSkillContent('embedded-ai-coding-standard')).toContain('name: tools-quality');
     expect(getSkillContent('os-abstraction')).toContain('name: os-adapter');
     expect(getSkillContent('rtos-freertos')).toContain('name: os-runtime');
@@ -112,7 +113,7 @@ describe('Skills catalog and loader', () => {
     expect(router).toContain('建议主 Skill：<由 project-integration 分发的 canonical ID 参考；未完成 RCP 时为空>');
     expect(router).toContain('交接 Skill：<0 至 2 个 canonical ID>');
     expect(router).toContain('workflow-project-integration');
-    expect(router).toContain('workflow-ai-collab');
+    expect(router).toContain('workflow-final-review');
     expect(router).toContain('tools-quality');
     expect(router).toContain('不引用归档 Skill 作为 active 路由目标');
   });
@@ -146,7 +147,7 @@ describe('Skills catalog and loader', () => {
     expect(integration).toContain('阻塞风险');
     expect(integration).toContain('CubeMX');
     expect(integration).toContain('implementation-plan-review-package.md');
-    expect(integration).toContain('workflow-ai-collab');
+    expect(integration).toContain('workflow-final-review');
     expect(integration).toContain('不得进入代码阶段');
     expect(reviewPackage).toContain('## 1. 工程现状表');
     expect(reviewPackage).toContain('## 2. 文件施工清单');
@@ -166,6 +167,7 @@ describe('Skills catalog and loader', () => {
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
     expect(getSkillAliases()['embedded']).toBe('workflow-requirements-router');
     expect(getSkillAliases()['workflow-router']).toBe('workflow-requirements-router');
+    expect(getSkillAliases()['workflow-ai-collab']).toBe('workflow-final-review');
   });
 
   test('plugin filesystem, frontmatter and manifest validate', () => {

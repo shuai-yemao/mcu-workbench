@@ -57,7 +57,7 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 - Core、Middleware 与 Driver 不创建项目专属 Adapter；Driver 仅处理器件协议并经 Core 公共能力访问总线。
 
 发现层归属冲突或需要变更依赖图时，交接 `workflow-project-integration`；
-需要实施代码改动时交接 `workflow-ai-collab`；质量检查交接 `tools-quality`。
+需要实施代码改动时交接 `workflow-final-review`；质量检查交接 `tools-quality`。
 
 ## 输出格式
 

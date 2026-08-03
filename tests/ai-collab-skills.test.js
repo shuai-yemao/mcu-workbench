@@ -7,15 +7,16 @@ const ROOT = path.resolve(__dirname, '..');
 
 describe('AI collaboration skills', () => {
   test('routes every legacy AI collaboration entry to a focused canonical skill', () => {
-    expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-ai-collab');
-    expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-ai-collab');
+    expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-final-review');
+    expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-final-review');
+    expect(resolveSkillId('workflow-ai-collab')).toBe('workflow-final-review');
     expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-quality');
     expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-quality');
     expect(resolveSkillId('tools-ai-code-quality')).toBe('tools-quality');
   });
 
   test('triggers on final code, patch or git diff and depends on tools-quality', () => {
-    const review = getSkillContent('workflow-ai-collab');
+    const review = getSkillContent('workflow-final-review');
     expect(review).toContain('最终代码');
     expect(review).toContain('git diff');
     expect(review).toContain('tools-quality');
@@ -26,9 +27,9 @@ describe('AI collaboration skills', () => {
   });
 
   test('keeps a read-only review boundary with fixed report fields', () => {
-    const review = getSkillContent('workflow-ai-collab');
+    const review = getSkillContent('workflow-final-review');
     const contract = fs.readFileSync(
-      path.join(ROOT, 'skills', 'workflow', 'workflow-ai-collab', 'references', 'prompt-contract.md'),
+      path.join(ROOT, 'skills', 'workflow', 'workflow-final-review', 'references', 'prompt-contract.md'),
       'utf8'
     );
 
@@ -54,7 +55,7 @@ describe('AI collaboration skills', () => {
   });
 
   test('only delegates to active agents and never claims board-level verification from static checks', () => {
-    const review = getSkillContent('workflow-ai-collab');
+    const review = getSkillContent('workflow-final-review');
     const agents = fs.readdirSync(path.join(ROOT, 'agents'));
 
     for (const agent of [

@@ -1,6 +1,6 @@
 # 实现方案审查包
 
-> 本包由 `workflow-project-integration` 在代码前审查阶段产出，是 `workflow-ai-collab` 的唯一正式输入。不得以未引用工程证据的方案文字代替本包。
+> 本包由 `workflow-project-integration` 在代码前审查阶段产出，是 `workflow-final-review` 的唯一正式输入。不得以未引用工程证据的方案文字代替本包。
 
 ## 元数据与输入
 
@@ -54,6 +54,6 @@
 | 需修订 | `<proposal item>` | `<required correction>` | `<conflicting or incomplete evidence>` | `<revision>` |
 | 阻塞风险 | `<proposal item>` | `<why code generation is prohibited>` | `<inferred/unverified fact>` | `<specific evidence question>` |
 
-**代码阶段判定：** `可交给 workflow-ai-collab` / `不得进入代码阶段`。
+**代码阶段判定：** `可交给 workflow-final-review` / `不得进入代码阶段`。
 
 只有实施相关事实均为 `confirmed` 或 `user-confirmed`，且四张表没有未关闭阻塞项时，才能选择前者。若发现新事实，退回 `workflow-project-integration` 更新本审查包。

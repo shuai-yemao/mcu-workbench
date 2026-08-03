@@ -88,4 +88,4 @@ Core、Middleware、Driver 不设置 Adapter。
 
 ## 7. Workflow 生命周期
 
-当前 active workflow 为 `workflow-requirements-router`、`workflow-project-integration`、`workflow-claude-layering` 和 `workflow-ai-collab`；旧 `workflow-router` 与 `embedded-ai-collab` 位于兼容/归档边界。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。
+当前 active workflow 为 `workflow-requirements-router`、`workflow-project-integration`、`workflow-claude-layering` 和 `workflow-final-review`；旧 `workflow-router`、`workflow-ai-collab` 与 `embedded-ai-collab` 位于兼容/归档边界。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。

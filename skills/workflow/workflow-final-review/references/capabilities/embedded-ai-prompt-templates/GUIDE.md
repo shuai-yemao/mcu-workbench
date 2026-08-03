@@ -7,7 +7,7 @@ migration_status: compare-only
 
 # 嵌入式 AI Prompt 模板
 
-> **入口说明**：本旧入口现解析到 `workflow-ai-collab`，只承担最终代码/变更集的独立 Review 编排。沿用本入口时必须提供最终代码、补丁或 `git diff`；本入口不生成实现、不自动修复。以下模板仅为迁移比对资料，不作为 active reference 读取。
+> **入口说明**：本旧入口现解析到 `workflow-final-review`，只承担最终代码/变更集的独立 Review 编排。沿用本入口时必须提供最终代码、补丁或 `git diff`；本入口不生成实现、不自动修复。以下模板仅为迁移比对资料，不作为 active reference 读取。
 >
 > 给 AI 下达嵌入式 C 编码任务时的标准 prompt 结构。
 > 使用时替换 `{MODULE}`、`{module}`、`{PERIPHERAL}` 等占位符。

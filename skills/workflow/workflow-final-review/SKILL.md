@@ -1,9 +1,9 @@
 ---
-name: workflow-ai-collab
-description: 在最终代码、补丁或 git diff 就绪后执行独立代码审查编排，按 `tools-quality` 的 profile 与门禁输出结构化审查报告；默认不生成实现、不自动修复。用户要求审查最终代码、补丁或 diff，或协调审查到验证流程时使用。
+name: workflow-final-review
+description: 在最终代码、补丁或 git diff 就绪后执行独立代码审查编排，作为输出前的最后一层门禁，按 `tools-quality` 的 profile 与门禁输出结构化审查报告；默认不生成实现、不自动修复。用户要求审查最终代码、补丁或 diff，或协调审查到验证流程时使用。
 ---
 
-# 最终代码 Review 编排
+# 最终代码 Review 编排（输出前最后一层门禁）
 
 ## 职责
 
