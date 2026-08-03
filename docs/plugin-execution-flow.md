@@ -13,8 +13,11 @@ flowchart TD
 
     S0 --> M[plugin manifest]
     M --> C[skills/catalog.js 兼容解析]
-    C --> R[workflow-router]
-    R --> S[选择一个主 Skill]
+    C --> R[workflow-requirements-router]
+    R --> A[分配一个或多个 Agent 分析]
+    A --> Q[补齐项目与需求约束]
+    Q --> P[生成需求约束包提示词]
+    P --> S[交给下游主 Skill]
     S --> G[读取主 SKILL.md]
     G --> Ref[按需读取 references]
     Ref --> Tool[调用 scripts 或项目工具]
@@ -39,12 +42,18 @@ flowchart TD
 
 第一步应识别请求所属职责，而不是直接加载全部 Skills。
 
-### 阶段 2：选择主 Skill
+### 阶段 2：需求约束分析与补证
+
+`workflow-requirements-router` 先分配 `embedded-lead` 和一个或多个专用 Agent，对需求、项目文件和已有证据进行分析；缺少关键事实时向用户提问。必须补齐项目背景、硬件资源、软件环境、FreeRTOS 任务/队列、分层边界、功能与非功能约束、优先级、依赖、验收标准和人工确认项。
+
+### 阶段 3：生成需求约束包并选择主 Skill
+
+Router 将已确认事实、证据、未决项、Agent 分析和下游提示词组成需求约束包（RCP），再选择一个主 Skill，必要时追加直接交接 Skill。RCP 完成前不生成实现代码。
 
 路由规则：
 
 ```text
-一个请求 → 一个主 Skill
+一个请求 → 一个需求约束包 → 一个主 Skill
              ↓
        必要时交接下游 Skill
 ```
@@ -67,7 +76,7 @@ flowchart TD
 当前 active 目录为 **107 catalog / 25 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
 ```
 
-### 阶段 3：渐进式读取上下文
+### 阶段 4：渐进式读取上下文
 
 读取顺序：
 
@@ -77,7 +86,7 @@ flowchart TD
 4. 必要的脚本、模板或项目文件；
 5. 不读取与当前请求无关的全部资料。
 
-### 阶段 4：执行项目工作
+### 阶段 5：执行项目工作
 
 根据 Skill 类型执行不同动作：
 

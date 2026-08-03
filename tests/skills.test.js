@@ -11,7 +11,7 @@ describe('Skills catalog and loader', () => {
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
-      'workflow-router', 'workflow-project-integration', 'app-architecture',
+      'workflow-requirements-router', 'workflow-project-integration', 'app-architecture',
       'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port',
       'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
       'middleware-communication', 'middleware-storage', 'middleware-algorithms',
@@ -36,7 +36,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('legacy names resolve to their renamed skills', () => {
-    expect(resolveSkillId('embedded')).toBe('workflow-router');
+    expect(resolveSkillId('embedded')).toBe('workflow-requirements-router');
+    expect(resolveSkillId('workflow-router')).toBe('workflow-requirements-router');
     expect(resolveSkillId('build-keil')).toBe('tools-build');
     expect(resolveSkillId('tool-build-keil')).toBe('tools-build');
     expect(resolveSkillId('gang-flash')).toBe('tools-flash');
@@ -91,8 +92,9 @@ describe('Skills catalog and loader', () => {
   test('loader returns every catalog skill and accepts legacy lookup', () => {
     expect(listAvailableSkills()).toHaveLength(25);
     expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(25);
-    expect(getSkillContent('workflow-router')).toContain('name: workflow-router');
-    expect(getSkillContent('embedded')).toContain('name: workflow-router');
+    expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
+    expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
+    expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('learning-tutor')).toContain('name: tools-learning-tutor');
     expect(getSkillContent('embedded-ai-collab')).toContain('name: workflow-ai-collab');
     expect(getSkillContent('embedded-ai-coding-standard')).toContain('name: tools-quality');
@@ -108,7 +110,8 @@ describe('Skills catalog and loader', () => {
     expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(37);
     expect(getSkillAliases()['build-keil']).toBe('tools-build');
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
-    expect(getSkillAliases()['embedded']).toBe('workflow-router');
+    expect(getSkillAliases()['embedded']).toBe('workflow-requirements-router');
+    expect(getSkillAliases()['workflow-router']).toBe('workflow-requirements-router');
   });
 
   test('plugin filesystem, frontmatter and manifest validate', () => {

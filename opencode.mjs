@@ -76,30 +76,6 @@ function toolNameForAgent(agentId) {
 //  Skill 函数
 // ========================
 
-function recommendSkill(request) {
-  const lowerRequest = request.toLowerCase();
-  const words = lowerRequest
-    .split(/\s+/)
-    .filter((w) => w.length > 2)
-    .map((w) => w.replace(/[^a-z0-9-]/g, ""));
-
-  for (const skill of CANONICAL_SKILLS) {
-    const desc = (skill.description || "").toLowerCase();
-    if (words.some((w) => desc.includes(w))) {
-      return { id: skill.id, description: skill.description, layer: skill.layer };
-    }
-  }
-
-  for (const skill of CANONICAL_SKILLS) {
-    const id = skill.id.toLowerCase();
-    if (words.some((w) => id.includes(w))) {
-      return { id: skill.id, description: skill.description, layer: skill.layer };
-    }
-  }
-
-  return null;
-}
-
 async function readSkillContent(skillId) {
   const resolved = resolveSkillId(skillId);
   if (!resolved) return null;
@@ -110,6 +86,74 @@ function toolNameForSkill(skillId) {
   return `mcu_workbench_${skillId.replace(/-/g, "_")}`;
 }
 
+function buildRequirementsIntake(request, projectRoot = null) {
+  const text = request.toLowerCase();
+  const analysisAgents = ["embedded-lead"];
+  const addAgent = (agentId) => {
+    if (!analysisAgents.includes(agentId)) analysisAgents.push(agentId);
+  };
+
+  if (/硬件|板|芯片|引脚|电源|pcb|pin|hardware|mcu/.test(text)) addAgent("hardware-integration");
+  if (/分层|架构|接口|依赖|迁移|layer|architecture|interface/.test(text)) addAgent("system-architect");
+  if (/任务|队列|freertos|rtos|驱动|固件|代码|bsp|hal|task|queue|firmware/.test(text)) addAgent("firmware-engineer");
+  if (/编译|构建|烧录|调试|链接|cmake|keil|gdb|build|flash|debug/.test(text)) addAgent("toolchain-engineer");
+  if (/测试|验收|质量|回归|验证|test|acceptance|quality|verify/.test(text)) addAgent("verification-engineer");
+  if (analysisAgents.length === 1) addAgent("system-architect");
+
+  const questions = [
+    "项目绝对路径、当前分支/提交和目标交付物是什么？",
+    "目标 MCU/板卡、引脚/总线/供电资源和可用测量条件是什么？",
+    "OS/FreeRTOS、编译器、SDK/HAL、构建、烧录和观测工具版本是什么？",
+    "涉及哪些任务、优先级、栈、周期、队列/消息、同步原语和 ISR 约束？",
+    "必须遵守哪些分层边界、功能/非功能约束、优先级和依赖关系？",
+    "验收需要哪些静态、主机、构建、目标运行、日志或实物证据？",
+  ];
+
+  const fields = [
+    "项目背景", "硬件资源", "软件环境", "FreeRTOS 任务与队列约束",
+    "分层架构约束", "功能需求", "非功能约束", "优先级", "依赖关系",
+    "验收标准", "人工确认问题",
+  ];
+
+  return {
+    request,
+    entrySkill: "workflow-requirements-router",
+    status: "analysis-required",
+    projectRoot,
+    agentPlan: {
+      coordinator: "embedded-lead",
+      analysts: analysisAgents,
+      parallel: analysisAgents.length > 2,
+      rule: "各 Agent 只分析自身领域，embedded-lead 汇总证据、冲突和阻塞",
+    },
+    requiredContext: fields.map((name) => ({ name, status: "unverified", value: null, evidence: [] })),
+    questions,
+    nextSkill: null,
+    requirementsConstraintPackagePrompt: [
+      "请基于以下用户需求和证据生成 Requirement Constraint Package（RCP）。",
+      "所有字段必须标记 confirmed、user-confirmed、inferred 或 unverified，并附证据位置。",
+      `用户需求：${request}`,
+      `项目路径：${projectRoot || "待用户提供"}`,
+      `必须覆盖：${fields.join("、")}`,
+      "RCP 完成前不得生成实现代码；完成后只将 RCP 交给一个主 Skill，并列出直接交接 Skill。",
+    ].join("\n"),
+  };
+}
+
+async function discoverProjectEvidence(projectRoot) {
+  if (!projectRoot) return { status: "not-provided", entries: [] };
+  try {
+    const entries = await readdir(projectRoot, { withFileTypes: true });
+    return {
+      status: "top-level-discovered",
+      entries: entries.map((entry) => ({ name: entry.name, type: entry.isDirectory() ? "directory" : "file" })),
+      note: "仅列出项目根目录候选证据，未将文件名当作已确认约束；下游需读取并记录证据位置。",
+    };
+  } catch (error) {
+    return { status: "unavailable", entries: [], error: error.message };
+  }
+}
+
 // ========================
 //  插件入口
 // ========================
@@ -118,38 +162,21 @@ export default async (_ctx) => {
   const tools = {};
   const agents = await loadAgents();
 
-  // ---- Skill 路由 ----
-  tools.mcu_workbench_route = tool({
-    description: "根据嵌入式开发请求推荐最合适的 mcu-workbench skill",
+  // ---- 首阶段需求约束路由（旧 route 名称保留兼容） ----
+  const requirementsRouterTool = tool({
+    description: "插件首阶段需求约束入口：分配一个或多个 Agent，补齐项目背景并生成下游 Skill 的需求约束包",
     args: {
-      request: tool.schema.string().describe("用户的嵌入式开发请求，例如 'STM32 HAL 开发' 或 'J-Link 调试'"),
+      request: tool.schema.string().describe("用户的嵌入式需求描述"),
+      projectRoot: tool.schema.string().optional().describe("可选的项目绝对路径；未提供时返回待用户确认问题"),
     },
     async execute(args) {
-      const recommended = recommendSkill(args.request);
-      if (!recommended) {
-        return {
-          request: args.request,
-          availableSkills: CANONICAL_SKILLS.slice(0, 10).map((s) => ({
-            id: s.id,
-            description: s.description,
-            layer: s.layer,
-          })),
-          message: "未找到精确匹配的 skill，请从以上列表中选择或提供更具体的关键词。",
-        };
-      }
-
-      const content = await readSkillContent(recommended.id);
-      return {
-        request: args.request,
-        recommended: {
-          id: recommended.id,
-          description: recommended.description,
-          layer: recommended.layer,
-        },
-        preview: content ? content.slice(0, 2000) : null,
-      };
+      const intake = buildRequirementsIntake(args.request, args.projectRoot || null);
+      intake.projectEvidence = await discoverProjectEvidence(args.projectRoot || null);
+      return intake;
     },
   });
+  tools.mcu_workbench_requirements_router = requirementsRouterTool;
+  tools.mcu_workbench_route = requirementsRouterTool;
 
   // ---- Skill tools ----
   for (const skill of CANONICAL_SKILLS) {

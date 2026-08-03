@@ -35,7 +35,7 @@ describe('Codex skill synchronization', () => {
     expect(fs.existsSync(path.join(target, 'embedded'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'debug-gdb-openocd'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'bsp-adapter'))).toBe(false);
-    expect(fs.existsSync(path.join(target, 'workflow-router', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(target, 'workflow-requirements-router', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(target, 'tools-debug', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(target, 'bsp-wrapper', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(target, 'bsp-port', 'SKILL.md'))).toBe(true);
@@ -61,6 +61,20 @@ describe('Codex skill synchronization', () => {
     expect(summary.total).toBe(25);
     expect(summary.added).toBe(25);
     expect(fs.existsSync(target)).toBe(false);
+  });
+
+  test('migrates the renamed workflow router alias', () => {
+    const target = path.join(temporaryRoot, 'skills');
+    const backupRoot = path.join(temporaryRoot, 'backups');
+    fs.mkdirSync(path.join(target, 'workflow-router'), { recursive: true });
+    fs.writeFileSync(path.join(target, 'workflow-router', 'SKILL.md'), 'legacy router');
+
+    const summary = syncCodexSkills({ target, backupRoot });
+
+    expect(summary.renamed).toBe(1);
+    expect(fs.existsSync(path.join(target, 'workflow-router'))).toBe(false);
+    expect(fs.existsSync(path.join(target, 'workflow-requirements-router', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(summary.backup, 'workflow-router', 'SKILL.md'))).toBe(true);
   });
 
   test('reports a conflict when a canonical directory and a legacy alias coexist', () => {

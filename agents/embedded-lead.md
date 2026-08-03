@@ -5,7 +5,7 @@ model: sonnet
 effort: medium
 maxTurns: 32
 skills:
-  - workflow-router
+  - workflow-requirements-router
   - workflow-project-integration
   - workflow-ai-collab
   - tools-quality

@@ -14,7 +14,7 @@ const {
 const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, description]) => {
   const isToolsSkill = layer === 'operations';
   const isArchived = (ARCHIVED_SOFTWARE_LAYERS.has(layer)
-    && !['workflow-router', 'middleware-lvgl'].includes(id))
+    && !['workflow-requirements-router', 'middleware-lvgl'].includes(id))
     || isToolsSkill;
   const activeLayer = isToolsSkill ? 'tools' : layer;
   return {
@@ -31,7 +31,7 @@ const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, des
 });
 
 const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
-  .filter((skill) => ['workflow-router', 'middleware-lvgl'].includes(skill.id))
+  .filter((skill) => ['workflow-requirements-router', 'middleware-lvgl'].includes(skill.id))
   .map((skill) => ({ ...skill, canonical: true }));
 
 const TOOL_MIGRATION_MAP = Object.fromEntries(
@@ -59,7 +59,7 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 ].map((skill) => [skill.id, skill]));
 
 const CANONICAL_ORDER = [
-  'workflow-router', 'workflow-project-integration', 'app-architecture',
+  'workflow-requirements-router', 'workflow-project-integration', 'app-architecture',
   'workflow-ai-collab',
   'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
   'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
@@ -95,6 +95,7 @@ const SKILL_BY_CANONICAL_ID = Object.fromEntries(CANONICAL_SKILLS.map((skill) =>
 const SKILL_BY_LEGACY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.legacyId, skill]));
 
 const MIGRATION_MAP = {
+  'workflow-router': 'workflow-requirements-router',
   'workflow-architecture': 'workflow-project-integration',
   'project-integration': 'workflow-project-integration',
   'embedded-architect': 'workflow-project-integration',

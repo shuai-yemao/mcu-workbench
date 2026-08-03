@@ -2,10 +2,11 @@
 
 ## 当前策略
 
-工作流只保留两个 active Skills：
+Workflow 层保留三个职责互斥的 active Skills：
 
-- `workflow-router`：请求分诊和最小 Skill 选择。
+- `workflow-requirements-router`：需求分析、约束补证、Agent 分配和需求约束包生成。
 - `workflow-project-integration`：项目审计、分层设计、调用链和迁移路线。
+- `workflow-ai-collab`：AI 协作的需求澄清、逐函数生成、独立审查和验证编排。
 
 `app-architecture` 是 APP 领域 Skill，不承担跨领域编排。实际团队协作由 `embedded-lead` Agent 负责，专业工作交给对应 Agent，执行记录写入 `.mcu-workbench/runs/`。
 
@@ -14,7 +15,7 @@
 ## 标准执行流
 
 ```text
-需求 → workflow-router → embedded-lead
+需求 → workflow-requirements-router → embedded-lead
      → workflow-project-integration
      → 专业 Agent 执行
      → verification-engineer 验证

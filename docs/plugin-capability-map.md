@@ -27,8 +27,9 @@
 
 | Skill | 功能 | 典型输出 |
 |---|---|---|
-| `workflow-router` | 请求分诊、主 Skill 选择和交接 | Skill 选择、交接链 |
+| `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和需求约束包 | 需求约束包、下游 Skill 交接 |
 | `workflow-project-integration` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划 |
+| `workflow-ai-collab` | AI 协作、逐函数生成、重构和验证编排 | 生成 Prompt、函数变更和验证交接 |
 ### 2.2 APP 软件架构
 
 | Skill | 功能 | 典型输出 |

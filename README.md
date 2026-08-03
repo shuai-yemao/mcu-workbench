@@ -27,7 +27,7 @@ archive/
 当前目录为 **107 catalog / 25 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
-workflow-router workflow-project-integration workflow-ai-collab
+workflow-requirements-router workflow-project-integration workflow-ai-collab
 app-architecture
 os-adapter os-runtime
 bsp-wrapper bsp-port bsp-hal-driver bsp-handler
@@ -62,7 +62,7 @@ claude plugin validate .
 
 插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用，稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。详细职责、写入边界和交接协议见 [docs/agents.md](docs/agents.md)。
 
-工作流只保留 `workflow-router` 和 `workflow-project-integration` 两个 active 入口；旧的 `embedded-ai-collab` 已归档。持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
+Workflow 层有三个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-project-integration` 负责跨层规划，`workflow-ai-collab` 负责编排 AI 协作。旧的 `workflow-router` 和 `embedded-ai-collab` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
 
 ### 稳定产物
 
@@ -103,7 +103,7 @@ npm run cli -- build --target stm32f4
 
 ## OpenCode 适配
 
-本分支新增 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 25 个 canonical skill 工具和一个路由工具。
+本分支新增 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 25 个 canonical Skill 工具和首阶段需求约束路由工具。
 
 ### 本地安装
 
@@ -113,13 +113,13 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 安装后 `C:\Users\zhang\.opencode\opencode.json` 会新增 plugin 路径。重启 OpenCode 后，可用以下工具：
 
-- `mcu_workbench_route`：根据请求推荐最合适的 skill
+- `mcu_workbench_requirements_router`：分配 Agent、补齐需求约束并生成下游 Skill 的 RCP（`mcu_workbench_route` 保留兼容）
 - `mcu_workbench_<skill_id>`：读取对应 SKILL.md 的内容摘要
 
 ### 示例
 
 ```text
-调用 mcu_workbench_route，请求 "STM32 HAL GPIO 初始化"
+调用 mcu_workbench_requirements_router，请求 "STM32 HAL GPIO 初始化"
 ```
 
 ```text

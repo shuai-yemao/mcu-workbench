@@ -5,7 +5,7 @@
 
 const LEGACY_SKILL_ENTRIES = [
   // 工作流：决定如何开始或如何在多个层之间交接。
-  ['workflow-router', 'embedded', 'workflow', '嵌入式请求分诊与最小 skill 编排'],
+  ['workflow-requirements-router', 'embedded', 'workflow', '嵌入式需求约束分析、Agent 编排与下游 Skill 交接'],
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
   ['workflow-architecture', 'embedded-architect', 'workflow', '嵌入式分层架构设计'],
   ['workflow-code-porting', 'code-porting', 'workflow', '跨 MCU、SDK 或工具链的代码移植'],
@@ -170,6 +170,7 @@ const TOOL_ALIASES = {
 };
 
 const CANONICAL_ALIASES = {
+  'workflow-requirements-router': ['workflow-router'],
   'os-adapter': ['os-abstraction'],
   'os-runtime': ['rtos-freertos', 'freertos-module'],
   'bsp-port': [

@@ -13,7 +13,7 @@ npm run migrate:capabilities       # 检查 80 份已转移能力及索引是否
 node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐缺失资料
 ```
 
-目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-router`、`app-architecture`、`os-adapter`、`os-runtime`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；其中 `app-architecture` 属于 APP 软件架构层，不属于 Workflow 层；它们不应凭空创建“旧版迁移资料”。
+目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-requirements-router`、`app-architecture`、`os-adapter`、`os-runtime`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；旧 `workflow-router` 仅作为兼容别名解析到新的需求约束入口。其中 `app-architecture` 属于 APP 软件架构层，不属于 Workflow 层；它们不应凭空创建“旧版迁移资料”。
 
 `os-abstraction` 与 `rtos-freertos` 仅在兼容映射中解析到这两个当前 OS 入口。
 
@@ -21,7 +21,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 | 旧名 | 历史归档目录 | 原架构层 |
 |---|---|---|
-| `embedded` | `workflow-router` | workflow |
+| `embedded` | `workflow-requirements-router` | workflow |
 | `devlog` | `workflow-devlog` | workflow |
 | `embedded-architect` | `workflow-architecture` | workflow |
 | `code-porting` | `workflow-code-porting` | workflow |
@@ -107,7 +107,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
-| `workflow-router` | `embedded` |
+| `workflow-requirements-router` | `embedded`、`workflow-router` |
 | `workflow-project-integration` | `workflow-architecture`、`project-integration`、`code-porting` |
 | `app-architecture` | APP 新入口，无旧目录 |
 | `os-adapter` | `os-abstraction`（兼容映射） |
