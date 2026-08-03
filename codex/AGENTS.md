@@ -37,8 +37,8 @@
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
 | 跨层审计、迁移和验收路线 | `workflow-project-integration` | 先审查方案和证据，再交接施工 |
-| AI 协作、逐函数实现和重构 | `workflow-ai-collab` | 接口与风格确认后，每次只实现一个可验证边界 |
-| 代码审查、格式、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题 |
+| 最终代码、补丁或 diff 的独立 Review 编排 | `workflow-ai-collab` | 按 profile 与门禁输出审查报告，不生成实现或自动修复 |
+| 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |
 | APP、OS、BSP、Core、Middleware | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
 | 烧录、调试、观测和发布 | `tools-flash`、`tools-debug`、`tools-observability`、`tools-release` | 先确认工具、产物、目标和观测通道 |
 

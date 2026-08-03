@@ -9,9 +9,9 @@ const LEGACY_SKILL_ENTRIES = [
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
   ['workflow-architecture', 'embedded-architect', 'workflow', '嵌入式分层架构设计'],
   ['workflow-code-porting', 'code-porting', 'workflow', '跨 MCU、SDK 或工具链的代码移植'],
-  ['embedded-ai-collab', 'embedded-ai-collab', 'workflow', '嵌入式 AI 协作编程入口 — 5 阶段工作流编排'],
+  ['embedded-ai-collab', 'embedded-ai-collab', 'workflow', '嵌入式 AI 协作编程入口 — 旧 5 阶段生成工作流；沿用此入口需提供最终代码或 diff'],
   ['embedded-ai-coding-standard', 'embedded-ai-coding-standard', 'workflow', '嵌入式 C AI 编码规范 — 命名、模板、五大原则'],
-  ['embedded-ai-prompt-templates', 'embedded-ai-prompt-templates', 'workflow', '嵌入式 AI Prompt 模板集 — 逐函数生成与审查'],
+  ['embedded-ai-prompt-templates', 'embedded-ai-prompt-templates', 'workflow', '嵌入式 AI Prompt 模板集 — 旧逐函数生成与审查模板；沿用此入口需提供最终代码或 diff'],
   ['embedded-ai-code-review', 'embedded-ai-code-review', 'workflow', '嵌入式 AI 代码审查清单 — 四层检查与反模式'],
   ['project-integration', 'embedded-project-integration', 'workflow', '嵌入式项目集成审计与指导 — 五层模型 + 8步路线图'],
 
@@ -111,7 +111,7 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 const CANONICAL_DEFINITIONS = [
   ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
-  ['workflow-ai-collab', 'workflow', '项目风格优先的嵌入式 AI 协作、逐函数生成与验证编排'],
+  ['workflow-ai-collab', 'workflow', '最终代码/变更集的独立 Review 编排，交付按严重级别分组的结构化审查报告'],
   ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-adapter', 'os', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
   ['os-runtime', 'os', '具体 RTOS 或裸机运行时的配置、Port 与调度诊断'],

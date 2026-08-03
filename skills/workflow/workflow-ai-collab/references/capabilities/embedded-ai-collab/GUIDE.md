@@ -7,6 +7,8 @@ migration_status: compare-only
 
 # 嵌入式 AI 协作编程
 
+> **入口说明**：本旧入口现解析到 `workflow-ai-collab`，只承担最终代码/变更集的独立 Review 编排。沿用本入口时必须提供最终代码、补丁或 `git diff`；本入口不生成实现、不自动修复。以下内容仅为迁移比对资料，不作为 active reference 读取。
+>
 > 与 AI 协作进行嵌入式 C 开发的标准流程。
 > 自动加载编码规范、Prompt 模板和审查清单，确保 AI 生成的代码符合项目标准。
 

@@ -12,8 +12,8 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 以下职责必须分流，不可由需求约束 Router 代办：
 
 - 跨层审计、分层设计、迁移顺序和验收路线：`workflow-project-integration`。
-- AI 协作、逐函数生成、重构和 Prompt：`workflow-ai-collab`。
-- 风格分析、静态质量门禁和独立代码审查：`tools-quality`。
+- 最终代码/变更集的独立 Review 编排：`workflow-ai-collab`。
+- 风格规则、静态质量门禁和质量检查工具来源：`tools-quality`。
 
 ## 阶段一：分配 Agent 分析需求
 
@@ -78,8 +78,8 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 ## 主 Skill 选择与交接
 
 1. 跨层规划、工程审计、迁移顺序和验收路线：主 Skill 为 `workflow-project-integration`。
-2. AI 协作、逐函数生成、重构和 Prompt：主 Skill 为 `workflow-ai-collab`。
-3. 风格分析、静态质量门禁和独立代码审查：主 Skill 为 `tools-quality`。
+2. 最终代码/变更集的独立 Review 编排：主 Skill 为 `workflow-ai-collab`。
+3. 风格规则、静态质量门禁和质量检查工具来源：主 Skill 为 `tools-quality`。
 4. 其他请求按下表选择直接责任 Skill；仅在 RCP 中存在明确输入依赖时追加交接。
 5. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 

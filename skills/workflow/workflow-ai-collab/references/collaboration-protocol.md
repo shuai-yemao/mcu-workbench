@@ -1,11 +1,11 @@
-# 协作阶段与交接
+# Review 编排与交接
 
 | 阶段 | 输入 | 负责人 | 产物 | 退出条件 |
 | --- | --- | --- | --- | --- |
-| 需求与证据 | 项目路径、目标、硬件/SDK、验收条件 | `embedded-lead` | 范围和证据表 | 无关键阻塞项 |
-| 架构与接口 | 现有调用链、公开 API、资源所有权 | `system-architect` | 接口与边界说明 | 用户或项目证据确认 |
-| 逐函数生成 | 已确认接口、风格 profile、最小任务 | `firmware-engineer` | 单函数差异和本地验证 | 目标构建或测试通过 |
-| 独立审查 | 差异、风格 profile、验收条件 | `verification-engineer` | 分级审查结果 | 无阻塞问题 |
-| 验证与交接 | 构建命令、产物、板级需求 | `toolchain-engineer` / `hardware-integration` | 可复现日志和限制 | 证据级别明确 |
+| 范围与证据 | 最终代码/变更集、接口与约束 | `embedded-lead` | 审查范围与证据表 | 明确被审版本/diff 与基线 |
+| 风格与门禁 | 变更集、风格 profile | `verification-engineer` | profile 偏差清单 | 记录 profile 来源与适用目录 |
+| 功能与资源 | 接口契约、调用链、资源所有权 | `verification-engineer` / `system-architect` | 分级问题清单 | 无未验证假设被表述为事实 |
+| ISR/DMA/并发与安全 | 并发证据、数据手册、板级条件 | `verification-engineer` / `hardware-integration` | 分级问题清单 | 板级结论有实物证据 |
+| 报告与交接 | 各阶段结果 | `embedded-lead` | 结构化审查报告 | 阻塞项与待补验证明确 |
 
-若当前会话未分派 agent，由主协作会话执行相同阶段职责；不得凭空声明已分派或已验证。
+本 Skill 默认只输出结构化审查报告，不生成实现、不自动修复、不产生替换代码或修复补丁。若当前会话未分派 agent，由主会话执行相同阶段职责；不得凭空声明已分派或已验证。
