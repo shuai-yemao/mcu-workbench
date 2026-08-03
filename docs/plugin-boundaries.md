@@ -46,6 +46,7 @@ Core、Middleware、Driver 不设置 Adapter。
 | `tools-debug` | 回溯、寄存器、GDB/OpenOCD 信息 | 根因、修复和回归建议 | `tools-observability`、软件架构 Skill |
 | `tools-observability` | RTT/ELOG/串口/SystemView 数据 | 运行时证据和时间线 | `tools-debug`、`tools-quality` |
 | `tools-quality` | 源码、Map、静态分析、测试结果 | 缺陷、等级、证据和回归结果 | `tools-build`、`tools-release` |
+| `tools-git` | 仓库状态、分支、差异、Jira 和用户确认 | 变更集、提交/标签证据、风险与验证交接 | `tools-quality`、`tools-build`、`tools-release` |
 | `tools-release` | 构建产物、签名信息、质量结果 | OTA 包、升级、回滚和发布记录 | `software-system`、项目集成 |
 | `tools-learning-tutor` | 项目代码、已有笔记和用户回答 | 学习笔记、Q&A、薄弱点和未验证项 | `workflow-project-integration` 或对应软件层 Skill |
 

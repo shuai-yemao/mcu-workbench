@@ -73,7 +73,7 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
     → os-adapter / os-runtime（如果涉及任务、队列或 Runtime）
     → core-mcu / mcu-platform（如果涉及底层外设）
 
-当前 active 目录为 **107 catalog / 25 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
+当前 active 目录为 **108 catalog / 26 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
 ```
 
 ### 阶段 4：渐进式读取上下文

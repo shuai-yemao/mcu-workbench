@@ -65,7 +65,7 @@ const CANONICAL_ORDER = [
   'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
   'middleware-communication', 'middleware-storage', 'middleware-algorithms',
   'software-system', 'tools-build', 'tools-flash', 'tools-linker',
-  'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
+  'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
   'tools-learning-tutor'
 ];
 

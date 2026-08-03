@@ -17,7 +17,7 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **107 catalog / 25 canonical**：
+当前 catalog 为 **108 catalog / 26 canonical**：
 
 - 25 个 canonical skills；
 - 80 个软件和工具归档入口；
@@ -67,6 +67,7 @@
 | `tools-debug` | GDB、OpenOCD、Ozone、RTOS、HardFault | 接收运行失败证据，输出根因和修复建议 |
 | `tools-observability` | ELOG、RTT、串口、SystemView | 采集日志、追踪和运行时证据 |
 | `tools-quality` | 代码审查、Map、静态分析、Unity | 输出质量问题、证据和回归结果 |
+| `tools-git` | 分支、Jira 提交、worktree、同步和受控恢复 | 记录变更、提示提交并交接验证证据 |
 | `tools-release` | OTA 打包、升级、回滚和发布验证 | 接收构建产物和质量结果 |
 | `tools-learning-tutor` | 基于项目代码提问、理解检查和 Obsidian 笔记生成 | 接收项目路径、模块范围和用户回答 |
 

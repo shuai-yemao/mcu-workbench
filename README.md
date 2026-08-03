@@ -24,7 +24,7 @@ archive/
 
 ## Canonical skills
 
-当前目录为 **107 catalog / 25 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **108 catalog / 26 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-project-integration workflow-ai-collab
@@ -35,14 +35,14 @@ core-mcu mcu-platform
 middleware-lvgl middleware-communication middleware-storage middleware-algorithms
 software-system
 tools-build tools-flash tools-linker tools-debug
-tools-observability tools-quality tools-release tools-learning-tutor
+tools-observability tools-quality tools-git tools-release tools-learning-tutor
 ```
 
 Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。
 
 ## 工具方向
 
-`skills/tools/` 按用途保留 8 个主入口。原 29 个工具目录及全部 references、scripts、assets 已归档到 `archive/tools-legacy/`；项目学习与笔记生成由 `tools-learning-tutor` 负责，旧调用名仍可解析到新的 `tools-*` 入口。
+`skills/tools/` 按用途保留 9 个主入口。原 29 个工具目录及全部 references、scripts、assets 已归档到 `archive/tools-legacy/`；项目学习与笔记生成由 `tools-learning-tutor` 负责，旧调用名仍可解析到新的 `tools-*` 入口。
 
 归档能力并未只保留名称兼容：80 份旧 Skill 的详细流程、脚本和资源已转移到对应 canonical Skill 的 active `references/capabilities/`，每个目标入口通过 `references/capability-index.md` 按需读取。可用 `npm run migrate:capabilities` 校验完整性。
 
@@ -119,7 +119,7 @@ npm run validate:flash-algorithm
 
 ## OpenCode 适配
 
-仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 25 个 canonical Skill 工具和首阶段需求约束路由工具。
+仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 26 个 canonical Skill 工具和首阶段需求约束路由工具。
 
 ### 本地安装
 

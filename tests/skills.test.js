@@ -6,9 +6,9 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps legacy entries and exposes 25 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(107);
-    expect(CANONICAL_SKILLS).toHaveLength(25);
+  test('catalog keeps legacy entries and exposes 26 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(108);
+    expect(CANONICAL_SKILLS).toHaveLength(26);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
@@ -17,7 +17,7 @@ describe('Skills catalog and loader', () => {
       'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
       'middleware-communication', 'middleware-storage', 'middleware-algorithms',
       'software-system', 'tools-build', 'tools-flash', 'tools-linker',
-      'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
+      'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
       'tools-learning-tutor', 'workflow-ai-collab'
     ]));
     expect(CANONICAL_SKILLS.find((skill) => skill.id === 'app-architecture')).toMatchObject({
@@ -91,8 +91,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(25);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(25);
+    expect(listAvailableSkills()).toHaveLength(26);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(26);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -158,7 +158,7 @@ describe('Skills catalog and loader', () => {
   test('registry is a compatibility view derived from catalog', () => {
     expect(Object.keys(getAllSkills())).toHaveLength(SKILL_CATALOG.length);
     expect(listSkillNames()).toEqual(Object.keys(getAllSkills()));
-    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(37);
+    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(38);
     expect(getSkillAliases()['build-keil']).toBe('tools-build');
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
     expect(getSkillAliases()['embedded']).toBe('workflow-requirements-router');
@@ -175,7 +175,7 @@ describe('Skills catalog and loader', () => {
     const tools = SKILL_CATALOG.filter((skill) => skill.layer === 'tools' && skill.canonical);
     expect(archived).toHaveLength(80);
     expect(archivedTools).toHaveLength(29);
-    expect(tools).toHaveLength(8);
+    expect(tools).toHaveLength(9);
     expect(archived.filter((skill) => skill.path.startsWith('archive/software-legacy/'))).toHaveLength(51);
     expect(tools.every((skill) => skill.path.startsWith('skills/tools/'))).toBe(true);
   });

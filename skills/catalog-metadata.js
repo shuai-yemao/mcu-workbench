@@ -133,6 +133,7 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
   ['tools-quality', 'tools', '代码审查、AI 代码约束、Map、静态分析和 Unity 测试'],
+  ['tools-git', 'tools', '项目 Git 分支、提交、同步、恢复与嵌入式验证交接'],
   ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
   ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
 ];

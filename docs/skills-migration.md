@@ -103,7 +103,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **107 catalog / 25 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
+当前状态为 **108 catalog / 26 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
@@ -150,7 +150,8 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 | `tools-debug` | `debug-*`、CmBacktrace、RTOS 调试别名 | 6 |
 | `tools-observability` | `observability-*`、ELOG/RTT/SystemView 别名 | 5 |
 | `tools-quality` | `quality-*`、审查/Map/MISRA/Unity 别名 | 4 |
+| `tools-git` | 项目 Git 分支、提交、同步和受控恢复 | 0 |
 | `tools-release` | `release-*`、OTA 别名 | 2 |
 | `tools-learning-tutor` | `workflow-learning-tutor`、`learning-tutor` | 2 |
 
-29 个旧工具目录位于 `archive/tools-legacy/`；8 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。
+29 个旧工具目录位于 `archive/tools-legacy/`；9 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。
