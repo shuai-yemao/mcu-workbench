@@ -13,7 +13,8 @@ function validateLearningTutorReferences(errors) {
     'references/note-template.md',
     'references/coverage-checklist.md',
     'references/obsidian-write-protocol.md',
-    'references/session-state.md'
+    'references/session-state.md',
+    'references/engineering-visual-output.md'
   ];
   for (const relative of requiredFiles) {
     if (!fs.existsSync(path.join(TUTOR_SKILL_ROOT, relative))) {
@@ -32,7 +33,8 @@ function validateLearningTutorReferences(errors) {
 
   const capabilityAnchors = [
     'tutor', 'code-audit', 'note-refresh', 'project-note',
-    '逐节', 'Q&A', 'Mermaid', 'WikiLink', 'Obsidian', '未验证', '薄弱点'
+    '逐节', 'Q&A', 'Mermaid', 'WikiLink', 'Obsidian', '未验证', '薄弱点',
+    '不自动跳过', '工程现场', 'SVG', 'React'
   ];
   for (const anchor of capabilityAnchors) {
     if (!content.includes(anchor)) errors.push(`tools-learning-tutor: 主入口缺少能力标记 ${anchor}`);
