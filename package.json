@@ -1,6 +1,6 @@
 {
   "name": "mcu-workbench",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "嵌入式开发生命周期全覆盖的 Claude Code / OpenCode 插件",
   "main": "index.js",
   "exports": {
@@ -18,6 +18,9 @@
     "cli": "node bin/mcu-workbench.js",
     "agent:artifacts": "node scripts/agent-artifacts.js",
     "build:codex-compat": "node scripts/build-codex-compat.js",
+    "build:opencode-commands": "node scripts/build-opencode-commands.js",
+    "sync:versions": "node scripts/sync-plugin-versions.js",
+    "check:versions": "node scripts/sync-plugin-versions.js --check",
     "codex:register": "node scripts/register-codex-marketplace.js",
     "sync:codex": "node scripts/sync-codex-skills.js",
     "migrate:capabilities": "node scripts/materialize-skill-capabilities.js --check",

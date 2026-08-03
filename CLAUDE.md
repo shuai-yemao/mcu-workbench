@@ -20,9 +20,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移、安全层文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
 | **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约、能力迁移 |
-| **测试套件** | `tests/` | 29 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
+| **测试套件** | `tests/` | 33 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
 | **Claude 插件** | `.claude-plugin/plugin.json` | Claude Code 插件清单 |
-| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 26 个 `mcu_workbench_<skill_id>` 工具 |
+| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 27 个 `mcu_workbench_<skill_id>` 工具 |
 | **Codex 适配** | `.codex-plugin/plugin.json` + `codex/AGENTS.md` | Codex CLI 插件 + 宿主运行约束 |
 | **Codex 兼容桥** | `AGENTS.override.md` | 从 `codex/AGENTS.md` 自动生成的兼容入口 |
 | **归档** | `archive/software-legacy/ tools-legacy/ workflows-legacy/` | 旧版技能与工作流，能力已转移至 canonical skills |
@@ -44,14 +44,23 @@ npm run validate:links          # SKILL.md 跨文件链接检查
 npm run migrate:capabilities    # 检查 80 份归档能力转移完整性
 node scripts/materialize-skill-capabilities.js --write   # 首次转移或补齐
 npm run build:codex-compat      # 生成 Codex 兼容桥（AGENTS.override.md）
+npm run build:opencode-commands # 生成 OpenCode 命令文件（.opencode/commands，由 agents 派生）
+npm run sync:versions           # 同步插件清单版本（package.json 为唯一版本源）
+npm run check:versions          # 检查版本一致性（只读）
 
 # 测试
-npm test -- --runInBand         # 运行全部 29 个测试文件
+npm test -- --runInBand         # 运行全部 33 个测试文件
 
 # CI / Codex
 npm run sync:codex              # 同步技能到 Codex 目录
 npm run codex:register          # 注册 Codex 市场
 node scripts/report-skills.js   # 技能清单报告
+
+# Claude 分层管理（目标工程受管 CLAUDE.md 与 .claude/rules 规则）
+npm run claude:scan -- --root <firmware-root>              # 只读扫描分层证据
+npm run claude:init -- --root <firmware-root> --write       # 初始化受管区块与路径规则
+npm run claude:sync -- --root <firmware-root> --write       # 重新扫描并更新受管规则
+npm run claude:validate -- --root <firmware-root> --strict  # 校验漂移（CI 门禁，不调用 --write）
 
 # Agent 产物管理
 npm run agent:artifacts -- init --project . --project-id <id> --mcu <mcu>
@@ -69,7 +78,7 @@ npm run cli -- build --target stm32f4
 ### 执行流程
 
 ```
-用户请求 → workflow-router（分诊）
+用户请求 → workflow-requirements-router（分诊）
          → workflow-project-integration（项目审计、分层、迁移路线）
          → embedded-lead Agent（团队编排）
          → 专业 Agent 执行
@@ -81,7 +90,7 @@ npm run cli -- build --target stm32f4
 ### 分层架构
 
 ```
-├─ workflow/    → workflow-router, workflow-project-integration, workflow-ai-collab
+├─ workflow/    → workflow-requirements-router, workflow-project-integration, workflow-ai-collab, workflow-claude-layering
 ├─ app/         → app-architecture
 ├─ os/          → os-adapter, os-runtime
 ├─ bsp/         → bsp-wrapper, bsp-port, bsp-hal-driver, bsp-handler
@@ -124,17 +133,17 @@ OpenCode 适配通过 `@opencode-ai/plugin` 暴露工具。Codex 适配说明见
 
 ## Agent 团队
 
-`agents/` 提供 7 个嵌入式角色，调用方式 `@mcu-workbench:<agent-name>`。职责与写入边界见 `docs/agents.md`：
+`agents/` 提供 7 个嵌入式角色，调用方式 `@mcu-workbench:<agent-name>`。每个 agent 在 frontmatter 声明稳定的 `domain` 与 `scope`，**不手写技能清单**——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，技能目录更新后 agent 自动获得新能力。职责与写入边界见 `docs/agents.md`：
 
-| Agent | 领域 | 写入范围 |
+| Agent | 领域（domain） | 写入范围（scope） |
 |-------|------|----------|
-| `embedded-lead` | 分诊、编排、最终汇总 | `.mcu-workbench/`、`docs/devlog/` |
-| `system-architect` | 软件分层与迁移 | `docs/architecture/` |
-| `firmware-engineer` | APP/OS/BSP/Core 集成 | 项目固件目录与配置 |
-| `hardware-integration` | 板级连接与测量 | `hardware/`、`docs/verification/` |
-| `toolchain-engineer` | 构建、烧录、链接、调试 | 工具链配置 |
-| `verification-engineer` | 测试、静态分析、证据 | `docs/verification/` |
-| `knowledge-engineer` | 开发日志与笔记 | `docs/notes/` |
+| `embedded-lead` | 项目协调 | `.mcu-workbench/`、`docs/devlog/` |
+| `system-architect` | 分层架构 | `docs/architecture/` |
+| `firmware-engineer` | 固件实现 | 项目固件目录与配置 |
+| `hardware-integration` | 硬件集成 | `hardware/`、`docs/verification/` |
+| `toolchain-engineer` | 工具链 | 工具配置、`docs/verification/` |
+| `verification-engineer` | 验证质量 | 测试目录、`docs/verification/` |
+| `knowledge-engineer` | 知识沉淀 | `docs/devlog/`、`docs/notes/` |
 
 Agent 遵循分域写入和显式交接协议。运行记录写入 `.mcu-workbench/runs/`。
 

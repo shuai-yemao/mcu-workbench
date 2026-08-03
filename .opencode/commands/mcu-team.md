@@ -1,19 +1,19 @@
 ---
-description: 列出 MCU-Workbench 嵌入式开发 agent 团队
+description: 列出 MCU-Workbench 嵌入式开发 agent 团队（7 个）
 agent: general
 ---
 
 You are using the MCU-Workbench embedded development agent team. Here is the team roster:
 
-| Agent | 角色 | 命令 |
-|---|---|---|
-| embedded-lead | 分诊、编排、最终汇总 | /mcu-embedded-lead |
-| system-architect | 软件分层与迁移 | /mcu-system-architect |
-| firmware-engineer | APP/OS/BSP/Core 集成实现 | /mcu-firmware-engineer |
-| hardware-integration | 板级连接与测量证据 | /mcu-hardware-integration |
-| toolchain-engineer | 构建、烧录、链接、调试 | /mcu-toolchain-engineer |
-| verification-engineer | 测试、质量、回归验证 | /mcu-verification-engineer |
-| knowledge-engineer | 日志、学习笔记、知识整理 | /mcu-knowledge-engineer |
+| Agent | 领域 | 写入范围 | 命令 |
+|---|---|---|---|
+| embedded-lead | 项目协调 | .mcu-workbench/, docs/devlog/ | /mcu-embedded-lead |
+| firmware-engineer | 固件实现 | 项目固件目录与配置 | /mcu-firmware-engineer |
+| hardware-integration | 硬件集成 | hardware/, docs/verification/ | /mcu-hardware-integration |
+| knowledge-engineer | 知识沉淀 | docs/devlog/, docs/notes/ | /mcu-knowledge-engineer |
+| system-architect | 分层架构 | docs/architecture/ | /mcu-system-architect |
+| toolchain-engineer | 工具链 | 工具配置, docs/verification/ | /mcu-toolchain-engineer |
+| verification-engineer | 验证质量 | 测试目录, docs/verification/ | /mcu-verification-engineer |
 
 推荐工作流：
 1. embedded-lead 分析需求和项目状态

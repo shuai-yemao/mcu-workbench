@@ -1,18 +1,18 @@
 # AGENTS.md — MCU-Workbench OpenCode 集成
 
-插件根目录的 `agents/*.md` 同时面向 OpenCode 和 Claude Code。OpenCode 通过 `opencode.mjs` 将 7 个 agent 暴露为可调用工具；Claude Code 自动发现 `agents/` 目录。
+插件根目录的 `agents/*.md` 同时面向 OpenCode 和 Claude Code。OpenCode 通过 `opencode.mjs` 将全部 agent（名册由 `lib/agent-domains.js` 的 `AGENT_ROSTER` 定义）暴露为可调用工具；Claude Code 自动发现 `agents/` 目录。
 
 ## Agent 团队
 
-| Agent | 角色 | 工具 ID | 写入范围 |
+| Agent | 领域 | 工具 ID | 写入范围 |
 |---|---|---|---|
-| `embedded-lead` | 分诊、编排、最终汇总 | `mcu_agent_embedded_lead` | `.mcu-workbench/`、`docs/devlog/` |
-| `system-architect` | 软件分层与迁移 | `mcu_agent_system_architect` | `docs/architecture/` |
-| `firmware-engineer` | APP/OS/BSP/Core 集成实现 | `mcu_agent_firmware_engineer` | 项目固件目录与配置 |
-| `hardware-integration` | 板级连接与测量证据 | `mcu_agent_hardware_integration` | `hardware/`、`docs/verification/` |
-| `toolchain-engineer` | 构建、烧录、链接、调试、观测 | `mcu_agent_toolchain_engineer` | 工具配置、`docs/verification/` |
-| `verification-engineer` | 测试、质量、回归验证 | `mcu_agent_verification_engineer` | 测试目录、`docs/verification/` |
-| `knowledge-engineer` | 日志、学习笔记、知识整理 | `mcu_agent_knowledge_engineer` | `docs/devlog/`、`docs/notes/` |
+| `embedded-lead` | 项目协调 | `mcu_agent_embedded_lead` | `.mcu-workbench/`、`docs/devlog/` |
+| `system-architect` | 分层架构 | `mcu_agent_system_architect` | `docs/architecture/` |
+| `firmware-engineer` | 固件实现 | `mcu_agent_firmware_engineer` | 项目固件目录与配置 |
+| `hardware-integration` | 硬件集成 | `mcu_agent_hardware_integration` | `hardware/`、`docs/verification/` |
+| `toolchain-engineer` | 工具链 | `mcu_agent_toolchain_engineer` | 工具配置、`docs/verification/` |
+| `verification-engineer` | 验证质量 | `mcu_agent_verification_engineer` | 测试目录、`docs/verification/` |
+| `knowledge-engineer` | 知识沉淀 | `mcu_agent_knowledge_engineer` | `docs/devlog/`、`docs/notes/` |
 
 ## 在 OpenCode 中使用
 

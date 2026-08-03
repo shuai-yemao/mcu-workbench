@@ -10,6 +10,8 @@ const require = createRequire(import.meta.url);
 
 const { CANONICAL_SKILLS, resolveSkillId } = require("./skills/catalog.js");
 const { getSkillContent } = require("./skills/loader.js");
+const { domainSkills, rankAgentsForRequest } = require("./lib/agent-domains.js");
+const { version: PLUGIN_VERSION } = require("./package.json");
 const yaml = require("js-yaml");
 
 // ========================
@@ -17,6 +19,7 @@ const yaml = require("js-yaml");
 // ========================
 
 let _agentCache = null;
+let _agentCacheVersion = null;
 
 /**
  * 解析 agent 文件的 YAML frontmatter 和正文
@@ -34,10 +37,11 @@ function parseAgentFile(content) {
 }
 
 /**
- * 加载全部 agents，结果被缓存
+ * 加载全部 agents，结果按插件版本缓存（版本变化即失效）。
+ * 技能集从领域注册表派生，不读取 frontmatter 中的技能清单。
  */
 async function loadAgents() {
-  if (_agentCache) return _agentCache;
+  if (_agentCache && _agentCacheVersion === PLUGIN_VERSION) return _agentCache;
   const agentsDir = join(__dirname, "agents");
   const entries = await readdir(agentsDir, { withFileTypes: true });
   const agents = [];
@@ -48,13 +52,17 @@ async function loadAgents() {
     const parsed = parseAgentFile(content);
     if (!parsed) continue;
 
+    const id = parsed.frontmatter.name || basename(entry.name, ".md");
+    const domain = parsed.frontmatter.domain || null;
     agents.push({
-      id: parsed.frontmatter.name || basename(entry.name, ".md"),
+      id,
       description: parsed.frontmatter.description || "",
+      domain,
+      scope: parsed.frontmatter.scope || "",
       model: parsed.frontmatter.model || null,
       effort: parsed.frontmatter.effort || null,
       maxTurns: parsed.frontmatter.maxTurns || null,
-      skills: parsed.frontmatter.skills || [],
+      skills: domain ? domainSkills(domain) : [],
       systemPrompt: parsed.body,
       file: entry.name,
       layer: "agent",
@@ -62,6 +70,7 @@ async function loadAgents() {
   }
 
   _agentCache = agents;
+  _agentCacheVersion = PLUGIN_VERSION;
   return agents;
 }
 
@@ -86,19 +95,15 @@ function toolNameForSkill(skillId) {
   return `mcu_workbench_${skillId.replace(/-/g, "_")}`;
 }
 
-function buildRequirementsIntake(request, projectRoot = null) {
-  const text = request.toLowerCase();
+function buildRequirementsIntake(request, projectRoot, agents) {
+  const ranked = rankAgentsForRequest(request, agents);
   const analysisAgents = ["embedded-lead"];
-  const addAgent = (agentId) => {
-    if (!analysisAgents.includes(agentId)) analysisAgents.push(agentId);
-  };
-
-  if (/硬件|板|芯片|引脚|电源|pcb|pin|hardware|mcu/.test(text)) addAgent("hardware-integration");
-  if (/分层|架构|接口|依赖|迁移|layer|architecture|interface/.test(text)) addAgent("system-architect");
-  if (/任务|队列|freertos|rtos|驱动|固件|代码|bsp|hal|task|queue|firmware/.test(text)) addAgent("firmware-engineer");
-  if (/编译|构建|烧录|调试|链接|cmake|keil|gdb|build|flash|debug/.test(text)) addAgent("toolchain-engineer");
-  if (/测试|验收|质量|回归|验证|test|acceptance|quality|verify/.test(text)) addAgent("verification-engineer");
-  if (analysisAgents.length === 1) addAgent("system-architect");
+  for (const { agent, score } of ranked) {
+    if (score > 0 && !analysisAgents.includes(agent.id)) analysisAgents.push(agent.id);
+  }
+  if (analysisAgents.length === 1 && !analysisAgents.includes("system-architect")) {
+    analysisAgents.push("system-architect");
+  }
 
   const questions = [
     "项目绝对路径、当前分支/提交和目标交付物是什么？",
@@ -170,7 +175,7 @@ export default async (_ctx) => {
       projectRoot: tool.schema.string().optional().describe("可选的项目绝对路径；未提供时返回待用户确认问题"),
     },
     async execute(args) {
-      const intake = buildRequirementsIntake(args.request, args.projectRoot || null);
+      const intake = buildRequirementsIntake(args.request, args.projectRoot || null, agents);
       intake.projectEvidence = await discoverProjectEvidence(args.projectRoot || null);
       return intake;
     },
@@ -209,30 +214,18 @@ export default async (_ctx) => {
   // ---- Agent 团队信息（供 LLM 了解可用 agent）----
   tools.mcu_workbench_agent_team = tool({
     description:
-      "列出所有 7 个 MCU-Workbench agent 及其角色、领域和写入范围。当需要嵌入式开发协助时，先调用此 tool 了解团队。",
+      `列出全部 ${agents.length} 个 MCU-Workbench agent 及其角色、领域和写入范围。当需要嵌入式开发协助时，先调用此 tool 了解团队。`,
     args: {},
     async execute() {
       return {
         team: agents.map((a) => ({
           id: a.id,
+          domain: a.domain,
           tool: toolNameForAgent(a.id),
           command: `/mcu-${a.id}`,
           description: a.description,
           skills: a.skills,
-          scope:
-            a.id === "embedded-lead"
-              ? ".mcu-workbench/, docs/devlog/"
-              : a.id === "system-architect"
-                ? "docs/architecture/"
-                : a.id === "firmware-engineer"
-                  ? "项目固件目录与配置"
-                  : a.id === "hardware-integration"
-                    ? "hardware/, docs/verification/"
-                    : a.id === "toolchain-engineer"
-                      ? "工具配置, docs/verification/"
-                      : a.id === "verification-engineer"
-                        ? "测试目录, docs/verification/"
-                        : "docs/devlog/, docs/notes/",
+          scope: a.scope,
         })),
         workflow:
           "embedded-lead → system-architect → firmware-engineer → verification-engineer\n" +
@@ -254,61 +247,15 @@ export default async (_ctx) => {
       request: tool.schema.string().describe("用户的嵌入式开发请求描述（中文或英文）"),
     },
     async execute(args) {
-      const lowerRequest = args.request.toLowerCase();
-      const keywords = lowerRequest
-        .replace(/[，,。.；;！!？?\s]+/g, " ")
-        .split(" ")
-        .filter((w) => w.length >= 2);
-
-      const domainKeywords = {
-        "embedded-lead": [
-          "项目", "初始化", "架构", "总览", "统筹", "编排", "协调",
-          "project", "init", "orchestrate", "coordinate", "overview",
-        ],
-        "system-architect": [
-          "分层", "架构", "设计", "接口", "迁移", "解耦",
-          "architecture", "layer", "design", "interface", "migration", "decouple",
-        ],
-        "firmware-engineer": [
-          "固件", "驱动", "hal", "bsp", "app", "实现", "代码", "编写", "i2c", "spi", "uart", "gpio", "adc", "定时器",
-          "firmware", "driver", "implement", "code", "bsp", "hal",
-        ],
-        "hardware-integration": [
-          "硬件", "电路", "原理图", "pcb", "引脚", "连接", "测量", "示波器",
-          "hardware", "schematic", "pin", "connection", "measurement", "oscilloscope",
-        ],
-        "toolchain-engineer": [
-          "编译", "构建", "烧录", "flash", "j-link", "openocd", "gdb", "调试", "链接", "map",
-          "build", "compile", "linker", "toolchain", "debug", "gdb",
-        ],
-        "verification-engineer": [
-          "测试", "验证", "回归", "质量", "审查", "静态分析",
-          "test", "verify", "regression", "quality", "review", "static analysis",
-        ],
-        "knowledge-engineer": [
-          "文档", "笔记", "日志", "记录", "学习",
-          "document", "note", "log", "record", "learn",
-        ],
-      };
-
-      const scored = agents.map((a) => {
-        let score = 0;
-        const domKeys = domainKeywords[a.id] || [];
-        for (const kw of keywords) {
-          if (domKeys.some((dk) => dk === kw)) score += 3;
-          if (domKeys.some((dk) => dk.includes(kw) || kw.includes(dk))) score += 1;
-        }
-        return { agent: a, score };
-      });
-
-      scored.sort((a, b) => b.score - a.score);
-      const best = scored[0].score > 0 ? scored[0].agent : null;
+      const ranked = rankAgentsForRequest(args.request, agents);
+      const best = ranked.length && ranked[0].score > 0 ? ranked[0].agent : null;
 
       return {
         request: args.request,
         recommended: best
           ? {
               id: best.id,
+              domain: best.domain,
               tool: toolNameForAgent(best.id),
               command: `/mcu-${best.id}`,
               description: best.description,
@@ -316,6 +263,7 @@ export default async (_ctx) => {
           : null,
         allAgents: agents.map((a) => ({
           id: a.id,
+          domain: a.domain,
           tool: toolNameForAgent(a.id),
           command: `/mcu-${a.id}`,
           description: a.description,
@@ -332,34 +280,20 @@ export default async (_ctx) => {
   for (const agent of agents) {
     const agentToolName = toolNameForAgent(agent.id);
 
-    const scope =
-      agent.id === "embedded-lead"
-        ? ".mcu-workbench/、docs/devlog/"
-        : agent.id === "system-architect"
-          ? "docs/architecture/"
-          : agent.id === "firmware-engineer"
-            ? "项目固件目录与配置"
-            : agent.id === "hardware-integration"
-              ? "hardware/、docs/verification/"
-              : agent.id === "toolchain-engineer"
-                ? "工具配置、docs/verification/"
-                : agent.id === "verification-engineer"
-                  ? "测试目录、docs/verification/"
-                  : "docs/devlog/、docs/notes/";
-
     tools[agentToolName] = tool({
-      description: `MCU-Workbench Agent「${agent.id}」：${agent.description}。写入范围：${scope}。调用此 tool 获取该角色的完整工作指令。`,
+      description: `MCU-Workbench Agent「${agent.id}」（领域 ${agent.domain}）：${agent.description}。写入范围：${agent.scope}。调用此 tool 获取该角色的完整工作指令。`,
       args: {
         task: tool.schema.string().optional().describe(`委托给 ${agent.id} 的具体任务`),
       },
       async execute(args) {
         return {
           role: agent.id,
+          domain: agent.domain,
           command: `/mcu-${agent.id}`,
           description: agent.description,
           skills: agent.skills,
           maxTurns: agent.maxTurns,
-          scope,
+          scope: agent.scope,
           task: args.task || null,
           instruction: `\n# 角色: ${agent.id}\n\n${agent.systemPrompt}\n\n## 当前任务\n${args.task || "请按角色指令自主开展工作。"}`,
           handoff: {

@@ -27,7 +27,7 @@ archive/
 当前目录为 **109 catalog / 27 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
-workflow-requirements-router workflow-project-integration workflow-ai-collab
+workflow-requirements-router workflow-project-integration workflow-ai-collab workflow-claude-layering
 app-architecture
 os-adapter os-runtime
 bsp-wrapper bsp-port bsp-hal-driver bsp-handler
@@ -60,9 +60,9 @@ claude plugin validate .
 
 ## Agent 团队
 
-插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用，稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。详细职责、写入边界和交接协议见 [docs/agents.md](docs/agents.md)。
+插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。详细职责、写入边界和交接协议见 [docs/agents.md](docs/agents.md)。
 
-Workflow 层有三个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-project-integration` 负责跨层规划，`workflow-ai-collab` 负责编排 AI 协作。旧的 `workflow-router` 和 `embedded-ai-collab` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
+Workflow 层有四个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-project-integration` 负责跨层规划，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-ai-collab` 负责编排 AI 协作。旧的 `workflow-router` 和 `embedded-ai-collab` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
 
 ### 需求约束入口
 
@@ -119,7 +119,7 @@ npm run validate:flash-algorithm
 
 ## OpenCode 适配
 
-仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 26 个 canonical Skill 工具和首阶段需求约束路由工具。
+仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 27 个 canonical Skill 工具和首阶段需求约束路由工具。
 
 ### 本地安装
 

@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { AGENT_ROSTER, DOMAINS, domainSkills } = require('../../lib/agent-domains');
 const { resolveSkillId, SKILL_BY_CANONICAL_ID } = require('../../skills/catalog');
 const {
   ROOT,
@@ -8,11 +9,7 @@ const {
   getFrontmatter
 } = require('./common');
 
-const EXPECTED_AGENTS = new Set([
-  'embedded-lead', 'system-architect', 'firmware-engineer',
-  'hardware-integration', 'toolchain-engineer', 'verification-engineer',
-  'knowledge-engineer'
-]);
+const AGENT_ROSTER_SET = new Set(AGENT_ROSTER);
 const FORBIDDEN_AGENT_KEYS = new Set(['hooks', 'mcpServers', 'permissionMode']);
 
 function parseAgentFrontmatter(frontmatter) {
@@ -55,18 +52,23 @@ function validateAgents(errors) {
     if (!NAME_PATTERN.test(name)) errors.push(`${relative}: 非法 agent name ${name}`);
     if (name !== path.basename(entry.name, '.md')) errors.push(`${relative}: name 必须与文件名一致`);
     if (!parsed.description) errors.push(`${relative}: 缺少 description`);
+    if (!parsed.domain) errors.push(`${relative}: 缺少 domain`);
+    else if (!DOMAINS[parsed.domain]) errors.push(`${relative}: domain 未在领域注册表中登记: ${parsed.domain}`);
+    if (!parsed.scope) errors.push(`${relative}: 缺少 scope（写入范围）`);
     if (parsed.model !== 'sonnet') errors.push(`${relative}: model 必须为 sonnet`);
     if (parsed.effort !== 'medium') errors.push(`${relative}: effort 必须为 medium`);
     if (!/^\d+$/.test(parsed.maxTurns || '') || Number(parsed.maxTurns) <= 0) errors.push(`${relative}: maxTurns 必须为正整数`);
-    if (!Array.isArray(parsed.skills) || parsed.skills.length === 0) errors.push(`${relative}: skills 不能为空`);
-    for (const skillId of parsed.skills || []) {
-      const resolved = resolveSkillId(skillId);
-      const hardwareSkill = resolved && resolved.startsWith('hardware-');
-      if (!resolved || (!SKILL_BY_CANONICAL_ID[resolved] && !hardwareSkill)) errors.push(`${relative}: skill 引用不是 canonical skill: ${skillId}`);
-    }
     for (const line of frontmatter.split(/\r?\n/)) {
+      if (/^skills:/.test(line.trim())) errors.push(`${relative}: skills 字段已禁止，技能集由领域注册表派生`);
       const key = line.match(/^([A-Za-z][A-Za-z0-9_]*):/);
       if (key && FORBIDDEN_AGENT_KEYS.has(key[1])) errors.push(`${relative}: 禁止 agent 字段 ${key[1]}`);
+    }
+    if (parsed.domain && DOMAINS[parsed.domain]) {
+      for (const skillId of domainSkills(parsed.domain)) {
+        const resolved = resolveSkillId(skillId);
+        const hardwareSkill = resolved && resolved.startsWith('hardware-');
+        if (!resolved || (!SKILL_BY_CANONICAL_ID[resolved] && !hardwareSkill)) errors.push(`${relative}: 领域 ${parsed.domain} 派生技能不可解析: ${skillId}`);
+      }
     }
     const requiredSections = [
       /##\s+Inputs|##\s+输入/i, /##\s+Evidence|##\s+证据/i,
@@ -78,16 +80,16 @@ function validateAgents(errors) {
   }
   const duplicates = names.filter((name, index) => names.indexOf(name) !== index);
   for (const name of duplicates) errors.push(`agents: agent name 重复 ${name}`);
-  for (const expected of EXPECTED_AGENTS) if (!names.includes(expected)) errors.push(`agents: 缺少 ${expected}`);
-  for (const name of names) if (!EXPECTED_AGENTS.has(name)) errors.push(`agents: 未登记 agent ${name}`);
+  for (const expected of AGENT_ROSTER) if (!names.includes(expected)) errors.push(`agents: 缺少名册 agent ${expected}`);
+  for (const name of names) if (!AGENT_ROSTER_SET.has(name)) errors.push(`agents: 未登记 agent ${name}`);
   for (const entry of entries.filter((item) => item.isFile() && path.extname(item.name) !== '.md')) errors.push(`agents: 不支持的文件 ${entry.name}`);
   for (const entry of entries.filter((item) => item.isDirectory())) errors.push(`agents: 不支持嵌套目录 ${entry.name}`);
-  if (files.length !== EXPECTED_AGENTS.size) errors.push(`agents: 期望 ${EXPECTED_AGENTS.size} 个 agent，实际 ${files.length} 个`);
+  if (files.length !== AGENT_ROSTER.length) errors.push(`agents: 期望 ${AGENT_ROSTER.length} 个 agent，实际 ${files.length} 个`);
   return { count: files.length, names: names.sort() };
 }
 
 module.exports = {
-  EXPECTED_AGENTS,
+  AGENT_ROSTER,
   parseAgentFrontmatter,
   validateAgents
 };

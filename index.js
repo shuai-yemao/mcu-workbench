@@ -10,7 +10,7 @@ const cli = require('./lib/cli');
 
 module.exports = {
   name: 'mcu-workbench',
-  version: '0.1.0',
+  version: require('./package.json').version,
   description: '嵌入式开发生命周期全覆盖的 Claude Code 插件',
 
   commands: [

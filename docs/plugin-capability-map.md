@@ -4,7 +4,7 @@
 
 ## 1. 插件组成
 
-除 Skills 和 Node CLI 外，插件根目录 `agents/` 提供 7 个按职责调用的 Claude Code Custom Agents。它们共享 canonical Skills，但不替代 Skills；Agent 负责把输入、证据、变更、测试和交接写入稳定产物协议。详见 [Agent team](agents.md)。
+除 Skills 和 Node CLI 外，插件根目录 `agents/` 提供按职责调用的 Claude Code Custom Agents（名册由 `lib/agent-domains.js` 定义）。每个 agent 声明稳定的 `domain` 与 `scope`，技能集由领域注册表从 canonical Skills 自动派生，不手写技能清单。Agent 负责把输入、证据、变更、测试和交接写入稳定产物协议。详见 [Agent team](agents.md)。
 
 当前插件由两条相互独立的能力链组成：
 
@@ -19,7 +19,7 @@
 
 当前 catalog 为 **109 catalog / 27 canonical**：
 
-- 25 个 canonical skills；
+- 27 个 canonical skills；
 - 80 个软件和工具归档入口；
 - 2 个硬件 active 入口。
 
@@ -30,6 +30,7 @@
 | `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和需求约束包 | 需求约束包、下游 Skill 交接 |
 | `workflow-project-integration` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划 |
 | `workflow-ai-collab` | 最终代码、补丁或 diff 的独立 Review 编排 | 按严重级别分组的审查报告与阻塞项 |
+| `workflow-claude-layering` | 目标工程 Claude 分层规则的扫描、同步与校验 | 受管 CLAUDE.md 区块、路径规则、漂移报告 |
 ### 2.2 APP 软件架构
 
 | Skill | 功能 | 典型输出 |
@@ -105,6 +106,7 @@ tools-release
 | `flash` / `mcu-flash` | `commands/mcu-flash.js` | 默认生成烧录计划；`--execute` 时执行 |
 | `mcu-debug` | `commands/mcu-debug.js` | 生成 OpenOCD/GDB 命令，不启动真实会话 |
 | `mcu-monitor` | `commands/mcu-debug.js` | 返回串口监控参数，不启动真实监控 |
+| `claude-layer` | `commands/mcu-claude-layer.js` | 扫描/同步/校验目标工程的 Claude 分层规则；init/sync 需 `--write` 才写入 |
 
 ### 3.2 Libraries and templates
 

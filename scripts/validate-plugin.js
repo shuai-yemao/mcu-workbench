@@ -4,8 +4,9 @@ const path = require('path');
 
 const { SKILL_CATALOG } = require('../skills/catalog');
 const { ROOT, NAME_PATTERN, readJson, summarize } = require('./validators/common');
-const { EXPECTED_AGENTS, parseAgentFrontmatter, validateAgents } = require('./validators/agents');
+const { AGENT_ROSTER, parseAgentFrontmatter, validateAgents } = require('./validators/agents');
 const { validateCodexManifest } = require('./validators/manifest');
+const { checkVersionSync } = require('./sync-plugin-versions');
 const {
   validateLvglReferences,
   validateSoftwareArchitectureGraph
@@ -19,6 +20,7 @@ function validatePlugin() {
   const errors = [];
   const agentSummary = validateAgents(errors);
   const codexManifest = validateCodexManifest(errors);
+  checkVersionSync(errors);
   validateLvglReferences(errors);
   validateSoftwareArchitectureGraph(errors);
   validateLearningTutorReferences(errors);
@@ -62,7 +64,7 @@ if (require.main === module) {
 module.exports = {
   ROOT,
   NAME_PATTERN,
-  EXPECTED_AGENTS,
+  AGENT_ROSTER,
   parseAgentFrontmatter,
   summarize,
   validateLvglReferences,
