@@ -64,6 +64,12 @@ claude plugin validate .
 
 Workflow 层有三个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-project-integration` 负责跨层规划，`workflow-ai-collab` 负责编排 AI 协作。旧的 `workflow-router` 和 `embedded-ai-collab` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
 
+### 需求约束入口
+
+`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。最终输出可审计的需求约束包（RCP），覆盖项目背景、硬件资源、软件环境、FreeRTOS 任务与队列、分层边界、功能/非功能需求、优先级、依赖关系、验收标准和人工确认项，并将唯一正式输入交给下游 Skill。
+
+RCP 会区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，同时携带证据位置、责任边界与验证边界；下游 Skill 发现新约束时必须回传 Router 更新 RCP，不能静默扩大范围。
+
 ### 稳定产物
 
 项目任务可以初始化统一的项目状态和运行记录：
@@ -91,19 +97,29 @@ Agent 遵循分域写入和显式交接协议；Lead 维护最终汇总，写入
 
 ## Node CLI
 
-仓库同时提供正式的 `mcu-workbench` CLI，用于项目骨架、BSP 模板、平台查询和构建/烧录命令计划：
+仓库同时提供正式的 `mcu-workbench` CLI，用于项目骨架、Core/BSP 分层模板、平台查询和构建/烧录命令计划：
 
 ```powershell
 npm run cli -- --help
 npm run cli -- platforms
-npm run cli -- build --target stm32f4
+npm run cli -- core --peripheral i2c --platform stm32f4
+npm run cli -- driver --device-type display --device SSD1306 --core i2c --platform stm32f4
+npm run cli -- build --platform stm32f4
+npm run cli -- flash --platform stm32f4 --device stlink
 ```
 
-构建和烧录默认只生成命令；确认路径和工具链后显式追加 `--execute` 才会运行外部命令。完整用法见 [docs/node-cli.md](docs/node-cli.md)。
+构建和烧录默认只生成命令；确认路径和工具链后显式追加 `--execute` 才会运行外部命令。`driver` 默认 dry-run，追加 `--write --output <dir>` 才会写入生成文件。完整用法见 [docs/node-cli.md](docs/node-cli.md)。
+
+分层生成和闪存算法配置还可以单独校验：
+
+```powershell
+npm run validate:layer
+npm run validate:flash-algorithm
+```
 
 ## OpenCode 适配
 
-本分支新增 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 25 个 canonical Skill 工具和首阶段需求约束路由工具。
+仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 25 个 canonical Skill 工具和首阶段需求约束路由工具。
 
 ### 本地安装
 
@@ -137,6 +153,8 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 ```powershell
 npm test -- --runInBand
 npm run validate:plugin
+npm run validate:links
+npm run validate:flash-algorithm
 claude plugin validate .
 git diff --check
 ```
