@@ -134,7 +134,7 @@ tools-release
 
 1. CLI 是否需要继续扩展真实调试和串口监控进程管理。
 2. `catalog.js`、`registry.js`、`loader.js` 的最终职责边界。
-3. 旧 `embedded-ai-collab` 已归档；后续 workflow 扩展遵循 [workflows.md](workflows.md)。
+3. 旧 `embedded-ai-collab` 已归档（Skill 名称不再解析）；后续 workflow 扩展遵循 [workflows.md](workflows.md)。
 4. Node 生成器的目录结构是否需要完全对齐当前 APP/OS/BSP/Middleware 架构。
 
 CLI 使用说明见 [docs/node-cli.md](node-cli.md)。

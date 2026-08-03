@@ -11,7 +11,7 @@ Workflow 层保留四个职责互斥的 active Skills：
 
 `app-architecture` 是 APP 领域 Skill，不承担跨领域编排。实际团队协作由 `embedded-lead` Agent 负责，专业工作交给对应 Agent，执行记录写入 `.mcu-workbench/runs/`。
 
-旧的 `embedded-ai-collab` 已归档到 `archive/workflows-legacy/embedded-ai-collab/`。它保留历史审查维度和脚本实现，但不再作为插件 active 入口，也不应直接引用旧的 `embedded-ai-*` Skill 名称。
+旧的 `embedded-ai-collab` 已归档到 `archive/workflows-legacy/embedded-ai-collab/`。它保留历史审查维度和脚本实现，但不再作为插件 active 入口，其旧 Skill 名称也不再解析到任何 active Skill。
 
 ## 标准执行流
 

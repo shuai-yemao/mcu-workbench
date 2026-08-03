@@ -1,20 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const { resolveSkillId } = require('../skills/catalog');
 const { getSkillContent } = require('../skills/loader');
 
 const ROOT = path.resolve(__dirname, '..');
 
 describe('AI collaboration skills', () => {
-  test('routes every legacy AI collaboration entry to a focused canonical skill', () => {
-    expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-final-review');
-    expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-final-review');
-    expect(resolveSkillId('workflow-ai-collab')).toBe('workflow-final-review');
-    expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-quality');
-    expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-quality');
-    expect(resolveSkillId('tools-ai-code-quality')).toBe('tools-quality');
-  });
-
   test('triggers on final code, patch or git diff and depends on tools-quality', () => {
     const review = getSkillContent('workflow-final-review');
     expect(review).toContain('最终代码');

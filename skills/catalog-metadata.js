@@ -9,10 +9,6 @@ const LEGACY_SKILL_ENTRIES = [
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
   ['workflow-architecture', 'embedded-architect', 'workflow', '嵌入式分层架构设计'],
   ['workflow-code-porting', 'code-porting', 'workflow', '跨 MCU、SDK 或工具链的代码移植'],
-  ['embedded-ai-collab', 'embedded-ai-collab', 'workflow', '嵌入式 AI 协作编程入口 — 旧 5 阶段生成工作流；沿用此入口需提供最终代码或 diff'],
-  ['embedded-ai-coding-standard', 'embedded-ai-coding-standard', 'workflow', '嵌入式 C AI 编码规范 — 命名、模板、五大原则'],
-  ['embedded-ai-prompt-templates', 'embedded-ai-prompt-templates', 'workflow', '嵌入式 AI Prompt 模板集 — 旧逐函数生成与审查模板；沿用此入口需提供最终代码或 diff'],
-  ['embedded-ai-code-review', 'embedded-ai-code-review', 'workflow', '嵌入式 AI 代码审查清单 — 四层检查与反模式'],
   ['project-integration', 'embedded-project-integration', 'workflow', '嵌入式项目集成审计与指导 — 五层模型 + 8步路线图'],
 
   // 平台层：MCU、内核、厂商框架和存储布局。
@@ -182,8 +178,7 @@ const CANONICAL_ALIASES = {
   'mcu-platform': [
     'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
     'stm32-hal-development', 'stm32-spl-development'
-  ],
-  'workflow-final-review': ['workflow-ai-collab']
+  ]
 };
 
 module.exports = {

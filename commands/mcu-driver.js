@@ -45,7 +45,7 @@ module.exports = {
   options: [
     { name: '--device-type', description: '设备类别，例如 externflash', required: true },
     { name: '--device', description: '设备型号，例如 W25Q64', required: true },
-    { name: '--core', description: '依赖的 Core 外设；可重复，iic 是 i2c 输入别名', required: true, repeatable: true },
+    { name: '--core', description: '依赖的 Core 外设；可重复', required: true, repeatable: true },
     { name: '--platform', description: '目标平台', required: true },
     { name: '--allow-custom-device', description: '允许未内置设备配置', default: false },
     { name: '--write', description: '将生成文件写入输出目录', default: false },

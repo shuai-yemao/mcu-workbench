@@ -15,15 +15,12 @@ describe('archived capability transfer into active skills', () => {
     const entries = [...groups.values()].flat();
 
     expect(errors).toEqual([]);
-    expect(entries).toHaveLength(80);
+    expect(entries).toHaveLength(76);
     expect(groups.get('workflow-project-integration').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
       'workflow-architecture', 'workflow-code-porting', 'project-integration'
     ]));
     expect(groups.get('tools-quality').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
-      'quality-code-review', 'embedded-ai-coding-standard', 'embedded-ai-code-review'
-    ]));
-    expect(groups.get('workflow-final-review').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
-      'embedded-ai-collab', 'embedded-ai-prompt-templates'
+      'quality-code-review'
     ]));
     expect(groups.get('tools-learning-tutor').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
       'workflow-devlog', 'workflow-learning-tutor'
@@ -49,7 +46,7 @@ describe('archived capability transfer into active skills', () => {
         expect(fs.existsSync(path.join(entry.destination, 'GUIDE.md'))).toBe(true);
         expect(index).toContain(`capabilities/${entry.source.id}/GUIDE.md`);
       }
-      if (['tools-learning-tutor', 'workflow-final-review', 'tools-quality'].includes(targetId)) {
+      if (targetId === 'tools-learning-tutor') {
         expect(index).toContain('迁移比对资料');
         expect(index).toContain('不作为 active reference 读取');
       }

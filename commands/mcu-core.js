@@ -6,7 +6,7 @@ async function generateCore(options) {
   const result = {
     success: true,
     files,
-    peripheral: options.peripheral === 'iic' ? 'i2c' : options.peripheral,
+    peripheral: options.peripheral,
     platform: options.platform
   };
   if (options.write) {
@@ -20,7 +20,7 @@ module.exports = {
   name: 'mcu-core',
   description: '生成 MCU Core 外设抽象代码',
   options: [
-    { name: '--peripheral', description: 'Core 外设（iic 是 i2c 输入别名）', required: true },
+    { name: '--peripheral', description: 'Core 外设', required: true },
     { name: '--platform', description: '目标平台', required: true },
     { name: '--write', description: '将生成文件写入输出目录', default: false },
     { name: '--force', description: '允许覆盖已存在的生成文件', default: false },

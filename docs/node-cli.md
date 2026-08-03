@@ -36,7 +36,6 @@ mcu-workbench skills --category tools
 ```
 
 `--json` 可用于脚本集成。错误写入 stderr，成功返回 0；命令失败返回 1。
-`build --target` 仍作为兼容别名可用，新脚本请使用 `build --platform`。
 
 ## SSD1306 分层输出
 

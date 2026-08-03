@@ -5,12 +5,13 @@ const {
 } = require('../lib/generator');
 
 describe('Generator Module', () => {
-  test('normalizes iic and removes duplicate Core selectors', () => {
-    expect(normalizeCoreList(['iic', 'spi', 'i2c'])).toEqual(['i2c', 'spi']);
+  test('normalizes and deduplicates Core selectors', () => {
+    expect(normalizeCoreList(['i2c', 'spi', 'i2c'])).toEqual(['i2c', 'spi']);
+    expect(() => normalizeCoreList(['iic'])).toThrow('Unsupported Core peripheral: iic');
   });
 
   test('generates exactly one Core C/H pair for an MCU peripheral', async () => {
-    const files = await generateCorePeripheral('iic', 'stm32f4');
+    const files = await generateCorePeripheral('i2c', 'stm32f4');
     expect(files.map((file) => file.path)).toEqual([
       'Core/Inc/core_i2c.h',
       'Core/Src/core_i2c.c'

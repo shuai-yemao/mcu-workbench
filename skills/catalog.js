@@ -193,12 +193,6 @@ const MIGRATION_MAP = {
   'rsa-module': 'software-system',
   'workflow-devlog': 'tools-learning-tutor',
   'devlog': 'tools-learning-tutor',
-  'embedded-ai-collab': 'workflow-final-review',
-  'embedded-ai-coding-standard': 'tools-quality',
-  'embedded-ai-prompt-templates': 'workflow-final-review',
-  'embedded-ai-code-review': 'tools-quality',
-  'tools-ai-code-quality': 'tools-quality',
-  'workflow-ai-collab': 'workflow-final-review',
   ...TOOL_MIGRATION_MAP
 };
 

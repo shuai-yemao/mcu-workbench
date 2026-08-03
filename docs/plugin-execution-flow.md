@@ -169,5 +169,5 @@ flowchart LR
 
 1. Skills 是否允许直接调用 Node `commands/`，还是只调用各自目录下的 scripts。
 2. 构建、烧录、调试是否必须真实执行，还是只输出命令和诊断建议。
-3. 旧 `embedded-ai-collab` 已归档；统一审查由 `verification-engineer` Agent 和 `tools-quality` 承担。
+3. 旧 `embedded-ai-collab` 已归档（Skill 名称不再解析）；统一审查由 `verification-engineer` Agent 和 `tools-quality` 承担。
 4. Node 原型与 Skills 是否需要共享平台配置、模板和结果格式。

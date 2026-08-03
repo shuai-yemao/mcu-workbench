@@ -69,7 +69,7 @@ npm run agent:artifacts -- record --project . --agent <agent> --task "<task>" --
 # Node CLI
 npm run cli -- --help
 npm run cli -- platforms
-npm run cli -- build --target stm32f4
+npm run cli -- build --platform stm32f4
 # 默认只生成命令计划；追加 --execute 才会运行外部命令
 ```
 

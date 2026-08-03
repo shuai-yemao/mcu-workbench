@@ -7,7 +7,7 @@ const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
   test('catalog keeps legacy entries and exposes 27 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(109);
+    expect(SKILL_CATALOG).toHaveLength(105);
     expect(CANONICAL_SKILLS).toHaveLength(27);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
@@ -63,12 +63,6 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('platform-cortex-registers')).toBe('core-mcu');
     expect(resolveSkillId('protocol-mqtt')).toBe('middleware-communication');
     expect(resolveSkillId('middleware-fatfs')).toBe('middleware-storage');
-    expect(resolveSkillId('embedded-ai-collab')).toBe('workflow-final-review');
-    expect(resolveSkillId('embedded-ai-prompt-templates')).toBe('workflow-final-review');
-    expect(resolveSkillId('workflow-ai-collab')).toBe('workflow-final-review');
-    expect(resolveSkillId('embedded-ai-coding-standard')).toBe('tools-quality');
-    expect(resolveSkillId('embedded-ai-code-review')).toBe('tools-quality');
-    expect(resolveSkillId('tools-ai-code-quality')).toBe('tools-quality');
     expect(resolveSkillId('not-a-skill')).toBeNull();
   });
 
@@ -98,8 +92,6 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('learning-tutor')).toContain('name: tools-learning-tutor');
-    expect(getSkillContent('embedded-ai-collab')).toContain('name: workflow-final-review');
-    expect(getSkillContent('embedded-ai-coding-standard')).toContain('name: tools-quality');
     expect(getSkillContent('os-abstraction')).toContain('name: os-adapter');
     expect(getSkillContent('rtos-freertos')).toContain('name: os-runtime');
     expect(getSkillContent('bsp-adapter')).toContain('name: bsp-port');
@@ -167,7 +159,6 @@ describe('Skills catalog and loader', () => {
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
     expect(getSkillAliases()['embedded']).toBe('workflow-requirements-router');
     expect(getSkillAliases()['workflow-router']).toBe('workflow-requirements-router');
-    expect(getSkillAliases()['workflow-ai-collab']).toBe('workflow-final-review');
   });
 
   test('plugin filesystem, frontmatter and manifest validate', () => {
@@ -178,10 +169,10 @@ describe('Skills catalog and loader', () => {
     const archived = SKILL_CATALOG.filter((skill) => skill.archived);
     const archivedTools = archived.filter((skill) => skill.path.startsWith('archive/tools-legacy/'));
     const tools = SKILL_CATALOG.filter((skill) => skill.layer === 'tools' && skill.canonical);
-    expect(archived).toHaveLength(80);
+    expect(archived).toHaveLength(76);
     expect(archivedTools).toHaveLength(29);
     expect(tools).toHaveLength(9);
-    expect(archived.filter((skill) => skill.path.startsWith('archive/software-legacy/'))).toHaveLength(51);
+    expect(archived.filter((skill) => skill.path.startsWith('archive/software-legacy/'))).toHaveLength(47);
     expect(tools.every((skill) => skill.path.startsWith('skills/tools/'))).toBe(true);
   });
 

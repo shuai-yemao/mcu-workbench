@@ -9,16 +9,16 @@ function captureCli(argv) {
 }
 
 describe('CLI', () => {
-  test('parses command aliases and dashed options', () => {
-    expect(parseArgs(['mcu-build', '--platform', 'stm32f4', '--gdb-port=3334'])).toEqual({
+  test('parses a command and dashed options', () => {
+    expect(parseArgs(['build', '--platform', 'stm32f4', '--gdb-port=3334'])).toEqual({
       command: 'build',
       options: { platform: 'stm32f4', gdbPort: '3334' }
     });
   });
 
-  test('parses repeatable --core and the mcu-core implementation alias', () => {
-    expect(parseArgs(['mcu-core', '--peripheral', 'iic', '--platform', 'stm32f4'])).toEqual({
-      command: 'core', options: { peripheral: 'iic', platform: 'stm32f4' }
+  test('parses repeatable --core and a canonical core peripheral', () => {
+    expect(parseArgs(['core', '--peripheral', 'i2c', '--platform', 'stm32f4'])).toEqual({
+      command: 'core', options: { peripheral: 'i2c', platform: 'stm32f4' }
     });
     expect(parseArgs(['driver', '--device-type', 'externflash', '--device', 'W25Q64', '--core', 'spi', '--core', 'dma'])).toEqual({
       command: 'driver', options: { deviceType: 'externflash', device: 'W25Q64', core: ['spi', 'dma'] }
@@ -52,18 +52,10 @@ describe('CLI', () => {
     expect(output.filter((entry) => entry.stream === 'stderr')).toHaveLength(0);
   });
 
-  test('keeps --target as a build compatibility alias', async () => {
+  test('rejects the removed --target build option', async () => {
     const { result, output } = await captureCli(['build', '--target', 'stm32f4', '--json']);
-    expect(result.exitCode).toBe(0);
-    const json = JSON.parse(output.find((entry) => entry.stream === 'stdout').line);
-    expect(json.success).toBe(true);
-    expect(json.command).toContain('cmake');
-  });
-
-  test('rejects conflicting build platform aliases', async () => {
-    const { result, output } = await captureCli(['build', '--platform', 'stm32f4', '--target', 'esp32']);
     expect(result.exitCode).toBe(1);
-    expect(output.some((entry) => entry.line.includes('Cannot use both --platform and --target with different values'))).toBe(true);
+    expect(output.some((entry) => entry.line.includes('Unknown option for build: --target'))).toBe(true);
   });
 
   test('lists only active skills by default and archived entries with --all', async () => {
