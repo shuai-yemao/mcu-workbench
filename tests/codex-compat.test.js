@@ -20,6 +20,14 @@ describe('Codex host boundary', () => {
     expect(content).toContain('不在 Codex 特化任务中直接修改 `common/`');
   });
 
+  test('routes current plugin capabilities without weakening evidence boundaries', () => {
+    const content = fs.readFileSync(source, 'utf8');
+    expect(content).toContain('workflow-requirements-router');
+    expect(content).toContain('app-architecture');
+    expect(content).toContain('UNRESOLVED_OSAL_API');
+    expect(content).toContain('npm run validate:layer -- --root <firmware-root>');
+  });
+
   test('can regenerate the bridge in an isolated temporary path', () => {
     const temporaryTarget = path.join(root, 'tests', '.tmp-codex-compat.md');
     try {
