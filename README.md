@@ -6,7 +6,8 @@
 
 ```text
 skills/
-├─ workflow/       # 路由、项目集成、APP 架构
+├─ workflow/       # 路由、项目集成和协作流程
+├─ app/            # 嵌入式 APP 软件架构
 ├─ os/             # OS Wrapper、Port 与 Runtime
 ├─ bsp/            # BSP Wrapper、Port、HAL Driver、Handler
 ├─ core/ mcu/      # Core 公共 MCU 能力与厂商平台实现
@@ -26,7 +27,8 @@ archive/
 当前目录为 **107 catalog / 25 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
-workflow-router workflow-project-integration app-architecture
+workflow-router workflow-project-integration workflow-ai-collab
+app-architecture
 os-adapter os-runtime
 bsp-wrapper bsp-port bsp-hal-driver bsp-handler
 core-mcu mcu-platform

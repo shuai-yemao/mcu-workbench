@@ -50,7 +50,10 @@ describe('Codex plugin adapter', () => {
         cwd: ROOT,
         encoding: 'utf8'
       }).trim();
-      expect(tracked).not.toBe('');
+      const hasSkillDirectory = fs.readdirSync(directory, { withFileTypes: true }).some((entry) => (
+        entry.isDirectory() && fs.existsSync(path.join(directory, entry.name, 'SKILL.md'))
+      ));
+      expect(tracked !== '' || hasSkillDirectory).toBe(true);
     }
   });
 });

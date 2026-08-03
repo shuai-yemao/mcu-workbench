@@ -4,7 +4,8 @@
 
 | 层级 | 主职责 |
 |---|---|
-| `workflow` | 请求路由、工程集成和 APP 架构 |
+| `workflow` | 请求路由、工程集成和 AI 协作流程 |
+| `app` | 嵌入式 APP 的 main、Manager、Task、Logic、UI、Profile |
 | `rtos` | OSAL、OS Wrapper、OS Port、FreeRTOS |
 | `bsp` | BSP Wrapper、BSP Port、hal_driver、Handler |
 | `platform` | MCU Core 与厂商 Driver |

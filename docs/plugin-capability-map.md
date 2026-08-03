@@ -23,15 +23,19 @@
 - 80 个软件和工具归档入口；
 - 2 个硬件 active 入口。
 
-### 2.1 请求路由与项目集成
+### 2.1 Workflow 请求路由与项目集成
 
 | Skill | 功能 | 典型输出 |
 |---|---|---|
 | `workflow-router` | 请求分诊、主 Skill 选择和交接 | Skill 选择、交接链 |
 | `workflow-project-integration` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划 |
+### 2.2 APP 软件架构
+
+| Skill | 功能 | 典型输出 |
+|---|---|---|
 | `app-architecture` | APP 的 main、manager、task、logic、UI、profile 边界 | APP 目录和调用关系 |
 
-### 2.2 OS、BSP、Core、Driver
+### 2.3 OS、BSP、Core、Driver
 
 | 层级 | Canonical skills | 主要职责 |
 |---|---|---|
@@ -42,7 +46,7 @@
 
 当前架构约束：Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。
 
-### 2.3 Middleware 与跨层系统能力
+### 2.4 Middleware 与跨层系统能力
 
 | Skill | 功能 |
 |---|---|
@@ -52,7 +56,7 @@
 | `middleware-algorithms` | DSP、FFT、电机控制和通用算法 |
 | `software-system` | Bootloader、低功耗、看门狗、固件安全等跨层能力 |
 
-### 2.4 工具方向
+### 2.5 工具方向
 
 | Skill | 汇总职责 | 主要交接 |
 |---|---|---|

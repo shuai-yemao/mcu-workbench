@@ -19,6 +19,10 @@ describe('Skills catalog and loader', () => {
       'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
       'tools-learning-tutor', 'workflow-ai-collab'
     ]));
+    expect(CANONICAL_SKILLS.find((skill) => skill.id === 'app-architecture')).toMatchObject({
+      layer: 'app',
+      path: 'skills/app/app-architecture'
+    });
     for (const skill of SKILL_CATALOG) {
       expect(skill.id).toMatch(/^[a-z][a-z0-9]*(?:-[a-z0-9]+){1,3}$/);
       const expectedPath = skill.archived

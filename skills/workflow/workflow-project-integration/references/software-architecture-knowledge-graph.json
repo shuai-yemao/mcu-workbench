@@ -30,14 +30,14 @@
     {"id":"upstream-heads-2026-07-23","range":"pinned HEAD commits","source_id":"freertos-kernel","project_fit":"source references must be reviewed when pins change"}
   ],
   "nodes": [
-    {"id":"layer-app","kind":"layer","label":"APP","path":"skills/workflow/app-architecture","source_id":"plugin-repository","layer":"app"},
+    {"id":"layer-app","kind":"layer","label":"APP","path":"skills/app/app-architecture","source_id":"plugin-repository","layer":"app"},
     {"id":"layer-middleware","kind":"layer","label":"Middleware","path":"skills/middleware","source_id":"plugin-repository","layer":"middleware"},
     {"id":"layer-os","kind":"layer","label":"OS","path":"skills/os","source_id":"plugin-repository","layer":"os"},
     {"id":"layer-bsp","kind":"layer","label":"BSP","path":"skills/bsp","source_id":"plugin-repository","layer":"bsp"},
     {"id":"layer-core","kind":"layer","label":"Core","path":"skills/core/core-mcu","source_id":"plugin-repository","layer":"core"},
     {"id":"layer-driver","kind":"layer","label":"MCU","path":"skills/mcu/mcu-platform","source_id":"plugin-repository","layer":"mcu"},
     {"id":"layer-tools","kind":"layer","label":"Tools","path":"skills/tools","source_id":"plugin-repository","layer":"tools"},
-    {"id":"skill-app-architecture","kind":"skill","label":"app-architecture","path":"skills/workflow/app-architecture/SKILL.md","source_id":"plugin-repository","layer":"app"},
+    {"id":"skill-app-architecture","kind":"skill","label":"app-architecture","path":"skills/app/app-architecture/SKILL.md","source_id":"plugin-repository","layer":"app"},
     {"id":"skill-middleware-communication","kind":"skill","label":"middleware-communication","path":"skills/middleware/middleware-communication/SKILL.md","source_id":"plugin-repository","layer":"middleware"},
     {"id":"skill-middleware-storage","kind":"skill","label":"middleware-storage","path":"skills/middleware/middleware-storage/SKILL.md","source_id":"plugin-repository","layer":"middleware"},
     {"id":"skill-middleware-algorithms","kind":"skill","label":"middleware-algorithms","path":"skills/middleware/middleware-algorithms/SKILL.md","source_id":"plugin-repository","layer":"middleware"},

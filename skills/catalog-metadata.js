@@ -111,7 +111,7 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 const CANONICAL_DEFINITIONS = [
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
   ['workflow-ai-collab', 'workflow', '项目风格优先的嵌入式 AI 协作、逐函数生成与验证编排'],
-  ['app-architecture', 'workflow', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
+  ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-adapter', 'os', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
   ['os-runtime', 'os', '具体 RTOS 或裸机运行时的配置、Port 与调度诊断'],
   ['bsp-wrapper', 'bsp', 'BSP Wrapper 的平台无关函数表注册与稳定转发入口'],

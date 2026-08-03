@@ -33,10 +33,10 @@ APP 只能调用 OS Wrapper、BSP Wrapper 和 Middleware 公共 API。禁止直�
 
 先读取 [`app-architecture-evidence.md`](references/app-architecture-evidence.md)，再判断项目是否真的存在 `manager/`、`task/`、`logic/`、`ui/` 和 `profile/`。插件生成器默认只提供 `App/main.c`、`BSP/`、`System/`、`Core/` 和 `cmake/`，不得把规划目录当成现成实现。
 
-最小产物包括：APP 层目录图、启动链、组件职责表、跨层依赖审计、测试入口和未决风险。需要完整分层证据时交接 [`software-architecture-knowledge-graph.md`](../workflow-project-integration/references/software-architecture-knowledge-graph.md)。
+最小产物包括：APP 层目录图、启动链、组件职责表、跨层依赖审计、测试入口和未决风险。需要完整分层证据时交接 [`software-architecture-knowledge-graph.md`](../../workflow/workflow-project-integration/references/software-architecture-knowledge-graph.md)。
 
 ## GR5526 交接
 
 验收 `Src/app/main.c`、`manager/`、`task/`、`ux_logic/` 与 `lv_user_task_create()`；OS 并发接口交给 [`os-adapter`](../../os/os-adapter/SKILL.md)，界面能力交给 [`middleware-lvgl`](../../middleware/middleware-lvgl/SKILL.md)。
 
-共享层契约见 [`software-layer-contract.md`](../workflow-project-integration/references/software-layer-contract.md)。
+共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。

@@ -81,7 +81,8 @@ npm run cli -- build --target stm32f4
 ### 分层架构
 
 ```
-├─ workflow/    → workflow-router, app-architecture, workflow-project-integration
+├─ workflow/    → workflow-router, workflow-project-integration, workflow-ai-collab
+├─ app/         → app-architecture
 ├─ os/          → os-adapter, os-runtime
 ├─ bsp/         → bsp-wrapper, bsp-port, bsp-hal-driver, bsp-handler
 ├─ core/ mcu/   → core-mcu, mcu-platform

@@ -36,7 +36,7 @@ description: 依据项目证据设计软件分层、审计工程集成关系并�
 
 ## 交接
 
-- APP 结构交给 [`app-architecture`](../app-architecture/SKILL.md)。
+- APP 结构交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
 - OSAL/OS Port 交给 [`os-adapter`](../../os/os-adapter/SKILL.md) 或 [`os-runtime`](../../os/os-runtime/SKILL.md)。
 - 器件链路交给 [`bsp-wrapper`](../../bsp/bsp-wrapper/SKILL.md)、[`bsp-port`](../../bsp/bsp-port/SKILL.md)、[`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md) 或 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)。
 - MCU/厂商库交给 [`core-mcu`](../../core/core-mcu/SKILL.md) 或 [`mcu-platform`](../../mcu/mcu-platform/SKILL.md)。
