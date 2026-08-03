@@ -103,7 +103,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **108 catalog / 26 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
+当前状态为 **109 catalog / 27 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|

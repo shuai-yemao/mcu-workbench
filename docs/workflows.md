@@ -2,9 +2,10 @@
 
 ## 当前策略
 
-Workflow 层保留三个职责互斥的 active Skills：
+Workflow 层保留四个职责互斥的 active Skills：
 
 - `workflow-requirements-router`：需求分析、约束补证、Agent 分配和需求约束包生成。
+- `workflow-claude-layering`：目标工程 Claude 分层规则的扫描、预览同步和漂移校验。
 - `workflow-project-integration`：项目审计、分层设计、调用链和迁移路线。
 - `workflow-ai-collab`：AI 协作的需求澄清、逐函数生成、独立审查和验证编排。
 

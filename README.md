@@ -24,7 +24,7 @@ archive/
 
 ## Canonical skills
 
-当前目录为 **108 catalog / 26 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **109 catalog / 27 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-project-integration workflow-ai-collab

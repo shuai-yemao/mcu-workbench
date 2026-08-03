@@ -109,6 +109,7 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 ]);
 
 const CANONICAL_DEFINITIONS = [
+  ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
   ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
   ['workflow-ai-collab', 'workflow', '项目风格优先的嵌入式 AI 协作、逐函数生成与验证编排'],
   ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],

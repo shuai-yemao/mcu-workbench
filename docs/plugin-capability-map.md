@@ -17,7 +17,7 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **108 catalog / 26 canonical**：
+当前 catalog 为 **109 catalog / 27 canonical**：
 
 - 25 个 canonical skills；
 - 80 个软件和工具归档入口；

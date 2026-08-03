@@ -59,7 +59,7 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 ].map((skill) => [skill.id, skill]));
 
 const CANONICAL_ORDER = [
-  'workflow-requirements-router', 'workflow-project-integration', 'app-architecture',
+  'workflow-requirements-router', 'workflow-claude-layering', 'workflow-project-integration', 'app-architecture',
   'workflow-ai-collab',
   'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
   'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',

@@ -25,6 +25,10 @@
     "validate:layer": "node scripts/validate-layer-contract.js --self-check",
     "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",
+    "claude:init": "node scripts/claude-layering.js init",
+    "claude:scan": "node scripts/claude-layering.js scan",
+    "claude:sync": "node scripts/claude-layering.js sync",
+    "claude:validate": "node scripts/claude-layering.js validate",
     "validate:flash-algorithm": "node scripts/validate-flash-algorithm-profile.js --profile skills/tools/tools-flash/references/capabilities/tool-flash-algorithm/profiles/w25q64-ui-3m-stm32f411-pb12-15.json",
     "report:skills": "node scripts/report-skills.js"
   },
