@@ -31,6 +31,18 @@ describe('CLI', () => {
     expect(output.some((entry) => entry.line.includes('MCUWB_E_DEPRECATED_PERIPHERAL'))).toBe(true);
   });
 
+  test('prints the SSD1306 manifest before its nine generated file paths', async () => {
+    const { result, output } = await captureCli([
+      'driver', '--device-type', 'display', '--device', 'SSD1306',
+      '--core', 'i2c', '--platform', 'stm32f4'
+    ]);
+    expect(result.exitCode).toBe(0);
+    expect(output[0].line).toContain('Manifest:');
+    expect(output[0].line).toContain('UNRESOLVED_OSAL_API');
+    expect(output[1].line).toContain('Generated 9 files for SSD1306');
+    expect(output.slice(2)).toHaveLength(9);
+  });
+
   test('prints a JSON build plan without executing tools', async () => {
     const { result, output } = await captureCli(['build', '--platform', 'stm32f4', '--json']);
     expect(result.exitCode).toBe(0);

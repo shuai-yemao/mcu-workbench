@@ -15,6 +15,7 @@ description: 负责 MCU 固件烧录、批量烧录、探针连接和烧录后�
 - 批量烧录：[`tool-flash-gang`](references/tool-flash-gang/GUIDE.md)
 - J-Link：[`tool-flash-jlink`](references/tool-flash-jlink/GUIDE.md)
 - Keil：[`tool-flash-keil`](references/tool-flash-keil/GUIDE.md)
+- Flash 下载算法制作：[`tool-flash-algorithm`](references/capabilities/tool-flash-algorithm/GUIDE.md)
 - OpenOCD：[`tool-flash-openocd`](references/tool-flash-openocd/GUIDE.md)
 - PlatformIO：[`tool-flash-platformio`](references/tool-flash-platformio/GUIDE.md)
 

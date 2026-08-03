@@ -20,6 +20,12 @@ async function generateDriver(options) {
   });
   const result = {
     success: true,
+    manifest: files.manifest || {
+      deviceType: options.deviceType,
+      device: options.device,
+      cores: Array.isArray(options.core) ? options.core : [options.core],
+      commentProfile: 'legacy-generated'
+    },
     files,
     deviceType: options.deviceType,
     device: options.device,

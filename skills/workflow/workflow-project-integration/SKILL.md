@@ -1,6 +1,6 @@
 ---
 name: workflow-project-integration
-description: 依据项目证据设计软件分层、审计工程集成关系并给出可验证的迁移路线。
+description: 依据项目证据审查需求实现方案、设计软件分层，并给出代码前门禁与可验证的集成路线。
 ---
 
 # 软件项目集成
@@ -13,8 +13,44 @@ description: 依据项目证据设计软件分层、审计工程集成关系并�
 
 1. 读取工程文件、构建日志、启动流程和现有笔记，记录可复现证据。
 2. 画出调用链，确认上层只依赖下层公开契约。
-3. 根据职责选择一个主 skill，最多追加两个交接 skill。
-4. 输出文件级改造顺序、验收点和未决风险；不在本 skill 内实现具体驱动。
+3. 若输入包含需求约束包和既有实现方案，先执行“实现方案审查与代码前门禁”。
+4. 根据职责选择一个主 skill，最多追加两个交接 skill。
+5. 输出文件级改造顺序、验收点和未决风险；不在本 skill 内实现具体驱动。
+
+## 实现方案审查与代码前门禁
+
+当 Router 已交付需求约束包（RCP），且已经产出既有需求实现方案时，本 Skill 必须先审查方案，再决定是否可以交给代码阶段。固定输入为：
+
+- 需求约束包（RCP）；
+- 既有需求实现方案；
+- 项目源码、配置、构建日志和现有运行记录。
+
+### 审查 Agent 团队
+
+`embedded-lead` 负责汇总结论。基础审查团队固定包含 `system-architect`（层边界和接口）、`firmware-engineer`（代码入口、数据流和可修改范围）及 `verification-engineer`（验收证据和回归路径）。
+
+- RCP 涉及芯片、板卡、引脚、外设或 CubeMX 时，加入 `hardware-integration` 审查配置、生成边界与板级证据；
+- RCP 涉及构建、链接、烧录、调试或观测入口时，加入 `toolchain-engineer` 审查命令、工具链和产物路径；
+- `knowledge-engineer` 负责把已确认事实、冲突、风险和交接材料整理为稳定审查包，不得补写未获证实的结论。
+
+每个 Agent 只审查本领域的证据。输出必须含 Summary、Evidence、Changed files、Tests、Artifacts、Blockers 和 Next handoff；`embedded-lead` 保留冲突，不能以汇总名义把推测改写为事实。
+
+### 工程事实与反猜测审查
+
+先从 RCP 和项目中整理工程事实；每个事实、施工建议和验收结论必须写入来源（`relative/path:line`、配置键或可复现命令）及以下可信等级之一：`confirmed`、`user-confirmed`、`inferred` 或 `unverified`。`inferred` 与 `unverified` 绝不可表述为已确认事实。
+
+然后将既有方案逐项分类为“可采用”“需修订”或“阻塞风险”，重点寻找看似合理但没有工程证据的内容：
+
+- 不存在、未读取或无源码依据的 HAL、RTOS、OSAL API、目录、符号和调用关系；
+- 未由 `.ioc`、生成配置或生成代码证明的 CubeMX 外设、引脚、时钟、DMA、IRQ 与 USER CODE 边界；
+- 不存在、工作目录错误或未由配置证明的构建、链接、烧录、调试命令及产物；
+- 将静态检查、主机测试或日志推断写成目标运行或实物验证结论。
+
+### 固定审查包与代码阶段门禁
+
+审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出，作为下一轮唯一正式输入。审查包固定包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接。
+
+只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能将审查包交给 [`workflow-ai-collab`](../workflow-ai-collab/SKILL.md)。下游只能在施工清单、生成约束和验收测试清单的范围内工作；发现新事实必须回传本 Skill 更新审查包。
 
 ## 交付计划最低产物
 
@@ -45,4 +81,5 @@ description: 依据项目证据设计软件分层、审计工程集成关系并�
 
 - [软件层契约](references/software-layer-contract.md)
 - [GR5526 LVGL 验收映射](references/gr5526-lvgl-mapping.md)
+- [实现方案审查包模板](references/implementation-plan-review-package.md)
 - [集成、移植与 AI 协作能力](references/capability-index.md)

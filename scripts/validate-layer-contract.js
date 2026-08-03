@@ -254,10 +254,56 @@ function validateHandle(files, type, errors) {
   }
 }
 
+function validateSsd1306Display(files, errors) {
+  const requiredSections = ['Includes', 'Private Defines', 'Private Types', 'Private State', 'Private Functions', 'Public Functions'];
+  for (const [role, file] of Object.entries(files)) {
+    if (role === 'coreHeader' || role === 'coreSource') continue;
+    if (!file.content.includes('@par dependencies') || !file.content.includes('Processing flow:')) {
+      addError(errors, 'LAYER_WORKFLOW_DOC_PROFILE', file.relative, 'SSD1306 generated files must use the workflow full-documentation profile.');
+    }
+    if (file.relative.endsWith('.c')) {
+      for (const section of requiredSections) {
+        if (!file.content.includes(`/* ${section} */`)) {
+          addError(errors, 'LAYER_WORKFLOW_SOURCE_SECTION', file.relative, `Generated source must contain ${section} section.`);
+        }
+      }
+    }
+  }
+  for (const role of ['handleHeader', 'handleSource']) {
+    const file = files[role];
+    if (file && /bsp_ssd1306_(?:driver|config)/i.test(file.content)) {
+      addError(errors, 'LAYER_HANDLE_DEVICE_DEPENDENCY', file.relative, 'Display Handle must not depend on SSD1306 files or configuration.');
+    }
+  }
+  if (files.driverSource && /\bHAL_[A-Za-z0-9_]+\s*\(|#\s*include\s*[<"][^>"]*(?:stm32|hal|freertos|rtthread|cmsis_os)[^>"]*[>"]/i.test(maskCommentsAndStrings(files.driverSource.content))) {
+    addError(errors, 'LAYER_HAL_DRIVER_CONCRETE_DEPENDENCY', files.driverSource.relative, 'SSD1306 Driver must use injected Core Bus Ops only.');
+  }
+  if (files.portSource) {
+    const source = files.portSource.content;
+    for (const [ruleId, pattern, message] of [
+      ['LAYER_PORT_OSAL_CONSTRUCTION', /osal_mutex_create\s*\(/, 'Display Port must create its declared OSAL mutex.'],
+      ['LAYER_PORT_OSAL_INJECTION', /pf_bind_osal\s*\(/, 'Display Port must inject OSAL Ops into the Handle.'],
+      ['LAYER_PORT_OSAL_CLEANUP', /osal_mutex_destroy\s*\(/, 'Display Port must release the created OSAL mutex on assembly failure.'],
+      ['LAYER_PORT_DIRECT_CONTEXT_OPS', /pf_bind_bus\(driver_api\.p_context/, 'Port must bind context-first Driver Ops directly.'],
+      ['LAYER_PORT_WRAPPER_REGISTRATION', /drv_adapter_wrapper_display_register\s*\(/, 'Port must register display public Ops with the Wrapper.']
+    ]) {
+      if (!pattern.test(source)) addError(errors, ruleId, files.portSource.relative, message);
+    }
+    if (/\(\s*int32_t\s*\(\s*\*\s*\)/.test(source)) {
+      addError(errors, 'LAYER_PORT_FUNCTION_POINTER_CAST', files.portSource.relative, 'Port must not use function-pointer casts for context-first Ops.');
+    }
+  }
+  if (files.handleSource && (!/pf_lock\(/.test(files.handleSource.content)
+    || !/pf_unlock\(/.test(files.handleSource.content))) {
+    addError(errors, 'LAYER_HANDLER_OSAL_MUTEX_USE', files.handleSource.relative, 'Display Handle must use injected OSAL mutex operations around framebuffer access.');
+  }
+}
+
 function validateLayerContract({ root, core, deviceType, device } = {}) {
   if (!root || !core || !deviceType || !device) throw createLayerError('--root, --core, --device-type, and --device are required.');
   const normalizedCore = normalizeCorePeripheral(core);
   const type = normalizeDeviceType(deviceType);
+  const normalizedDevice = normalizeDevice(device);
   const paths = expectedPaths({ core: normalizedCore, deviceType: type, device });
   const errors = [];
   const resolvedRoot = path.resolve(root);
@@ -265,10 +311,14 @@ function validateLayerContract({ root, core, deviceType, device } = {}) {
   validateSections(files, errors);
   validateCore(files, errors);
   validateWrapper(files, errors);
-  validateHalDriver(files, errors);
-  validateHandler(files, errors);
-  validatePort(files, type, errors);
-  validateHandle(files, type, errors);
+  if (normalizedDevice.stem === 'ssd1306') {
+    validateSsd1306Display(files, errors);
+  } else {
+    validateHalDriver(files, errors);
+    validateHandler(files, errors);
+    validatePort(files, type, errors);
+    validateHandle(files, type, errors);
+  }
   return { root: resolvedRoot, paths, errors, valid: errors.length === 0 };
 }
 
@@ -338,5 +388,6 @@ module.exports = {
   runSelfCheck,
   validateHalDriver,
   validateHandler,
+  validateSsd1306Display,
   validateLayerContract
 };

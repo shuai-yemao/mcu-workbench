@@ -7,4 +7,4 @@
 3. 由 `tools-quality` 解析出的风格 profile；
 4. 本次函数的输入、输出、失败语义和验收条件。
 
-输出必须列出：修改文件、函数行为、遵循的 profile 来源、未验证假设和运行过的验证。不得注入未被 profile 要求的文件名前缀、Doxygen 或装饰性注释。
+输出必须列出：修改文件、函数行为、遵循的 profile 来源、未验证假设和运行过的验证。对 MCU Workbench 生成的 BSP 切片，必须采用 `tools-quality` 的完整注释 profile；对用户工程手写代码，仍不得注入未被项目 profile 要求的文件名前缀、Doxygen 或装饰性注释。

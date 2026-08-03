@@ -28,7 +28,7 @@ mcu-workbench platforms
 
 ```powershell
 mcu-workbench new --name demo --platform stm32f4 --rtos freertos
-mcu-workbench driver --peripheral oled --platform stm32f4 --write --output .
+mcu-workbench driver --device-type display --device SSD1306 --core i2c --platform stm32f4 --write --output .
 mcu-workbench build --platform stm32f4
 mcu-workbench build --platform stm32f4 --clean --execute
 mcu-workbench flash --platform stm32f4 --device stlink --execute
@@ -37,6 +37,17 @@ mcu-workbench skills --category tools
 
 `--json` 可用于脚本集成。错误写入 stderr，成功返回 0；命令失败返回 1。
 `build --target` 仍作为兼容别名可用，新脚本请使用 `build --platform`。
+
+## SSD1306 分层输出
+
+`driver --device-type display --device SSD1306 --core i2c` 生成九个 BSP
+文件：器件级 Driver、显示类 Handle、BSP Port 与 BSP Wrapper。命令结果额外带有
+manifest，列明 Core 依赖、OSAL mutex、完整注释 profile、公开 API 映射、阻塞限制和
+待确认项。
+
+SSD1306 的 Port 依赖目标工程已有的公开 `osal.h` 与 Core I2C 事务 API；生成时会标记
+`UNRESOLVED_OSAL_API`，直到目标工程实际确认 mutex 类型、创建/销毁、lock/unlock
+接口和状态码。该标记表示预览，不是编译或板级验证结论。
 
 ## 设计边界
 

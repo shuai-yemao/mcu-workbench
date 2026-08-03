@@ -26,6 +26,14 @@ AI 生成代码审查、项目风格 profile 与 clang-format 基线由本 Skill
 3. 除非项目或用户明确采用，否则不强制 `ec_*`、变量前缀或全函数 Doxygen；不使用居中横线分隔注释，也不将 80 列作为硬限制。
 4. 先检查编译、接口、错误路径和资源所有权；再检查 ISR/DMA/并发、数组边界及硬件约束；最后报告风格偏差。
 
+### BSP 生成代码
+
+MCU Workbench 生成的 BSP 切片不使用保守默认注释；统一采用
+[`BSP 生成代码完整注释 Profile`](references/generated-bsp-comment-profile.md)。
+该规则只约束生成器产物，不能倒灌覆盖用户工程已有的手写风格。
+
+审查 GPIO 输出类生成切片时，额外按 [`GPIO 输出外设检查表`](../../bsp/references/gpio-output-peripheral-checklist.md) 核对极性与上下文、失败后 ready 状态、错误码保留、Port 回滚、并发注册及 Fake GPIO 覆盖；不可用复杂设备的 OSAL/IRQ 模板代替这些证据。
+
 ## 三级验证闭环
 
 ```mermaid
@@ -69,4 +77,4 @@ flowchart LR
 
 当架构扫描包含已登记基线问题时，退出码非零必须同时报告基线数量、当前数量和新增差异；只有“零新增”才能称为本阶段通过，不能把非零退出码直接改写成全量通过。
 
-对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不审计用户工程的其他自定义代码；它检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、Handle ISR 延后与注释分区。
+对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不审计用户工程的其他自定义代码；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界与完整注释分区。

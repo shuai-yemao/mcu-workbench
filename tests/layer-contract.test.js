@@ -41,6 +41,26 @@ describe('generated layer contract validator', () => {
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
+  test('accepts an SSD1306 display slice with OSAL mutex injection and full documentation', async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mcu-ssd1306-layer-contract-'));
+    const files = [
+      ...(await generateCorePeripheral('i2c', 'stm32f4')),
+      ...(await generateBspDriver({
+        deviceType: 'display', device: 'SSD1306', cores: ['i2c'], platform: 'stm32f4'
+      }))
+    ];
+    for (const file of files) {
+      const target = path.join(root, file.path);
+      await fs.mkdir(path.dirname(target), { recursive: true });
+      await fs.writeFile(target, file.content, 'utf8');
+    }
+
+    const result = validateLayerContract({
+      root, core: 'i2c', deviceType: 'display', device: 'SSD1306'
+    });
+    expect(result).toMatchObject({ valid: true, errors: [] });
+  });
+
   test('generates the Port as the Core, MCU, OS Wrapper, Driver, Handler, and Wrapper composition root', async () => {
     const root = await createSlice();
     const port = await fs.readFile(

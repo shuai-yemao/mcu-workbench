@@ -25,6 +25,7 @@
     "validate:layer": "node scripts/validate-layer-contract.js --self-check",
     "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",
+    "validate:flash-algorithm": "node scripts/validate-flash-algorithm-profile.js --profile skills/tools/tools-flash/references/capabilities/tool-flash-algorithm/profiles/w25q64-ui-3m-stm32f411-pb12-15.json",
     "report:skills": "node scripts/report-skills.js"
   },
   "keywords": [

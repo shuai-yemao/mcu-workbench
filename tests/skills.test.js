@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const { SKILL_CATALOG, CANONICAL_SKILLS, resolveSkillId } = require('../skills/catalog');
 const { getAllSkills, getSkillAliases, getSkillsByCategory, listSkillNames } = require('../skills/registry');
 const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('../skills/loader');
@@ -102,6 +103,56 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('rtos-freertos')).toContain('name: os-runtime');
     expect(getSkillContent('bsp-adapter')).toContain('name: bsp-port');
     expect(getSkillContent('driver-vendor')).toContain('name: mcu-platform');
+  });
+
+  test('workflow router emits a bounded, canonical routing contract', () => {
+    const router = getSkillContent('workflow-requirements-router');
+    expect(router).toContain('## 路由单（固定输出）');
+    expect(router).toContain('主 Skill：<唯一 canonical ID；未完成 RCP 时为空>');
+    expect(router).toContain('交接 Skill：<0 至 2 个 canonical ID>');
+    expect(router).toContain('workflow-project-integration');
+    expect(router).toContain('workflow-ai-collab');
+    expect(router).toContain('tools-quality');
+    expect(router).toContain('不引用归档 Skill 作为 active 路由目标');
+  });
+
+  test('project integration reviews implementation plans before code generation', () => {
+    const integration = getSkillContent('workflow-project-integration');
+    const reviewPackage = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-project-integration',
+      'references',
+      'implementation-plan-review-package.md'
+    ), 'utf8');
+    expect(integration).toContain('## 实现方案审查与代码前门禁');
+    expect(integration).toContain('需求约束包（RCP）');
+    expect(integration).toContain('既有需求实现方案');
+    expect(integration).toContain('embedded-lead');
+    expect(integration).toContain('system-architect');
+    expect(integration).toContain('firmware-engineer');
+    expect(integration).toContain('verification-engineer');
+    expect(integration).toContain('hardware-integration');
+    expect(integration).toContain('toolchain-engineer');
+    expect(integration).toContain('knowledge-engineer');
+    expect(integration).toContain('`confirmed`、`user-confirmed`、`inferred` 或 `unverified`');
+    expect(integration).toContain('可采用');
+    expect(integration).toContain('需修订');
+    expect(integration).toContain('阻塞风险');
+    expect(integration).toContain('CubeMX');
+    expect(integration).toContain('implementation-plan-review-package.md');
+    expect(integration).toContain('workflow-ai-collab');
+    expect(integration).toContain('不得进入代码阶段');
+    expect(reviewPackage).toContain('## 1. 工程现状表');
+    expect(reviewPackage).toContain('## 2. 文件施工清单');
+    expect(reviewPackage).toContain('## 3. 代码生成约束清单');
+    expect(reviewPackage).toContain('## 4. 验收测试清单');
+    expect(reviewPackage).toContain('可采用');
+    expect(reviewPackage).toContain('需修订');
+    expect(reviewPackage).toContain('阻塞风险');
+    expect(reviewPackage).toContain('代码阶段判定');
   });
 
   test('registry is a compatibility view derived from catalog', () => {

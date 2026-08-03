@@ -10,3 +10,4 @@
 | Keil 烧录 | [完整流程与资源](capabilities/tool-flash-keil/GUIDE.md) |
 | OpenOCD 烧录 | [完整流程与资源](capabilities/tool-flash-openocd/GUIDE.md) |
 | PlatformIO 烧录 | [完整流程与资源](capabilities/tool-flash-platformio/GUIDE.md) |
+| Keil Flash 下载算法制作 | [完整流程、固定 Profile 与验收](capabilities/tool-flash-algorithm/GUIDE.md) |
