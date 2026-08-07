@@ -6,16 +6,18 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps legacy entries and exposes 27 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(105);
-    expect(CANONICAL_SKILLS).toHaveLength(27);
+  test('catalog keeps legacy entries and exposes 30 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(108);
+    expect(CANONICAL_SKILLS).toHaveLength(30);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-requirements-router', 'workflow-project-integration', 'app-architecture',
       'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port',
       'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
-      'middleware-communication', 'middleware-storage', 'middleware-algorithms',
+      'middleware-communication', 'middleware-storage', 'middleware-fal',
+      'middleware-flashdb', 'middleware-letter-shell',
+      'middleware-algorithms',
       'software-system', 'tools-build', 'tools-flash', 'tools-linker',
       'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
       'tools-learning-tutor', 'workflow-final-review', 'workflow-claude-layering'
@@ -86,8 +88,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(27);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(27);
+    expect(listAvailableSkills()).toHaveLength(30);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(30);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -177,7 +179,7 @@ describe('Skills catalog and loader', () => {
   });
 
   test('adapter rule is explicit in canonical software skills', () => {
-    for (const id of ['core-mcu', 'mcu-platform', 'middleware-lvgl', 'middleware-communication', 'middleware-storage', 'middleware-algorithms']) {
+    for (const id of ['core-mcu', 'mcu-platform', 'middleware-lvgl', 'middleware-communication', 'middleware-storage', 'middleware-fal', 'middleware-flashdb', 'middleware-letter-shell', 'middleware-algorithms']) {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
     expect(getSkillContent('bsp-wrapper')).toMatch(/Wrapper/);

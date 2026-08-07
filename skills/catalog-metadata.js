@@ -119,6 +119,9 @@ const CANONICAL_DEFINITIONS = [
   ['mcu-platform', 'mcu', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],
   ['middleware-communication', 'middleware', 'MQTT、BLE、CAN、Modbus、WiFi 等通信能力'],
   ['middleware-storage', 'middleware', 'FatFs、SFUD、Flash 与文件系统接入'],
+  ['middleware-fal', 'middleware', 'FAL Flash 抽象层：分区表、设备 ops 与相对偏移寻址'],
+  ['middleware-flashdb', 'middleware', 'FlashDB KV/TS 嵌入式数据库：追加写、GC 与掉电安全'],
+  ['middleware-letter-shell', 'middleware', 'letter_shell 串口命令行：命令段导出、交互与任务化'],
   ['middleware-algorithms', 'middleware', 'DSP、FFT、电机控制及通用算法中间件'],
   ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
 ];

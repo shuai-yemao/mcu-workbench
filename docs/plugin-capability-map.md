@@ -17,9 +17,9 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **109 catalog / 27 canonical**：
+当前 catalog 为 **108 catalog / 30 canonical**：
 
-- 27 个 canonical skills；
+- 30 个 canonical skills；
 - 80 个软件和工具归档入口；
 - 2 个硬件 active 入口。
 
@@ -55,6 +55,9 @@
 | `middleware-lvgl` | LVGL 核心、显示和输入接入 |
 | `middleware-communication` | MQTT、BLE、CAN、Modbus、WiFi、USB 等通信能力 |
 | `middleware-storage` | FatFs、SFUD、Flash 和文件系统接入 |
+| `middleware-fal` | FAL Flash 抽象层：分区表、设备 ops、相对偏移寻址 |
+| `middleware-flashdb` | FlashDB KV/TS 嵌入式数据库：追加写、GC、掉电安全 |
+| `middleware-letter-shell` | letter_shell 串口命令行：命令段导出、交互、任务化 |
 | `middleware-algorithms` | DSP、FFT、电机控制和通用算法 |
 | `software-system` | Bootloader、低功耗、看门狗、固件安全等跨层能力 |
 

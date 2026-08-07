@@ -62,8 +62,10 @@ const CANONICAL_ORDER = [
   'workflow-requirements-router', 'workflow-claude-layering', 'workflow-project-integration', 'app-architecture',
   'workflow-final-review',
   'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
-  'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
-  'middleware-communication', 'middleware-storage', 'middleware-algorithms',
+  'bsp-handler', 'core-mcu', 'mcu-platform',   'middleware-lvgl',
+  'middleware-communication', 'middleware-storage', 'middleware-fal',
+  'middleware-flashdb', 'middleware-letter-shell',
+  'middleware-algorithms',
   'software-system', 'tools-build', 'tools-flash', 'tools-linker',
   'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
   'tools-learning-tutor'

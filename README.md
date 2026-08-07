@@ -24,7 +24,7 @@ archive/
 
 ## Canonical skills
 
-当前目录为 **109 catalog / 27 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **108 catalog / 30 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-project-integration workflow-final-review workflow-claude-layering
@@ -32,7 +32,8 @@ app-architecture
 os-adapter os-runtime
 bsp-wrapper bsp-port bsp-hal-driver bsp-handler
 core-mcu mcu-platform
-middleware-lvgl middleware-communication middleware-storage middleware-algorithms
+middleware-lvgl middleware-communication middleware-storage middleware-fal
+middleware-flashdb middleware-letter-shell middleware-algorithms
 software-system
 tools-build tools-flash tools-linker tools-debug
 tools-observability tools-quality tools-git tools-release tools-learning-tutor
@@ -119,7 +120,7 @@ npm run validate:flash-algorithm
 
 ## OpenCode 适配
 
-仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 27 个 canonical Skill 工具和首阶段需求约束路由工具。
+仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 30 个 canonical Skill 工具和首阶段需求约束路由工具。
 
 ### 本地安装
 
