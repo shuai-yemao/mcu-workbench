@@ -9,10 +9,10 @@
   "skills": [
     "./skills/workflow/",
     "./skills/app/",
+    "./skills/service/",
     "./skills/platform/",
     "./skills/impl/",
     "./skills/vendor/",
-    "./skills/system/",
     "./skills/tools/",
     "./skills/hardware/"
   ]

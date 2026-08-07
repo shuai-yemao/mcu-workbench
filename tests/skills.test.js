@@ -7,8 +7,8 @@ const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
   test('catalog keeps legacy entries and exposes 30 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(109);
-    expect(CANONICAL_SKILLS).toHaveLength(31);
+    expect(SKILL_CATALOG).toHaveLength(119);
+    expect(CANONICAL_SKILLS).toHaveLength(41);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
@@ -18,7 +18,9 @@ describe('Skills catalog and loader', () => {
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
       'vendor_flashdb', 'vendor_letter_shell',
       'vendor_dsp',
-      'software-system', 'tools-build', 'tools-flash', 'tools-linker',
+      'service_system', 'service_battery', 'service_backlight', 'service_calendar', 'service_diagnosis',
+      'service_log', 'service_ota', 'service_power', 'service_sensor', 'service_storage', 'service_watchdog',
+      'tools-build', 'tools-flash', 'tools-linker',
       'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
       'tools-learning-tutor', 'workflow-final-review', 'workflow-claude-layering'
     ]));
@@ -94,8 +96,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(31);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(31);
+    expect(listAvailableSkills()).toHaveLength(41);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(41);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');

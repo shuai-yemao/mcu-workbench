@@ -116,7 +116,21 @@ const CANONICAL_DEFINITIONS = [
   ['impl_board', 'impl', 'Impl 落地：板级组合根——构造实例、注入 Ops、资源绑定（board_resource_config + board_bsp_register）'],
   ['impl_bsp', 'impl', 'Impl 落地：器件驱动实现（Driver 协议子层），隔离 HAL/RTOS/板级绑定'],
   ['impl_bsp_handler', 'impl', 'Impl 落地：Handler 机制子层——实例注册、生命周期、队列、工作线程、ISR 延后、缓存与回调（D5）'],
-  ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
+  ['service_system', 'service', 'Service 系统业务：Bootloader、低功耗、看门狗、固件安全和跨层系统能力（带业务策略）']
+];
+
+// Service 层（D10）：App 常见业务抽象，带业务策略，按业务域组织（对应范本 02_Service/）。
+const SERVICE_DEFINITIONS = [
+  ['service_battery', 'service', 'Service 电池业务：电量计算、电压/充电状态、低电量告警策略'],
+  ['service_backlight', 'service', 'Service 背光业务：亮度调节、自动亮度/超时策略'],
+  ['service_calendar', 'service', 'Service 日历业务：时间管理、闹钟、日程策略'],
+  ['service_diagnosis', 'service', 'Service 诊断业务：故障码管理、自检、诊断报告'],
+  ['service_log', 'service', 'Service 日志业务：分级日志、环形缓冲、导出策略'],
+  ['service_ota', 'service', 'Service OTA 业务：固件下载、校验、跳转、回滚策略'],
+  ['service_power', 'service', 'Service 电源业务：待机/休眠/唤醒、功耗档位策略'],
+  ['service_sensor', 'service', 'Service 传感器业务：多传感器汇聚、滤波、单位转换、上报策略'],
+  ['service_storage', 'service', 'Service 存储业务：参数存取、KV、分区管理、掉电安全'],
+  ['service_watchdog', 'service', 'Service 看门狗业务：喂狗策略、任务存活监控、复位诊断']
 ];
 
 // Vendor 层（D3/D9/D11）：厂家与第三方底座，源码只登记映射不复制（D7）。
@@ -201,6 +215,7 @@ module.exports = {
   LEGACY_SKILL_ENTRIES,
   ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
+  SERVICE_DEFINITIONS,
   VENDOR_DEFINITIONS,
   TOOL_CANONICAL_DEFINITIONS,
   TOOL_ALIASES,
