@@ -3,7 +3,8 @@ const path = require('path');
 const { validateMarkdownFileLinks } = require('../../lib/skill-links');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const NAME_PATTERN = /^[a-z][a-z0-9]*(?:-[a-z0-9]+){1,3}$/;
+// D11：新技能采用下划线命名（service_battery / vendor_stm32 等），兼容旧连字符 id。
+const NAME_PATTERN = /^[a-z][a-z0-9]*(?:[-_][a-z0-9]+){1,3}$/;
 const ABSOLUTE_PATH_PATTERN = /(?:\b[A-Za-z]:[\\/]|file:\/\/\/|\{USER_HOME\})/;
 
 function readJson(relativePath, errors) {

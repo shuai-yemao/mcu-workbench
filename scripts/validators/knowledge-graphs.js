@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { ROOT } = require('./common');
 
-const LVGL_SKILL_ROOT = path.join(ROOT, 'skills', 'middleware', 'middleware-lvgl');
+const LVGL_SKILL_ROOT = path.join(ROOT, 'skills', 'vendor', 'vendor_lvgl');
 const LVGL_GRAPH_PATH = path.join(LVGL_SKILL_ROOT, 'references', 'lvgl-knowledge-graph.json');
 const ARCH_GRAPH_ROOT = path.join(ROOT, 'skills', 'workflow', 'workflow-review-gate', 'references');
 const ARCH_GRAPH_PATH = path.join(ARCH_GRAPH_ROOT, 'software-architecture-knowledge-graph.json');
@@ -61,22 +61,22 @@ function validateLvglReferences(errors) {
   ];
   for (const relative of requiredFiles) {
     if (!fs.existsSync(path.join(LVGL_SKILL_ROOT, relative))) {
-      errors.push(`skills/middleware/middleware-lvgl: 缺少 ${relative}`);
+      errors.push(`skills/vendor/vendor_lvgl: 缺少 ${relative}`);
     }
   }
   if (!fs.existsSync(LVGL_GRAPH_PATH)) return null;
-  const graph = readGraph(LVGL_GRAPH_PATH, 'skills/middleware/middleware-lvgl', errors);
+  const graph = readGraph(LVGL_GRAPH_PATH, 'skills/vendor/vendor_lvgl', errors);
   if (!graph) return null;
-  const ids = validateCommonGraph(graph, 'skills/middleware/middleware-lvgl', errors);
+  const ids = validateCommonGraph(graph, 'skills/vendor/vendor_lvgl', errors);
   if (!ids || !Array.isArray(graph.versions)) return graph;
   for (const source of graph.sources) {
     for (const key of ['repository', 'role', 'version']) {
-      if (!source || !source[key]) errors.push(`skills/middleware/middleware-lvgl: source 缺少 ${key}`);
+      if (!source || !source[key]) errors.push(`skills/vendor/vendor_lvgl: source 缺少 ${key}`);
     }
   }
   const versionIds = new Set(graph.versions.map((version) => version && version.id));
   for (const required of ['lvgl-8.3', 'lvgl-9.3', 'lvgl-9-latest']) {
-    if (!versionIds.has(required)) errors.push(`skills/middleware/middleware-lvgl: 缺少版本矩阵 ${required}`);
+    if (!versionIds.has(required)) errors.push(`skills/vendor/vendor_lvgl: 缺少版本矩阵 ${required}`);
   }
   return graph;
 }

@@ -14,10 +14,10 @@ describe('Skills catalog and loader', () => {
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-requirements-router', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
       'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port',
-      'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
-      'middleware-communication', 'middleware-storage', 'middleware-fal',
-      'middleware-flashdb', 'middleware-letter-shell',
-      'middleware-algorithms',
+      'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'vendor_stm32', 'vendor_lvgl',
+      'vendor_stack', 'vendor_fatfs', 'vendor_fal',
+      'vendor_flashdb', 'vendor_letter_shell',
+      'vendor_dsp',
       'software-system', 'tools-build', 'tools-flash', 'tools-linker',
       'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
       'tools-learning-tutor', 'workflow-final-review', 'workflow-claude-layering'
@@ -27,7 +27,7 @@ describe('Skills catalog and loader', () => {
       path: 'skills/app/app-architecture'
     });
     for (const skill of SKILL_CATALOG) {
-      expect(skill.id).toMatch(/^[a-z][a-z0-9]*(?:-[a-z0-9]+){1,3}$/);
+      expect(skill.id).toMatch(/^[a-z][a-z0-9]*(?:[-_][a-z0-9]+){1,3}$/);
       const expectedPath = skill.archived
         ? skill.path
         : path.posix.join('skills', skill.layer, skill.id);
@@ -57,14 +57,17 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('bsp-platform-adapter')).toBe('bsp-port');
     expect(resolveSkillId('peripheral-driver')).toBe('bsp-port');
     expect(resolveSkillId('embedded-adapter')).toBe('bsp-port');
-    expect(resolveSkillId('driver-vendor')).toBe('mcu-platform');
-    expect(resolveSkillId('platform-stm32-hal')).toBe('mcu-platform');
-    expect(resolveSkillId('platform-stm32-spl')).toBe('mcu-platform');
-    expect(resolveSkillId('stm32-hal-development')).toBe('mcu-platform');
-    expect(resolveSkillId('stm32-spl-development')).toBe('mcu-platform');
+    expect(resolveSkillId('driver-vendor')).toBe('vendor_stm32');
+    expect(resolveSkillId('platform-stm32-hal')).toBe('vendor_stm32');
+    expect(resolveSkillId('platform-stm32-spl')).toBe('vendor_stm32');
+    expect(resolveSkillId('stm32-hal-development')).toBe('vendor_stm32');
+    expect(resolveSkillId('stm32-spl-development')).toBe('vendor_stm32');
+    expect(resolveSkillId('mcu-platform')).toBe('vendor_stm32');
     expect(resolveSkillId('platform-cortex-registers')).toBe('core-mcu');
-    expect(resolveSkillId('protocol-mqtt')).toBe('middleware-communication');
-    expect(resolveSkillId('middleware-fatfs')).toBe('middleware-storage');
+    expect(resolveSkillId('protocol-mqtt')).toBe('vendor_stack');
+    expect(resolveSkillId('middleware-fatfs')).toBe('vendor_fatfs');
+    expect(resolveSkillId('middleware-lvgl')).toBe('vendor_lvgl');
+    expect(resolveSkillId('middleware-algorithms')).toBe('vendor_dsp');
     expect(resolveSkillId('not-a-skill')).toBeNull();
   });
 
@@ -97,7 +100,7 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('os-abstraction')).toContain('name: os-adapter');
     expect(getSkillContent('rtos-freertos')).toContain('name: os-runtime');
     expect(getSkillContent('bsp-adapter')).toContain('name: bsp-port');
-    expect(getSkillContent('driver-vendor')).toContain('name: mcu-platform');
+    expect(getSkillContent('driver-vendor')).toContain('name: vendor_stm32');
   });
 
   test('workflow router emits a bounded, canonical routing contract', () => {
@@ -218,7 +221,7 @@ describe('Skills catalog and loader', () => {
   });
 
   test('adapter rule is explicit in canonical software skills', () => {
-    for (const id of ['core-mcu', 'mcu-platform', 'middleware-lvgl', 'middleware-communication', 'middleware-storage', 'middleware-fal', 'middleware-flashdb', 'middleware-letter-shell', 'middleware-algorithms']) {
+    for (const id of ['core-mcu', 'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp']) {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
     expect(getSkillContent('bsp-wrapper')).toMatch(/Wrapper/);

@@ -6,6 +6,7 @@ const {
   LEGACY_SKILL_ENTRIES,
   ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
+  VENDOR_DEFINITIONS,
   TOOL_CANONICAL_DEFINITIONS,
   TOOL_ALIASES,
   CANONICAL_ALIASES
@@ -14,7 +15,7 @@ const {
 const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, description]) => {
   const isToolsSkill = layer === 'operations';
   const isArchived = (ARCHIVED_SOFTWARE_LAYERS.has(layer)
-    && !['workflow-requirements-router', 'middleware-lvgl'].includes(id))
+    && !['workflow-requirements-router'].includes(id))
     || isToolsSkill;
   const activeLayer = isToolsSkill ? 'tools' : layer;
   return {
@@ -31,7 +32,7 @@ const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, des
 });
 
 const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
-  .filter((skill) => ['workflow-requirements-router', 'middleware-lvgl'].includes(skill.id))
+  .filter((skill) => ['workflow-requirements-router'].includes(skill.id))
   .map((skill) => ({ ...skill, canonical: true }));
 
 const TOOL_MIGRATION_MAP = Object.fromEntries(
@@ -41,6 +42,14 @@ const TOOL_MIGRATION_MAP = Object.fromEntries(
 const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
   ...EXISTING_CANONICAL_SKILLS,
   ...CANONICAL_DEFINITIONS.map(([id, layer, description]) => ({
+    id,
+    legacyId: id,
+    layer,
+    description,
+    path: `skills/${layer}/${id}`,
+    canonical: true
+  })),
+  ...VENDOR_DEFINITIONS.map(([id, layer, description]) => ({
     id,
     legacyId: id,
     layer,
@@ -62,11 +71,11 @@ const CANONICAL_ORDER = [
   'workflow-requirements-router', 'workflow-claude-layering', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
   'workflow-final-review',
   'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
-  'bsp-handler', 'core-mcu', 'mcu-platform',   'middleware-lvgl',
-  'middleware-communication', 'middleware-storage', 'middleware-fal',
-  'middleware-flashdb', 'middleware-letter-shell',
-  'middleware-algorithms',
-  'software-system', 'tools-build', 'tools-flash', 'tools-linker',
+  'bsp-handler', 'core-mcu',
+  'software-system',
+  'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal',
+  'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp',
+  'tools-build', 'tools-flash', 'tools-linker',
   'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
   'tools-learning-tutor'
 ];
@@ -125,9 +134,9 @@ const MIGRATION_MAP = {
   'platform-option-bytes': 'core-mcu',
   'platform-sram': 'core-mcu',
   'platform-internal-flash': 'core-mcu',
-  'driver-vendor': 'mcu-platform',
-  'platform-stm32-hal': 'mcu-platform',
-  'platform-stm32-spl': 'mcu-platform',
+  'driver-vendor': 'vendor_stm32',
+  'platform-stm32-hal': 'vendor_stm32',
+  'platform-stm32-spl': 'vendor_stm32',
   'arm-core-registers': 'core-mcu',
   'arm-interrupt-exception': 'core-mcu',
   'arm-memory-architecture': 'core-mcu',
@@ -136,8 +145,17 @@ const MIGRATION_MAP = {
   'option-bytes': 'core-mcu',
   'sram-module': 'core-mcu',
   'flash-module': 'core-mcu',
-  'stm32-hal-development': 'mcu-platform',
-  'stm32-spl-development': 'mcu-platform',
+  'stm32-hal-development': 'vendor_stm32',
+  'stm32-spl-development': 'vendor_stm32',
+  'mcu-platform': 'vendor_stm32',
+  'middleware-lvgl': 'vendor_lvgl',
+  'middleware-communication': 'vendor_stack',
+  'middleware-storage': 'vendor_fatfs',
+  'middleware-fal': 'vendor_fal',
+  'middleware-flashdb': 'vendor_flashdb',
+  'middleware-letter-shell': 'vendor_letter_shell',
+  'middleware-algorithms': 'vendor_dsp',
+  'lvgl-module': 'vendor_lvgl',
   'bus-i2c': 'core-mcu',
   'bus-spi': 'core-mcu',
   'bus-uart': 'core-mcu',
@@ -152,34 +170,34 @@ const MIGRATION_MAP = {
   'dma-module': 'core-mcu',
   'motor-control': 'core-mcu',
   'timer-module': 'core-mcu',
-  'protocol-ble': 'middleware-communication',
-  'protocol-can': 'middleware-communication',
-  'protocol-cellular': 'middleware-communication',
-  'protocol-gps': 'middleware-communication',
-  'protocol-lora': 'middleware-communication',
-  'protocol-modbus': 'middleware-communication',
-  'protocol-mqtt': 'middleware-communication',
-  'protocol-usb': 'middleware-communication',
-  'protocol-wifi': 'middleware-communication',
-  'protocol-ymodem': 'middleware-communication',
-  'ble-module': 'middleware-communication',
-  'can-debug': 'middleware-communication',
-  'cellular-module': 'middleware-communication',
-  'gps-module': 'middleware-communication',
-  'lora-module': 'middleware-communication',
-  'modbus-debug': 'middleware-communication',
-  'mqtt-module': 'middleware-communication',
-  'usb-module': 'middleware-communication',
-  'wifi-module': 'middleware-communication',
-  'ymodem-module': 'middleware-communication',
-  'middleware-dsp': 'middleware-algorithms',
-  'middleware-fft': 'middleware-algorithms',
-  'dsp-module': 'middleware-algorithms',
-  'fft-module': 'middleware-algorithms',
-  'middleware-fatfs': 'middleware-storage',
-  'middleware-sfud': 'middleware-storage',
-  'fatfs-module': 'middleware-storage',
-  'sfud-module': 'middleware-storage',
+  'protocol-ble': 'vendor_stack',
+  'protocol-can': 'vendor_stack',
+  'protocol-cellular': 'vendor_stack',
+  'protocol-gps': 'vendor_stack',
+  'protocol-lora': 'vendor_stack',
+  'protocol-modbus': 'vendor_stack',
+  'protocol-mqtt': 'vendor_stack',
+  'protocol-usb': 'vendor_stack',
+  'protocol-wifi': 'vendor_stack',
+  'protocol-ymodem': 'vendor_stack',
+  'ble-module': 'vendor_stack',
+  'can-debug': 'vendor_stack',
+  'cellular-module': 'vendor_stack',
+  'gps-module': 'vendor_stack',
+  'lora-module': 'vendor_stack',
+  'modbus-debug': 'vendor_stack',
+  'mqtt-module': 'vendor_stack',
+  'usb-module': 'vendor_stack',
+  'wifi-module': 'vendor_stack',
+  'ymodem-module': 'vendor_stack',
+  'middleware-dsp': 'vendor_dsp',
+  'middleware-fft': 'vendor_dsp',
+  'dsp-module': 'vendor_dsp',
+  'fft-module': 'vendor_dsp',
+  'middleware-fatfs': 'vendor_fatfs',
+  'middleware-sfud': 'vendor_fatfs',
+  'fatfs-module': 'vendor_fatfs',
+  'sfud-module': 'vendor_fatfs',
   'system-bootloader': 'software-system',
   'system-low-power': 'software-system',
   'system-watchdog': 'software-system',

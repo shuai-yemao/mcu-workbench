@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 109 catalog / 31 canonical；当前入口含 os-adapter、os-runtime、bsp-wrapper、bsp-port、core-mcu、mcu-platform |
+| **Canonical Skills** | `skills/` | 109 catalog / 31 canonical；当前入口含 os-adapter、os-runtime、bsp-wrapper、bsp-port、core-mcu、vendor_stm32 |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移、安全层文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
@@ -95,7 +95,7 @@ npm run cli -- build --platform stm32f4
 ├─ app/         → app-architecture
 ├─ os/          → os-adapter, os-runtime
 ├─ bsp/         → bsp-wrapper, bsp-port, bsp-hal-driver, bsp-handler
-├─ core/ mcu/   → core-mcu, mcu-platform
+├─ core/ mcu/   → core-mcu, vendor_stm32
 ├─ middleware/  → middleware-lvgl, middleware-communication, middleware-storage, middleware-fal, middleware-flashdb, middleware-letter-shell, middleware-algorithms
 ├─ system/      → software-system
 ├─ hardware/    → hardware-pcb-analysis, hardware-visa-debug
@@ -156,3 +156,17 @@ Agent 遵循分域写入和显式交接协议。运行记录写入 `.mcu-workben
 | `.claude/CLAUDE.md` | 全局用户级 | 用户环境、插件列表、Hook 配置、行为准则 |
 
 开发工作流由 `.claude/rules/ecc/common/` 规则系统定义：agents → code-review → coding-style → development-workflow → git-workflow → hooks → patterns → performance → security → testing。
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as GitHub issues (via `gh` CLI) in `shuai-yemao/mcu-workbench`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` at repo root + `docs/adr/` (12 ADRs, 0001-0012, recording architecture-evolution decisions D1-D12). See `docs/agents/domain.md`.

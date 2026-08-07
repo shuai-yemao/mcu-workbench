@@ -103,7 +103,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **109 catalog / 31 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
+当前状态为 **109 catalog / 31 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`vendor_stm32`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
@@ -118,7 +118,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 | `bsp-hal-driver` | `bsp-device-driver` |
 | `bsp-handler` | `bsp-device-service` |
 | `core-mcu` | `platform-*`（厂商 HAL/SPL 除外）、`bus-*`、`peripheral-*` |
-| `mcu-platform` | `driver-vendor`、`platform-stm32-hal`、`platform-stm32-spl`（兼容映射） |
+| `vendor_stm32` | `driver-vendor`、`platform-stm32-hal`、`platform-stm32-spl`（兼容映射） |
 | `middleware-lvgl` | `middleware-lvgl` |
 | `middleware-communication` | `protocol-*` |
 | `middleware-storage` | `middleware-fatfs`、`middleware-sfud` |

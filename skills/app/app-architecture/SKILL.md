@@ -37,6 +37,6 @@ APP 只能调用 OS Wrapper、BSP Wrapper 和 Middleware 公共 API。禁止直�
 
 ## GR5526 交接
 
-验收 `Src/app/main.c`、`manager/`、`task/`、`ux_logic/` 与 `lv_user_task_create()`；OS 并发接口交给 [`os-adapter`](../../os/os-adapter/SKILL.md)，界面能力交给 [`middleware-lvgl`](../../middleware/middleware-lvgl/SKILL.md)。
+验收 `Src/app/main.c`、`manager/`、`task/`、`ux_logic/` 与 `lv_user_task_create()`；OS 并发接口交给 [`os-adapter`](../../os/os-adapter/SKILL.md)，界面能力交给 [`vendor_lvgl`](../../vendor/vendor_lvgl/SKILL.md)。
 
 共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。

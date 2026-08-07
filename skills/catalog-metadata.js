@@ -48,11 +48,10 @@ const LEGACY_SKILL_ENTRIES = [
   ['bsp-device-service', 'bsp-peripheral-handler', 'bsp', '多实例 BSP 服务与资源编排'],
   ['bsp-platform-adapter', 'embedded-adapter', 'bsp', 'BSP 依赖到 HAL/RTOS 的平台适配'],
 
-  // RTOS 与中间件。
+  // RTOS 与中间件（源码底座已归 Vendor，仅保留能力指引类 legacy 登记）。
   ['middleware-dsp', 'dsp-module', 'middleware', '嵌入式数字信号处理'],
   ['middleware-fatfs', 'fatfs-module', 'middleware', 'FatFs 文件系统'],
   ['middleware-fft', 'fft-module', 'middleware', '快速傅里叶变换'],
-  ['middleware-lvgl', 'lvgl-module', 'middleware', 'LVGL 图形界面'],
   ['middleware-sfud', 'sfud-module', 'middleware', 'SFUD 串行 Flash 驱动'],
 
   // 系统能力。
@@ -117,14 +116,19 @@ const CANONICAL_DEFINITIONS = [
   ['bsp-hal-driver', 'bsp', 'BSP Driver：器件协议与可注入实例接口'],
   ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
   ['core-mcu', 'core', 'MCU 内部外设、初始化、中断与 DMA 组织'],
-  ['mcu-platform', 'mcu', 'CMSIS、厂商 HAL/LL/SPL、寄存器与 SDK'],
-  ['middleware-communication', 'middleware', 'MQTT、BLE、CAN、Modbus、WiFi 等通信能力'],
-  ['middleware-storage', 'middleware', 'FatFs、SFUD、Flash 与文件系统接入'],
-  ['middleware-fal', 'middleware', 'FAL Flash 抽象层：分区表、设备 ops 与相对偏移寻址'],
-  ['middleware-flashdb', 'middleware', 'FlashDB KV/TS 嵌入式数据库：追加写、GC 与掉电安全'],
-  ['middleware-letter-shell', 'middleware', 'letter_shell 串口命令行：命令段导出、交互与任务化'],
-  ['middleware-algorithms', 'middleware', 'DSP、FFT、电机控制及通用算法中间件'],
   ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
+];
+
+// Vendor 层（D3/D9/D11）：厂家与第三方底座，源码只登记映射不复制（D7）。
+const VENDOR_DEFINITIONS = [
+  ['vendor_stm32', 'vendor', 'Vendor 底座登记：CMSIS、STM32 HAL/LL/SPL、ESP-IDF Driver、寄存器和厂商 SDK'],
+  ['vendor_lvgl', 'vendor', 'Vendor 底座登记：LVGL GUI 源码与集成知识（显示/输入接入、OS 协作、性能验证）'],
+  ['vendor_stack', 'vendor', 'Vendor 底座登记：MQTT、BLE、CAN、Modbus、WiFi、蜂窝、LoRa、GPS、USB 通信协议栈'],
+  ['vendor_fatfs', 'vendor', 'Vendor 底座登记：FatFs、SFUD、Flash 存储、磨损处理和文件系统源码'],
+  ['vendor_fal', 'vendor', 'Vendor 底座登记：FAL Flash 抽象层源码（分区表、设备 ops、相对偏移寻址）'],
+  ['vendor_flashdb', 'vendor', 'Vendor 底座登记：FlashDB KV/TS 嵌入式数据库源码（追加写、GC、掉电安全）'],
+  ['vendor_letter_shell', 'vendor', 'Vendor 底座登记：letter_shell 串口命令行源码（命令导出、参数解析、补全）'],
+  ['vendor_dsp', 'vendor', 'Vendor 底座登记：DSP、FFT、电机控制及通用算法库源码（如 CMSIS-DSP）']
 ];
 
 const TOOL_CANONICAL_DEFINITIONS = [
@@ -179,16 +183,24 @@ const CANONICAL_ALIASES = {
     'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter',
     'peripheral-driver', 'embedded-adapter'
   ],
-  'mcu-platform': [
-    'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
+  'vendor_stm32': [
+    'mcu-platform', 'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
     'stm32-hal-development', 'stm32-spl-development'
-  ]
+  ],
+  'vendor_lvgl': ['middleware-lvgl', 'lvgl-module'],
+  'vendor_stack': ['middleware-communication', 'protocol-ble', 'protocol-can', 'protocol-cellular', 'protocol-gps', 'protocol-lora', 'protocol-modbus', 'protocol-mqtt', 'protocol-usb', 'protocol-wifi', 'protocol-ymodem'],
+  'vendor_fatfs': ['middleware-storage', 'middleware-fatfs', 'middleware-sfud', 'fatfs-module', 'sfud-module'],
+  'vendor_fal': ['middleware-fal'],
+  'vendor_flashdb': ['middleware-flashdb'],
+  'vendor_letter_shell': ['middleware-letter-shell'],
+  'vendor_dsp': ['middleware-algorithms', 'middleware-dsp', 'middleware-fft', 'dsp-module', 'fft-module']
 };
 
 module.exports = {
   LEGACY_SKILL_ENTRIES,
   ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
+  VENDOR_DEFINITIONS,
   TOOL_CANONICAL_DEFINITIONS,
   TOOL_ALIASES,
   CANONICAL_ALIASES

@@ -33,7 +33,7 @@ workflow-requirements-router workflow-review-gate workflow-integration-plan work
 app-architecture
 os-adapter os-runtime
 bsp-wrapper bsp-port bsp-hal-driver bsp-handler
-core-mcu mcu-platform
+core-mcu vendor_stm32
 middleware-lvgl middleware-communication middleware-storage middleware-fal
 middleware-flashdb middleware-letter-shell middleware-algorithms
 software-system

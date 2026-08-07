@@ -24,7 +24,7 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
     if (legacyIds.has(skill.legacyId)) errors.push(`catalog: 重复旧名称 ${skill.legacyId}`);
     ids.add(skill.id);
     legacyIds.add(skill.legacyId);
-    if (skill.layer !== 'platform') expectedLayers.add(skill.layer);
+    if (skill.layer !== 'platform' && !skill.archived) expectedLayers.add(skill.layer);
 
     const directory = path.join(ROOT, skill.path);
     const skillFile = path.join(directory, 'SKILL.md');

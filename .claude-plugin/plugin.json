@@ -12,12 +12,9 @@
     "./skills/os/",
     "./skills/bsp/",
     "./skills/core/",
-    "./skills/mcu/",
-    "./skills/middleware/",
+    "./skills/vendor/",
     "./skills/system/",
-    "./skills/interface/",
     "./skills/tools/",
-    "./skills/security/",
     "./skills/hardware/"
   ]
 }
