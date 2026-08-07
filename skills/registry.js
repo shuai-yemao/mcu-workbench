@@ -21,7 +21,8 @@ const {
 const SKILLS = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.id, {
   name: skill.id,
   description: skill.description,
-  category: skill.layer,
+  layer: skill.layer,
+  category: skill.layer, // 兼容别名：getSkillsByCategory 调用点沿用旧字段名。
   platforms: ['all'],
   legacyName: skill.legacyId,
   aliases: skill.aliases || [],
@@ -35,7 +36,7 @@ function getAllSkills() {
 
 function getSkillsByCategory(category) {
   return Object.fromEntries(
-    Object.entries(SKILLS).filter(([, skill]) => skill.category === category)
+    Object.entries(SKILLS).filter(([, skill]) => skill.layer === category)
   );
 }
 

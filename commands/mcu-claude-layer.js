@@ -1,4 +1,4 @@
-const { runClaudeLayer } = require('../lib/claude-layering');
+const { runClaudeLayer } = require('../lib/claude-layer');
 
 function run(options = {}) {
   return runClaudeLayer({

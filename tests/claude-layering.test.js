@@ -6,7 +6,7 @@ const {
   createDefaultConfig,
   runClaudeLayer,
   scanProject
-} = require('../lib/claude-layering');
+} = require('../lib/claude-layer');
 const { runCli } = require('../lib/cli');
 
 function withFixture(callback) {
@@ -65,7 +65,7 @@ describe('Claude layering', () => {
   test('init preserves manual files unless --write is requested, then creates managed artifacts', () => withFixture((root) => {
     const preview = runClaudeLayer({ action: 'init', root });
     expect(preview.changed).toBe(true);
-    expect(fs.existsSync(path.join(root, '.mcu-workbench', 'claude-layering.json'))).toBe(false);
+    expect(fs.existsSync(path.join(root, '.mcu-workbench', 'claude-layer.json'))).toBe(false);
 
     const result = runClaudeLayer({ action: 'init', root, write: true });
     expect(result.changed).toBe(true);
@@ -76,7 +76,7 @@ describe('Claude layering', () => {
     expect(rootClaude).toContain('mcu-workbench:managed:start');
     expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '10-app.md'))).toBe(true);
     expect(fs.readFileSync(path.join(root, '.claude', 'rules', 'team.md'), 'utf8')).toBe('# Team rule\n');
-    expect(fs.existsSync(path.join(root, '.mcu-workbench', 'claude-layering.state.json'))).toBe(true);
+    expect(fs.existsSync(path.join(root, '.mcu-workbench', 'claude-layer.state.json'))).toBe(true);
   }));
 
   test('sync previews drift and validate distinguishes warnings, strict failures, and managed-file drift', () => withFixture((root) => {
@@ -119,6 +119,31 @@ describe('Claude layering', () => {
     config.layout.driver = ['^Components/Device/'];
     const scan = scanProject({ root, config });
     expect(scan.layers.driver.files.map((item) => item.path)).toContain('Components/Device/sensor.c');
+  }));
+
+  test('falls back to legacy claude-layering config and state names, then writes new names', () => withFixture((root) => {
+    // 模拟存量旧工程：legacy 配置已存在；init 读到它就不重写配置，仅生成新路径 state。
+    fs.mkdirSync(path.join(root, '.mcu-workbench'), { recursive: true });
+    const legacyConfig = path.join(root, '.mcu-workbench', 'claude-layering.json');
+    const legacyState = path.join(root, '.mcu-workbench', 'claude-layering.state.json');
+    fs.writeFileSync(legacyConfig, JSON.stringify(createDefaultConfig()), 'utf8');
+
+    const init = runClaudeLayer({ action: 'init', root, write: true });
+    expect(init.exitCode).toBe(0);
+    const newState = path.join(root, '.mcu-workbench', 'claude-layer.state.json');
+    expect(fs.existsSync(newState)).toBe(true);
+    // 旧工程没有新路径 state，只有 legacy state。
+    fs.renameSync(newState, legacyState);
+
+    // 读取必须回退到 legacy 文件名。
+    expect(runClaudeLayer({ action: 'scan', root }).exitCode).toBe(0);
+    expect(runClaudeLayer({ action: 'validate', root }).exitCode).toBe(0);
+
+    // 保存写新：sync 后 state 落回新路径，config 保留 legacy 路径。
+    const synced = runClaudeLayer({ action: 'sync', root, write: true });
+    expect(synced.exitCode).toBe(0);
+    expect(fs.existsSync(newState)).toBe(true);
+    expect(fs.existsSync(legacyConfig)).toBe(true);
   }));
 
   test('exposes claude-layer as a CLI subcommand with JSON output', async () => withFixtureAsync(async (root) => {

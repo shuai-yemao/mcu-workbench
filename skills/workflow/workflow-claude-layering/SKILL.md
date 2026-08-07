@@ -25,8 +25,8 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 `init` 与 `sync` 默认只显示计划。只有用户明确要求写入时才追加 `--write`。
 `--strict` 把 `unverified` 路径从告警提升为错误。
 
-可选配置位于 `.mcu-workbench/claude-layering.json`。`layout` 可为 `app`、
-`middleware`、`os`、`bsp`、`core`、`driver` 指定正则表达式数组，覆盖默认目录识别。
+可选配置位于 `.mcu-workbench/claude-layer.json`（旧版 `claude-layering.json` 自动读取兼容）。
+`layout` 可为 `app`、`middleware`、`os`、`bsp`、`core`、`driver` 指定正则表达式数组，覆盖默认目录识别。
 
 ## 受管文件边界
 
@@ -35,7 +35,7 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 | `CLAUDE.md` | 共享 | 仅更新 `mcu-workbench:managed` 标记区块；保留其他手写内容。 |
 | `.claude/rules/mcu-workbench/` | 本 Skill | 每层规则使用 `paths` 限定生效目录。 |
 | `.claude/rules/` 的其他文件 | 用户/项目 | 不读取后重写，不删除。 |
-| `.mcu-workbench/claude-layering*.json` | 本 Skill | 配置由用户确认，state 由扫描器生成。 |
+| `.mcu-workbench/claude-layer*.json` | 本 Skill | 配置由用户确认，state 由扫描器生成；旧版 `claude-layering*.json` 只读兼容。 |
 | `docs/architecture/claude-layer-map.md` | 本 Skill | 记录静态扫描事实与未确认项。 |
 
 若工程已有 `AGENTS.md`，受管区块引用 `@AGENTS.md`，不复制其内容。

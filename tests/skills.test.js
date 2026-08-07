@@ -182,6 +182,7 @@ describe('Skills catalog and loader', () => {
 
     expect(Object.keys(registry.getAllSkills())).toHaveLength(catalog.SKILL_CATALOG.length);
     expect(registry.getAllSkills()['tools-debug']).toMatchObject({ canonical: true, archived: false });
+    expect(registry.getAllSkills()['tools-debug'].layer).toBe('tools');
     expect(registry.getAllSkills()['tools-debug'].category).toBe('tools');
   });
 

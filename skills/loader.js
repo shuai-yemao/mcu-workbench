@@ -38,7 +38,8 @@ function loadSkillsFromPlugin() {
       description: meta.description || skill.description,
       path: path.dirname(skillFile),
       content,
-      category: skill.layer,
+      layer: skill.layer,
+      category: skill.layer, // 兼容别名：旧宿主读 skill.category。
       legacyName: skill.legacyId
     }];
   }).filter(([, skill]) => skill));
