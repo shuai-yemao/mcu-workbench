@@ -1,6 +1,6 @@
 # BSP 架构专用契约
 
-`drv_adapter_*.c/.h` 是 BSP Wrapper；`drv_adapter_port_*.c/.h` 是 BSP Port；`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。
+`platform_*_wrapper.c/.h` 是 BSP Wrapper（legacy 名 `drv_adapter_wrapper_*`）；`impl_*_port.c/.h` 是 BSP Port（legacy 名 `drv_adapter_port_*`）；`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。
 
 ```text
 APP / Middleware → BSP Wrapper → BSP Public Ops

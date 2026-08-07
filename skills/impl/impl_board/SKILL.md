@@ -27,7 +27,7 @@ platform_bsp 只包含标准类型头和自身公共声明，不能包含本层�
 
 ## 生成契约
 
-目录和名称固定为 `Bsp/Porting/<type>/drv_adapter_port_<type>.c/.h` 与 `Bsp/Wrapper/<type>/drv_adapter_wrapper_<type>.c/.h`。组合根只导出一个 `drv_adapter_port_<type>_register()`；私有装配区可以绑定 Driver、Handle，运行时转发只能调用 Handle API。生成实现不直接调用 HAL，平台实现应通过 platform_mcu 后端注入。生成前先输出 manifest，列明设备 profile、Ops 映射、OSAL 资源、阻塞/ISR 限制、注释 profile 与未验证项。
+目录和名称固定为 `04_Impl/impl_board/<type>/Inc|Src/impl_<type>_port.c/.h` 与 `03_Platform/platform_bsp/<type>/Inc|Src/platform_<type>_wrapper.c/.h`。组合根只导出一个 `impl_<type>_port_register()`；私有装配区可以绑定 Driver、Handle，运行时转发只能调用 Handle API。生成实现不直接调用 HAL，平台实现应通过 platform_mcu 后端注入。生成前先输出 manifest，列明设备 profile、Ops 映射、OSAL 资源、阻塞/ISR 限制、注释 profile 与未验证项。
 
 器件协议交给 [`impl_bsp`](../impl_bsp/SKILL.md)，资源/并发交给 [`impl_bsp`](../impl_bsp/SKILL.md)（Handler 机制子层）。实现证据见 [`bsp-layer-evidence.md`](references/bsp-layer-evidence.md)，器件适配和 Fake 样例见 [`capability-index.md`](references/capability-index.md)。
 共享温湿度案例见 [`bsp-aht21-case.md`](../../bsp/references/bsp-aht21-case.md)。

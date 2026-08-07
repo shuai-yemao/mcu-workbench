@@ -60,7 +60,7 @@ hardware(2)  ──────────────── 保留 →        
 
 | 层 | 技能 | 数量 |
 |---|---|---|
-| workflow | requirements-router / claude-layering / review-gate / integration-plan / final-review | 5 |
+| workflow | requirements-router / workflow-claude-layering / review-gate / integration-plan / final-review | 5 |
 | app | app-architecture | 1 |
 | service | service-system（由 software-system 升格）+ battery / backlight / calendar / diagnosis / log / ota / power / sensor / storage / watchdog | 11 |
 | platform | platform-mcu / platform-os / platform-bsp | 3 |

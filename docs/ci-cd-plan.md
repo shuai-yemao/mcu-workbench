@@ -47,7 +47,7 @@
 | 分层契约自检 | `npm run validate:layer` | validate-layer-contract --self-check |
 | 架构校验 | `npm run validate:architecture` | validate-architecture.js |
 | Codex 兼容产物 | `npm run build:codex-compat` | 生成 AGENTS.override.md |
-| Claude 分层校验 | `npm run claude:validate` | claude-layering.js validate |
+| Claude 分层校验 | `npm run claude:validate` | claude-layer validate |
 | Flash 算法档案 | `npm run validate:flash-algorithm` | 指定 profile JSON |
 
 ### 2.2 缺口（CI 要补的）

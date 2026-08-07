@@ -114,7 +114,7 @@ Platform 只有头文件（零 .c）；机制在 Impl/Handler，策略在 Servic
 
 | 层 | 数量 | 技能 |
 |---|---|---|
-| workflow（插件层） | 5 | requirements-router / claude-layering / review-gate / integration-plan / final-review |
+| workflow（插件层） | 5 | requirements-router / workflow-claude-layering / review-gate / integration-plan / final-review |
 | app（软件架构层） | 1 | app-architecture |
 | service（软件架构层） | 11 | system + battery / backlight / calendar / diagnosis / log / ota / power / sensor / storage / watchdog |
 | platform（软件架构层） | 3 | platform_mcu / platform_os / platform_bsp |

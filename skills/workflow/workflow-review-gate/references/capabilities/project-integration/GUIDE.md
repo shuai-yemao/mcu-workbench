@@ -52,7 +52,7 @@ description: |
 | 层 | 识别标志 | 典型文件 |
 |----|---------|---------|
 | **Platform** | 外设初始化编排、引脚配置 | `user_periph_setup.c`、`board_init.c` |
-| **Driver** | Adapter 绑定或具体硬件驱动 | `drv_adapter_port_*.c`、`*_driver.c`、`lcd_*.c` |
+| **Driver** | Adapter 绑定或具体硬件驱动 | `impl_*_port.c`（legacy `drv_adapter_port_*.c`）、`*_driver.c`、`lcd_*.c` |
 | **OS** | OS 抽象层、FreeRTOS 绑定 | `os_adapter/`、`osal.h`、`os_impl_*.c` |
 | **Middleware** | 框架 port 层、协议栈端口 | `lv_port_*.c`、`ble_*.c` |
 | **APP** | 业务逻辑、状态机、任务、UI | `main.c`、`manager/`、`task/`、`logic/`、`ui_layout/` |
@@ -80,10 +80,10 @@ description: |
 | 检查项 | 评估标准 | 判定 |
 |--------|---------|------|
 | Wrapper（第一段） | 存在抽象结构体（如 `disp_drv_t`）和统一接口 | 有→✅ / 无→❌ |
-| Porting（第二段） | 存在 `drv_adapter_port_*.c` 完成函数指针绑定 | 有→✅ / 无→❌ |
+| Porting（第二段） | 存在 `impl_*_port.c`（legacy `drv_adapter_port_*.c`）完成函数指针绑定 | 有→✅ / 无→❌ |
 | Driver（第三段） | 存在具体驱动的 `.c/.h` 文件 | 有→✅ / 无→❌ |
 | 三段绑定完整 | Wrapper → Porting → Driver 调用链完整 | 完整→✅ / 断开→⚠️ |
-| 调用方不越层 | Middleware/APP 只调 `drv_adapter_*()`，不直接调 `lcd_*` 等 | 不越层→✅ / 直接调→❌ |
+| 调用方不越层 | Middleware/APP 只调 `platform_*_wrapper_*()` / `impl_*_port_*()`（legacy `drv_adapter_*()`），不直接调 `lcd_*` 等 | 不越层→✅ / 直接调→❌ |
 
 **外设检查矩阵**（审计时按实际外设展开）：
 

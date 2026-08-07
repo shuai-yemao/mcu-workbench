@@ -26,7 +26,7 @@ Platform IIC 公共接口提供初始化、释放、事务 read/write、memory r
 
 ## 生成契约
 
-`mcu-workbench core --peripheral <name>` 每类外设只生成 `Core/Inc/core_<name>.h` 和 `Core/Src/core_<name>.c`。`iic` 仅是 CLI 输入别名，统一归一化为 `i2c`；公开文件名、API 和文档只能使用 `i2c`。公共头不包含 HAL、FreeRTOS、CMSIS-OS 或厂商类型；使用 `void *backend_context` 隔离平台上下文。
+`mcu-workbench core --peripheral <name>` 每类外设只生成 `03_Platform/platform_mcu/Inc/platform_<name>.h` 和 `03_Platform/platform_mcu/Src/platform_<name>.c`。`iic` 仅是 CLI 输入别名，统一归一化为 `i2c`；公开文件名、API 和文档只能使用 `i2c`。公共头不包含 HAL、FreeRTOS、CMSIS-OS 或厂商类型；使用 `void *backend_context` 隔离平台上下文。
 
 公共头不得暴露 `I2C_HandleTypeDef`、`GPIO_TypeDef`、RTOS 句柄或其他厂商类型。跨设备共享总线互斥由 Platform 总线实例契约负责，但只可调用公开 `osal_mutex_*` 或注入的 lock/unlock Ops，不得调用原生 RTOS API。历史上位于 BSP 的 GPIO 模拟 IIC 应迁移为 Core Software IIC 后端。
 
