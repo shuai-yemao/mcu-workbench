@@ -9,6 +9,10 @@ description: 负责嵌入式代码审查、AI 生成代码约束、Map 分析、
 
 统一处理 AI 生成代码审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
 
+## 路由边界
+
+本 skill 承担**静态分析流**（编码期/构建期预防）：代码审查、Map/RAM/ROM/栈估算、Cppcheck/MISRA、Unity 行为验证。静态分析只能发现"可疑模式"，不能证明运行时一定正确——发现潜在栈溢出、时序、中断嵌套问题时，交接 [`tools-debug`](../tools-debug/SKILL.md)（调试流）在运行时验证；需要长稳/偶发观测交接 [`tools-observability`](../tools-observability/SKILL.md)（日志流）。静态门禁不替代目标运行、观测通道和实物验收。
+
 ## 变体
 
 代码审查、Map 分析、静态分析、格式检查和 Unity 的原始资料分别保留在 `references/quality-*` 或 `references/capabilities/*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。

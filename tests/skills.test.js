@@ -163,6 +163,27 @@ describe('Skills catalog and loader', () => {
     expect(getSkillAliases()['workflow-router']).toBe('workflow-requirements-router');
   });
 
+  test('module boundary: catalog holds facts, registry derives the view, loader reads disk', () => {
+    const catalog = require('../skills/catalog');
+    const registry = require('../skills/registry');
+    const loader = require('../skills/loader');
+
+    for (const fact of ['SKILL_CATALOG', 'CANONICAL_SKILLS', 'MIGRATION_MAP', 'SKILL_BY_ID', 'SKILL_BY_CANONICAL_ID', 'SKILL_BY_LEGACY_ID', 'resolveSkillId']) {
+      expect(catalog).toHaveProperty(fact);
+    }
+    for (const derived of ['SKILLS', 'getAllSkills', 'getSkillsByCategory', 'getSkillsByPlatform', 'getSkillAliases', 'listSkillNames']) {
+      expect(catalog).not.toHaveProperty(derived);
+      expect(registry).toHaveProperty(derived);
+    }
+    for (const diskApi of ['loadSkillsFromPlugin', 'getSkillContent', 'listAvailableSkills', 'parseSkillMeta']) {
+      expect(loader).toHaveProperty(diskApi);
+    }
+
+    expect(Object.keys(registry.getAllSkills())).toHaveLength(catalog.SKILL_CATALOG.length);
+    expect(registry.getAllSkills()['tools-debug']).toMatchObject({ canonical: true, archived: false });
+    expect(registry.getAllSkills()['tools-debug'].category).toBe('tools');
+  });
+
   test('plugin filesystem, frontmatter and manifest validate', () => {
     expect(validatePlugin().errors).toEqual([]);
   });

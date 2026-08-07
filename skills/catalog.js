@@ -209,64 +209,15 @@ function resolveSkillId(id) {
   return null;
 }
 
-// Derived compatibility registry. Keep catalog.js as the only skill metadata source;
-// registry.js only re-exports this view for the legacy Node API.
-const SKILLS = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.id, {
-  name: skill.id,
-  description: skill.description,
-  category: skill.layer,
-  platforms: ['all'],
-  legacyName: skill.legacyId,
-  aliases: skill.aliases || [],
-  canonical: Boolean(skill.canonical),
-  archived: Boolean(skill.archived)
-}]));
-
-function getAllSkills() {
-  return { ...SKILLS };
-}
-
-function getSkillsByCategory(category) {
-  return Object.fromEntries(
-    Object.entries(SKILLS).filter(([, skill]) => skill.category === category)
-  );
-}
-
-function getSkillsByPlatform(platform) {
-  return Object.fromEntries(
-    Object.entries(SKILLS).filter(([, skill]) =>
-      skill.platforms.includes(platform) || skill.platforms.includes('all')
-    )
-  );
-}
-
-function listSkillNames() {
-  return Object.keys(SKILLS);
-}
-
-function getSkillAliases() {
-  const aliases = {};
-  for (const skill of SKILL_CATALOG) {
-    const target = resolveSkillId(skill.id) || skill.id;
-    if (skill.legacyId && skill.legacyId !== target) aliases[skill.legacyId] = target;
-    for (const alias of skill.aliases || []) aliases[alias] = target;
-  }
-  for (const [alias, target] of Object.entries(MIGRATION_MAP)) aliases[alias] = target;
-  return aliases;
-}
-
+// 职责边界：本文件只持有"事实"（目录、别名、迁移映射、ID 解析），不派生查询视图。
+// 查询视图（SKILLS、getAllSkills 等）在 registry.js 中基于本文件派生；
+// 磁盘加载（SKILL.md 内容、frontmatter）在 loader.js 中实现。
 module.exports = {
-  SKILLS,
   SKILL_CATALOG,
   CANONICAL_SKILLS,
   MIGRATION_MAP,
   SKILL_BY_ID,
   SKILL_BY_CANONICAL_ID,
   SKILL_BY_LEGACY_ID,
-  resolveSkillId,
-  getAllSkills,
-  getSkillsByCategory,
-  getSkillsByPlatform,
-  getSkillAliases,
-  listSkillNames
+  resolveSkillId
 };

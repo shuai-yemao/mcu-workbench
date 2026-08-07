@@ -68,8 +68,8 @@
 | `tools-build` | CMake、ESP-IDF、IAR、Keil、PlatformIO 构建 | 输出 ELF、HEX、BIN、MAP 等产物 |
 | `tools-flash` | J-Link、OpenOCD、ESP-IDF、Keil、批量烧录 | 接收构建产物，写入并校验目标板 |
 | `tools-linker` | SCT、LD、ICF、内存布局和链接错误 | 为构建和 Map 分析提供布局依据 |
-| `tools-debug` | GDB、OpenOCD、Ozone、RTOS、HardFault | 接收运行失败证据，输出根因和修复建议 |
-| `tools-observability` | ELOG、RTT、串口、SystemView | 采集日志、追踪和运行时证据 |
+| `tools-debug` | GDB、OpenOCD、J-Link、Ozone、RTOS、HardFault、离线断点 | 接收运行失败证据，输出根因和修复建议 |
+| `tools-observability` | ELOG、RTT、串口、SystemView、SWV/ITM、面包屑 | 采集日志、追踪和运行时证据 |
 | `tools-quality` | 代码审查、Map、静态分析、Unity | 输出质量问题、证据和回归结果 |
 | `tools-git` | 分支、Jira 提交、worktree、同步和受控恢复 | 记录变更、提示提交并交接验证证据 |
 | `tools-release` | OTA 打包、升级、回滚和发布验证 | 接收构建产物和质量结果 |
@@ -107,8 +107,8 @@ tools-release
 | `driver` | `commands/mcu-driver.js` | 根据设备类别、设备、Core 和平台生成 Driver/Handle/Port/Wrapper；不生成 `System/**` |
 | `build` / `mcu-build` | `commands/mcu-build.js` | 默认生成构建计划；`--execute` 时执行 |
 | `flash` / `mcu-flash` | `commands/mcu-flash.js` | 默认生成烧录计划；`--execute` 时执行 |
-| `mcu-debug` | `commands/mcu-debug.js` | 生成 OpenOCD/GDB 命令，不启动真实会话 |
-| `mcu-monitor` | `commands/mcu-debug.js` | 返回串口监控参数，不启动真实监控 |
+| `mcu-debug` | `commands/mcu-debug.js` | 生成 OpenOCD/J-Link GDB 调试计划；`--execute` 启动真实会话（交互 GDB） |
+| `mcu-monitor` | `commands/mcu-debug.js` | 生成串口/RTT/SWO 监控计划；`--execute` 启动真实监控（复用已装 CLI 工具） |
 | `claude-layer` | `commands/mcu-claude-layer.js` | 扫描/同步/校验目标工程的 Claude 分层规则；init/sync 需 `--write` 才写入 |
 
 ### 3.2 Libraries and templates
@@ -118,6 +118,8 @@ tools-release
 | `lib/platform.js` | 平台配置、平台查询和简单平台检测 |
 | `lib/builder.js` | CMake/ESP-IDF 构建命令拼接 |
 | `lib/flasher.js` | ST-Link/OpenOCD/esptool 命令拼接 |
+| `lib/debugger.js` | OpenOCD/J-Link GDB 调试计划与真实会话 |
+| `lib/session-runner.js` | 长驻/交互进程 spawn、流式输出与停止 |
 | `lib/generator.js` | BSP 模板读取和文件内容生成 |
 | `templates/` | CLI 使用的 C/H 模板 |
 
@@ -125,9 +127,10 @@ tools-release
 
 | 文件 | 功能 |
 |---|---|
-| `skills/catalog.js` | canonical、旧名称、别名、层级和归档路径事实源 |
-| `skills/loader.js` | 加载 canonical Skill 内容 |
-| `skills/registry.js` | 兼容旧 Node API 的 Skill registry 包装 |
+| `skills/catalog-metadata.js` | 原始技能元数据数组（canonical、旧名称、别名、层级、归档路径） |
+| `skills/catalog.js` | 元数据事实源：构建目录、别名/迁移映射、ID 解析 |
+| `skills/registry.js` | 查询视图层：在 catalog 事实之上派生 `SKILLS` 与 `get*` 查询函数，兼容旧 Node API |
+| `skills/loader.js` | 磁盘加载层：读取 SKILL.md 内容、解析 frontmatter |
 | `scripts/validate-plugin.js` | manifest、catalog、frontmatter、目录和链接校验 |
 | `scripts/sync-codex-skills.js` | 同步 canonical Skills，并处理旧目录迁移和冲突 |
 | `tests/skills.test.js` | catalog、路由、加载和适配层约束测试 |
@@ -135,8 +138,8 @@ tools-release
 
 ## 5. 当前未决问题
 
-1. CLI 是否需要继续扩展真实调试和串口监控进程管理。
-2. `catalog.js`、`registry.js`、`loader.js` 的最终职责边界。
+1. ~~CLI 是否需要继续扩展真实调试和串口监控进程管理。~~ 已实现：`mcu-debug`/`mcu-monitor` 支持 `--execute` 真实会话（J-Link/OpenOCD/RTT/串口/SWO），通过 `lib/session-runner.js` 管理长驻进程。
+2. ~~`catalog.js`、`registry.js`、`loader.js` 的最终职责边界。~~ 已定：`catalog-metadata.js`＝原始数据、`catalog.js`＝元数据事实源、`registry.js`＝查询视图层、`loader.js`＝磁盘加载层。新增/修改技能元数据只允许落在 catalog-metadata/catalog，registry 与 loader 不持有数据定义。
 3. 旧 `embedded-ai-collab` 已归档（Skill 名称不再解析）；后续 workflow 扩展遵循 [workflows.md](workflows.md)。
 4. Node 生成器的目录结构是否需要完全对齐当前 APP/OS/BSP/Middleware 架构。
 

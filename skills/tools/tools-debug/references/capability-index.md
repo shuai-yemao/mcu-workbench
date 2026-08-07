@@ -10,3 +10,4 @@
 | SEGGER Ozone 调试 | [完整流程与资源](capabilities/debug-ozone/GUIDE.md) |
 | PlatformIO 调试 | [完整流程与资源](capabilities/debug-platformio/GUIDE.md) |
 | RTOS 任务与调度诊断 | [完整流程与资源](capabilities/debug-rtos/GUIDE.md) |
+| 离线断点（FPB / DWT / BKPT / Flash Patch / MPU） | [完整流程与资源](capabilities/debug-offline-breakpoint/GUIDE.md) |

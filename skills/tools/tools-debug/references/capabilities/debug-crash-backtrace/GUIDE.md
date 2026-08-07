@@ -375,6 +375,77 @@ _call_main
 
 > 提示：Keil AC5 的 .axf 文件调试信息在工程属性 → Output → Select Folder for Objects 中设置；IAR 在 Exe 目录下。
 
+## RTOS 异步栈回溯（OS 模式）
+
+> **异步栈回溯** — 系统已经崩溃/复位，只能靠异常发生时保存下来的栈现场 + 上下文离线还原调用链。相对调试器的"同步回溯"（断点暂停、实时读寄存器），异步回溯**不打断系统、不依赖仿真器**，量产设备也能用。CmBacktrace 的 RTOS 模式即这种场景。
+
+### RTOS 与裸机回溯的唯一区别：各任务有独立栈
+
+RTOS 下每个任务有独立栈（PSP 切换）。崩溃时 PSP 指向**当前正在运行的任务**的栈，异常自动入栈发生在"当前任务自己的栈"上。**"切换了任务怎么回溯？" → 不影响**：出错发生在切换之后，回溯切换后的当前任务栈即可，旧任务栈是冻结快照无需处理。
+
+### 第一道分水岭：EXC_RETURN 决定回溯哪个栈
+
+```c
+EXC_RETURN & (1 << 2) == 0  → 使用 MSP（裸机/中断上下文）
+EXC_RETURN & (1 << 2) != 0  → 使用 PSP（RTOS 任务上下文）
+```
+
+| EXC_RETURN | 含义 |
+|-----------|------|
+| `0xFFFFFFF1` | Handler 模式 + MSP（异常/中断内） |
+| `0xFFFFFFF9` | Thread 模式 + MSP（裸机 main） |
+| `0xFFFFFFFD` | Thread 模式 + PSP（RTOS 任务，最常见崩溃场景） |
+
+### 任务识别：CmBacktrace 通过当前任务句柄拿任务名 + 栈范围
+
+```c
+/* CmBacktrace RTOS 模式获取当前任务信息（伪代码） */
+void cmb_os_get_cur_task(void)
+{
+    tcb = xTaskGetCurrentTaskHandle();   /* FreeRTOS 返回 pxCurrentTCB */
+    name = tcb->pcTaskName;
+    stack_start = tcb->pxStack;          /* 栈底（向下生长的高地址端） */
+    stack_size  = tcb->uxSizeOfStack;
+}
+```
+
+**为什么 FreeRTOS 要改源码？** FreeRTOS 的 TCB 没有导出任务栈大小的官方 API，CmBacktrace 官方移植要求向 `tasks.c` 追加 `vTaskStackAddr()/vTaskStackSize()/vTaskName()` 三个函数。网上流传的"免改源码"trace 宏方案（PR #82）**未合并、存在宏作用域缺陷**（宏调用点在 tasks.c 内部，CmBacktrace 的 cmb_def.h 不会被其包含；栈大小用 `TCB地址 − pxStack` 估算依赖相邻分配假设，静态任务栈会算错），不推荐生产环境。RT-Thread 等 TCB 完整暴露栈信息的 RTOS 则不需要改源码。
+
+### 回溯算法：沿 LR 链向上翻
+
+异常帧 8 字布局：SP+0 R0 / +4 R1 / +8 R2 / +12 R3 / +16 R12 / +20 **LR** / +24 **PC** / +28 xPSR。回溯就是沿当前任务栈翻找被 `PUSH {LR}` 保存的返回地址。
+
+```c
+#define MAX_DEPTH 20
+uint32_t call_stack[MAX_DEPTH];
+uint32_t current_lr = fault_lr;       /* 从异常帧的 LR 开始 */
+int depth = 0;
+
+while (current_lr != 0 && depth < MAX_DEPTH) {
+    if (current_lr >= FLASH_BASE && current_lr <= FLASH_END) {
+        call_stack[depth++] = current_lr & ~1;   /* 清 Thumb bit */
+    }
+    current_lr = find_next_lr_on_stack(psp, depth);
+}
+```
+
+### Cortex-M4F FPU Lazy Stacking
+
+FPU Active 时基础 8 字 + S0~S15（16 字）+ FPSCR（1 字）+ 对齐（1 字）= **26 字 = 104 字节**。汇编版 `cmb_fault.S` 能正确保存 FPU 寄存器。
+
+### 成功率与离线反解析
+
+- 回溯成功率约 **70%**：栈已被破坏（DMA 溢出写栈）或深度递归时可能断裂，需结合其他手段
+- 输出自动生成 addr2line 命令：`addr2line -e firmware.axf -a -f 08000a60 08000141 0800313f`
+
+### 移植验证要点
+
+1. `cmb_cfg.h` 打开 `CMB_USING_OS_PLATFORM` + `CMB_OS_PLATFORM_TYPE CMB_OS_PLATFORM_FREERTOS`
+2. `tasks.c` 末尾追加 `vTaskStackAddr/vTaskStackSize/vTaskName` 三个函数
+3. 用 `cmb_fault.S` 接管 HardFault（注释原 handler）
+4. 故障测试**必须在 FreeRTOS 任务中触发**（main 里触发输出 "bare metal(no OS)"，调度器未启动）
+5. 编译需 Debug Information（否则 addr2line 输出 `??:?`）；关键函数加 `noinline`、关尾调用优化避免回溯链断裂
+
 ## 错误
 
 | 错误现象 | 根因 | 解决 |
