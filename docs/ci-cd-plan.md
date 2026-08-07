@@ -119,7 +119,7 @@ push / PR
 **Job 3 `firmware-syntax`（嵌入式特色，V-03 自动化）**
 ```yaml
 - run: sudo apt-get update && sudo apt-get install -y gcc
-- run: find templates test-project integration-test -name '*.c' -o -name '*.h' \
+- run: find templates -name '*.c' -o -name '*.h' \
        | xargs gcc -Wall -Wextra -fsyntax-only -I templates 2>&1
 ```
 

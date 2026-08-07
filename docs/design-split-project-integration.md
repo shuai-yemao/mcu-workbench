@@ -18,7 +18,7 @@
 
 - 不追求总内容变少——`references/`（知识图谱、分层契约）是共享事实源，不会拆分；
 - 不改变门禁语义：阻塞不得进入代码阶段的不变量保持不变；
-- 不迁移历史产物（`outputs/gpio-core-demo/**` 保持原样）。
+- 不迁移历史产物（`outputs/gpio-core-demo/**` 保持原样；该目录已于 2026-08-07 随冗余目录清理移除）。
 
 ## 2. 拆分方案总览
 
@@ -118,7 +118,7 @@ skills/workflow/
 
 ### 5.5 历史产物
 
-`outputs/gpio-core-demo/**`（RCP/审查包/BRD/PRD/SRSys）为已交付演示产物，**不迁移、不改写**，仅在设计评审中说明其流程语义不变。
+`outputs/gpio-core-demo/**`（RCP/审查包/BRD/PRD/SRSys）为已交付演示产物，**不迁移、不改写**，仅在设计评审中说明其流程语义不变。（该目录已于 2026-08-07 随冗余目录清理移除。）
 
 ## 6. 迁移映射（MIGRATION_MAP 建议）
 
@@ -153,7 +153,7 @@ npm run build:codex-compat        # 重生成 AGENTS.override.md 后 git diff �
 git diff --check                  # 无空白错误
 ```
 
-验收标准：全绿 + `grep -rn "workflow-project-integration" --include="*.md" --include="*.js" --include="*.mjs"` 仅命中历史产物（outputs/）与迁移映射（MIGRATION_MAP 定义处）。
+验收标准：全绿 + `grep -rn "workflow-project-integration" --include="*.md" --include="*.js" --include="*.mjs"` 仅命中迁移映射（MIGRATION_MAP 定义处）。
 
 ## 9. 决策点（待用户拍板）
 
@@ -162,7 +162,7 @@ git diff --check                  # 无空白错误
 - **D3 references 归属**：knowledge-graph / layer-contract 随 review-gate（推荐，plan 相对引用），还是复制一份（不推荐，破坏单一事实源）；
 - **D4 数量文案**：全仓库 "108 catalog / 30 canonical" → "109 catalog / 31 canonical"（8 处文档 + 2 处测试）；
 - **D5 交付计划四张表归属**：现状/边界/文件修改/验收表 → plan（推荐），确认不与 gate 四张清单混同；
-- **D6 历史产物**：outputs/gpio-core-demo 不迁移（推荐）。
+- **D6 历史产物**：outputs/gpio-core-demo 不迁移（推荐，已实施；该目录已于 2026-08-07 随冗余目录清理移除）。
 
 ## 10. 风险与缓解
 
