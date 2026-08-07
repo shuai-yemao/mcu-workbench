@@ -67,6 +67,34 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
     }
   }
 
+  // D8/阶段 5 门禁：App 只调 Service——App 目录禁止 include Vendor / Impl / HAL 符号。
+  const appRoot = path.join(ROOT, 'skills', 'app');
+  if (fs.existsSync(appRoot)) {
+    const appSkillFiles = (function collect(dir, results) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) collect(full, results);
+        else if (/\.md$/.test(entry.name)) results.push(full);
+      }
+      return results;
+    })(appRoot, []);
+    const forbiddenAppPattern = /(?:^|[^A-Za-z_])(?:#include\s*[<"][^>"]+[>"]|HAL_[A-Za-z_]+|xTask[A-Za-z_]*|impl_[a-z_]+|vendor_[a-z_]+)/gm;
+    for (const file of appSkillFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      // 剥离反引号代码引用、行内链接目标与禁止性描述行，只检查"正文实际调用"形态。
+      const sanitized = content
+        .replace(/`[^`]*`/g, '')          // 反引号代码 token
+        .replace(/\[[^\]]*\]\([^)]*\)/g, '') // markdown 链接
+        .split(/\r?\n/)
+        .filter((line) => !/禁止|不得|不直接|不调用|不允许|only|forbid|ban|不 include|不引用/i.test(line))
+        .join('\n');
+      const matches = sanitized.match(forbiddenAppPattern) || [];
+      if (matches.length) {
+        errors.push(`App 层禁止底层依赖：${path.relative(ROOT, file)}（App 只调 Service；命中：${matches.slice(0, 3).map((m) => m.trim()).join(', ')}）`);
+      }
+    }
+  }
+
   const activeText = findTextFiles(path.join(ROOT, 'skills'))
     .map((file) => ({ file, content: fs.readFileSync(file, 'utf8') }));
   for (const skill of SKILL_CATALOG) {
