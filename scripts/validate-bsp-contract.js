@@ -7,11 +7,11 @@ function readFile(filePath) {
 }
 
 function getExportedBspFunctions(content) {
-  return [...content.matchAll(/\b(bsp_[a-zA-Z0-9_]+)\s*\(/g)].map((match) => match[1]);
+  return [...content.matchAll(/\b((?:bsp_|impl_|platform_)[a-zA-Z0-9_]+)\s*\(/g)].map((match) => match[1]);
 }
 
 function getPublicDefinitions(content) {
-  return [...content.matchAll(/^(?!\s*static\b)\s*[a-zA-Z_][\w\s*]*?\b(bsp_[a-zA-Z0-9_]+)\s*\([^;{}]*\)\s*\{/gm)]
+  return [...content.matchAll(/^(?!\s*static\b)\s*[a-zA-Z_][\w\s*]*?\b((?:bsp_|impl_|platform_)[a-zA-Z0-9_]+)\s*\([^;{}]*\)\s*\{/gm)]
     .map((match) => match[1]);
 }
 
@@ -39,11 +39,11 @@ function validateAdapter(options, errors) {
   const wrapper = readFile(options.wrapperSource);
   if (port) {
     const publicDefinitions = [...port.matchAll(/^(?!\s*static\b)\s*[A-Za-z_]\w*[\w\s*]*\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{/gm)].map((match) => match[1]);
-    if (publicDefinitions.length !== 1 || !/^drv_adapter_port_[a-z0-9_]+_register$/.test(publicDefinitions[0] || '')) {
-      errors.push('Port must export exactly one drv_adapter_port_<type>_register function.');
+    if (publicDefinitions.length !== 1 || !/^(?:drv_adapter_port_[a-z0-9_]+_register|impl_[a-z0-9_]+_port_register)$/.test(publicDefinitions[0] || '')) {
+      errors.push('Port must export exactly one drv_adapter_port_<type>_register or impl_<type>_port_register function.');
     }
     const staticFunctions = [...port.matchAll(/static[\s\S]*?\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{([\s\S]*?)\n\}/g)];
-    if (staticFunctions.some((match) => /\b(?:bsp_[a-z0-9_]+_driver|core_[a-z0-9_]+)\b/i.test(match[2]))) {
+    if (staticFunctions.some((match) => /\b(?:bsp_[a-z0-9_]+_driver|impl_[a-z0-9_]+_driver|core_[a-z0-9_]+|platform_[a-z0-9_]+)\b/i.test(match[2]))) {
       errors.push('Port runtime functions must call Handle APIs only.');
     }
   }

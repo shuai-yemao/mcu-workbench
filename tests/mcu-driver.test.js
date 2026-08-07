@@ -7,7 +7,9 @@ describe('MCU Driver Command', () => {
     });
     expect(result.success).toBe(true);
     expect(result.files).toHaveLength(9);
-    expect(result.files.some((file) => file.path.includes('drv_adapter_wrapper_externflash'))).toBe(true);
+    expect(result.files.some((file) => file.path.includes('platform_externflash_wrapper'))).toBe(true);
+    expect(result.files.some((file) => file.path.includes('impl_externflash_port'))).toBe(true);
+    expect(result.files.every((file) => file.path.match(/^(?:0[0-9]|99)_/))).toBe(true);
   });
 
   test('hard rejects the removed --peripheral option with migration help', () => {

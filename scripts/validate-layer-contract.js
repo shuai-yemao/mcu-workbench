@@ -90,22 +90,22 @@ function createLayerError(message) {
 function expectedPaths({ core, deviceType, device }) {
   const type = normalizeDeviceType(deviceType);
   const normalizedDevice = normalizeDevice(device);
-  const driverRoot = `Bsp/BoardDriver/${type}/Driver/${normalizedDevice.directory}`;
-  const handleRoot = `Bsp/BoardDriver/${type}/Handle`;
-  const portRoot = `Bsp/Porting/${type}`;
-  const wrapperRoot = `Bsp/Wrapper/${type}`;
+  const driverRoot = `04_Impl/impl_bsp/${type}/${normalizedDevice.directory}`;
+  const handleRoot = `04_Impl/impl_bsp_handler/${type}`;
+  const portRoot = `04_Impl/impl_board/${type}`;
+  const wrapperRoot = `03_Platform/platform_bsp/${type}`;
   return {
-    coreHeader: `Core/Inc/core_${core}.h`,
-    coreSource: `Core/Src/core_${core}.c`,
-    driverConfig: `${driverRoot}/Inc/bsp_${normalizedDevice.stem}_config.h`,
-    driverHeader: `${driverRoot}/Inc/bsp_${normalizedDevice.stem}_driver.h`,
-    driverSource: `${driverRoot}/Src/bsp_${normalizedDevice.stem}_driver.c`,
-    handleHeader: `${handleRoot}/Inc/bsp_${type}_handle.h`,
-    handleSource: `${handleRoot}/Src/bsp_${type}_handle.c`,
-    portHeader: `${portRoot}/Inc/drv_adapter_port_${type}.h`,
-    portSource: `${portRoot}/Src/drv_adapter_port_${type}.c`,
-    wrapperHeader: `${wrapperRoot}/Inc/drv_adapter_wrapper_${type}.h`,
-    wrapperSource: `${wrapperRoot}/Src/drv_adapter_wrapper_${type}.c`
+    coreHeader: `03_Platform/platform_mcu/Inc/platform_${core}.h`,
+    coreSource: `03_Platform/platform_mcu/Src/platform_${core}.c`,
+    driverConfig: `${driverRoot}/Inc/impl_${normalizedDevice.stem}_config.h`,
+    driverHeader: `${driverRoot}/Inc/impl_${normalizedDevice.stem}_driver.h`,
+    driverSource: `${driverRoot}/Src/impl_${normalizedDevice.stem}_driver.c`,
+    handleHeader: `${handleRoot}/Inc/impl_${type}_handle.h`,
+    handleSource: `${handleRoot}/Src/impl_${type}_handle.c`,
+    portHeader: `${portRoot}/Inc/impl_${type}_port.h`,
+    portSource: `${portRoot}/Src/impl_${type}_port.c`,
+    wrapperHeader: `${wrapperRoot}/Inc/platform_${type}_wrapper.h`,
+    wrapperSource: `${wrapperRoot}/Src/platform_${type}_wrapper.c`
   };
 }
 
@@ -205,7 +205,7 @@ function validateHandler(files, errors) {
 
 function validatePort(files, type, errors) {
   if (!files.portSource) return;
-  const expected = `drv_adapter_port_${type}_register`;
+  const expected = `impl_${type}_port_register`;
   const definitions = findFunctionDefinitions(files.portSource.content);
   const publicDefinitions = definitions.filter((definition) => !definition.isStatic);
   if (publicDefinitions.length !== 1 || publicDefinitions[0].name !== expected) {
@@ -215,8 +215,8 @@ function validatePort(files, type, errors) {
     [...files.portSource.content.matchAll(/\bcore_ops\.[A-Za-z_]\w*\s*=\s*([A-Za-z_]\w*)\s*;/g)].map((match) => match[1])
   );
   for (const definition of definitions.filter((entry) => entry.isStatic)) {
-    const callsDriverDirectly = /\bbsp_[a-z0-9_]+_driver\b/i.test(definition.body);
-    const callsCoreDirectly = /\bcore_[a-z0-9_]+\b/i.test(definition.body);
+    const callsDriverDirectly = /\bimpl_[a-z0-9_]+_driver\b/i.test(definition.body);
+    const callsCoreDirectly = /\bplatform_[a-z0-9_]+\b/i.test(definition.body);
     if (callsDriverDirectly || (callsCoreDirectly && !coreOpsBindings.has(definition.name))) {
       addError(errors, 'LAYER_PORT_RUNTIME_BYPASS', files.portSource.relative, `Port runtime function ${definition.name} must call Handle APIs only.`);
     }
@@ -233,7 +233,7 @@ function validatePort(files, type, errors) {
     ['LAYER_PORT_MCU_OPS_INJECTION', /driver_register_mcu_ops\s*\(/, 'Port must inject MCU Ops into the HAL Driver.'],
     ['LAYER_PORT_OS_WRAPPER_OPS_INJECTION', /handle_register_osal_ops\s*\(/, 'Port must inject OS Wrapper Ops into the Handler.'],
     ['LAYER_PORT_HAL_DRIVER_OPS_INJECTION', /handle_register_driver\s*\(/, 'Port must inject HAL Driver Ops into the Handler.'],
-    ['LAYER_PORT_WRAPPER_REGISTRATION', /drv_adapter_wrapper_[a-z0-9_]+_register\s*\(/i, 'Port must register BSP public Ops with the Wrapper.']
+    ['LAYER_PORT_WRAPPER_REGISTRATION', /platform_[a-z0-9_]+_wrapper_register\s*\(/i, 'Port must register BSP public Ops with the Wrapper.']
   ];
   for (const [ruleId, pattern, message] of requiredInjections) {
     if (!pattern.test(files.portSource.content)) addError(errors, ruleId, files.portSource.relative, message);
@@ -242,7 +242,7 @@ function validatePort(files, type, errors) {
 
 function validateHandle(files, type, errors) {
   if (!files.handleSource) return;
-  const prefix = `bsp_${type}_handle`;
+  const prefix = `impl_${type}_handle`;
   const definitions = findFunctionDefinitions(files.handleSource.content);
   const notify = definitions.find((definition) => definition.name === `${prefix}_notify_from_isr`);
   const process = definitions.find((definition) => definition.name === `${prefix}_process`);
@@ -271,7 +271,7 @@ function validateSsd1306Display(files, errors) {
   }
   for (const role of ['handleHeader', 'handleSource']) {
     const file = files[role];
-    if (file && /bsp_ssd1306_(?:driver|config)/i.test(file.content)) {
+    if (file && /impl_ssd1306_(?:driver|config)/i.test(file.content)) {
       addError(errors, 'LAYER_HANDLE_DEVICE_DEPENDENCY', file.relative, 'Display Handle must not depend on SSD1306 files or configuration.');
     }
   }
@@ -285,7 +285,7 @@ function validateSsd1306Display(files, errors) {
       ['LAYER_PORT_OSAL_INJECTION', /pf_bind_osal\s*\(/, 'Display Port must inject OSAL Ops into the Handle.'],
       ['LAYER_PORT_OSAL_CLEANUP', /osal_mutex_destroy\s*\(/, 'Display Port must release the created OSAL mutex on assembly failure.'],
       ['LAYER_PORT_DIRECT_CONTEXT_OPS', /pf_bind_bus\(driver_api\.p_context/, 'Port must bind context-first Driver Ops directly.'],
-      ['LAYER_PORT_WRAPPER_REGISTRATION', /drv_adapter_wrapper_display_register\s*\(/, 'Port must register display public Ops with the Wrapper.']
+      ['LAYER_PORT_WRAPPER_REGISTRATION', /platform_display_wrapper_register\s*\(/, 'Port must register display public Ops with the Wrapper.']
     ]) {
       if (!pattern.test(source)) addError(errors, ruleId, files.portSource.relative, message);
     }

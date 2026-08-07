@@ -49,4 +49,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: 固件模板语法检查
-        run: gcc -Wall -Wextra -fsyntax-only -I templates/bsp-oled templates/bsp-oled/bsp_oled_driver.c
+        run: gcc -Wall -Wextra -fsyntax-only -I templates/bsp-oled templates/bsp-oled/impl_oled_driver.c

@@ -1,6 +1,6 @@
-#include "bsp_oled_driver.h"
+#include "impl_oled_driver.h"
 
-int32_t oled_driver_inst(bsp_oled_driver_t* self, oled_operations_t* oled_ops, uint8_t width, uint8_t height) {
+int32_t impl_oled_driver_inst(impl_oled_driver_t* self, impl_oled_ops_t* oled_ops, uint8_t width, uint8_t height) {
     if (self == NULL || oled_ops == NULL) {
         return -1;
     }
@@ -11,7 +11,7 @@ int32_t oled_driver_inst(bsp_oled_driver_t* self, oled_operations_t* oled_ops, u
     return 0;
 }
 
-int32_t oled_init(bsp_oled_driver_t* self) {
+int32_t impl_oled_init(impl_oled_driver_t* self) {
     if (self == NULL || self->p_oled_opes_inst == NULL) {
         return -1;
     }
@@ -19,7 +19,7 @@ int32_t oled_init(bsp_oled_driver_t* self) {
     return self->p_oled_opes_inst->pf_oled_init();
 }
 
-int32_t oled_show_string(bsp_oled_driver_t* self, uint8_t x, uint8_t y, const char* str) {
+int32_t impl_oled_show_string(impl_oled_driver_t* self, uint8_t x, uint8_t y, const char* str) {
     if (self == NULL || self->p_oled_opes_inst == NULL) {
         return -1;
     }

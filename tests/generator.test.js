@@ -13,11 +13,11 @@ describe('Generator Module', () => {
   test('generates exactly one Core C/H pair for an MCU peripheral', async () => {
     const files = await generateCorePeripheral('i2c', 'stm32f4');
     expect(files.map((file) => file.path)).toEqual([
-      'Core/Inc/core_i2c.h',
-      'Core/Src/core_i2c.c'
+      '03_Platform/platform_mcu/Inc/platform_i2c.h',
+      '03_Platform/platform_mcu/Src/platform_i2c.c'
     ]);
     expect(files[0].content).not.toMatch(/stm32|FreeRTOS|I2C_HandleTypeDef/i);
-    expect(files[1].content).toContain('core_i2c_dma_irq_dispatch');
+    expect(files[1].content).toContain('platform_i2c_dma_irq_dispatch');
   });
 
   test('generates a pin-level GPIO Core pair without transaction semantics', async () => {
@@ -25,22 +25,33 @@ describe('Generator Module', () => {
     const header = files[0].content;
     const source = files[1].content;
     expect(files.map((file) => file.path)).toEqual([
-      'Core/Inc/core_gpio.h',
-      'Core/Src/core_gpio.c'
+      '03_Platform/platform_mcu/Inc/platform_gpio.h',
+      '03_Platform/platform_mcu/Src/platform_gpio.c'
     ]);
     expect(header).not.toMatch(/stm32|FreeRTOS|GPIO_TypeDef|HAL_/i);
-    expect(header).toContain('core_gpio_configure');
-    expect(header).toContain('core_gpio_set_pin');
-    expect(header).toContain('core_gpio_get_pin');
-    expect(header).toContain('core_gpio_toggle_pin');
-    expect(header).toContain('CORE_GPIO_MODE_OUTPUT');
+    expect(header).toContain('platform_gpio_configure');
+    expect(header).toContain('platform_gpio_set_pin');
+    expect(header).toContain('platform_gpio_get_pin');
+    expect(header).toContain('platform_gpio_toggle_pin');
+    expect(header).toContain('PLATFORM_GPIO_MODE_OUTPUT');
     expect(header).not.toContain('pf_transfer');
     expect(header).not.toContain('pf_start_async');
-    expect(source).toContain('core_gpio_toggle_pin');
-    expect(source).toContain('CORE_STATUS_INVALID_ARGUMENT');
+    expect(source).toContain('platform_gpio_toggle_pin');
+    expect(source).toContain('PLATFORM_ERR_PARAM');
   });
 
-  test('generates the fixed layered BSP output without System files', async () => {
+  test('emits double-underscore-free guards and platform error baseline', async () => {
+    const files = await generateCorePeripheral('i2c', 'stm32f4');
+    const header = files[0].content;
+    expect(header).toContain('#ifndef PLATFORM_I2C_H');
+    expect(header).not.toMatch(/__[A-Z0-9_]+_H__/);
+    expect(header).toContain('PLATFORM_OK = 0');
+    expect(header).toContain('PLATFORM_ERR_BUSY');
+    expect(header).toContain('PLATFORM_ERR_PARAM');
+    expect(header).not.toContain('core_status_t');
+  });
+
+  test('generates the fixed layered BSP output under the numbered hierarchy', async () => {
     const files = await generateBspDriver({
       deviceType: 'externflash',
       device: 'W25Q64',
@@ -50,11 +61,12 @@ describe('Generator Module', () => {
 
     expect(files).toHaveLength(9);
     expect(files.map((file) => file.path)).toEqual(expect.arrayContaining([
-      'Bsp/BoardDriver/externflash/Driver/W25Q64/Inc/bsp_w25q64_config.h',
-      'Bsp/BoardDriver/externflash/Handle/Src/bsp_externflash_handle.c',
-      'Bsp/Porting/externflash/Src/drv_adapter_port_externflash.c',
-      'Bsp/Wrapper/externflash/Src/drv_adapter_wrapper_externflash.c'
+      '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h',
+      '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c',
+      '04_Impl/impl_board/externflash/Src/impl_externflash_port.c',
+      '03_Platform/platform_bsp/externflash/Src/platform_externflash_wrapper.c'
     ]));
+    expect(files.every((file) => file.path.match(/^(?:0[0-9]|99)_/))).toBe(true);
     expect(files.some((file) => file.path.startsWith('System/'))).toBe(false);
   });
 
@@ -83,22 +95,22 @@ describe('Generator Module', () => {
       osalResources: ['mutex'],
       commentProfile: 'workflow-full-doc'
     });
-    expect(byPath['Bsp/BoardDriver/display/Handle/Inc/bsp_display_handle.h'])
-      .not.toContain('bsp_ssd1306_');
-    expect(byPath['Bsp/Porting/display/Src/drv_adapter_port_display.c'])
+    expect(byPath['04_Impl/impl_bsp_handler/display/Inc/impl_display_handle.h'])
+      .not.toContain('impl_ssd1306_');
+    expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
       .toContain('osal_mutex_create');
-    expect(byPath['Bsp/Porting/display/Src/drv_adapter_port_display.c'])
-      .toContain('if (drv_adapter_wrapper_display_register(&wrapper_ops) != 0) goto cleanup_mutex;');
-    expect(byPath['Bsp/Porting/display/Src/drv_adapter_port_display.c'])
+    expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
+      .toContain('if (platform_display_wrapper_register(&wrapper_ops) != 0) goto cleanup_mutex;');
+    expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
       .not.toMatch(/\(\s*int32_t\s*\(\s*\*/);
-    expect(byPath['Bsp/BoardDriver/display/Driver/SSD1306/Inc/bsp_ssd1306_config.h'])
-      .toContain('BSP_SSD1306_COLUMN_OFFSET');
+    expect(byPath['04_Impl/impl_bsp/display/SSD1306/Inc/impl_ssd1306_config.h'])
+      .toContain('IMPL_SSD1306_COLUMN_OFFSET');
     for (const file of files) {
       expect(file.content).toContain('@file');
       expect(file.content).toContain('@par dependencies');
       expect(file.content).toContain('Processing flow');
     }
-    expect(byPath['Bsp/Wrapper/display/Inc/drv_adapter_wrapper_display.h'])
+    expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_wrapper.h'])
       .toContain('void *p_context');
   });
 });
