@@ -2,6 +2,7 @@
 #define __BSP_OLED_DRIVER_H__
 
 #include <stdint.h>
+#include <stddef.h>
 
 // OLED 操作接口（抽象接口）
 typedef struct {
