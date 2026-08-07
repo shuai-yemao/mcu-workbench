@@ -13,7 +13,7 @@
     "mcu-workbench": "bin/mcu-workbench.js"
   },
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "build": "echo 'Build complete'",
     "cli": "node bin/mcu-workbench.js",
     "agent:artifacts": "node scripts/agent-artifacts.js",
