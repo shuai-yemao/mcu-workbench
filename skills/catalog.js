@@ -59,7 +59,7 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 ].map((skill) => [skill.id, skill]));
 
 const CANONICAL_ORDER = [
-  'workflow-requirements-router', 'workflow-claude-layering', 'workflow-project-integration', 'app-architecture',
+  'workflow-requirements-router', 'workflow-claude-layering', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
   'workflow-final-review',
   'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'bsp-hal-driver',
   'bsp-handler', 'core-mcu', 'mcu-platform',   'middleware-lvgl',
@@ -98,12 +98,13 @@ const SKILL_BY_LEGACY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skil
 
 const MIGRATION_MAP = {
   'workflow-router': 'workflow-requirements-router',
-  'workflow-architecture': 'workflow-project-integration',
-  'project-integration': 'workflow-project-integration',
-  'embedded-architect': 'workflow-project-integration',
-  'embedded-project-integration': 'workflow-project-integration',
-  'workflow-code-porting': 'workflow-project-integration',
-  'code-porting': 'workflow-project-integration',
+  'workflow-architecture': 'workflow-integration-plan',
+  'project-integration': 'workflow-review-gate',
+  'workflow-project-integration': 'workflow-review-gate',
+  'embedded-architect': 'workflow-integration-plan',
+  'embedded-project-integration': 'workflow-review-gate',
+  'workflow-code-porting': 'workflow-integration-plan',
+  'code-porting': 'workflow-integration-plan',
   'os-abstraction': 'os-adapter',
   'rtos-freertos': 'os-runtime',
   'freertos-module': 'os-runtime',

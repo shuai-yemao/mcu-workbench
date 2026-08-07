@@ -17,8 +17,9 @@ flowchart TD
     R --> A[分配一个或多个 Agent 分析]
     A --> Q[补齐项目与需求约束]
     Q --> P[生成需求约束包提示词]
-    P --> S[交给 workflow-project-integration]
-    S --> G[读取主 SKILL.md]
+    P --> S[交给 workflow-review-gate 审查门禁]
+    S --> S2[workflow-integration-plan 规划分发]
+    S2 --> G[读取主 SKILL.md]
     G --> Ref[按需读取 references]
     Ref --> Tool[调用 scripts 或项目工具]
     Tool --> V[构建/烧录/调试/观测/质量验证]
@@ -46,34 +47,38 @@ flowchart TD
 
 `workflow-requirements-router` 先分配 `embedded-lead` 和一个或多个专用 Agent，对需求、项目文件和已有证据进行分析；缺少关键事实时向用户提问。必须补齐项目背景、硬件资源、软件环境、FreeRTOS 任务/队列、分层边界、功能与非功能约束、优先级、依赖、验收标准和人工确认项。
 
-### 阶段 3：生成需求约束包并交接 project-integration
+### 阶段 3：生成需求约束包并交接审查门禁
 
-Router 将已确认事实、证据、未决项、Agent 分析和下游提示词组成需求约束包（RCP），固定交接给 `workflow-project-integration`（必经分层/审计/迁移门禁）；由其完成分层审查后分发实现层 Skill。RCP 完成前不生成实现代码。
+Router 将已确认事实、证据、未决项、Agent 分析和下游提示词组成需求约束包（RCP），固定交接给 `workflow-review-gate`（必经审查门禁）完成反猜测审查与放行/阻塞判定；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计并分发实现层 Skill。RCP 完成前不生成实现代码。
 
 路由规则：
 
 ```text
-一个请求 → 一个需求约束包 → workflow-project-integration（必经）
+一个请求 → 一个需求约束包 → workflow-review-gate（必经审查门禁）
+             ↓ 放行
+        workflow-integration-plan（分层/审计/迁移设计）
              ↓
-       分层审查后只分发一个实现层 Skill；执行 agent 执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限
+       只分发一个实现层 Skill；执行 agent 执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限
 ```
 
 以下示例展示 project-integration 分层审查完成后的分发结果（所有请求均先经过 project-integration 门禁）：
 
 ```text
 “Keil 工程编译失败”
-    → workflow-project-integration（审计门禁）
+    → workflow-review-gate（审查门禁）
+    → workflow-integration-plan（规划与分发）
     → tools-build（唯一实现层 Skill）
     → 执行中按需查阅 tools-linker（链接布局问题）、tools-quality（Map 分析）
 ```
 
 ```text
 “外部 Flash 驱动怎么分层”
-    → workflow-project-integration（审计门禁）
+    → workflow-review-gate（审查门禁）
+    → workflow-integration-plan（规划与分发）
     → bsp-wrapper（唯一实现层 Skill）
     → 执行中按需查阅 bsp-port / bsp-hal-driver / bsp-handler（器件链路）、os-adapter / os-runtime（任务/队列/Runtime）、core-mcu / mcu-platform（底层外设）
 
-当前 active 目录为 **108 catalog / 30 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
+当前 active 目录为 **109 catalog / 31 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
 ```
 
 ### 阶段 4：渐进式读取上下文
@@ -114,7 +119,7 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 验证命令
 实际结果
 未验证项目
-必经交接 workflow-project-integration（由其分发实现层 Skill）
+必经交接 workflow-review-gate（审查门禁）→ workflow-integration-plan（分发实现层 Skill）
 ```
 
 ## 3. Node CLI 执行链

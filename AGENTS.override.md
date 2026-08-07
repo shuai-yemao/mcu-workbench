@@ -15,7 +15,7 @@
 
 ## 2. 嵌入式工程工作方式
 
-- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），并固定交接给 `workflow-project-integration`；它只负责约束、证据和交接，不代替架构设计、代码实现或验证。
+- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），并固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计与实现层分发。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
 - RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准和阻塞项。会影响实现或验收而无法从项目证实的问题，一次只向用户询问一个。
 - 先读取真实项目结构、构建配置、芯片型号、RTOS 和驱动证据，再给出结论。
 - 按 APP → Middleware → OS → BSP → Core → Driver 分层分析依赖和职责。
@@ -33,12 +33,13 @@
 
 ## 4. Skill 路由与协作
 
-`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-project-integration`（必经门禁）；完成分层/审计/迁移设计后只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限；不把归档 Skill 当作活动入口。
+`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计并只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限；不把归档 Skill 当作活动入口。
 
 | 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
-| 所有请求的 RCP（必经门禁） | `workflow-project-integration` | 必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档（`docs/requirements/`）供用户审查，完成分层/审计/迁移设计后分发实现层 |
+| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档（`docs/requirements/`）供用户审查，判定放行/阻塞 |
+| 放行后的集成规划与分发 | `workflow-integration-plan` | 分层/审计/迁移设计、文件级改造顺序，只分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 按 profile 与门禁输出审查报告，不生成实现或自动修复 |
 | 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |
 | APP、OS、BSP、Core、Middleware | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |

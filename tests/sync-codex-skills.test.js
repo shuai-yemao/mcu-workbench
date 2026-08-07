@@ -28,9 +28,9 @@ describe('Codex skill synchronization', () => {
 
     const summary = syncCodexSkills({ target, backupRoot });
 
-    expect(summary.total).toBe(30);
+    expect(summary.total).toBe(31);
     expect(summary.renamed).toBe(3);
-    expect(summary.added).toBe(27);
+    expect(summary.added).toBe(28);
     expect(summary.replaced).toBe(3);
     expect(fs.existsSync(path.join(target, 'embedded'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'debug-gdb-openocd'))).toBe(false);
@@ -58,8 +58,8 @@ describe('Codex skill synchronization', () => {
   test('dry run reports the migration without creating a target directory', () => {
     const target = path.join(temporaryRoot, 'skills');
     const summary = syncCodexSkills({ target, dryRun: true });
-    expect(summary.total).toBe(30);
-    expect(summary.added).toBe(30);
+    expect(summary.total).toBe(31);
+    expect(summary.added).toBe(31);
     expect(fs.existsSync(target)).toBe(false);
   });
 

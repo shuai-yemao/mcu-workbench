@@ -103,12 +103,13 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **108 catalog / 30 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
+当前状态为 **109 catalog / 31 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`mcu-platform`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
 | `workflow-requirements-router` | `embedded`、`workflow-router` |
-| `workflow-project-integration` | `workflow-architecture`、`project-integration`、`code-porting` |
+| `workflow-review-gate` | `project-integration`（兼容映射 `workflow-project-integration`） |
+| `workflow-integration-plan` | `workflow-architecture`、`code-porting` |
 | `app-architecture` | APP 新入口，无旧目录 |
 | `os-adapter` | `os-abstraction`（兼容映射） |
 | `os-runtime` | `rtos-freertos`、`freertos-module`（兼容映射） |

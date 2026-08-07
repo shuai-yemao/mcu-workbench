@@ -22,4 +22,4 @@ Wrapper 只定义稳定的设备能力和错误模型；Port 只注入板级函�
 - Flush、输入、Flash 读写是否有超时和错误恢复；
 - Mock 是否可以替换 Port 而不修改 APP/Middleware。
 
-具体工程文件映射见 [`gr5526-lvgl-mapping.md`](../../../workflow/workflow-project-integration/references/gr5526-lvgl-mapping.md)。
+具体工程文件映射见 [`gr5526-lvgl-mapping.md`](../../../workflow/workflow-review-gate/references/gr5526-lvgl-mapping.md)。

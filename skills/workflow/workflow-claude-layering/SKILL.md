@@ -10,8 +10,8 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 为目标固件工程维护受管的 Claude 上下文：根 `CLAUDE.md` 的受管区块、
 `.claude/rules/mcu-workbench/` 中的路径规则、分层扫描快照和架构报告。
 
-本 Skill 编排扫描、预览、同步和校验；不替代 `workflow-project-integration`
-进行架构设计，不生成固件业务代码，也不把静态检查描述为目标板验证。
+本 Skill 编排扫描、预览、同步和校验；不替代 `workflow-review-gate` / `workflow-integration-plan`
+进行架构设计与审查，不生成固件业务代码，也不把静态检查描述为目标板验证。
 
 ## 触发与输入
 
@@ -56,7 +56,7 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 - Handler 拥有工作循环、缓存、重试和回调；Port 不得复制业务缓存。
 - Core、Middleware 与 Driver 不创建项目专属 Adapter；Driver 仅处理器件协议并经 Core 公共能力访问总线。
 
-发现层归属冲突或需要变更依赖图时，交接 `workflow-project-integration`；
+发现层归属冲突或需要变更依赖图时，交接 `workflow-review-gate`；
 需要实施代码改动时交接 `workflow-final-review`；质量检查交接 `tools-quality`。
 
 ## 输出格式

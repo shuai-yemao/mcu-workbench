@@ -2,11 +2,12 @@
 
 ## 当前策略
 
-Workflow 层保留四个职责互斥的 active Skills：
+Workflow 层保留五个职责互斥的 active Skills：
 
-- `workflow-requirements-router`：需求分析、约束补证、Agent 分配和需求约束包生成；RCP 固定交接给 `workflow-project-integration`。
+- `workflow-requirements-router`：需求分析、约束补证、Agent 分配和需求约束包生成；RCP 固定交接给 `workflow-review-gate`（必经审查门禁）。
+- `workflow-review-gate`：接收所有请求的 RCP（必经审查门禁），反猜测审查既有实现方案，必选产出四张审查清单并重组为 BRD/PRD/SRSys，判定放行/阻塞。
+- `workflow-integration-plan`：消费放行后的审查包，完成项目审计、分层设计、调用链、迁移路线和文件级改造顺序后分发唯一实现层 Skill。
 - `workflow-claude-layering`：目标工程 Claude 分层规则的扫描、预览同步和漂移校验。
-- `workflow-project-integration`：接收所有请求的 RCP（必经门禁），完成项目审计、分层设计、调用链和迁移路线后分发实现层 Skill。
 - `workflow-final-review`：最终代码、补丁或 diff 的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告。
 
 `app-architecture` 是 APP 领域 Skill，不承担跨领域编排。实际团队协作由 `embedded-lead` Agent 负责，专业工作交给对应 Agent，执行记录写入 `.mcu-workbench/runs/`。
@@ -17,7 +18,8 @@ Workflow 层保留四个职责互斥的 active Skills：
 
 ```text
 需求 → workflow-requirements-router（分诊 + 生成 RCP）
-     → workflow-project-integration（必经：分层/审计/迁移设计 + 分发）
+     → workflow-review-gate（必经审查门禁：反猜测审查 + 放行/阻塞判定）
+     → workflow-integration-plan（分层/审计/迁移设计 + 分发）
      → embedded-lead
      → 专业 Agent 执行
      → verification-engineer 验证

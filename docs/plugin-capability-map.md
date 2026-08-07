@@ -17,9 +17,9 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **108 catalog / 30 canonical**：
+当前 catalog 为 **109 catalog / 31 canonical**：
 
-- 30 个 canonical skills；
+- 31 个 canonical skills；
 - 80 个软件和工具归档入口；
 - 2 个硬件 active 入口。
 
@@ -27,8 +27,9 @@
 
 | Skill | 功能 | 典型输出 |
 |---|---|---|
-| `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和需求约束包 | 需求约束包 → workflow-project-integration（必经） |
-| `workflow-project-integration` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划 |
+| `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和需求约束包 | 需求约束包 → workflow-review-gate（必经） |
+| `workflow-review-gate` | 代码前审查与门禁、BRD/PRD/SRSys | 审查包、放行/阻塞判定 |
+| `workflow-integration-plan` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划、分发 |
 | `workflow-final-review` | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | 按严重级别分组的审查报告与阻塞项 |
 | `workflow-claude-layering` | 目标工程 Claude 分层规则的扫描、同步与校验 | 受管 CLAUDE.md 区块、路径规则、漂移报告 |
 ### 2.2 APP 软件架构

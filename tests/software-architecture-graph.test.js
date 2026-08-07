@@ -4,7 +4,7 @@ const { getSkillContent } = require('../skills/loader');
 const { validateSoftwareArchitectureGraph } = require('../scripts/validate-plugin');
 
 const ROOT = path.resolve(__dirname, '..');
-const GRAPH_PATH = path.join(ROOT, 'skills', 'workflow', 'workflow-project-integration', 'references', 'software-architecture-knowledge-graph.json');
+const GRAPH_PATH = path.join(ROOT, 'skills', 'workflow', 'workflow-review-gate', 'references', 'software-architecture-knowledge-graph.json');
 
 describe('software layered architecture knowledge graph', () => {
   const graph = JSON.parse(fs.readFileSync(GRAPH_PATH, 'utf8'));

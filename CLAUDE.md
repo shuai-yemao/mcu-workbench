@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 108 catalog / 30 canonical；当前入口含 os-adapter、os-runtime、bsp-wrapper、bsp-port、core-mcu、mcu-platform |
+| **Canonical Skills** | `skills/` | 109 catalog / 31 canonical；当前入口含 os-adapter、os-runtime、bsp-wrapper、bsp-port、core-mcu、mcu-platform |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移、安全层文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
@@ -79,7 +79,8 @@ npm run cli -- build --platform stm32f4
 
 ```
 用户请求 → workflow-requirements-router（分诊）
-         → workflow-project-integration（项目审计、分层、迁移路线）
+         → workflow-review-gate（审查门禁、放行/阻塞判定）
+         → workflow-integration-plan（项目审计、分层、迁移路线、分发）
          → embedded-lead Agent（团队编排）
          → 专业 Agent 执行
          → verification-engineer（验证）
@@ -90,7 +91,7 @@ npm run cli -- build --platform stm32f4
 ### 分层架构
 
 ```
-├─ workflow/    → workflow-requirements-router, workflow-project-integration, workflow-final-review, workflow-claude-layering
+├─ workflow/    → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
 ├─ app/         → app-architecture
 ├─ os/          → os-adapter, os-runtime
 ├─ bsp/         → bsp-wrapper, bsp-port, bsp-hal-driver, bsp-handler

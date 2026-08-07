@@ -1,6 +1,6 @@
 ---
 name: workflow-requirements-router
-description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-project-integration。
+description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-review-gate（必经审查门禁），放行后由 workflow-integration-plan 规划与分发。
 ---
 
 # 嵌入式需求约束路由
@@ -11,7 +11,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 以下职责必须分流，不可由需求约束 Router 代办：
 
-- 跨层审计、分层设计、迁移顺序和验收路线：`workflow-project-integration`。
+- 代码前审查与门禁判定：`workflow-review-gate`；放行后的跨层审计、分层设计、迁移顺序、文件级改造顺序与分发：`workflow-integration-plan`。
 - 最终代码/变更集的独立 Review 编排（输出前最后一层门禁）：`workflow-final-review`。
 - 风格规则、静态质量门禁和质量检查工具来源：`tools-quality`。
 
@@ -54,7 +54,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 ## 阶段三：生成需求约束包
 
-需求约束包（Requirement Constraint Package，RCP）是交给 workflow-project-integration 的唯一正式输入。它必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
+需求约束包（Requirement Constraint Package，RCP）是交给 workflow-review-gate 的唯一正式输入。它必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
 
 ```text
 需求约束包
@@ -73,16 +73,16 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 └─ 下游提示词：目标 Skill、范围、输入证据、必须遵守、禁止事项、输出和验收
 ```
 
-下游提示词必须明确：workflow-project-integration 只能在 RCP 的范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。
+下游提示词必须明确：workflow-review-gate 只能在 RCP 的范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。审查放行后由 workflow-integration-plan 完成分层/审计/迁移设计与分发。
 
 ## 必经交接与分发
 
-1. 所有请求的 RCP 一律交接给 `workflow-project-integration`（必经分层/审计/迁移门禁），Router 不直接交接实现层 Skill。
-2. `workflow-project-integration` 在完成分层审查后按下表只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
-3. 最终代码/变更集的独立 Review 编排由 `workflow-project-integration` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
+1. 所有请求的 RCP 一律交接给 `workflow-review-gate`（必经审查门禁），Router 不直接交接实现层 Skill；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计。
+2. `workflow-integration-plan` 在审查放行后按下表只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
+3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
-| 请求事实 | 实现层 Skill（由 project-integration 分发） |
+| 请求事实 | 实现层 Skill（由 workflow-integration-plan 分发） |
 |---|---|
 | APP 启动、Task、Manager、UI 结构 | `app-architecture` |
 | OSAL、任务、队列、同步原语接口 | `os-adapter` |
@@ -109,15 +109,15 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 ```text
 状态：分析中 | 待用户确认 | 可交接 | 阻塞
-必经下游：workflow-project-integration
-实现 Skill：<由 project-integration 分发的唯一 canonical ID；未完成 RCP 时为空>
+必经下游：workflow-review-gate
+实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>
 参与 Agent：<embedded-lead + 一个或多个专用 Agent>
 需求约束包：<完整包或稳定产物绝对路径>
 已读证据：<绝对路径、命令或日志位置>
-责任边界：<project-integration 负责分层/审计/迁移与分发；明确不负责什么>
+责任边界：<workflow-review-gate 负责审查与门禁，workflow-integration-plan 负责分层/审计/迁移与分发；明确不负责什么>
 交接契约：<每个交接的输入、输出、资源所有权>
 验证边界：<需要的静态/主机/构建/目标/实物证据；当前尚未通过的项>
-下一步：<补证问题，或 project-integration 执行的一项最小动作>
+下一步：<补证问题，或 workflow-review-gate 执行的一项最小动作>
 ```
 
 ## 硬约束
@@ -125,8 +125,8 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 - Adapter 只存在于 OS 和 BSP，且由 Wrapper 与 Port 组成；Core、Middleware、Driver 不创建 Adapter。
 - BSP Wrapper 是平台无关的函数表注册与转发层；BSP Port 才可绑定具体 Driver、Handler 和平台对象。
 - 不使用 Router 实现具体 HAL、器件协议、RTOS、UI 或业务代码。
-- RCP 固定交接给 workflow-project-integration，不直接交接实现层 Skill。
+- RCP 固定交接给 workflow-review-gate（必经审查门禁），不直接交接实现层 Skill。
 - 不引用归档 Skill 作为 active 路由目标；只输出 catalog 中的 canonical ID。
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
 
-跨层边界和源码证据见 [`workflow-project-integration`](../workflow-project-integration/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-project-integration/references/software-architecture-knowledge-graph.md)。
+跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。

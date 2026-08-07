@@ -14,10 +14,10 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 在以下时机触发：
 
 - 实现 Skill（`app-architecture`、`os-adapter`、`bsp-*`、`core-mcu`、`mcu-platform` 等）已输出最终代码、补丁或 `git diff`；
-- `workflow-project-integration` 在代码产物就绪后交接最终代码/变更集与验收清单；
+- `workflow-integration-plan` 在代码产物就绪后交接最终代码/变更集与验收清单；
 - 用户要求对现有代码、补丁或 diff 做独立审查。
 
-若输入仍处于需求或生成阶段，先交给 `workflow-project-integration` 或对应实现 Skill；本 Skill 不承担代码生成阶段。
+若输入仍处于需求或生成阶段，先交给 `workflow-review-gate`（需求/方案阶段）或对应实现 Skill；本 Skill 不承担代码生成阶段。
 
 ## 输入
 

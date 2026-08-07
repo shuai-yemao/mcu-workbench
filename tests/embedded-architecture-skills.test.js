@@ -27,7 +27,8 @@ describe('embedded architecture skill contracts', () => {
     'skills/os/os-adapter/SKILL.md',
     'skills/os/os-runtime/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
-    'skills/workflow/workflow-project-integration/SKILL.md'
+    'skills/workflow/workflow-review-gate/SKILL.md',
+    'skills/workflow/workflow-integration-plan/SKILL.md'
   ];
 
   test('keeps project-specific evidence out of canonical entry points', () => {
@@ -52,7 +53,7 @@ describe('embedded architecture skill contracts', () => {
 
   test('publishes all evidence references at their canonical locations', () => {
     for (const relativePath of [
-      'skills/workflow/workflow-project-integration/references/ec-s100-architecture-audit.md',
+      'skills/workflow/workflow-review-gate/references/ec-s100-architecture-audit.md',
       'skills/core/core-mcu/references/core-iic-backends-case.md',
       'skills/bsp/references/bsp-aht21-case.md',
       'skills/os/os-adapter/references/osal-freertos-case.md',
@@ -81,7 +82,7 @@ describe('embedded architecture skill contracts', () => {
     ];
     for (const relativePath of documents) {
       const content = read(relativePath);
-      expect(content).toContain('108 catalog / 30 canonical');
+      expect(content).toContain('109 catalog / 31 canonical');
       expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
       for (const entry of ['os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'core-mcu', 'mcu-platform']) {
         expect(content).toContain(entry);
@@ -99,7 +100,7 @@ describe('embedded architecture skill contracts', () => {
   });
 
   test('requires file-level delivery tables and evidence handoff', () => {
-    const integration = read('skills/workflow/workflow-project-integration/SKILL.md');
+    const integration = read('skills/workflow/workflow-integration-plan/SKILL.md');
     expect(integration).toContain('现状表');
     expect(integration).toContain('边界表');
     expect(integration).toContain('文件修改表');

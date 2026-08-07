@@ -20,4 +20,4 @@ Bootloader、低功耗、看门狗、CRC、AES、RSA 与固件签名的详细流
 
 交接：启动与链接交给对应工具 skill，电源/器件控制交给 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)，OS 资源交给 [`os-adapter`](../../os/os-adapter/SKILL.md)。
 
-共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。
+共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。

@@ -26,5 +26,5 @@ Wrapper 提供稳定的 `osal_*` 公共接口和项目错误码；Port 以 `os_*
 
 不在 OSAL 中放 BSP 设备协议，不让 APP 或 Middleware 绕过 Wrapper 调用原生 RTOS。
 
-共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。
+共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。
 固定源码映射案例见 [`osal-freertos-case.md`](references/osal-freertos-case.md)。

@@ -5,7 +5,7 @@
 
 const LEGACY_SKILL_ENTRIES = [
   // 工作流：决定如何开始或如何在多个层之间交接。
-  ['workflow-requirements-router', 'embedded', 'workflow', '嵌入式需求约束分析、Agent 编排与固定交接给 workflow-project-integration'],
+  ['workflow-requirements-router', 'embedded', 'workflow', '嵌入式需求约束分析、Agent 编排与固定交接给 workflow-review-gate'],
   ['workflow-devlog', 'devlog', 'workflow', '嵌入式开发记录与可追溯交接'],
   ['workflow-architecture', 'embedded-architect', 'workflow', '嵌入式分层架构设计'],
   ['workflow-code-porting', 'code-porting', 'workflow', '跨 MCU、SDK 或工具链的代码移植'],
@@ -106,7 +106,8 @@ const ARCHIVED_SOFTWARE_LAYERS = new Set([
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
-  ['workflow-project-integration', 'workflow', '分层设计、工程审计与集成路线'],
+  ['workflow-review-gate', 'workflow', '代码前审查与门禁：反猜测审查、四张清单、BRD/PRD/SRSys 与放行/阻塞判定'],
+  ['workflow-integration-plan', 'workflow', '放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发'],
   ['workflow-final-review', 'workflow', '最终代码/变更集的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告'],
   ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['os-adapter', 'os', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],

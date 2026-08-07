@@ -16,8 +16,11 @@ describe('archived capability transfer into active skills', () => {
 
     expect(errors).toEqual([]);
     expect(entries).toHaveLength(76);
-    expect(groups.get('workflow-project-integration').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
-      'workflow-architecture', 'workflow-code-porting', 'project-integration'
+    expect(groups.get('workflow-integration-plan').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
+      'workflow-architecture', 'workflow-code-porting'
+    ]));
+    expect(groups.get('workflow-review-gate').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
+      'project-integration'
     ]));
     expect(groups.get('tools-quality').map((entry) => entry.source.id)).toEqual(expect.arrayContaining([
       'quality-code-review'

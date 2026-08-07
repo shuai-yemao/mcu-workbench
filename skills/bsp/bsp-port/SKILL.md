@@ -34,4 +34,4 @@ Wrapper 只包含标准类型头和自身公共声明，不能包含 Port、HAL�
 GPIO 输出外设的绑定、回滚和 Fake Port 最小集见 [`gpio-output-peripheral-checklist.md`](../references/gpio-output-peripheral-checklist.md)。
 跨 skill 通用错误模式与调试教训见 [`../references/common-error-patterns.md`](../references/common-error-patterns.md)。
 
-全局分层见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。
+全局分层见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。

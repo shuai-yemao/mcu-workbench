@@ -73,7 +73,7 @@ description: 基于真实嵌入式项目代码，训练用户理解机制、进�
 
 每轮输出当前问题或当前章节，不提前伪造结论。最终输出至少包含：项目/模块范围、证据文件与调用链、已确认理解、薄弱点、笔记草稿或路径、写入确认状态、未验证项和下一步；Obsidian 草稿不应成为对话逐字稿或 AI 批改对照表。
 
-- 跨层目录、工程审计和集成路线交给 `workflow-project-integration`；
+- 跨层目录、工程审计和集成路线交给 `workflow-integration-plan`；代码前审查与门禁交给 `workflow-review-gate`；
 - APP、OS、BSP、Core、Driver、Middleware 的设计交给对应 canonical Skill；
 - `knowledge-engineer` 负责组织日志和笔记，但必须遵守本 Skill 的模式、证据和写入协议；
 - 不把代码推断写成硬件事实，不在本 Skill 内直接修改业务或驱动代码。

@@ -1,21 +1,21 @@
 ---
-name: workflow-project-integration
-description: 依据项目证据审查需求实现方案、设计软件分层，并给出代码前门禁与可验证的集成路线。
+name: workflow-review-gate
+description: 代码前审查与门禁：依据项目证据反猜测审查既有实现方案，必选产出四张审查清单并重组为 BRD/PRD/SRSys，判定放行/阻塞。
 ---
 
-# 软件项目集成
+# 代码前审查门禁
 
 ## 适用范围
 
-本 Skill 是 Router 需求约束包（RCP）的唯一接收方（必经门禁）：对所有请求先完成分层/工程审计/迁移设计，再分发实现层 Skill。处理跨层架构、既有工程审计、目录映射、依赖方向和分阶段集成计划。先识别 APP、Middleware、OS、BSP、Core、Driver，再把实现交接给唯一的下游 skill。
+本 Skill 是 Router 需求约束包（RCP）的唯一接收方（必经门禁）：对所有请求先完成实现方案审查与代码前门禁判定。审查放行后固定交接给 `workflow-integration-plan` 完成分层/迁移设计与实现层 Skill 分发；门禁阻塞则回传 Router 补证。本 Skill 不生成实现代码、不分层迁移设计、不分发实现层 Skill。
 
 ## 工作流
 
-1. 读取工程文件、构建日志、启动流程和现有笔记，记录可复现证据。
-2. 画出调用链，确认上层只依赖下层公开契约。
-3. 输入固定为 Router 的 RCP，固定执行“实现方案审查与代码前门禁”：审查既有需求实现方案（无既有方案时以 RCP 与项目证据为审查对象），必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档。
-4. 完成分层审查后只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
-5. 输出文件级改造顺序、验收点和未决风险；不在本 skill 内实现具体驱动。
+1. 固定输入为 Router 的 RCP、既有需求实现方案（无既有方案时以 RCP 与项目证据为审查对象）与项目源码、配置、构建日志和现有运行记录。
+2. 整理工程事实：每个事实、施工建议和验收结论写入来源（`relative/path:line`、配置键或可复现命令）及可信等级（`confirmed` / `user-confirmed` / `inferred` / `unverified`）。
+3. 反猜测审查既有方案，逐项分类为"可采用 / 需修订 / 阻塞风险"。
+4. 必选产出四张审查清单，并重组为 BRD/PRD/SRSys 三份产品文档输出到 `<project>/docs/requirements/` 交付用户审查。
+5. 门禁判定：全部实施相关事实为 `confirmed` 或 `user-confirmed` 且四张表无未关闭阻塞项 → 放行并交接 `workflow-integration-plan`；否则保持阻塞、记录补证问题并回传 Router。
 
 ## 实现方案审查与代码前门禁
 
@@ -39,7 +39,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 
 先从 RCP 和项目中整理工程事实；每个事实、施工建议和验收结论必须写入来源（`relative/path:line`、配置键或可复现命令）及以下可信等级之一：`confirmed`、`user-confirmed`、`inferred` 或 `unverified`。`inferred` 与 `unverified` 绝不可表述为已确认事实。
 
-然后将既有方案逐项分类为“可采用”“需修订”或“阻塞风险”，重点寻找看似合理但没有工程证据的内容：
+然后将既有方案逐项分类为"可采用""需修订"或"阻塞风险"，重点寻找看似合理但没有工程证据的内容：
 
 - 不存在、未读取或无源码依据的 HAL、RTOS、OSAL API、目录、符号和调用关系；
 - 未由 `.ioc`、生成配置或生成代码证明的 CubeMX 外设、引脚、时钟、DMA、IRQ 与 USER CODE 边界；
@@ -50,7 +50,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 
 审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出，作为下一轮唯一正式输入。审查包**必选**包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接；四张清单必须同时重组为 BRD/PRD/SRSys 三份产品文档（见下节）。
 
-只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能进入代码阶段并交给对应层的实现 Skill。代码产物就绪后，把最终代码/变更集与验收清单交接给 [`workflow-final-review`](../workflow-final-review/SKILL.md) 做最终代码审查；`workflow-final-review` 不承担代码生成阶段。下游只能在施工清单、生成约束和验收测试清单的范围内工作；发现新事实必须回传本 Skill 更新审查包。
+只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能放行并交接 `workflow-integration-plan` 规划与分发。代码产物就绪后，由 `workflow-integration-plan` 把最终代码/变更集与验收清单交接给 [`workflow-final-review`](../workflow-final-review/SKILL.md) 做最终代码审查；`workflow-final-review` 不承担代码生成阶段。下游只能在施工清单、生成约束和验收测试清单的范围内工作；发现新事实必须回传本 Skill 更新审查包。
 
 ### 必选产品文档输出（BRD / PRD / SRSys）
 
@@ -64,34 +64,22 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 
 命名规范：`<request_id>-BRD.md`、`<request_id>-PRD.md`、`<request_id>-SRSys.md`；三份文档的章节骨架见 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 第 5 节。三份文档与四张清单同步更新；发现新事实必须回传本 Skill 更新审查包并重新生成文档。
 
-## 交付计划最低产物
-
-每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表（区别于审查包的四张清单——后者必选重组为 BRD/PRD/SRSys 产品文档）；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与门禁，不代替下游实现。
-
-固件分层交付作为本 Skill 的模式 C：基线、Tools 观测通道、最小系统、OS Adapter、Core、BSP Driver/Handle、Port、Wrapper、集成回归。它扩展模式 A 的审计证据并可映射模式 B 的路线图，但不将 UART 日志定义为软件层，也不在本 Skill 中实现任何一层代码。
-
 ## 分层证据图
 
-先读取 [`software-architecture-knowledge-graph.md`](references/software-architecture-knowledge-graph.md) 和对应 JSON，再按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序审计。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。
+先读取 [`software-architecture-knowledge-graph.md`](references/software-architecture-knowledge-graph.md) 和对应 JSON，再按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序核对分层证据。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。分层审计、迁移设计与文件级改造顺序由 `workflow-integration-plan` 承担。
 
 ## 硬边界
 
 - Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成。
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
 - 上层调用下层时，调用下层 Adapter 的 Wrapper；Middleware 仅通过公共 API 使用 OS/BSP 能力。
-- 本 skill 只输出项目审计、分层设计、迁移路线、必选的 BRD/PRD/SRSys 产品文档和下游交接，不直接执行代码移植、最终代码审查、Prompt 模板生成或具体驱动实现。
+- 本 skill 只输出工程事实、反猜测审查结论、必选的 BRD/PRD/SRSys 产品文档和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
-
-## 分发目标
-
-- APP 结构交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
-- OSAL/OS Port 交给 [`os-adapter`](../../os/os-adapter/SKILL.md) 或 [`os-runtime`](../../os/os-runtime/SKILL.md)。
-- 器件链路交给 [`bsp-wrapper`](../../bsp/bsp-wrapper/SKILL.md)、[`bsp-port`](../../bsp/bsp-port/SKILL.md)、[`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md) 或 [`bsp-handler`](../../bsp/bsp-handler/SKILL.md)。
-- MCU/厂商库交给 [`core-mcu`](../../core/core-mcu/SKILL.md) 或 [`mcu-platform`](../../mcu/mcu-platform/SKILL.md)。
+- 分层审计、迁移路线、文件级改造顺序与实现层分发交给 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
 
 ## 参考
 
 - [软件层契约](references/software-layer-contract.md)
 - [GR5526 LVGL 验收映射](references/gr5526-lvgl-mapping.md)
 - [实现方案审查包模板](references/implementation-plan-review-package.md)
-- [集成、移植与 AI 协作能力](references/capability-index.md)
+- [内化能力索引](references/capability-index.md)

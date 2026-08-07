@@ -1,6 +1,6 @@
 # 实现方案审查包
 
-> 本包由 `workflow-project-integration` 在代码前审查阶段产出，是 `workflow-final-review` 的唯一正式输入。四张清单（工程现状表、文件施工清单、代码生成约束清单、验收测试清单）是每次审查的必选产出，并须按第 5 节重组为 BRD/PRD/SRSys 三份正式产品文档输出到 `<project>/docs/requirements/`，交付用户审查，可直接作为产品管理正式文档。不得以未引用工程证据的方案文字代替本包。
+> 本包由 `workflow-review-gate` 在代码前审查阶段产出，是 `workflow-final-review` 的唯一正式输入。四张清单（工程现状表、文件施工清单、代码生成约束清单、验收测试清单）是每次审查的必选产出，并须按第 5 节重组为 BRD/PRD/SRSys 三份正式产品文档输出到 `<project>/docs/requirements/`，交付用户审查，可直接作为产品管理正式文档。不得以未引用工程证据的方案文字代替本包。
 
 ## 元数据与输入
 
@@ -68,7 +68,7 @@
 
 **代码阶段判定：** `可交给 workflow-final-review` / `不得进入代码阶段`。
 
-只有实施相关事实均为 `confirmed` 或 `user-confirmed`，且四张表没有未关闭阻塞项时，才能选择前者。若发现新事实，退回 `workflow-project-integration` 更新本审查包。
+只有实施相关事实均为 `confirmed` 或 `user-confirmed`，且四张表没有未关闭阻塞项时，才能选择前者。若发现新事实，退回 `workflow-review-gate` 更新本审查包。
 
 ## 5. 产品文档映射（BRD / PRD / SRSys）
 

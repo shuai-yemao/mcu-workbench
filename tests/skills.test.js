@@ -7,12 +7,12 @@ const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
   test('catalog keeps legacy entries and exposes 30 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(108);
-    expect(CANONICAL_SKILLS).toHaveLength(30);
+    expect(SKILL_CATALOG).toHaveLength(109);
+    expect(CANONICAL_SKILLS).toHaveLength(31);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
-      'workflow-requirements-router', 'workflow-project-integration', 'app-architecture',
+      'workflow-requirements-router', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
       'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port',
       'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'mcu-platform', 'middleware-lvgl',
       'middleware-communication', 'middleware-storage', 'middleware-fal',
@@ -88,8 +88,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(30);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(30);
+    expect(listAvailableSkills()).toHaveLength(31);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(31);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -103,24 +103,25 @@ describe('Skills catalog and loader', () => {
   test('workflow router emits a bounded, canonical routing contract', () => {
     const router = getSkillContent('workflow-requirements-router');
     expect(router).toContain('## 路由单（固定输出）');
-    expect(router).toContain('必经下游：workflow-project-integration');
-    expect(router).toContain('实现 Skill：<由 project-integration 分发的唯一 canonical ID；未完成 RCP 时为空>');
+    expect(router).toContain('必经下游：workflow-review-gate');
+    expect(router).toContain('实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>');
     expect(router).toContain('只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限');
     expect(router).not.toContain('参考 Skill');
-    expect(router).toContain('workflow-project-integration');
+    expect(router).toContain('workflow-review-gate');
+    expect(router).toContain('workflow-integration-plan');
     expect(router).toContain('workflow-final-review');
     expect(router).toContain('tools-quality');
     expect(router).toContain('不引用归档 Skill 作为 active 路由目标');
   });
 
-  test('project integration reviews implementation plans before code generation', () => {
-    const integration = getSkillContent('workflow-project-integration');
+  test('review gate reviews implementation plans before code generation', () => {
+    const integration = getSkillContent('workflow-review-gate');
     const reviewPackage = fs.readFileSync(path.join(
       __dirname,
       '..',
       'skills',
       'workflow',
-      'workflow-project-integration',
+      'workflow-review-gate',
       'references',
       'implementation-plan-review-package.md'
     ), 'utf8');
@@ -159,6 +160,15 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('<request_id>-BRD.md');
     expect(reviewPackage).toContain('<request_id>-PRD.md');
     expect(reviewPackage).toContain('<request_id>-SRSys.md');
+  });
+
+  test('integration plan dispatches a single implementation skill after gate clearance', () => {
+    const plan = getSkillContent('workflow-integration-plan');
+    expect(plan).toContain('只分发一个实现层 Skill');
+    expect(plan).toContain('审查包门禁状态非放行不得分发');
+    expect(plan).toContain('workflow-final-review');
+    expect(plan).toContain('现状表');
+    expect(plan).toContain('文件修改表');
   });
 
   test('registry is a compatibility view derived from catalog', () => {

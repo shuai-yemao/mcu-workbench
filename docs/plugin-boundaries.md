@@ -48,11 +48,11 @@ Core、Middleware、Driver 不设置 Adapter。
 | `tools-quality` | 源码、Map、静态分析、测试结果 | 缺陷、等级、证据和回归结果 | `tools-build`、`tools-release` |
 | `tools-git` | 仓库状态、分支、差异、Jira 和用户确认 | 变更集、提交/标签证据、风险与验证交接 | `tools-quality`、`tools-build`、`tools-release` |
 | `tools-release` | 构建产物、签名信息、质量结果 | OTA 包、升级、回滚和发布记录 | `software-system`、项目集成 |
-| `tools-learning-tutor` | 项目代码、已有笔记和用户回答 | 学习笔记、Q&A、薄弱点和未验证项 | `workflow-project-integration` 或对应软件层 Skill |
+| `tools-learning-tutor` | 项目代码、已有笔记和用户回答 | 学习笔记、Q&A、薄弱点和未验证项 | `workflow-integration-plan` 或对应软件层 Skill |
 
 工具 Skill 不负责定义软件架构层，只负责工具链工作流和验证证据。
 
-源码仓库、项目文件和层间调用证据统一登记在[软件分层知识图谱](../skills/workflow/workflow-project-integration/references/software-architecture-knowledge-graph.md)；逐层 Skill 只引用对应证据，不复制上游源码。
+源码仓库、项目文件和层间调用证据统一登记在[软件分层知识图谱](../skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md)；逐层 Skill 只引用对应证据，不复制上游源码。
 
 ## 4. Catalog、Registry、Loader 边界
 
@@ -70,7 +70,7 @@ Core、Middleware、Driver 不设置 Adapter。
 
 | 模块 | 当前责任 | 与 Skills 的关系 |
 |---|---|---|
-| `commands/mcu-new.js` | 生成项目骨架 | 不等同于 `workflow-project-integration` |
+| `commands/mcu-new.js` | 生成项目骨架 | 不等同于 `workflow-integration-plan` 的项目集成规划 |
 | `commands/mcu-core.js` | 生成单类 MCU Core `.c/.h` | 不等同于 `core-mcu` 的完整工程审计 |
 | `commands/mcu-driver.js` | 生成 BSP Driver/Handle/Port/Wrapper 切片 | 不等同于 `bsp-hal-driver` 或 `bsp-handler` |
 | `lib/builder.js` | 生成构建命令；`--execute` 时运行 | 不等同于 `tools-build` 的完整工具链路 |
@@ -88,4 +88,4 @@ Core、Middleware、Driver 不设置 Adapter。
 
 ## 7. Workflow 生命周期
 
-当前 active workflow 为 `workflow-requirements-router`、`workflow-project-integration`、`workflow-claude-layering` 和 `workflow-final-review`；旧 `workflow-router` 位于兼容边界，`embedded-ai-collab` 归档于 `archive/workflows-legacy/`。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。
+当前 active workflow 为 `workflow-requirements-router`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-claude-layering` 和 `workflow-final-review`；旧 `workflow-router` 位于兼容边界，`embedded-ai-collab` 归档于 `archive/workflows-legacy/`。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。

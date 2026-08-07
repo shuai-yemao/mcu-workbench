@@ -22,4 +22,4 @@ HAL/SPL 的完整调用流程、示例和版本差异见 [`capability-index.md`]
 
 厂商 `HAL_*`/LL/CMSIS API 只能由 Core 的私有后端或确有职责的底层 Port 使用；APP、Middleware 和 BSP 器件 Driver 不得直接调用。厂商状态映射为项目错误码的责任属于 Core 边界，而不是外部器件 Driver。
 
-共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-project-integration/references/software-layer-contract.md)。
+共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。
