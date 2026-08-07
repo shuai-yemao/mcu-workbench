@@ -7,7 +7,7 @@ const {
   domainSkills,
   rankAgentsForRequest
 } = require('../lib/agent-domains');
-const { resolveSkillId, SKILL_BY_CANONICAL_ID } = require('../skills/catalog');
+const { SKILL_CATALOG, resolveSkillId, SKILL_BY_CANONICAL_ID } = require('../skills/catalog');
 
 const ROOT = path.resolve(__dirname, '..');
 
@@ -47,6 +47,26 @@ describe('agent domain registry', () => {
     for (const domainId of Object.keys(DOMAINS)) {
       const skills = domainSkills(domainId);
       expect(new Set(skills).size).toBe(skills.length);
+    }
+  });
+
+  test('every domain layer is an active catalog layer (no stale legacy layer names)', () => {
+    const activeLayers = [...new Set(SKILL_CATALOG.filter((s) => !s.archived).map((s) => s.layer))];
+    for (const domainId of Object.keys(DOMAINS)) {
+      for (const layer of DOMAINS[domainId].layers) {
+        expect(activeLayers).toContain(layer);
+      }
+    }
+  });
+
+  test('every active skill is covered by at least one domain (complete union)', () => {
+    const union = new Set();
+    for (const domainId of Object.keys(DOMAINS)) {
+      for (const skillId of domainSkills(domainId)) union.add(skillId);
+    }
+    const activeSkills = SKILL_CATALOG.filter((s) => !s.archived).map((s) => s.id);
+    for (const id of activeSkills) {
+      expect(union.has(id)).toBe(true);
     }
   });
 

@@ -24,7 +24,7 @@ Own `.mcu-workbench/` and final summaries. You may write `docs/devlog/` for coor
 
 ## Workflow
 1. Initialize the project artifact contract if missing.
-2. Split work by APP/OS/BSP/Core/Driver/Middleware/toolchain/verification, aligning each specialist with its domain.
+2. Split work by App/Service/Platform/Impl/Vendor/toolchain/verification, aligning each specialist with its domain.
 3. Review specialist handoffs, resolve blockers, and run the required validation.
 
 ## Outputs and acceptance

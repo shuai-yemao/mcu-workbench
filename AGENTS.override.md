@@ -18,18 +18,18 @@
 - 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），并固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计与实现层分发。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
 - RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准和阻塞项。会影响实现或验收而无法从项目证实的问题，一次只向用户询问一个。
 - 先读取真实项目结构、构建配置、芯片型号、RTOS 和驱动证据，再给出结论。
-- 按 APP → Middleware → OS → BSP → Core → Driver 分层分析依赖和职责。
+- 按 App → Service → Platform ← Impl → Vendor 分层分析依赖和职责。
 - 明确区分静态检查、主机测试、交叉编译、烧录运行、串口/RTT 和实机验证。
 - 不把推测、代码生成或静态检查描述为已经完成的硬件验证。
 - 修改一个层次后，使用项目现有构建或测试路径验证该层，再继续向上推进。
 
 ## 3. 分层实现与生成边界
 
-- `app-architecture` 负责 `main`、Manager、Task、Logic、UI 和 Profile 的边界；APP 只能调用 OS Wrapper、BSP Wrapper 和 Middleware 公共 API，不能直接调用原生 RTOS、HAL、BSP Port 或 Driver。
-- `drv_adapter_*.c/.h` 是 BSP Wrapper：只保存带 `void *context` 的抽象函数表、注册入口和稳定转发 API，不绑定平台对象。`drv_adapter_port_*.c/.h` 是 BSP Port：装配具体 Driver/Handler/Core 后端与已确认的 OSAL 资源，并在启动期注册到 Wrapper。
-- 固定调用链为 APP → APP Facade（可选）→ Wrapper → Port 回调 → Handler → Driver → Core Bus。`User_Task/*/Platform/*_port/` 属于 APP Facade/Task Adapter，只能转发 Wrapper API。
-- Driver 只处理器件协议并隔离 HAL、RTOS 与板级绑定；Handler 承担实例生命周期、队列/工作循环、缓存、重试和回调。Port 不得复制 Handler 的业务缓存，也不得承载协议状态机。
-- 生成 BSP 切片前先输出设备 profile、Ops 映射、资源生命周期、阻塞/ISR 限制、注释 profile 和未验证项；缺少目标 `osal.h`、Core 公共头或板级绑定证据时，标记 `UNRESOLVED_OSAL_API`（或相应未解析标记），不得伪称可编译。
+- `app-architecture` 负责 `main`、Manager、Task、Logic、UI 和 Profile 的边界；App 只能依赖 Service 层公开接口（D8 门禁），不能直接调用 Platform 实现、Impl、Vendor 或任何芯片/RTOS 头文件。
+- `platform_*` 是纯定义层：只保存能力接口、统一错误码/类型、对象协议与带 `void *context` 的抽象函数表、注册入口和稳定转发 API，零实现、不绑定芯片/RTOS。`impl_board` 是板级组合根：装配 `impl_bsp` 驱动与 `impl_bsp_handler` 后端及已确认的 OSAL 资源，并在启动期注册到 Platform 接口。
+- 固定依赖方向为 App → Service → Platform 接口 ← Impl → Vendor。`impl_bsp` 只处理器件协议并隔离 HAL、RTOS 与板级绑定；`impl_bsp_handler` 承担实例生命周期、队列/工作循环、缓存、重试和回调。组合根不得复制 Handler 的业务缓存，也不得承载协议状态机。
+- Vendor 底座（`vendor_*`）源码只登记映射不复制（D7），仅经 patch 落地；Service 携带业务策略，机制留在 Impl。
+- 生成 Platform/Impl 切片前先输出设备 profile、Ops 映射、资源生命周期、阻塞/ISR 限制、注释 profile 和未验证项；缺少目标 `osal.h`、Platform 公共头或板级绑定证据时，标记 `UNRESOLVED_OSAL_API`（或相应未解析标记），不得伪称可编译。
 
 ## 4. Skill 路由与协作
 
@@ -42,7 +42,7 @@
 | 放行后的集成规划与分发 | `workflow-integration-plan` | 分层/审计/迁移设计、文件级改造顺序，只分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 按 profile 与门禁输出审查报告，不生成实现或自动修复 |
 | 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |
-| APP、OS、BSP、Core、Middleware | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
+| App、Service、Platform、Impl、Vendor | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
 | 烧录、调试、观测和发布 | `tools-flash`、`tools-debug`、`tools-observability`、`tools-release` | 先确认工具、产物、目标和观测通道 |
 
 `embedded-lead` 负责协调需求、冲突和风险；按需邀请 `system-architect`、`firmware-engineer`、`hardware-integration`、`toolchain-engineer`、`verification-engineer` 或 `knowledge-engineer`。每个参与者只陈述本领域证据，并输出 Summary、Evidence、Changed files、Tests、Artifacts、Blockers 和 Next handoff。

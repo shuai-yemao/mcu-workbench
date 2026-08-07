@@ -6,11 +6,10 @@
 |---|---|
 | `workflow` | 请求路由、工程集成和 AI 协作流程 |
 | `app` | 嵌入式 APP 的 main、Manager、Task、Logic、UI、Profile |
-| `rtos` | OSAL、OS Wrapper、OS Port、FreeRTOS |
-| `bsp` | BSP Wrapper、BSP Port、hal_driver、Handler |
-| `platform` | MCU Core 与厂商 Driver |
-| `middleware` | LVGL、通信、存储、算法 |
-| `system` | Bootloader、低功耗、看门狗、安全 |
+| `service` | Service 业务层：service_system + 10 个业务服务（带业务策略，D10） |
+| `platform` | Platform 纯定义：能力接口 + 统一错误码/类型/对象协议，零实现不绑芯片/RTOS |
+| `impl` | Impl 落地：OS Port、板级组合根、器件驱动、Handler 机制 |
+| `vendor` | Vendor 底座登记：源码只登记映射不复制（D7） |
 | `hardware` | PCB、仪器和硬件分析 |
 | `tools` | 构建、烧录、链接、调试、观测、质量、发布 |
 
@@ -32,14 +31,9 @@ tools-learning-tutor 项目提问与 Obsidian 学习笔记
 ## 软件调用链
 
 ```text
-APP
-├─ OS Wrapper → OS Port → FreeRTOS/其他 OS
-├─ BSP Wrapper → BSP Port → hal_driver
-└─ Middleware API
-
-hal_driver → Core → Driver
+App → Service → Platform 接口 ← Impl → Vendor
 ```
 
-Core、Middleware、Driver 不创建 Adapter。
+App 只依赖 Service（D8 门禁）；Service 只依赖 Platform 接口；Platform 纯定义零实现；Impl 落地实现；Vendor 只登记映射不复制。
 
 旧 skill 目录已从 `archive/` 移除；旧调用名经 catalog 的 `resolveSkillId()` 兼容解析到当前 active skill。

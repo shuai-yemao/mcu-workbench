@@ -32,7 +32,7 @@
 | D11 | 新技能下划线命名（service_battery） |
 | D12 | 技能跟随归属，不为凑层强造技能 |
 
-目标态 42 技能 = 5 软件架构层（app×1 / service×11 / platform×3 / impl×3 / vendor×8）+ 3 插件层（workflow×5 / tools×9 / hardware×2）。
+目标态 43 技能 = 5 软件架构层（app×1 / service×11 / platform×3 / impl×4 / vendor×8）+ 3 插件层（workflow×5 / tools×9 / hardware×2）。
 
 ## 分层契约（软件架构）
 

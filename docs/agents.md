@@ -13,6 +13,8 @@
 - 技能目录增删/改名后，只需维护 `lib/agent-domains.js`（或依赖 layer 自动聚合），**agent 文件零改动**，不产生功能退化。
 - `scope` 是机器可读的写入范围，供 OpenCode 工具与生成器使用。
 
+`DOMAINS.layers` 引用真实 catalog 层集（`workflow` / `app` / `platform` / `impl` / `service` / `vendor` / `tools` / `hardware`），禁止旧分层名（`os` / `bsp` / `core` / `mcu` / `middleware` / `system`）——它们匹配不到任何技能会导致派生漂移。当前聚合：architecture 覆盖全部软件层（契约、落地、业务、底座 + 门禁/迁移工作流）；firmware 覆盖 `app` / `service` / `platform` / `impl` / `vendor` + `tools-build`；hardware 聚合 `hardware` 层并显式追加 Platform MCU/BSP 接口与 Impl 板级绑定技能；toolchain / verification / knowledge 用 `extraSkills` 显式追加跨层工具技能。
+
 ## OpenCode 调用
 
 在 OpenCode 中，每个 agent 以独立 tool 形式暴露：
