@@ -157,7 +157,6 @@ const MIGRATION_MAP = {
   'middleware-algorithms': 'vendor_dsp',
   'lvgl-module': 'vendor_lvgl',
   'core-mcu': 'platform_mcu',
-  'os-adapter': 'platform_os',
   'bsp-wrapper': 'platform_bsp',
   'bus-i2c': 'platform_mcu',
   'bus-spi': 'platform_mcu',
