@@ -20,6 +20,26 @@ describe('Generator Module', () => {
     expect(files[1].content).toContain('core_i2c_dma_irq_dispatch');
   });
 
+  test('generates a pin-level GPIO Core pair without transaction semantics', async () => {
+    const files = await generateCorePeripheral('gpio', 'stm32f4');
+    const header = files[0].content;
+    const source = files[1].content;
+    expect(files.map((file) => file.path)).toEqual([
+      'Core/Inc/core_gpio.h',
+      'Core/Src/core_gpio.c'
+    ]);
+    expect(header).not.toMatch(/stm32|FreeRTOS|GPIO_TypeDef|HAL_/i);
+    expect(header).toContain('core_gpio_configure');
+    expect(header).toContain('core_gpio_set_pin');
+    expect(header).toContain('core_gpio_get_pin');
+    expect(header).toContain('core_gpio_toggle_pin');
+    expect(header).toContain('CORE_GPIO_MODE_OUTPUT');
+    expect(header).not.toContain('pf_transfer');
+    expect(header).not.toContain('pf_start_async');
+    expect(source).toContain('core_gpio_toggle_pin');
+    expect(source).toContain('CORE_STATUS_INVALID_ARGUMENT');
+  });
+
   test('generates the fixed layered BSP output without System files', async () => {
     const files = await generateBspDriver({
       deviceType: 'externflash',
