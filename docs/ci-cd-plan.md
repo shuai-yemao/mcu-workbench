@@ -1,7 +1,8 @@
 # mcu-workbench CI/CD 部署计划
 
-> 状态：待用户审查 | 日期：2026-08-07 | 分支基线：host_ai
+> 状态：✅ 已实施（阶段 0+1+2 完成，2026-08-07） | 日期：2026-08-07 | 分支基线：host_ai
 > 目标仓库：https://github.com/shuai-yemao/mcu-workbench.git
+> 实施记录：`.github/workflows/ci.yml`（test/validate/firmware-syntax 三 Job）+ README badge 已上线；D6 决策见 6.1
 
 ---
 
@@ -110,9 +111,10 @@ push / PR
 - run: npm run check:versions
 - run: npm run migrate:capabilities
 - run: npm run validate:layer
-- run: npm run claude:validate
 - run: npm run build:codex-compat && git diff --exit-code   # 生成物必须与提交一致
 ```
+
+> 实施修正：原计划含 `claude:validate`，但该命令需 `--root <firmware-root>` 指向**用户固件工程**，不属于插件仓库自身契约，CI 干净检出中无固件工程 → **已从 ci.yml 移除**（保持给用户的固件工程侧工具，不入插件仓库 CI）。
 
 关键点：`build:codex-compat` 后必须 `git diff --exit-code`——**如果运行后工作区有差异，说明 AGENTS.override.md 没随源头同步，CI 直接红**。这正是防止"只改源头忘了重生成"的机制。
 
@@ -189,6 +191,12 @@ CI 全绿后，README 顶部加 badge：
 | D3 | validate Job 范围 | 全部脚本 / 仅 validate:plugin+links | **全部**（脚本都很快） |
 | D4 | 固件 C 语法检查 Job | 纳入 / 不纳入 | **纳入**（嵌入式特色，apt gcc 很便宜） |
 | D5 | 阶段 3 CD | 现在设计 / 后置 | **后置**（先有稳定 CI 再谈发布） |
+
+### 6.1 实施中发现并处理的问题（D6）
+
+| 编号 | 问题 | 现象 | 决策 |
+|---|---|---|---|
+| D6 | jest 并行套件共享状态污染 | 全量并行跑 7 套件失败（9 用例），**每个套件单独跑全绿**；`--runInBand` 串行 36/186 全绿 | `package.json` 的 `test` 固定为 `jest --runInBand`（约 26s）。本地与 CI 行为完全一致，杜绝"本地绿 CI 红"谜团。将来若需并行提速，另立"测试隔离重构"专项，不在本次范围 |
 
 ---
 

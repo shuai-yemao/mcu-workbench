@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [host_ai]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 单元测试（jest）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: 安装依赖
+        run: npm ci
+      - name: 运行单元测试
+        run: npm test
+
+  validate:
+    name: 插件契约校验
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: 安装依赖
+        run: npm ci
+      - name: 插件契约校验（skills/agents/分层）
+        run: npm run validate:plugin
+      - name: 文档链接校验
+        run: npm run validate:links
+      - name: 版本一致性
+        run: npm run check:versions
+      - name: 能力迁移检查
+        run: npm run migrate:capabilities
+      - name: 分层契约自检
+        run: npm run validate:layer
+      - name: Codex 产物一致性
+        run: npm run build:codex-compat && git diff --exit-code
+
+  firmware-syntax:
+    name: 固件 C 语法检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 固件模板语法检查
+        run: gcc -Wall -Wextra -fsyntax-only -I templates/bsp-oled templates/bsp-oled/bsp_oled_driver.c

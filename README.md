@@ -1,5 +1,7 @@
 # MCU-Workbench
 
+[![CI](https://github.com/shuai-yemao/mcu-workbench/actions/workflows/ci.yml/badge.svg)](https://github.com/shuai-yemao/mcu-workbench/actions/workflows/ci.yml)
+
 面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发插件。
 
 ## 插件结构
