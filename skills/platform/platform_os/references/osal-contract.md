@@ -24,4 +24,4 @@ FreeRTOS、RT-Thread 和裸机映射只能作为实现示例；公共能力清�
 | 定时 | 时基来源、回调上下文和停止/重启行为 |
 | 裸机替代 | Fake/Mock 不依赖 RTOS，仍能运行 APP 单元测试 |
 
-具体 FreeRTOS 的文件、配置和端口证据见 [`freertos-source-map.md`](../../../os/os-runtime/references/freertos-source-map.md)。
+具体 FreeRTOS 的文件、配置和端口证据见 [`freertos-source-map.md`](../../../impl/impl_os/references/freertos-source-map.md)。

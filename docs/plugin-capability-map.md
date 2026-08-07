@@ -42,8 +42,8 @@
 
 | 层级 | Canonical skills | 主要职责 |
 |---|---|---|
-| OS | `platform_os`、`os-runtime` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
-| BSP | `platform_bsp`、`bsp-port`、`bsp-hal-driver`、`bsp-handler` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理 |
+| OS | `platform_os`、`impl_os` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
+| BSP | `platform_bsp`、`impl_board`、`impl_bsp`、`impl_bsp_handler` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理 |
 | Platform | `platform_mcu`、`platform_os`、`platform_bsp` | MCU 内部外设初始化、中断和 DMA |
 | MCU | `vendor_stm32` | CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK |
 

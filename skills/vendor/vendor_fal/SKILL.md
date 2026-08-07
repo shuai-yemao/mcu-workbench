@@ -24,4 +24,4 @@ description: Vendor 底座登记：FAL（Flash Abstraction Layer）源码与知�
 
 ## 交接
 
-分区之上的 KV/TS 存储交给 [`vendor_flashdb`](../vendor_flashdb/SKILL.md)，文件系统交给 [`vendor_fatfs`](../vendor_fatfs/SKILL.md)；具体 Flash 芯片的 JEDEC 识别与读写擦时序属于 [`vendor_fatfs`](../vendor_fatfs/SKILL.md) 的 SFUD 能力或 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)，FAL 不直接实现器件协议。
+分区之上的 KV/TS 存储交给 [`vendor_flashdb`](../vendor_flashdb/SKILL.md)，文件系统交给 [`vendor_fatfs`](../vendor_fatfs/SKILL.md)；具体 Flash 芯片的 JEDEC 识别与读写擦时序属于 [`vendor_fatfs`](../vendor_fatfs/SKILL.md) 的 SFUD 能力或 [`bsp-hal-driver`](../../impl/impl_bsp/SKILL.md)，FAL 不直接实现器件协议。

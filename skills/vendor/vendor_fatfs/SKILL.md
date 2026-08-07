@@ -18,4 +18,4 @@ description: Vendor 底座登记：FatFs、SFUD、Flash 存储、磨损处理和
 Flash/KV/时序存储读取 [`flash-storage-sources.md`](references/flash-storage-sources.md)，区分 Middleware 公共存储 API 与 BSP 器件协议。
 FatFs、SFUD 的移植步骤、配置和参考资料见 [`capability-index.md`](references/capability-index.md)。
 
-交接：Flash 器件协议交给 [`bsp-hal-driver`](../../bsp/bsp-hal-driver/SKILL.md)，存储层只经 [`bsp-wrapper`](../../platform/platform_bsp/SKILL.md) 使用设备能力。
+交接：Flash 器件协议交给 [`bsp-hal-driver`](../../impl/impl_bsp/SKILL.md)，存储层只经 [`bsp-wrapper`](../../platform/platform_bsp/SKILL.md) 使用设备能力。

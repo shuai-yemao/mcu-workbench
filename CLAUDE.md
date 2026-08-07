@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 109 catalog / 31 canonical；当前入口含 platform_os、os-runtime、platform_bsp、bsp-port、platform_mcu、vendor_stm32 |
+| **Canonical Skills** | `skills/` | 109 catalog / 31 canonical；当前入口含 platform_os、impl_os、platform_bsp、impl_board、platform_mcu、vendor_stm32 |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移、安全层文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
@@ -93,8 +93,8 @@ npm run cli -- build --platform stm32f4
 ```
 ├─ workflow/    → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
 ├─ app/         → app-architecture
-├─ os/          → os-runtime（平台接口见 platform/）
-├─ bsp/         → bsp-port, bsp-hal-driver, bsp-handler（平台接口见 platform/）
+├─ os/          → impl_os（平台接口见 platform/）
+├─ bsp/         → impl_board, impl_bsp, impl_bsp_handler（平台接口见 platform/）
 ├─ platform/    → platform_mcu, platform_os, platform_bsp
 ├─ middleware/  → middleware-lvgl, middleware-communication, middleware-storage, middleware-fal, middleware-flashdb, middleware-letter-shell, middleware-algorithms
 ├─ system/      → software-system

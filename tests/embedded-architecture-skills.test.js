@@ -21,11 +21,11 @@ describe('embedded architecture skill contracts', () => {
   const canonicalSkillEntries = [
     'skills/platform/platform_mcu/SKILL.md',
     'skills/platform/platform_bsp/SKILL.md',
-    'skills/bsp/bsp-port/SKILL.md',
-    'skills/bsp/bsp-hal-driver/SKILL.md',
-    'skills/bsp/bsp-handler/SKILL.md',
+    'skills/impl/impl_board/SKILL.md',
+    'skills/impl/impl_bsp/SKILL.md',
+    'skills/impl/impl_bsp_handler/SKILL.md',
     'skills/platform/platform_os/SKILL.md',
-    'skills/os/os-runtime/SKILL.md',
+    'skills/impl/impl_os/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
     'skills/workflow/workflow-review-gate/SKILL.md',
     'skills/workflow/workflow-integration-plan/SKILL.md'
@@ -42,8 +42,8 @@ describe('embedded architecture skill contracts', () => {
   test('uses the verified two-layer OS naming consistently', () => {
     const abstraction = read('skills/platform/platform_os/SKILL.md');
     const contract = read('skills/platform/platform_os/references/osal-contract.md');
-    const freertos = read('skills/os/os-runtime/SKILL.md');
-    const freertosMap = read('skills/os/os-runtime/references/freertos-source-map.md');
+    const freertos = read('skills/impl/impl_os/SKILL.md');
+    const freertosMap = read('skills/impl/impl_os/references/freertos-source-map.md');
 
     expect(abstraction).toContain('os_*_impl()');
     expect(contract).toContain('osal_task_create() → os_task_create_impl()');
@@ -84,7 +84,7 @@ describe('embedded architecture skill contracts', () => {
       const content = read(relativePath);
       expect(content).toContain('109 catalog / 31 canonical');
       expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
-      for (const entry of ['platform_os', 'os-runtime', 'platform_bsp', 'bsp-port', 'platform_mcu', 'vendor_stm32']) {
+      for (const entry of ['platform_os', 'impl_os', 'platform_bsp', 'impl_board', 'platform_mcu', 'vendor_stm32']) {
         expect(content).toContain(entry);
       }
     }
@@ -94,7 +94,7 @@ describe('embedded architecture skill contracts', () => {
     const migration = read('docs/skills-migration.md');
     const activeSourceLine = migration.split(/\r?\n/).find((line) => line.includes('没有归档前身'));
     expect(activeSourceLine).toContain('platform_os');
-    expect(activeSourceLine).toContain('os-runtime');
+    expect(activeSourceLine).toContain('impl_os');
     expect(activeSourceLine).not.toContain('os-abstraction');
     expect(activeSourceLine).not.toContain('rtos-freertos');
   });
@@ -110,16 +110,16 @@ describe('embedded architecture skill contracts', () => {
 
   test('keeps active capability guides aligned with the canonical contracts', () => {
     const adapterGuide = read(
-      'skills/bsp/bsp-port/references/capabilities/bsp-platform-adapter/GUIDE.md'
+      'skills/impl/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md'
     );
     const driverGuide = read(
-      'skills/bsp/bsp-hal-driver/references/capabilities/bsp-device-driver/GUIDE.md'
+      'skills/impl/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md'
     );
     const handlerGuide = read(
-      'skills/bsp/bsp-handler/references/capabilities/bsp-device-service/GUIDE.md'
+      'skills/impl/impl_bsp_handler/references/capabilities/bsp-device-service/GUIDE.md'
     );
     const freertosMap = read(
-      'skills/os/os-runtime/references/freertos-source-map.md'
+      'skills/impl/impl_os/references/freertos-source-map.md'
     );
 
     expect(adapterGuide).toContain('不能在 BSP Port 实现');
@@ -131,7 +131,7 @@ describe('embedded architecture skill contracts', () => {
   });
 
   test('keeps repository-relative BSP adapter script paths valid', () => {
-    const usagePath = 'skills/bsp/bsp-port/references/capabilities/bsp-device-adaptation/references/usage.md';
+    const usagePath = 'skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/usage.md';
     const usage = read(usagePath);
     for (const [, scriptPath] of usage.matchAll(/python3\s+([^\s]+\.py)/g)) {
       expect(fs.existsSync(path.join(ROOT, scriptPath))).toBe(true);

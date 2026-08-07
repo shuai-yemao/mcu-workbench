@@ -112,10 +112,10 @@ const CANONICAL_DEFINITIONS = [
   ['platform_mcu', 'platform', 'Platform 纯定义：MCU 能力接口（GPIO/I2C/SPI/UART/ADC/TIM/DMA/中断/启动）+ 统一错误码/类型/对象协议规范'],
   ['platform_os', 'platform', 'Platform 纯定义：OS 能力接口（OSAL、任务、队列、同步、定时、内存），零实现不绑 RTOS'],
   ['platform_bsp', 'platform', 'Platform 纯定义：板级器件能力接口 + 函数表/注册/对象协议，零实现不绑芯片'],
-  ['os-runtime', 'os', '具体 RTOS 或裸机运行时的配置、Port 与调度诊断'],
-  ['bsp-port', 'bsp', 'BSP Port 的平台对象绑定、Core 后端选择与资源注入'],
-  ['bsp-hal-driver', 'bsp', 'BSP Driver：器件协议与可注入实例接口'],
-  ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
+  ['impl_os', 'impl', 'Impl 落地：具体 RTOS（FreeRTOS）或裸机的 os_*_impl() 原生 Port 实现、调度调试和迁移验收'],
+  ['impl_board', 'impl', 'Impl 落地：板级组合根——构造实例、注入 Ops、资源绑定（board_resource_config + board_bsp_register）'],
+  ['impl_bsp', 'impl', 'Impl 落地：器件驱动实现（Driver 协议子层），隔离 HAL/RTOS/板级绑定'],
+  ['impl_bsp_handler', 'impl', 'Impl 落地：Handler 机制子层——实例注册、生命周期、队列、工作线程、ISR 延后、缓存与回调（D5）'],
   ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
 ];
 
@@ -178,13 +178,12 @@ const TOOL_ALIASES = {
 const CANONICAL_ALIASES = {
   'workflow-requirements-router': ['workflow-router'],
   'platform_os': ['os-adapter', 'os-abstraction'],
-  'os-runtime': ['rtos-freertos', 'freertos-module'],
+  'impl_os': ['os-runtime', 'rtos-freertos', 'freertos-module'],
   'platform_mcu': ['core-mcu', 'platform-cortex-registers', 'platform-cortex-interrupts', 'platform-cortex-memory', 'platform-mcu-architecture', 'platform-peripheral-registers', 'platform-option-bytes', 'platform-sram', 'platform-internal-flash', 'arm-core-registers', 'arm-interrupt-exception', 'arm-memory-architecture', 'chip-architecture', 'mcu-peripheral-registers', 'option-bytes', 'sram-module', 'flash-module'],
   'platform_bsp': ['bsp-wrapper'],
-  'bsp-port': [
-    'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter',
-    'peripheral-driver', 'embedded-adapter'
-  ],
+  'impl_board': ['bsp-port', 'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter', 'peripheral-driver', 'embedded-adapter'],
+  'impl_bsp': ['bsp-hal-driver', 'bsp-device-driver', 'bsp-peripheral-driver'],
+  'impl_bsp_handler': ['bsp-handler', 'bsp-device-service', 'bsp-peripheral-handler'],
   'vendor_stm32': [
     'mcu-platform', 'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
     'stm32-hal-development', 'stm32-spl-development'

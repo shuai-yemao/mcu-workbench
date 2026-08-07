@@ -1,11 +1,11 @@
 ---
-name: bsp-hal-driver
-description: Use when implementing, refactoring, or reviewing a BSP device Driver that isolates device protocol from HAL, RTOS, and board bindings.
+name: impl_bsp
+description: Impl 落地：器件驱动实现（Driver 协议子层）+ Handler 机制子层（多实例/生命周期/缓存/重试），隔离 HAL/RTOS/板级绑定。
 ---
 
-# BSP Driver
+# Impl BSP（平台适配 · 器件驱动 + Handler 机制）
 
-先读取共享 [`BSP 架构专用契约`](../references/bsp-architecture-contract.md)，再从数据手册和原理图提取器件协议证据。
+先读取共享 [`BSP 架构专用契约`](../../bsp/references/bsp-architecture-contract.md)，再从数据手册和原理图提取器件协议证据。
 
 ## 固定流程
 
@@ -15,7 +15,7 @@ description: Use when implementing, refactoring, or reviewing a BSP device Drive
 4. 默认采用 `instance_only`：模块级仅 `bsp_xxx_driver_inst()`，其余函数为实例函数表或 `static`。兼容例外遵循 [`api-policy.md`](references/api-policy.md)。
 5. 用 Fake Bus/Timebase/GPIO 覆盖成功、超时、重试和回滚路径，并把板级四级证据写入契约规定的位置。
 
-GPIO 输出设备（LED、继电器、使能脚）遵循 [`GPIO 输出外设检查表`](../references/gpio-output-peripheral-checklist.md)：逻辑状态与物理电平分离，必须保留极性、Core GPIO 上下文、失败状态和 deinit 规则，不能为套用通用器件模板虚构协议或 MCU Ops。
+GPIO 输出设备（LED、继电器、使能脚）遵循 [`GPIO 输出外设检查表`](../../bsp/references/gpio-output-peripheral-checklist.md)：逻辑状态与物理电平分离，必须保留极性、Core GPIO 上下文、失败状态和 deinit 规则，不能为套用通用器件模板虚构协议或 MCU Ops。
 
 ## 生成目录与 DMA/IRQ
 
@@ -30,7 +30,7 @@ Port 可长期持有具体 Driver 并把其北向回调注册到 Wrapper；这�
 - 在 Driver 放置 Handler 的缓存、队列、线程或业务调度。
 
 状态机、错误恢复和交接证据见 [`hal-driver-evidence.md`](references/hal-driver-evidence.md)；器件样例见 [`capability-index.md`](references/capability-index.md)。
-共享温湿度案例见 [`bsp-aht21-case.md`](../references/bsp-aht21-case.md)。
-跨 skill 通用错误模式与调试教训见 [`../references/common-error-patterns.md`](../references/common-error-patterns.md)。
+共享温湿度案例见 [`bsp-aht21-case.md`](../../bsp/references/bsp-aht21-case.md)。
+跨 skill 通用错误模式与调试教训见 [`common-error-patterns.md`](../../bsp/references/common-error-patterns.md)。
 
-交接：MCU 外设实现交给 [`core-mcu`](../../platform/platform_mcu/SKILL.md)，厂商库交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)，绑定交给 [`bsp-port`](../bsp-port/SKILL.md)。
+交接：MCU 外设实现交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md)，厂商库交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)，绑定交给 [`impl_board`](../impl_board/SKILL.md)。
