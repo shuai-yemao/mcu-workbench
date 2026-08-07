@@ -75,14 +75,14 @@ describe('embedded architecture skill contracts', () => {
     expect(algorithms).toContain('不直接操作外设');
   });
 
-  test('keeps public documentation aligned with the 109 catalog and 31 canonical entries', () => {
+  test('keeps public documentation aligned with the 43 catalog and 41 canonical entries', () => {
     const documents = [
       'README.md', 'CLAUDE.md', 'docs/skills-migration.md', 'docs/codex-adaptation.md',
       'docs/plugin-capability-map.md', 'docs/plugin-execution-flow.md'
     ];
     for (const relativePath of documents) {
       const content = read(relativePath);
-      expect(content).toContain('109 catalog / 31 canonical');
+      expect(content).toContain('43 catalog / 41 canonical');
       expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
       for (const entry of ['platform_os', 'impl_os', 'platform_bsp', 'impl_board', 'platform_mcu', 'vendor_stm32']) {
         expect(content).toContain(entry);

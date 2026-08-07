@@ -42,6 +42,4 @@ hal_driver → Core → Driver
 
 Core、Middleware、Driver 不创建 Adapter。
 
-## 归档
-
-`archive/software-legacy/` 和 `archive/tools-legacy/` 不属于 active manifest，只保留原始内容和兼容迁移依据。
+旧 skill 目录已从 `archive/` 移除；旧调用名经 catalog 的 `resolveSkillId()` 兼容解析到当前 active skill。

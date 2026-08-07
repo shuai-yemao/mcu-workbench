@@ -12,7 +12,6 @@ const {
   validateSoftwareArchitectureGraph
 } = require('./validators/knowledge-graphs');
 const { validateLearningTutorReferences } = require('./validators/learning-tutor');
-const { validateCapabilityMigration } = require('./validators/capability-migration');
 const { validateSkillCatalogAndFilesystem } = require('./validators/skill-catalog');
 const { validateSkillLinks } = require('../lib/skill-links');
 
@@ -24,7 +23,6 @@ function validatePlugin() {
   validateLvglReferences(errors);
   validateSoftwareArchitectureGraph(errors);
   validateLearningTutorReferences(errors);
-  validateCapabilityMigration(errors);
 
   const manifest = readJson('.claude-plugin/plugin.json', errors);
   if (manifest) {
@@ -70,6 +68,5 @@ module.exports = {
   validateLvglReferences,
   validateSoftwareArchitectureGraph,
   validateLearningTutorReferences,
-  validateCapabilityMigration,
   validatePlugin
 };

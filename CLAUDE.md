@@ -15,18 +15,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 109 catalog / 31 canonical；当前入口含 platform_os、impl_os、platform_bsp、impl_board、platform_mcu、vendor_stm32 |
+| **Canonical Skills** | `skills/` | 43 catalog / 41 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
-| **文档站点** | `docs/` | VitePress — 架构、验证、迁移、安全层文档 |
+| **文档站点** | `docs/` | VitePress — 架构、验证、迁移文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
-| **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约、能力迁移 |
-| **测试套件** | `tests/` | 33 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
+| **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约 |
+| **测试套件** | `tests/` | 35 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
 | **Claude 插件** | `.claude-plugin/plugin.json` | Claude Code 插件清单 |
-| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 30 个 `mcu_workbench_<skill_id>` 工具 |
+| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 41 个 `mcu_workbench_<skill_id>` 技能工具 + `mcu_workbench_route`（共 52 个导出键） |
 | **Codex 适配** | `.codex-plugin/plugin.json` + `codex/AGENTS.md` | Codex CLI 插件 + 宿主运行约束 |
 | **Codex 兼容桥** | `AGENTS.override.md` | 从 `codex/AGENTS.md` 自动生成的兼容入口 |
-| **归档** | `archive/software-legacy/ tools-legacy/ workflows-legacy/` | 旧版技能与工作流，能力已转移至 canonical skills |
-| **Safety Layer** | `docs/safety-layer-architecture.md` | 四层 Agent 系统的安全层设计 |
 
 ## 常用命令
 
@@ -41,20 +39,19 @@ npm run validate:plugin         # 插件清单完整性校验
 npm run validate:architecture   # 架构契约校验（BSP 分层合规）
 npm run validate:layer          # 分层契约专项验证
 npm run validate:links          # SKILL.md 跨文件链接检查
-npm run migrate:capabilities    # 检查 80 份归档能力转移完整性
-node scripts/materialize-skill-capabilities.js --write   # 首次转移或补齐
+npm run validate:flash-algorithm # 烧录算法 profile 校验
 npm run build:codex-compat      # 生成 Codex 兼容桥（AGENTS.override.md）
 npm run build:opencode-commands # 生成 OpenCode 命令文件（.opencode/commands，由 agents 派生）
 npm run sync:versions           # 同步插件清单版本（package.json 为唯一版本源）
 npm run check:versions          # 检查版本一致性（只读）
 
 # 测试
-npm test -- --runInBand         # 运行全部 33 个测试文件
+npm test -- --runInBand         # 运行全部 35 个测试文件
 
 # CI / Codex
 npm run sync:codex              # 同步技能到 Codex 目录
 npm run codex:register          # 注册 Codex 市场
-node scripts/report-skills.js   # 技能清单报告
+npm run report:skills           # 技能清单报告
 
 # Claude 分层管理（目标工程受管 CLAUDE.md 与 .claude/rules 规则）
 npm run claude:scan -- --root <firmware-root>              # 只读扫描分层证据
@@ -91,29 +88,22 @@ npm run cli -- build --platform stm32f4
 ### 分层架构
 
 ```
-├─ workflow/    → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
-├─ app/         → app-architecture
-├─ os/          → impl_os（平台接口见 platform/）
-├─ bsp/         → impl_board, impl_bsp, impl_bsp_handler（平台接口见 platform/）
-├─ platform/    → platform_mcu, platform_os, platform_bsp
-├─ middleware/  → middleware-lvgl, middleware-communication, middleware-storage, middleware-fal, middleware-flashdb, middleware-letter-shell, middleware-algorithms
-├─ system/      → software-system
-├─ hardware/    → hardware-pcb-analysis, hardware-visa-debug
-└─ tools/       → tools-build, tools-flash, tools-linker, tools-debug,
-                      tools-observability, tools-quality, tools-git, tools-release,
-                  tools-learning-tutor
+├─ workflow/  → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
+├─ app/       → app-architecture
+├─ platform/  → platform_mcu, platform_os, platform_bsp（纯接口契约，零实现、不绑 RTOS/芯片）
+├─ impl/      → impl_os, impl_board, impl_bsp, impl_bsp_handler（落地实现，隔离 HAL/RTOS/板级）
+├─ service/   → service_system + service_backlight/battery/calendar/diagnosis/log/ota/power/sensor/storage/watchdog（业务服务，11）
+├─ vendor/    → vendor_stm32, vendor_lvgl, vendor_stack, vendor_fatfs, vendor_fal, vendor_flashdb, vendor_letter_shell, vendor_dsp（厂家底座，8）
+├─ tools/     → tools-build, tools-flash, tools-linker, tools-debug, tools-observability, tools-quality, tools-git, tools-release, tools-learning-tutor
+└─ hardware/  → hardware-pcb-analysis, hardware-visa-debug
 ```
 
-**Adapter 只存在于 OS 和 BSP**；Core、Middleware、Driver 不设置 Adapter。
+分层语义：**Platform 纯定义 → Impl 落地 → Vendor 底座登记**（Vendor 源码只登记映射、不复制）。旧 `os-*`/`bsp-*`/`middleware-*` 连字符命名已作为迁移别名登记在 `skills/catalog.js` 的 `MIGRATION_MAP`（174 条），旧名仍可解析到新技能；旧软件技能目录已从 `archive/` 移除，能力已内化到对应 canonical skill 的 `references/capabilities/`。
 分层边界见 `docs/plugin-boundaries.md`，完整迁移关系见 `docs/skills-migration.md`。
 
 ### Architecture Contract
 
-`lib/architecture-contract.js` 是 BSP 分层合规的权威规则引擎，定义九大分层模式（`app/middleware/bsp/bspDriver/bspPort/wrapper/corePublic/osWrapper/osPort`），通过正则匹配文件和目录路径来判定层级归属。调用链：`validate:architecture` → `validate-bsp-contract.js` / `validate-layer-contract.js` → `architecture-contract.js`。
-
-### Safety Layer
-
-`docs/safety-layer-architecture.md` 定义四层 Agent 系统：需求对齐层 → 安全层 → 编排层 → 记忆层。安全层通过 AGENTS.md 规则实现可编程护栏，自动注入编排层的 Phase 0.5 和 Phase 2.5。用法见 `docs/safety-layer-usage.md`。
+`lib/architecture-contract.js` 是 BSP 分层合规的权威规则引擎，定义十一类角色模式（`app/middleware/bspDriver/bspPort/bspWrapper/wrapper/appFacade/corePublic/osWrapper/osPort`，另含 `Wapper` 拼写门禁），通过正则匹配文件和目录路径来判定层级归属。调用链：`validate:architecture` → `validate-bsp-contract.js` / `validate-layer-contract.js` → `architecture-contract.js`。
 
 ## 宿主适配与边界
 

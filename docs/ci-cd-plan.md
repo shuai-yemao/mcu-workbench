@@ -40,11 +40,10 @@
 
 | 资产 | 命令 | 说明 |
 |---|---|---|
-| 单元测试 | `npm test` | jest，36 suites / 185 tests |
-| 插件契约校验 | `npm run validate:plugin` | 108 skills / 7 agents / 13 层 |
+| 单元测试 | `npm test` | jest，35 suites / 182 tests |
+| 插件契约校验 | `npm run validate:plugin` | 43 skills / 7 agents / 8 层 |
 | 文档链接校验 | `npm run validate:links` | 288 markdown 文件 |
 | 版本一致性 | `npm run check:versions` | sync-plugin-versions --check |
-| 能力迁移一致性 | `npm run migrate:capabilities` | materialize-skill-capabilities --check |
 | 分层契约自检 | `npm run validate:layer` | validate-layer-contract --self-check |
 | 架构校验 | `npm run validate:architecture` | validate-architecture.js |
 | Codex 兼容产物 | `npm run build:codex-compat` | 生成 AGENTS.override.md |
@@ -109,7 +108,6 @@ push / PR
 - run: npm run validate:plugin
 - run: npm run validate:links
 - run: npm run check:versions
-- run: npm run migrate:capabilities
 - run: npm run validate:layer
 - run: npm run build:codex-compat && git diff --exit-code   # 生成物必须与提交一致
 ```
@@ -137,7 +135,6 @@ push / PR
 | 插件契约校验 | `npm run validate:plugin` | skills/agents/分层不一致 |
 | 文档链接校验 | `npm run validate:links` | markdown 链接断裂 |
 | 版本一致性 | `npm run check:versions` | 版本号不同步 |
-| 能力迁移检查 | `npm run migrate:capabilities` | 能力迁移未回填 |
 | 分层契约自检 | `npm run validate:layer` | 分层越界 |
 | Codex 产物一致性 | `npm run build:codex-compat` + `git diff` | 生成物未随源头同步 |
 | 固件 C 语法检查 | 对应 gcc -fsyntax-only 命令 | C 代码语法错误 |
@@ -161,7 +158,7 @@ CI 全绿后，README 顶部加 badge：
 
 | 阶段 | 内容 | 产出 | 耗时 |
 |---|---|---|---|
-| **0. 基线化** | 合入当前未提交拆分改动，确认本地全绿 | git 干净，185 tests 绿 | 1 次提交 |
+| **0. 基线化** | 合入当前未提交拆分改动，确认本地全绿 | git 干净，182 tests 绿 | 1 次提交 |
 | **1. MVP CI** | ci.yml：test + validate 两 Job，push/PR 触发 | 每次提交自动验证 | 0.5 天 |
 | **2. 增强** | firmware-syntax Job、npm 缓存、README 徽章、jest 覆盖率（可选） | 三 Job 全绿 | 0.5 天 |
 | **3. CD（可选）** | tag 触发：npm pack + GitHub Release 草稿；将来可扩展固件 .hex/.bin 产物存档 | 一键发布 | 1 天 |

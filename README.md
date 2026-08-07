@@ -17,16 +17,11 @@ skills/
 ├─ system/         # 跨层系统能力
 ├─ hardware/       # PCB、仪器和硬件分析
 └─ tools/          # 构建、烧录、链接、调试、观测、质量、发布
-
-archive/
-├─ software-legacy/ # 旧软件架构入口
-├─ tools-legacy/    # 旧工具入口
-└─ workflows-legacy/ # 旧工作流实现
 ```
 
 ## Canonical skills
 
-当前目录为 **109 catalog / 31 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **43 catalog / 41 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering
@@ -45,9 +40,9 @@ Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter�
 
 ## 工具方向
 
-`skills/tools/` 按用途保留 9 个主入口。原 29 个工具目录及全部 references、scripts、assets 已归档到 `archive/tools-legacy/`；项目学习与笔记生成由 `tools-learning-tutor` 负责，旧调用名仍可解析到新的 `tools-*` 入口。
+`skills/tools/` 按用途保留 9 个主入口。旧工具入口已移除，其旧调用名仍可解析到新的 `tools-*` 入口；项目学习与笔记生成由 `tools-learning-tutor` 负责。
 
-归档能力并未只保留名称兼容：80 份旧 Skill 的详细流程、脚本和资源已转移到对应 canonical Skill 的 active `references/capabilities/`，每个目标入口通过 `references/capability-index.md` 按需读取。可用 `npm run migrate:capabilities` 校验完整性。
+旧 Skill 的能力流程、脚本和资源已内化到对应 canonical Skill 的 active `references/capabilities/`，每个目标入口通过 `references/capability-index.md` 按需读取。
 
 硬件方向本轮不重构，仍保留在 `skills/hardware/`。
 
@@ -65,7 +60,7 @@ claude plugin validate .
 
 插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。详细职责、写入边界和交接协议见 [docs/agents.md](docs/agents.md)。
 
-Workflow 层有五个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张审查清单并重组为 BRD/PRD/SRSys），`workflow-integration-plan` 负责跨层规划与实现层分发，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析，`embedded-ai-collab` 已归档到 `archive/workflows-legacy/`；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
+Workflow 层有五个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张审查清单并重组为 BRD/PRD/SRSys），`workflow-integration-plan` 负责跨层规划与实现层分发，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
 
 ### 需求约束入口
 

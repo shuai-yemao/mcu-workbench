@@ -8,10 +8,7 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 
 归档不是运行时依赖。每一份归档 `SKILL.md`、其 `references/`、`scripts/` 和 `assets/` 已被转移为目标 canonical Skill 的 active `references/capabilities/<能力主题>/`，并由目标 Skill 的 `references/capability-index.md` 选择性加载。主入口保持简短，只承担边界、路由和验收；命中具体技术时再读取完整能力资料。
 
-```powershell
-npm run migrate:capabilities       # 检查 80 份已转移能力及索引是否完整
-node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐缺失资料
-```
+归档目录与一次性迁移机制（`scripts/materialize-skill-capabilities.js`）已随归档删除；能力已全部内化为 active Skill 的 references，不再需要从归档回迁。
 
 目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-requirements-router`、`app-architecture`、`platform_os`、`impl_os`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；旧 `workflow-router` 仅作为兼容别名解析到新的需求约束入口。其中 `app-architecture` 属于 APP 软件架构层，不属于 Workflow 层；它们不应凭空创建“旧版迁移资料”。
 
@@ -103,7 +100,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **109 catalog / 31 canonical**；OS/BSP/Core/MCU 当前入口固定为 `platform_os`、`impl_os`、`platform_bsp`、`impl_board`、`platform_mcu`、`vendor_stm32`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
+当前状态为 **43 catalog / 41 canonical**；OS/BSP/Core/MCU 当前入口固定为 `platform_os`、`impl_os`、`platform_bsp`、`impl_board`、`platform_mcu`、`vendor_stm32`。旧目录已从 `archive/` 移除，旧名只经 `resolveSkillId()` 的兼容映射解析到新技能。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
@@ -137,12 +134,12 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 | 来源 | 当前路径 | 数量 | 状态 |
 |---|---|---:|---|
 | 原 `hardware/` | `skills/hardware/` | 2 | active，待重构 |
-| 原 `operations/` | `archive/tools-legacy/` | 29 | archived，保留兼容解析 |
-| 旧软件层（workflow/platform/interface/bsp/middleware/system/security） | `archive/software-legacy/` | 51 | archived，不由 manifest 加载 |
+| 原 `operations/` | 已移除归档 | 29 | 旧名经 `resolveSkillId()` 解析到 `tools-*` |
+| 旧软件层（workflow/platform/interface/bsp/middleware/system/security） | 已移除归档 | 51 | 能力内化到 canonical skill 的 `references/capabilities/` |
 
-工具 29 个入口包含 `tool-*` 构建/烧录/链接、`debug-*`、`observability-*`、`quality-*` 和 `release-*`。原调用名保留，catalog 路径切换到 `skills/tools/`。
+工具 29 个入口包含 `tool-*` 构建/烧录/链接、`debug-*`、`observability-*`、`quality-*` 和 `release-*`。原调用名保留，经 `resolveSkillId()` 解析到 `skills/tools/` 下的新入口。
 
-> 说明：旧工具目录已归档；当前 active 工具入口位于 `skills/tools/`，硬件目录保持不变。
+> 说明：旧工具目录已移除归档；当前 active 工具入口位于 `skills/tools/`，硬件目录保持不变。
 
 ## 工具方向重分类
 
@@ -158,4 +155,4 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 | `tools-release` | `release-*`、OTA 别名 | 2 |
 | `tools-learning-tutor` | `workflow-learning-tutor`、`learning-tutor` | 2 |
 
-29 个旧工具目录位于 `archive/tools-legacy/`；9 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。
+旧工具目录已移除归档；9 个主入口位于 `skills/tools/` 并纳入 canonical catalog。旧名称通过 `resolveSkillId()` 解析到新的 `tools-*` skill。

@@ -7,7 +7,7 @@
 | `commands/mcu-new.js` | 判断插件生成器实际提供的 APP 骨架和 CMake 输入 |
 | `docs/plugin-boundaries.md` | 判断 APP 的允许依赖和禁止越层调用 |
 | `skills/app/app-architecture/SKILL.md` | 判断 Manager、Task、Logic、UI、Profile 的职责 |
-| `archive/software-legacy/workflow/project-integration/SKILL.md` | 作为历史 GR5526 集成规则，必须结合当前边界复核 |
+| 历史 `project-integration` 规则（已移除归档） | GR5526 集成规则仅作历史背景，必须结合当前 `skills/workflow/` 边界复核 |
 | 用户提供的 GR5526 LVGL 工程 | 验证真实启动链和 UI 任务，不作为通用 API 来源 |
 
 ## 结构判定

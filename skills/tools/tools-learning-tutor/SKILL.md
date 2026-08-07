@@ -80,4 +80,4 @@ description: 基于真实嵌入式项目代码，训练用户理解机制、进�
 
 ## 历史兼容
 
-旧名称 `workflow-learning-tutor` 和 `learning-tutor` 继续解析到本 Skill。归档目录中的旧版完整模板保留在 `archive/software-legacy/workflow/workflow-learning-tutor/`，仅用于迁移比对，不作为独立入口加载。
+旧名称 `workflow-learning-tutor` 和 `learning-tutor` 继续解析到本 Skill。

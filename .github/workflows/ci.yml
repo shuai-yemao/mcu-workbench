@@ -38,8 +38,6 @@ jobs:
         run: npm run validate:links
       - name: 版本一致性
         run: npm run check:versions
-      - name: 能力迁移检查
-        run: npm run migrate:capabilities
       - name: 分层契约自检
         run: npm run validate:layer
       - name: Codex 产物一致性

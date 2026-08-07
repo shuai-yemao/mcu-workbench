@@ -58,14 +58,17 @@ describe('CLI', () => {
     expect(output.some((entry) => entry.line.includes('Unknown option for build: --target'))).toBe(true);
   });
 
-  test('lists only active skills by default and archived entries with --all', async () => {
+  test('lists canonical skills by default and all active skills with --all', async () => {
     const active = await captureCli(['skills', '--json']);
-    const archived = await captureCli(['skills', '--all', '--json']);
+    const all = await captureCli(['skills', '--all', '--json']);
     const activeJson = JSON.parse(active.output[0].line);
-    const archivedJson = JSON.parse(archived.output[0].line);
+    const allJson = JSON.parse(all.output[0].line);
     expect(activeJson.skills.some((skill) => skill.id === 'tools-build')).toBe(true);
+    expect(activeJson.skills.every((skill) => skill.canonical)).toBe(true);
     expect(activeJson.skills.some((skill) => skill.archived)).toBe(false);
-    expect(archivedJson.skills.length).toBeGreaterThan(activeJson.skills.length);
+    expect(allJson.skills.length).toBeGreaterThan(activeJson.skills.length);
+    expect(allJson.skills.some((skill) => skill.id === 'hardware-pcb-analysis')).toBe(true);
+    expect(allJson.skills.some((skill) => skill.archived)).toBe(false);
   });
 
   test('returns a non-zero exit code for missing required options', async () => {

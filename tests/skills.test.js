@@ -6,8 +6,8 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps legacy entries and exposes 30 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(119);
+  test('catalog keeps active entries and exposes 41 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(43);
     expect(CANONICAL_SKILLS).toHaveLength(41);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
@@ -30,13 +30,7 @@ describe('Skills catalog and loader', () => {
     });
     for (const skill of SKILL_CATALOG) {
       expect(skill.id).toMatch(/^[a-z][a-z0-9]*(?:[-_][a-z0-9]+){1,3}$/);
-      const expectedPath = skill.archived
-        ? skill.path
-        : path.posix.join('skills', skill.layer, skill.id);
-      expect(skill.path).toBe(expectedPath);
-      if (skill.archived) {
-        expect(skill.path).toMatch(/^archive\/(?:software-legacy\/[^/]+\/|tools-legacy\/)[^/]+$/);
-      }
+      expect(skill.path).toBe(path.posix.join('skills', skill.layer, skill.id));
     }
   });
 
@@ -74,25 +68,6 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('middleware-lvgl')).toBe('vendor_lvgl');
     expect(resolveSkillId('middleware-algorithms')).toBe('vendor_dsp');
     expect(resolveSkillId('not-a-skill')).toBeNull();
-  });
-
-  test('all 29 archived tool entries resolve to their canonical group', () => {
-    const expectedGroup = (id) => {
-      if (id.startsWith('tool-build-') || id.startsWith('build-')) return 'tools-build';
-      if (id.startsWith('tool-flash-') || id.startsWith('flash-') || id === 'gang-flash') return 'tools-flash';
-      if (id === 'tool-linker-scatter' || id === 'linker-scatter') return 'tools-linker';
-      if (id.startsWith('debug-') || id === 'cmbacktrace-debug' || id === 'embedded-debugger-framework' || id === 'ozone-module' || id === 'rtos-debug') return 'tools-debug';
-      if (id.startsWith('observability-') || ['elog-module', 'rtt-monitor', 'segger-rtt-module', 'serial-monitor', 'systemview-module'].includes(id)) return 'tools-observability';
-      if (id.startsWith('quality-') || ['embedded-reviewer', 'map-analyzer', 'static-analysis', 'embedded-unity-testing'].includes(id)) return 'tools-quality';
-      if (id.startsWith('release-') || ['ota-package', 'ota-update-system'].includes(id)) return 'tools-release';
-      return null;
-    };
-    const archivedTools = SKILL_CATALOG.filter((skill) => skill.path.startsWith('archive/tools-legacy/'));
-    expect(archivedTools).toHaveLength(29);
-    for (const skill of archivedTools) {
-      expect(resolveSkillId(skill.id)).toBe(expectedGroup(skill.id));
-      expect(resolveSkillId(skill.legacyId)).toBe(expectedGroup(skill.legacyId));
-    }
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
@@ -182,7 +157,7 @@ describe('Skills catalog and loader', () => {
   test('registry is a compatibility view derived from catalog', () => {
     expect(Object.keys(getAllSkills())).toHaveLength(SKILL_CATALOG.length);
     expect(listSkillNames()).toEqual(Object.keys(getAllSkills()));
-    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(38);
+    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(9);
     expect(getSkillAliases()['build-keil']).toBe('tools-build');
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
     expect(getSkillAliases()['embedded']).toBe('workflow-requirements-router');
@@ -214,14 +189,12 @@ describe('Skills catalog and loader', () => {
     expect(validatePlugin().errors).toEqual([]);
   });
 
-  test('legacy software is archived and operations are exposed as tools', () => {
+  test('no archived entries remain and operations are exposed as tools', () => {
     const archived = SKILL_CATALOG.filter((skill) => skill.archived);
-    const archivedTools = archived.filter((skill) => skill.path.startsWith('archive/tools-legacy/'));
     const tools = SKILL_CATALOG.filter((skill) => skill.layer === 'tools' && skill.canonical);
-    expect(archived).toHaveLength(76);
-    expect(archivedTools).toHaveLength(29);
+    expect(archived).toHaveLength(0);
     expect(tools).toHaveLength(9);
-    expect(archived.filter((skill) => skill.path.startsWith('archive/software-legacy/'))).toHaveLength(47);
+    expect(SKILL_CATALOG.filter((skill) => skill.layer === 'hardware')).toHaveLength(2);
     expect(tools.every((skill) => skill.path.startsWith('skills/tools/'))).toBe(true);
   });
 

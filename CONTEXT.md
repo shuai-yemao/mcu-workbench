@@ -9,7 +9,7 @@
 
 - GitHub：`https://github.com/shuai-yemao/mcu-workbench`
 - 当前分支：`host_ai`
-- 仓库管理的技能位于 `skills/`（catalog 109 条 = 33 active + 76 archived + 4 未登记残留）
+- 仓库管理的技能位于 `skills/`（catalog 43 条 = 41 canonical + 2 hardware active；归档已删除，旧调用名经 `MIGRATION_MAP` 兼容解析）
 
 ## 正在发生的事（2026-08 上下文）
 

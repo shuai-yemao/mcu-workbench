@@ -13,14 +13,13 @@
 | Skills 链 | `.claude-plugin/plugin.json` → `skills/` | 架构知识、工作流、参考资料和工具脚本 | 当前主要插件能力 |
 | Node CLI 链 | `bin/mcu-workbench.js` → `lib/cli.js` → `commands/` → `lib/` | 项目生成、模板生成、命令计划和显式工具执行 | 正式 CLI；与 Skills 链独立 |
 
-归档内容位于 `archive/` 和 `legacy/`，不属于 active manifest。
+归档内容已从 `archive/` 移除，旧 skill 能力已内化到对应 canonical skill 的 `references/capabilities/`。
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **109 catalog / 31 canonical**：
+当前 catalog 为 **43 catalog / 41 canonical**：
 
-- 31 个 canonical skills；
-- 80 个软件和工具归档入口；
+- 41 个 canonical skills；
 - 2 个硬件 active 入口。
 
 ### 2.1 Workflow 请求路由与项目集成

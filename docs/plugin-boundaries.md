@@ -13,7 +13,6 @@
 | References | 技术变体、案例、厂商差异 | 不替代主 Skill 的核心流程 | `references/` |
 | Scripts | 可重复的检查、分析、生成或采集 | 不隐藏关键决策和权限 | 各 Skill 的 `scripts/` |
 | Node CLI | 项目生成、模板渲染、命令计划和显式工具执行 | 不自动代表 Claude Code command | `bin/`、`lib/cli.js`、`commands/`、`lib/` |
-| Archive | 历史入口、迁移和兼容依据 | 不作为 active skill、workflow 或 Agent 加载 | `archive/`、`legacy/` |
 
 ## 2. 软件架构层边界
 
@@ -88,4 +87,4 @@ Core、Middleware、Driver 不设置 Adapter。
 
 ## 7. Workflow 生命周期
 
-当前 active workflow 为 `workflow-requirements-router`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-claude-layering` 和 `workflow-final-review`；旧 `workflow-router` 位于兼容边界，`embedded-ai-collab` 归档于 `archive/workflows-legacy/`。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。
+当前 active workflow 为 `workflow-requirements-router`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-claude-layering` 和 `workflow-final-review`；旧 `workflow-router` 位于兼容边界，`embedded-ai-collab` 工作流已移除归档。新增 workflow 必须遵循 [workflows.md](workflows.md) 的职责、权限、产物和校验约束。

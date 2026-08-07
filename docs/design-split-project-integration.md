@@ -150,7 +150,6 @@ npm run validate:plugin           # 108→109 skills / 7 agents / 13 层
 npm run validate:links            # 288+ Markdown 链接
 npm run validate:architecture
 npm run build:codex-compat        # 重生成 AGENTS.override.md 后 git diff 检查
-npm run migrate:capabilities -- --check   # skill-capability-migration
 git diff --check                  # 无空白错误
 ```
 

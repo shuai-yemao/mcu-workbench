@@ -12,7 +12,7 @@
 - `tools-release`：发布与 OTA
 - `tools-learning-tutor`：项目提问、理解检查与 Obsidian 学习笔记
 
-原 29 个入口及其完整资料保留在 `archive/tools-legacy/`，主入口通过 `references/<旧入口>/GUIDE.md` 和对应脚本命名空间复用。
+原 29 个工具入口已移除归档；主入口通过 `references/<旧入口>/GUIDE.md` 和对应脚本命名空间复用。
 
 Git 变更可在任意阶段由 `tools-git` 记录、拆分与交接；推荐工具链验证顺序仍为 `tools-build` → `tools-flash` / `tools-debug` → `tools-observability` → `tools-quality` → `tools-release`。
 

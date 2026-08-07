@@ -4,7 +4,6 @@
  */
 const {
   LEGACY_SKILL_ENTRIES,
-  ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
   SERVICE_DEFINITIONS,
   VENDOR_DEFINITIONS,
@@ -13,21 +12,17 @@ const {
   CANONICAL_ALIASES
 } = require('./catalog-metadata');
 
+// 归档已删除，LEGACY_SKILL_ENTRIES 仅含仍作为 active 入口的 legacy 技能，archived 恒为 false。
 const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, description]) => {
   const isToolsSkill = layer === 'operations';
-  const isArchived = (ARCHIVED_SOFTWARE_LAYERS.has(layer)
-    && !['workflow-requirements-router'].includes(id))
-    || isToolsSkill;
   const activeLayer = isToolsSkill ? 'tools' : layer;
   return {
     id,
     legacyId,
     layer: activeLayer,
     description,
-    archived: isArchived,
-    path: isArchived
-      ? (isToolsSkill ? `archive/tools-legacy/${id}` : `archive/software-legacy/${layer}/${id}`)
-      : `skills/${activeLayer}/${id}`,
+    archived: false,
+    path: `skills/${activeLayer}/${id}`,
     canonical: false
   };
 });
@@ -95,20 +90,9 @@ const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => ({
   aliases: [...(TOOL_ALIASES[id] || []), ...(CANONICAL_ALIASES[id] || [])]
 }));
 
-const TUTOR_ENTRY = {
-  id: 'workflow-learning-tutor',
-  legacyId: 'learning-tutor',
-  layer: 'workflow',
-  description: '嵌入式代码学习与 Obsidian 笔记辅导',
-  archived: true,
-  path: 'archive/software-legacy/workflow/workflow-learning-tutor',
-  canonical: false
-};
-
 const SKILL_CATALOG = [
   ...CANONICAL_SKILLS,
-  ...LEGACY_SKILL_CATALOG.filter((skill) => !CANONICAL_SKILLS.some((canonical) => canonical.id === skill.id)),
-  TUTOR_ENTRY
+  ...LEGACY_SKILL_CATALOG.filter((skill) => !CANONICAL_SKILLS.some((canonical) => canonical.id === skill.id))
 ];
 
 const SKILL_BY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.id, skill]));
