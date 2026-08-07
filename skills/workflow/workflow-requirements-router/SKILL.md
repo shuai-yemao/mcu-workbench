@@ -75,31 +75,33 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 下游提示词必须明确：workflow-project-integration 只能在 RCP 的范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。
 
-## 必经交接与分发参考
+## 必经交接与分发
 
 1. 所有请求的 RCP 一律交接给 `workflow-project-integration`（必经分层/审计/迁移门禁），Router 不直接交接实现层 Skill。
-2. `workflow-project-integration` 在完成分层审查后按下表分发实现层主 Skill，最多追加两个直接交接 Skill。
+2. `workflow-project-integration` 在完成分层审查后按下表只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
 3. 最终代码/变更集的独立 Review 编排由 `workflow-project-integration` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
-| 请求事实 | 建议实现层主 Skill（由 project-integration 分发） | 可选直接交接 |
-|---|---|---|
-| APP 启动、Task、Manager、UI 结构 | `app-architecture` | `os-adapter`、`middleware-lvgl` |
-| OSAL、任务、队列、同步原语接口 | `os-adapter` | `os-runtime` |
-| FreeRTOS/裸机运行时、调度和 Port | `os-runtime` | `os-adapter` |
-| BSP 抽象表、注册和平台无关转发 | `bsp-wrapper` | `bsp-port` |
-| 外设实例绑定、平台对象和注册 | `bsp-port` | `bsp-wrapper`、`bsp-hal-driver` |
-| 器件协议、寄存器序列和 HAL Driver | `bsp-hal-driver` | `core-mcu`、`mcu-platform` |
-| 多实例、缓存、重试、回调和工作循环 | `bsp-handler` | `bsp-port`、`os-adapter` |
-| CMSIS、寄存器、总线或 MCU 外设能力 | `core-mcu` | `mcu-platform`、`tools-build` |
-| STM32 HAL、ESP-IDF 或厂商 SDK | `mcu-platform` | `core-mcu`、`tools-build` |
-| LVGL | `middleware-lvgl` | `bsp-port`、`os-adapter` |
-| MQTT、BLE、CAN、USB 或网络协议 | `middleware-communication` | `bsp-port` |
-| Flash、文件系统、KV 或存储中间件 | `middleware-storage` | `bsp-port` |
-| DSP、FFT 或通用算法中间件 | `middleware-algorithms` | `core-mcu` |
-| Bootloader、低功耗、看门狗或密码系统 | `software-system` | `tools-release`、`mcu-platform` |
-| 构建、链接、烧录、调试或观测 | 对应 `tools-*` Skill | 仅列出直接工具依赖 |
-| 学习、源码讲解或经用户授权的笔记 | `tools-learning-tutor` | 对应层 Skill |
+| 请求事实 | 实现层 Skill（由 project-integration 分发） |
+|---|---|
+| APP 启动、Task、Manager、UI 结构 | `app-architecture` |
+| OSAL、任务、队列、同步原语接口 | `os-adapter` |
+| FreeRTOS/裸机运行时、调度和 Port | `os-runtime` |
+| BSP 抽象表、注册和平台无关转发 | `bsp-wrapper` |
+| 外设实例绑定、平台对象和注册 | `bsp-port` |
+| 器件协议、寄存器序列和 HAL Driver | `bsp-hal-driver` |
+| 多实例、缓存、重试、回调和工作循环 | `bsp-handler` |
+| CMSIS、寄存器、总线或 MCU 外设能力 | `core-mcu` |
+| STM32 HAL、ESP-IDF 或厂商 SDK | `mcu-platform` |
+| LVGL | `middleware-lvgl` |
+| MQTT、BLE、CAN、USB 或网络协议 | `middleware-communication` |
+| Flash、文件系统、KV 或存储中间件 | `middleware-storage` |
+| DSP、FFT 或通用算法中间件 | `middleware-algorithms` |
+| Bootloader、低功耗、看门狗或密码系统 | `software-system` |
+| 构建、链接、烧录、调试或观测 | 对应 `tools-*` Skill |
+| 学习、源码讲解或经用户授权的笔记 | `tools-learning-tutor` |
+
+上表仅声明实现层 Skill 的分发依据。分发后，执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅对应 Skill，不预分配参考清单、不设数量上限；查阅知识不改变实现职责。
 
 ## 路由单（固定输出）
 
@@ -108,8 +110,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 ```text
 状态：分析中 | 待用户确认 | 可交接 | 阻塞
 必经下游：workflow-project-integration
-建议主 Skill：<由 project-integration 分发的 canonical ID 参考；未完成 RCP 时为空>
-交接 Skill：<0 至 2 个 canonical ID>
+实现 Skill：<由 project-integration 分发的唯一 canonical ID；未完成 RCP 时为空>
 参与 Agent：<embedded-lead + 一个或多个专用 Agent>
 需求约束包：<完整包或稳定产物绝对路径>
 已读证据：<绝对路径、命令或日志位置>

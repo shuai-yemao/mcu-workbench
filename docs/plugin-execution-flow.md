@@ -55,7 +55,7 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 ```text
 一个请求 → 一个需求约束包 → workflow-project-integration（必经）
              ↓
-       分层审查后分发一个实现层主 Skill
+       分层审查后只分发一个实现层 Skill；执行 agent 执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限
 ```
 
 以下示例展示 project-integration 分层审查完成后的分发结果（所有请求均先经过 project-integration 门禁）：
@@ -63,17 +63,15 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 ```text
 “Keil 工程编译失败”
     → workflow-project-integration（审计门禁）
-    → tools-build
-    → tools-linker（如果是链接布局问题）
-    → tools-quality（如果需要 Map 分析）
+    → tools-build（唯一实现层 Skill）
+    → 执行中按需查阅 tools-linker（链接布局问题）、tools-quality（Map 分析）
 ```
 
 ```text
 “外部 Flash 驱动怎么分层”
     → workflow-project-integration（审计门禁）
-    → bsp-wrapper / bsp-port / bsp-hal-driver / bsp-handler
-    → os-adapter / os-runtime（如果涉及任务、队列或 Runtime）
-    → core-mcu / mcu-platform（如果涉及底层外设）
+    → bsp-wrapper（唯一实现层 Skill）
+    → 执行中按需查阅 bsp-port / bsp-hal-driver / bsp-handler（器件链路）、os-adapter / os-runtime（任务/队列/Runtime）、core-mcu / mcu-platform（底层外设）
 
 当前 active 目录为 **108 catalog / 30 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `mcu-platform` 是当前入口，旧名仅作为兼容映射。
 ```

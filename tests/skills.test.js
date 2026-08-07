@@ -104,8 +104,9 @@ describe('Skills catalog and loader', () => {
     const router = getSkillContent('workflow-requirements-router');
     expect(router).toContain('## 路由单（固定输出）');
     expect(router).toContain('必经下游：workflow-project-integration');
-    expect(router).toContain('建议主 Skill：<由 project-integration 分发的 canonical ID 参考；未完成 RCP 时为空>');
-    expect(router).toContain('交接 Skill：<0 至 2 个 canonical ID>');
+    expect(router).toContain('实现 Skill：<由 project-integration 分发的唯一 canonical ID；未完成 RCP 时为空>');
+    expect(router).toContain('只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限');
+    expect(router).not.toContain('参考 Skill');
     expect(router).toContain('workflow-project-integration');
     expect(router).toContain('workflow-final-review');
     expect(router).toContain('tools-quality');

@@ -14,7 +14,7 @@ description: 依据项目证据审查需求实现方案、设计软件分层，�
 1. 读取工程文件、构建日志、启动流程和现有笔记，记录可复现证据。
 2. 画出调用链，确认上层只依赖下层公开契约。
 3. 输入固定为 Router 的 RCP；若已有既有需求实现方案，先执行“实现方案审查与代码前门禁”。
-4. 根据职责选择一个实现层主 skill，最多追加两个交接 skill，再分发。
+4. 完成分层审查后只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
 5. 输出文件级改造顺序、验收点和未决风险；不在本 skill 内实现具体驱动。
 
 ## 实现方案审查与代码前门禁
@@ -70,7 +70,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 - 本 skill 只输出项目审计、分层设计、迁移路线和下游交接，不直接执行代码移植、最终代码审查、Prompt 模板生成或具体驱动实现。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 
-## 交接
+## 分发目标
 
 - APP 结构交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
 - OSAL/OS Port 交给 [`os-adapter`](../../os/os-adapter/SKILL.md) 或 [`os-runtime`](../../os/os-runtime/SKILL.md)。

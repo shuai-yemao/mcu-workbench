@@ -33,9 +33,9 @@
 
 ## 4. Skill 路由与协作
 
-`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-project-integration`（必经门禁）；完成分层/审计/迁移设计后，优先使用一个实现层主 Skill，只在存在明确输入依赖时交接下游 Skill；不把归档 Skill 当作活动入口。
+`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-project-integration`（必经门禁）；完成分层/审计/迁移设计后只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限；不把归档 Skill 当作活动入口。
 
-| 请求类型 | 主 Skill | 边界 |
+| 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
 | 所有请求的 RCP（必经门禁） | `workflow-project-integration` | 先审查方案和证据，完成分层/审计/迁移设计后分发实现层 |
