@@ -31,9 +31,9 @@ archive/
 ```text
 workflow-requirements-router workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering
 app-architecture
-os-adapter os-runtime
-bsp-wrapper bsp-port bsp-hal-driver bsp-handler
-core-mcu vendor_stm32
+platform_os os-runtime
+platform_bsp bsp-port bsp-hal-driver bsp-handler
+platform_mcu vendor_stm32
 middleware-lvgl middleware-communication middleware-storage middleware-fal
 middleware-flashdb middleware-letter-shell middleware-algorithms
 software-system

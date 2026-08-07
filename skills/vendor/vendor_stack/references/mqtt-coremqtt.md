@@ -31,4 +31,4 @@ APP/Profile
 
 - 连接、订阅、发布、断线重连各有日志和超时证据。
 - 主机测试覆盖报文编解码和错误路径，目标板测试覆盖真实 BSP 收发。
-- 交接给 [`os-adapter`](../../../os/os-adapter/SKILL.md) 时只交并发/计时需求；交接给 [`bsp-port`](../../../bsp/bsp-port/SKILL.md) 时只交网络设备能力。
+- 交接给 [`os-adapter`](../../../platform/platform_os/SKILL.md) 时只交并发/计时需求；交接给 [`bsp-port`](../../../bsp/bsp-port/SKILL.md) 时只交网络设备能力。

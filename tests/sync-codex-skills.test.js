@@ -37,7 +37,7 @@ describe('Codex skill synchronization', () => {
     expect(fs.existsSync(path.join(target, 'bsp-adapter'))).toBe(false);
     expect(fs.existsSync(path.join(target, 'workflow-requirements-router', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(target, 'tools-debug', 'SKILL.md'))).toBe(true);
-    expect(fs.existsSync(path.join(target, 'bsp-wrapper', 'SKILL.md'))).toBe(true);
+    expect(fs.existsSync(path.join(target, 'platform_bsp', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(target, 'bsp-port', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'embedded', 'SKILL.md'))).toBe(true);
     expect(fs.existsSync(path.join(summary.backup, 'debug-gdb-openocd', 'SKILL.md'))).toBe(true);

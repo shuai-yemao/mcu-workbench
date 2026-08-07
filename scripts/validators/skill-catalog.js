@@ -24,7 +24,7 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
     if (legacyIds.has(skill.legacyId)) errors.push(`catalog: 重复旧名称 ${skill.legacyId}`);
     ids.add(skill.id);
     legacyIds.add(skill.legacyId);
-    if (skill.layer !== 'platform' && !skill.archived) expectedLayers.add(skill.layer);
+    if (!skill.archived) expectedLayers.add(skill.layer);
 
     const directory = path.join(ROOT, skill.path);
     const skillFile = path.join(directory, 'SKILL.md');
@@ -49,6 +49,22 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
   const actualDirectories = findSkillDirectories(path.join(ROOT, 'skills')).map((directory) => path.resolve(directory));
   for (const directory of actualDirectories) {
     if (!expectedDirectories.has(directory)) errors.push(`未登记的 skill 目录：${path.relative(ROOT, directory)}`);
+  }
+
+  // D12/阶段 2 门禁：Platform 层只允许头文件与文档，禁止任何实现（.c / .cpp）。
+  const platformRoot = path.join(ROOT, 'skills', 'platform');
+  if (fs.existsSync(platformRoot)) {
+    const implFiles = (function collect(dir, results) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) collect(full, results);
+        else if (/\.(?:c|cpp)$/.test(entry.name)) results.push(full);
+      }
+      return results;
+    })(platformRoot, []);
+    for (const impl of implFiles) {
+      errors.push(`Platform 层禁止实现文件：${path.relative(ROOT, impl)}（Platform 只定义接口）`);
+    }
   }
 
   const activeText = findTextFiles(path.join(ROOT, 'skills'))

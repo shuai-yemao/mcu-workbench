@@ -13,7 +13,7 @@ npm run migrate:capabilities       # 检查 80 份已转移能力及索引是否
 node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐缺失资料
 ```
 
-目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-requirements-router`、`app-architecture`、`os-adapter`、`os-runtime`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；旧 `workflow-router` 仅作为兼容别名解析到新的需求约束入口。其中 `app-architecture` 属于 APP 软件架构层，不属于 Workflow 层；它们不应凭空创建“旧版迁移资料”。
+目前 80 份归档来源迁入 18 个 canonical Skill。没有归档前身的 `workflow-requirements-router`、`app-architecture`、`platform_os`、`os-runtime`、`middleware-lvgl` 和硬件 Skills 保持各自的原生 references；旧 `workflow-router` 仅作为兼容别名解析到新的需求约束入口。其中 `app-architecture` 属于 APP 软件架构层，不属于 Workflow 层；它们不应凭空创建“旧版迁移资料”。
 
 `os-abstraction` 与 `rtos-freertos` 仅在兼容映射中解析到这两个当前 OS 入口。
 
@@ -103,7 +103,7 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **109 catalog / 31 canonical**；OS/BSP/Core/MCU 当前入口固定为 `os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu`、`vendor_stm32`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
+当前状态为 **109 catalog / 31 canonical**；OS/BSP/Core/MCU 当前入口固定为 `platform_os`、`os-runtime`、`platform_bsp`、`bsp-port`、`platform_mcu`、`vendor_stm32`。旧目录仍保留并登记在 catalog 中，只供 `resolveSkillId()` 的兼容映射使用，迁移期间不删除旧目录。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|
@@ -111,13 +111,13 @@ node scripts/materialize-skill-capabilities.js --write # 首次转移或补齐�
 | `workflow-review-gate` | `project-integration`（兼容映射 `workflow-project-integration`） |
 | `workflow-integration-plan` | `workflow-architecture`、`code-porting` |
 | `app-architecture` | APP 新入口，无旧目录 |
-| `os-adapter` | `os-abstraction`（兼容映射） |
+| `platform_os` | `os-adapter`/`os-abstraction`（兼容映射） |
 | `os-runtime` | `rtos-freertos`、`freertos-module`（兼容映射） |
-| `bsp-wrapper` | 无旧入口；提供函数表与稳定转发 |
+| `platform_bsp` | `bsp-wrapper`（兼容映射）；提供函数表与稳定转发 |
 | `bsp-port` | `bsp-adapter`、`bsp-device-adaptation`、`bsp-platform-adapter`（兼容映射） |
 | `bsp-hal-driver` | `bsp-device-driver` |
 | `bsp-handler` | `bsp-device-service` |
-| `core-mcu` | `platform-*`（厂商 HAL/SPL 除外）、`bus-*`、`peripheral-*` |
+| `platform_mcu` | `core-mcu`、`platform-*`（厂商 HAL/SPL 除外）、`bus-*`、`peripheral-*` |
 | `vendor_stm32` | `driver-vendor`、`platform-stm32-hal`、`platform-stm32-spl`（兼容映射） |
 | `middleware-lvgl` | `middleware-lvgl` |
 | `middleware-communication` | `protocol-*` |

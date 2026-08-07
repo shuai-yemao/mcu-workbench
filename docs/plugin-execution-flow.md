@@ -75,10 +75,10 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 “外部 Flash 驱动怎么分层”
     → workflow-review-gate（审查门禁）
     → workflow-integration-plan（规划与分发）
-    → bsp-wrapper（唯一实现层 Skill）
-    → 执行中按需查阅 bsp-port / bsp-hal-driver / bsp-handler（器件链路）、os-adapter / os-runtime（任务/队列/Runtime）、core-mcu / vendor_stm32（底层外设）
+    → platform_bsp（唯一实现层 Skill）
+    → 执行中按需查阅 bsp-port / bsp-hal-driver / bsp-handler（器件链路）、platform_os / os-runtime（任务/队列/Runtime）、platform_mcu / vendor_stm32（底层外设）
 
-当前 active 目录为 **109 catalog / 31 canonical**；`os-adapter`、`os-runtime`、`bsp-wrapper`、`bsp-port`、`core-mcu` 与 `vendor_stm32` 是当前入口，旧名仅作为兼容映射。
+当前 active 目录为 **109 catalog / 31 canonical**；`platform_os`、`os-runtime`、`platform_bsp`、`bsp-port`、`platform_mcu` 与 `vendor_stm32` 是当前入口，旧名仅作为兼容映射。
 ```
 
 ### 阶段 4：渐进式读取上下文

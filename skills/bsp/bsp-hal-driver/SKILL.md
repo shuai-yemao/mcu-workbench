@@ -33,4 +33,4 @@ Port 可长期持有具体 Driver 并把其北向回调注册到 Wrapper；这�
 共享温湿度案例见 [`bsp-aht21-case.md`](../references/bsp-aht21-case.md)。
 跨 skill 通用错误模式与调试教训见 [`../references/common-error-patterns.md`](../references/common-error-patterns.md)。
 
-交接：MCU 外设实现交给 [`core-mcu`](../../core/core-mcu/SKILL.md)，厂商库交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)，绑定交给 [`bsp-port`](../bsp-port/SKILL.md)。
+交接：MCU 外设实现交给 [`core-mcu`](../../platform/platform_mcu/SKILL.md)，厂商库交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)，绑定交给 [`bsp-port`](../bsp-port/SKILL.md)。

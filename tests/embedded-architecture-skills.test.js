@@ -19,12 +19,12 @@ function findMarkdownFiles(root) {
 
 describe('embedded architecture skill contracts', () => {
   const canonicalSkillEntries = [
-    'skills/core/core-mcu/SKILL.md',
-    'skills/bsp/bsp-wrapper/SKILL.md',
+    'skills/platform/platform_mcu/SKILL.md',
+    'skills/platform/platform_bsp/SKILL.md',
     'skills/bsp/bsp-port/SKILL.md',
     'skills/bsp/bsp-hal-driver/SKILL.md',
     'skills/bsp/bsp-handler/SKILL.md',
-    'skills/os/os-adapter/SKILL.md',
+    'skills/platform/platform_os/SKILL.md',
     'skills/os/os-runtime/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
     'skills/workflow/workflow-review-gate/SKILL.md',
@@ -40,8 +40,8 @@ describe('embedded architecture skill contracts', () => {
   });
 
   test('uses the verified two-layer OS naming consistently', () => {
-    const abstraction = read('skills/os/os-adapter/SKILL.md');
-    const contract = read('skills/os/os-adapter/references/osal-contract.md');
+    const abstraction = read('skills/platform/platform_os/SKILL.md');
+    const contract = read('skills/platform/platform_os/references/osal-contract.md');
     const freertos = read('skills/os/os-runtime/SKILL.md');
     const freertosMap = read('skills/os/os-runtime/references/freertos-source-map.md');
 
@@ -54,9 +54,9 @@ describe('embedded architecture skill contracts', () => {
   test('publishes all evidence references at their canonical locations', () => {
     for (const relativePath of [
       'skills/workflow/workflow-review-gate/references/ec-s100-architecture-audit.md',
-      'skills/core/core-mcu/references/core-iic-backends-case.md',
+      'skills/platform/platform_mcu/references/core-iic-backends-case.md',
       'skills/bsp/references/bsp-aht21-case.md',
-      'skills/os/os-adapter/references/osal-freertos-case.md',
+      'skills/platform/platform_os/references/osal-freertos-case.md',
       'skills/tools/tools-observability/references/debugcomponent-rtt-case.md'
     ]) {
       expect(fs.existsSync(path.join(ROOT, relativePath))).toBe(true);
@@ -84,7 +84,7 @@ describe('embedded architecture skill contracts', () => {
       const content = read(relativePath);
       expect(content).toContain('109 catalog / 31 canonical');
       expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
-      for (const entry of ['os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port', 'core-mcu', 'vendor_stm32']) {
+      for (const entry of ['platform_os', 'os-runtime', 'platform_bsp', 'bsp-port', 'platform_mcu', 'vendor_stm32']) {
         expect(content).toContain(entry);
       }
     }
@@ -93,7 +93,7 @@ describe('embedded architecture skill contracts', () => {
   test('lists current OS entries rather than compatibility aliases in migration prose', () => {
     const migration = read('docs/skills-migration.md');
     const activeSourceLine = migration.split(/\r?\n/).find((line) => line.includes('没有归档前身'));
-    expect(activeSourceLine).toContain('os-adapter');
+    expect(activeSourceLine).toContain('platform_os');
     expect(activeSourceLine).toContain('os-runtime');
     expect(activeSourceLine).not.toContain('os-abstraction');
     expect(activeSourceLine).not.toContain('rtos-freertos');

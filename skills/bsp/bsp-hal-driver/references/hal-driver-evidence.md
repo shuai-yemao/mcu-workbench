@@ -13,7 +13,7 @@ reset → detect → configure → ready
 
 ## 交接
 
-- 总线控制器和 DMA：[`core-mcu`](../../../core/core-mcu/SKILL.md)
+- 总线控制器和 DMA：[`core-mcu`](../../../platform/platform_mcu/SKILL.md)
 - 厂商 HAL/LL/CMSIS：[`vendor_stm32`](../../../vendor/vendor_stm32/SKILL.md)
 - 板级函数表：[`bsp-port`](../../bsp-port/SKILL.md)
 - 多实例和生命周期：[`bsp-handler`](../../bsp-handler/SKILL.md)

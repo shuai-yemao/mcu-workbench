@@ -109,13 +109,13 @@ const CANONICAL_DEFINITIONS = [
   ['workflow-integration-plan', 'workflow', '放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发'],
   ['workflow-final-review', 'workflow', '最终代码/变更集的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告'],
   ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
-  ['os-adapter', 'os', 'OSAL、OS Wrapper、OS Port 与并发接口规范'],
+  ['platform_mcu', 'platform', 'Platform 纯定义：MCU 能力接口（GPIO/I2C/SPI/UART/ADC/TIM/DMA/中断/启动）+ 统一错误码/类型/对象协议规范'],
+  ['platform_os', 'platform', 'Platform 纯定义：OS 能力接口（OSAL、任务、队列、同步、定时、内存），零实现不绑 RTOS'],
+  ['platform_bsp', 'platform', 'Platform 纯定义：板级器件能力接口 + 函数表/注册/对象协议，零实现不绑芯片'],
   ['os-runtime', 'os', '具体 RTOS 或裸机运行时的配置、Port 与调度诊断'],
-  ['bsp-wrapper', 'bsp', 'BSP Wrapper 的平台无关函数表注册与稳定转发入口'],
   ['bsp-port', 'bsp', 'BSP Port 的平台对象绑定、Core 后端选择与资源注入'],
   ['bsp-hal-driver', 'bsp', 'BSP Driver：器件协议与可注入实例接口'],
   ['bsp-handler', 'bsp', 'BSP 多实例、生命周期、缓存、事件与资源所有权'],
-  ['core-mcu', 'core', 'MCU 内部外设、初始化、中断与 DMA 组织'],
   ['software-system', 'system', 'Bootloader、低功耗、看门狗与固件安全等跨层能力']
 ];
 
@@ -177,8 +177,10 @@ const TOOL_ALIASES = {
 
 const CANONICAL_ALIASES = {
   'workflow-requirements-router': ['workflow-router'],
-  'os-adapter': ['os-abstraction'],
+  'platform_os': ['os-adapter', 'os-abstraction'],
   'os-runtime': ['rtos-freertos', 'freertos-module'],
+  'platform_mcu': ['core-mcu', 'platform-cortex-registers', 'platform-cortex-interrupts', 'platform-cortex-memory', 'platform-mcu-architecture', 'platform-peripheral-registers', 'platform-option-bytes', 'platform-sram', 'platform-internal-flash', 'arm-core-registers', 'arm-interrupt-exception', 'arm-memory-architecture', 'chip-architecture', 'mcu-peripheral-registers', 'option-bytes', 'sram-module', 'flash-module'],
+  'platform_bsp': ['bsp-wrapper'],
   'bsp-port': [
     'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter',
     'peripheral-driver', 'embedded-adapter'

@@ -9,9 +9,9 @@
   "skills": [
     "./skills/workflow/",
     "./skills/app/",
+    "./skills/platform/",
     "./skills/os/",
     "./skills/bsp/",
-    "./skills/core/",
     "./skills/vendor/",
     "./skills/system/",
     "./skills/tools/",

@@ -13,8 +13,8 @@ describe('Skills catalog and loader', () => {
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-requirements-router', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
-      'os-adapter', 'os-runtime', 'bsp-wrapper', 'bsp-port',
-      'bsp-hal-driver', 'bsp-handler', 'core-mcu', 'vendor_stm32', 'vendor_lvgl',
+      'platform_mcu', 'platform_os', 'platform_bsp', 'os-runtime', 'bsp-port',
+      'bsp-hal-driver', 'bsp-handler', 'vendor_stm32', 'vendor_lvgl',
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
       'vendor_flashdb', 'vendor_letter_shell',
       'vendor_dsp',
@@ -49,7 +49,10 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('map-analyzer')).toBe('tools-quality');
     expect(resolveSkillId('ota-update-system')).toBe('tools-release');
     expect(resolveSkillId('bsp-peripheral-driver')).toBe('bsp-hal-driver');
-    expect(resolveSkillId('os-abstraction')).toBe('os-adapter');
+    expect(resolveSkillId('os-abstraction')).toBe('platform_os');
+    expect(resolveSkillId('os-adapter')).toBe('platform_os');
+    expect(resolveSkillId('core-mcu')).toBe('platform_mcu');
+    expect(resolveSkillId('bsp-wrapper')).toBe('platform_bsp');
     expect(resolveSkillId('rtos-freertos')).toBe('os-runtime');
     expect(resolveSkillId('freertos-module')).toBe('os-runtime');
     expect(resolveSkillId('bsp-adapter')).toBe('bsp-port');
@@ -63,7 +66,7 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('stm32-hal-development')).toBe('vendor_stm32');
     expect(resolveSkillId('stm32-spl-development')).toBe('vendor_stm32');
     expect(resolveSkillId('mcu-platform')).toBe('vendor_stm32');
-    expect(resolveSkillId('platform-cortex-registers')).toBe('core-mcu');
+    expect(resolveSkillId('platform-cortex-registers')).toBe('platform_mcu');
     expect(resolveSkillId('protocol-mqtt')).toBe('vendor_stack');
     expect(resolveSkillId('middleware-fatfs')).toBe('vendor_fatfs');
     expect(resolveSkillId('middleware-lvgl')).toBe('vendor_lvgl');
@@ -97,7 +100,7 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('learning-tutor')).toContain('name: tools-learning-tutor');
-    expect(getSkillContent('os-abstraction')).toContain('name: os-adapter');
+    expect(getSkillContent('os-adapter')).toContain('name: platform_os');
     expect(getSkillContent('rtos-freertos')).toContain('name: os-runtime');
     expect(getSkillContent('bsp-adapter')).toContain('name: bsp-port');
     expect(getSkillContent('driver-vendor')).toContain('name: vendor_stm32');
@@ -221,11 +224,11 @@ describe('Skills catalog and loader', () => {
   });
 
   test('adapter rule is explicit in canonical software skills', () => {
-    for (const id of ['core-mcu', 'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp']) {
+    for (const id of ['platform_mcu', 'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp']) {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
-    expect(getSkillContent('bsp-wrapper')).toMatch(/Wrapper/);
+    expect(getSkillContent('platform_bsp')).toMatch(/函数表|函数表|注册/);
     expect(getSkillContent('bsp-port')).toMatch(/Port/);
-    expect(getSkillContent('os-adapter')).toMatch(/Wrapper/);
+    expect(getSkillContent('platform_os')).toMatch(/osal_/);
   });
 });

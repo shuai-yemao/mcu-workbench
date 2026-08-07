@@ -42,9 +42,9 @@
 
 | 层级 | Canonical skills | 主要职责 |
 |---|---|---|
-| OS | `os-adapter`、`os-runtime` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
-| BSP | `bsp-wrapper`、`bsp-port`、`bsp-hal-driver`、`bsp-handler` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理 |
-| Core | `core-mcu` | MCU 内部外设初始化、中断和 DMA |
+| OS | `platform_os`、`os-runtime` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
+| BSP | `platform_bsp`、`bsp-port`、`bsp-hal-driver`、`bsp-handler` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理 |
+| Platform | `platform_mcu`、`platform_os`、`platform_bsp` | MCU 内部外设初始化、中断和 DMA |
 | MCU | `vendor_stm32` | CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK |
 
 当前架构约束：Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。

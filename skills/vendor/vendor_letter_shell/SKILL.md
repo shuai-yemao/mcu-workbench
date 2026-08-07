@@ -9,7 +9,7 @@ description: Vendor 底座登记：letter_shell 嵌入式串口命令行 shell �
 
 letter_shell 把 C 函数注册成串口命令，在任务上下文中运行，通过 UART 提供命令行交互。它不直接依赖 RTOS——只调用 `read/write/lock/unlock` 四个回调，底层由 OSAL 包装 FreeRTOS 等，核心不接触任何 RTOS 原语。
 
-UART 通道与物理收发属于 [`core-mcu`](../../core/core-mcu/SKILL.md) 或 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)；日志输出建议用 RTT/ELOG（[`tools-observability`](../../tools/tools-observability/SKILL.md)），不要在 ISR 里直接调 `shellPrint`。
+UART 通道与物理收发属于 [`core-mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)；日志输出建议用 RTT/ELOG（[`tools-observability`](../../tools/tools-observability/SKILL.md)），不要在 ISR 里直接调 `shellPrint`。
 
 ## 工作流
 
@@ -24,4 +24,4 @@ UART 通道与物理收发属于 [`core-mcu`](../../core/core-mcu/SKILL.md) 或 
 
 ## 交接
 
-UART 物理通道交给 [`core-mcu`](../../core/core-mcu/SKILL.md)；任务与信号量交给 [`os-adapter`](../../os/os-adapter/SKILL.md)；运行时观测（RTT/日志）交给 [`tools-observability`](../../tools/tools-observability/SKILL.md)。
+UART 物理通道交给 [`core-mcu`](../../platform/platform_mcu/SKILL.md)；任务与信号量交给 [`os-adapter`](../../platform/platform_os/SKILL.md)；运行时观测（RTT/日志）交给 [`tools-observability`](../../tools/tools-observability/SKILL.md)。
