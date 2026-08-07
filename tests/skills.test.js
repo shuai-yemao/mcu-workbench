@@ -152,6 +152,13 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('需修订');
     expect(reviewPackage).toContain('阻塞风险');
     expect(reviewPackage).toContain('代码阶段判定');
+    expect(integration).toContain('必选产品文档输出（BRD / PRD / SRSys）');
+    expect(integration).toContain('docs/requirements/');
+    expect(integration).toContain('SRSys');
+    expect(reviewPackage).toContain('## 5. 产品文档映射（BRD / PRD / SRSys）');
+    expect(reviewPackage).toContain('<request_id>-BRD.md');
+    expect(reviewPackage).toContain('<request_id>-PRD.md');
+    expect(reviewPackage).toContain('<request_id>-SRSys.md');
   });
 
   test('registry is a compatibility view derived from catalog', () => {

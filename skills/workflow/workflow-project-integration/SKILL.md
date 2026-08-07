@@ -13,7 +13,7 @@ description: 依据项目证据审查需求实现方案、设计软件分层，�
 
 1. 读取工程文件、构建日志、启动流程和现有笔记，记录可复现证据。
 2. 画出调用链，确认上层只依赖下层公开契约。
-3. 输入固定为 Router 的 RCP；若已有既有需求实现方案，先执行“实现方案审查与代码前门禁”。
+3. 输入固定为 Router 的 RCP，固定执行“实现方案审查与代码前门禁”：审查既有需求实现方案（无既有方案时以 RCP 与项目证据为审查对象），必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档。
 4. 完成分层审查后只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
 5. 输出文件级改造顺序、验收点和未决风险；不在本 skill 内实现具体驱动。
 
@@ -48,13 +48,25 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 
 ### 固定审查包与代码阶段门禁
 
-审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出，作为下一轮唯一正式输入。审查包固定包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接。
+审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出，作为下一轮唯一正式输入。审查包**必选**包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接；四张清单必须同时重组为 BRD/PRD/SRSys 三份产品文档（见下节）。
 
 只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能进入代码阶段并交给对应层的实现 Skill。代码产物就绪后，把最终代码/变更集与验收清单交接给 [`workflow-final-review`](../workflow-final-review/SKILL.md) 做最终代码审查；`workflow-final-review` 不承担代码生成阶段。下游只能在施工清单、生成约束和验收测试清单的范围内工作；发现新事实必须回传本 Skill 更新审查包。
 
+### 必选产品文档输出（BRD / PRD / SRSys）
+
+四张审查清单是每次审查的**必选产出**，与是否存在既有实现方案无关；它们保留在审查包内，作为**插件后续流程**（实现层 Skill 的施工边界、`workflow-final-review` 的验收依据）的唯一正式输入，不直接作为对外交付物。审查完成后必须将四张清单的**内容重新组织为三份正式产品文档**，输出到 `<project>/docs/requirements/`，**交付用户审查**，可直接作为产品管理正式文档：
+
+| 产品文档 | 内容来源 | 定位 |
+|---|---|---|
+| BRD（商业需求文档 Business Requirements Document） | 工程现状表 + RCP 项目背景/目标/价值 | 为什么做：项目背景、工程现状、价值与非功能约束高层视图 |
+| PRD（产品需求文档 Product Requirements Document） | 文件施工清单 + 代码生成约束清单 | 做什么：产品范围与优先级、文件施工计划、需求约束与禁止事项 |
+| SRSys（系统需求规格说明书 System Requirements Specification） | 工程现状表 + 代码生成约束清单 + 验收测试清单（系统需求视角） | 系统需求：系统级功能/非功能/接口需求规格，验收标准为最后一章 |
+
+命名规范：`<request_id>-BRD.md`、`<request_id>-PRD.md`、`<request_id>-SRSys.md`；三份文档的章节骨架见 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 第 5 节。三份文档与四张清单同步更新；发现新事实必须回传本 Skill 更新审查包并重新生成文档。
+
 ## 交付计划最低产物
 
-每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与门禁，不代替下游实现。
+每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表（区别于审查包的四张清单——后者必选重组为 BRD/PRD/SRSys 产品文档）；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与门禁，不代替下游实现。
 
 固件分层交付作为本 Skill 的模式 C：基线、Tools 观测通道、最小系统、OS Adapter、Core、BSP Driver/Handle、Port、Wrapper、集成回归。它扩展模式 A 的审计证据并可映射模式 B 的路线图，但不将 UART 日志定义为软件层，也不在本 Skill 中实现任何一层代码。
 
@@ -67,7 +79,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 - Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成。
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
 - 上层调用下层时，调用下层 Adapter 的 Wrapper；Middleware 仅通过公共 API 使用 OS/BSP 能力。
-- 本 skill 只输出项目审计、分层设计、迁移路线和下游交接，不直接执行代码移植、最终代码审查、Prompt 模板生成或具体驱动实现。
+- 本 skill 只输出项目审计、分层设计、迁移路线、必选的 BRD/PRD/SRSys 产品文档和下游交接，不直接执行代码移植、最终代码审查、Prompt 模板生成或具体驱动实现。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 
 ## 分发目标
