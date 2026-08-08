@@ -1,13 +1,13 @@
 ---
 name: quality-format-check
-description: 嵌入式 C 代码格式检查 — 使用 clang-format 校验缩进、行宽、大括号、空格等是否符合 embedded-ai-coding-standard。
+description: 嵌入式 C 代码格式检查 — 使用 clang-format 校验缩进、行宽、大括号、空格等是否符合 style-profile 编码规范。
 version: "1.0.0"
 ---
 
 # 格式检查
 
 > 基于 `.clang-format` 对嵌入式 C 代码进行自动化格式检查。
-> 检查项与 `embedded-ai-coding-standard` 的生成档保持一致：4 空格缩进、行宽 ≤160、K&R 大括号、if/for `{` 同行、指针 `*` 靠变量名等。
+> 检查项与 `style-profile` 编码规范保持一致：4 空格缩进、行宽 ≤80、K&R 大括号、if/for `{` 同行、指针 `*` 靠变量名等。
 
 ## 前置条件
 
@@ -54,7 +54,7 @@ find drivers test \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} +
 | 检查项 | clang-format 配置键 | 编码规范对应 |
 |--------|---------------------|-------------|
 | 4 空格缩进 | `IndentWidth: 4`, `UseTab: Never` | 硬性约束 #1 |
-| 行宽 ≤160 | `ColumnLimit: 160` | 长分层 API 的可读性上限 |
+| 行宽 ≤80 | `ColumnLimit: 80` | 硬性约束 #2 |
 | K&R 函数 `{` 同行 | `AfterFunction: false` | 排版细节 #3 |
 | if/for `{` 同行 | `AfterControlStatement: false` | 排版细节 #4 |
 | 枚举/结构体 `{` 换行 | `AfterEnum: true`, `AfterStruct: true` | 排版细节 #5 |
@@ -65,9 +65,9 @@ find drivers test \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} +
 
 ## 边界
 
-- 不检查 Doxygen 注释完整性（由 `embedded-ai-code-review` 检查）
-- 不检查命名规范（由 `embedded-ai-code-review` 检查）
-- 不检查逻辑正确性（由编译器与 `embedded-ai-code-review` 检查）
+- 不检查 Doxygen 注释完整性（由 `tools-quality` 代码审查门禁检查）
+- 不检查命名规范（由 `tools-quality` 代码审查门禁检查）
+- 不检查逻辑正确性（由编译器与 `tools-quality` 代码审查门禁检查）
 - 不自动修复注释的左对齐/右对齐填充（AI 生成时需按规范手动控制）
 
 ## 输出示例

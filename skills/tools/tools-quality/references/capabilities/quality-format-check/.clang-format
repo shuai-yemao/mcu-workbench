@@ -1,5 +1,5 @@
 # clang-format for embedded C (STM32F4)
-# Matches embedded-ai-coding-standard v1.0
+# Matches tools-quality style-profile v1.0
 
 Language: Cpp
 BasedOnStyle: WebKit
@@ -12,7 +12,7 @@ IndentCaseLabels: true            # switch-case 缩进
 IndentPPDirectives: None          # #ifdef 等不缩进
 
 # Line width
-ColumnLimit: 160
+ColumnLimit: 80
 AllowShortBlocksOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None

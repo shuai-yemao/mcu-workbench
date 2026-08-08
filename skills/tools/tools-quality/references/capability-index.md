@@ -5,6 +5,7 @@
 | 能力主题 | 详细资料 |
 | --- | --- |
 | 嵌入式代码审查 | [完整流程与资源](capabilities/quality-code-review/GUIDE.md) |
+| 代码格式检查 | [完整流程与资源](capabilities/quality-format-check/GUIDE.md) |
 | 链接 Map 文件分析 | [完整流程与资源](capabilities/quality-map-analysis/GUIDE.md) |
 | 静态分析与 MISRA 检查 | [完整流程与资源](capabilities/quality-static-analysis/GUIDE.md) |
 | 嵌入式 Unity 单元测试 | [完整流程与资源](capabilities/quality-unity-testing/GUIDE.md) |
