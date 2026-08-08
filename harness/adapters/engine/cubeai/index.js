@@ -66,22 +66,6 @@ function createCubeaiEngine() {
 
     async run() {
       return { ok: true, outputs: { label: 'unknown', confidence: 0.8 } };
-    },
-
-    async evaluate({ bundle, target, dataset }) {
-      return {
-        kind: 'eval-report',
-        content: JSON.stringify({
-          engine: 'cubeai',
-          target: target.capabilities().id,
-          dataset: dataset.id,
-          model: bundle.id,
-          accuracy: 0.93,
-          latencyMs: 18.2,
-          ramBytes: 6144,
-          flashBytes: 12288
-        })
-      };
     }
   };
 }

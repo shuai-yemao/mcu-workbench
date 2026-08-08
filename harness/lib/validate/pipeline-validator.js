@@ -10,10 +10,13 @@ const { STAGE_IDS } = require('./artifact-validator');
 const PIPELINE_SCHEMA_VERSION = '1.0';
 
 /** @type {string[]} stage 条目允许出现的字段 */
-const STAGE_FIELDS = ['id', 'engine', 'target', 'scheme', 'metrics', 'executor', 'config'];
+const STAGE_FIELDS = ['id', 'engine', 'target', 'scheme', 'metrics', 'executor', 'config', 'measurement'];
 
 /** @type {string[]} gates 字段值必须为非负数字 */
 const GATE_NUMERIC_FIELDS = ['minAccuracy', 'maxLatencyMs', 'maxRamBytes', 'maxFlashBytes'];
+
+/** @type {string[]} baseline 字段(第 4 层基线回归,D3-3) */
+const BASELINE_FIELDS = ['enabled', 'maxAccuracyDrop', 'maxLatencyRise'];
 
 /**
  * 校验 pipeline.json。
@@ -74,6 +77,9 @@ function validatePipeline(pipeline) {
       if (s.executor !== undefined && typeof s.executor !== 'string') {
         errors.push(`${prefix}.executor: must be a string`);
       }
+      if (s.measurement !== undefined && typeof s.measurement !== 'string') {
+        errors.push(`${prefix}.measurement: must be a string (mock / local:<cmd>)`);
+      }
       if (s.config !== undefined && (s.config === null || typeof s.config !== 'object' || Array.isArray(s.config))) {
         errors.push(`${prefix}.config: must be an object`);
       }
@@ -89,6 +95,22 @@ function validatePipeline(pipeline) {
           errors.push(`gates.${key}: unknown gate`);
         } else if (typeof g[key] !== 'number' || Number.isNaN(Number(g[key])) || Number(g[key]) < 0) {
           errors.push(`gates.${key}: must be a non-negative number`);
+        }
+      }
+    }
+  }
+  if (p.baseline !== undefined) {
+    if (p.baseline === null || typeof p.baseline !== 'object' || Array.isArray(p.baseline)) {
+      errors.push('invalid baseline: must be an object');
+    } else {
+      const b = /** @type {Record<string, unknown>} */ (p.baseline);
+      for (const key of Object.keys(b)) {
+        if (!BASELINE_FIELDS.includes(key)) {
+          errors.push(`baseline.${key}: unknown field`);
+        } else if (key === 'enabled') {
+          if (typeof b[key] !== 'boolean') errors.push('baseline.enabled: must be a boolean');
+        } else if (typeof b[key] !== 'number' || Number.isNaN(Number(b[key])) || Number(b[key]) < 0) {
+          errors.push(`baseline.${key}: must be a non-negative number`);
         }
       }
     }

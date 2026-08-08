@@ -12,6 +12,8 @@ const { planPipeline } = require('./pipeline/planner');
 const { validatePipeline } = require('./validate/pipeline-validator');
 const { Registry, createDefaultRegistry } = require('./registry');
 const { compareRuns } = require('./report/compare');
+const { trendRuns } = require('./report/trend');
+const { BaselineStore } = require('./baseline/baseline-store');
 const dataset = require('./dataset/dataset-manager');
 
 /**
@@ -21,7 +23,8 @@ const dataset = require('./dataset/dataset-manager');
 function createHarness({ baseDir, registry = createDefaultRegistry() }) {
   if (!baseDir) throw new Error('baseDir is required (目标工程 .mcu-workbench/ 路径)');
   const store = new RunStore({ baseDir });
-  const runner = new Runner({ registry, store });
+  const baselineStore = new BaselineStore({ baseDir });
+  const runner = new Runner({ registry, store, baselineStore });
   let pipeline;
 
   return {
@@ -64,6 +67,14 @@ function createHarness({ baseDir, registry = createDefaultRegistry() }) {
     compare({ runIds }) {
       return compareRuns({ store, runIds });
     },
+
+    /** 历史趋势:多次 run 指标序列 */
+    trend({ runIds }) {
+      return trendRuns({ store, runIds });
+    },
+
+    /** 基线库(读取/管理;写入由 runner 在 eval gate 通过时自动完成) */
+    baseline: baselineStore,
 
     /** 数据集管理工具(importDir/splitDataset/makeCalibrationSet/...) */
     dataset

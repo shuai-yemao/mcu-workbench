@@ -62,6 +62,7 @@ function planPipeline({ pipeline, registry }) {
     }
 
     if (stageSpec.executor !== undefined) entry.executor = stageSpec.executor;
+    if (stageSpec.measurement !== undefined) entry.measurement = stageSpec.measurement;
     plan.stages.push(entry);
   }
 

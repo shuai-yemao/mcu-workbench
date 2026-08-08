@@ -68,23 +68,6 @@ const unsigned int model_data_len = 4;
 
     async run() {
       return { ok: true, outputs: { label: 'unknown', confidence: 0.9 } };
-    },
-
-    async evaluate({ bundle, target, dataset }) {
-      // MVP: 模拟评测;阶段 3 接入真实精度/延迟/内存测量
-      return {
-        kind: 'eval-report',
-        content: JSON.stringify({
-          engine: 'tflm',
-          target: target.capabilities().id,
-          dataset: dataset.id,
-          model: bundle.id,
-          accuracy: 0.95,
-          latencyMs: 12.5,
-          ramBytes: 4096,
-          flashBytes: 8192
-        })
-      };
     }
   };
 }

@@ -7,7 +7,7 @@ const os = require('os');
 const path = require('path');
 const { createHarness, createDefaultRegistry } = require('../lib/index');
 
-function basePipeline(engine) {
+function basePipeline(engine, accuracy) {
   return {
     schemaVersion: '1.0',
     name: `compare-${engine}`,
@@ -16,7 +16,13 @@ function basePipeline(engine) {
       { id: 'train', executor: 'mock' },
       { id: 'quantize', engine, scheme: 'int8' },
       { id: 'integrate', engine },
-      { id: 'eval', engine, target: 'host', metrics: ['accuracy', 'latency', 'ram'] }
+      {
+        id: 'eval',
+        engine,
+        target: 'host',
+        metrics: ['accuracy', 'latency', 'ram'],
+        measurement: `local:node -e "console.log(JSON.stringify({accuracy:${accuracy},latencyMs:10,ramBytes:100,flashBytes:200}))"`
+      }
     ],
     gates: { minAccuracy: 0.9 }
   };
@@ -29,9 +35,9 @@ describe('compare 对比报告', () => {
       const registry = createDefaultRegistry({ probe: () => true });
       const h = createHarness({ baseDir, registry });
 
-      h.createPipeline(basePipeline('tflm'));
+      h.createPipeline(basePipeline('tflm', 0.95));
       const runTflm = await h.run();
-      h.createPipeline(basePipeline('cubeai'));
+      h.createPipeline(basePipeline('cubeai', 0.93));
       const runCubeai = await h.run();
 
       const { rows, summary } = h.compare({ runIds: [runTflm.runId, runCubeai.runId] });
@@ -44,9 +50,10 @@ describe('compare 对比报告', () => {
         expect(row.latencyMs).toBeGreaterThan(0);
         expect(row.artifactId).toBeTruthy();
       }
-      // 最优摘要:tflm 0.95 > cubeai 0.93
+      // 最优摘要:固定测量值下 tflm 0.95 > cubeai 0.93
       expect(summary.bestEngine).toBe('tflm');
-      expect(summary.fastestLatencyMs).toBeLessThan(summary.minRamBytes ? Infinity : Infinity);
+      expect(summary.bestAccuracy).toBe(0.95);
+      expect(summary.fastestLatencyMs).toBe(10);
     } finally {
       fs.rmSync(baseDir, { recursive: true, force: true });
     }

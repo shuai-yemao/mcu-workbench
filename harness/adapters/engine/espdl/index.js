@@ -65,22 +65,6 @@ static const int8_t model_data[] = { 0, 1, 2, 3 };
 
     async run() {
       return { ok: true, outputs: { label: 'unknown', confidence: 0.85 } };
-    },
-
-    async evaluate({ bundle, target, dataset }) {
-      return {
-        kind: 'eval-report',
-        content: JSON.stringify({
-          engine: 'espdl',
-          target: target.capabilities().id,
-          dataset: dataset.id,
-          model: bundle.id,
-          accuracy: 0.91,
-          latencyMs: 22.4,
-          ramBytes: 8192,
-          flashBytes: 16384
-        })
-      };
     }
   };
 }

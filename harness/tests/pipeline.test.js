@@ -138,7 +138,8 @@ describe('report', () => {
     h.createPipeline(DEMO_PIPELINE);
     const run = await h.run();
     const { evalReport } = h.report({ runId: run.runId });
-    expect(evalReport.accuracy).toBe(0.95);
+    expect(evalReport.accuracy).toBeGreaterThanOrEqual(0.9);
+    expect(evalReport.accuracy).toBeLessThan(0.98);
     expect(evalReport.latencyMs).toBeGreaterThan(0);
     expect(evalReport.dataset).toBeTruthy();
   });

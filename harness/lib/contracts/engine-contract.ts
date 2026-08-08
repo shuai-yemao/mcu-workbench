@@ -50,10 +50,10 @@ export interface EngineAdapter {
   generateCode(req: { artifact: ArtifactRef; config: GenConfig }): Promise<ArtifactPayload>;
   /** 在目标上运行推理 */
   run(req: { bundle: ArtifactRef; target: TargetAdapter }): Promise<RunResult>;
-  /** 评测(精度/延迟/内存/功耗)→ eval-report payload */
-  evaluate(req: {
-    bundle: ArtifactRef;
-    target: TargetAdapter;
-    dataset: ArtifactRef;
-  }): Promise<ArtifactPayload>;
 }
+
+/**
+ * 契约修正 #2(阶段 3):evaluate 已从引擎解耦。
+ * 评测(精度/延迟/内存)是跨引擎的共性测量协议,由 eval stage 编排 measurement provider
+ * (lib/eval/measurement.js)完成;引擎只管 convert/quantize/generateCode/run。
+ */
