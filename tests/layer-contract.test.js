@@ -190,4 +190,205 @@ describe('generated layer contract validator', () => {
       expect.objectContaining({ ruleId: 'LAYER_HANDLE_TASK_CALLBACK' })
     ]));
   });
+
+  async function createWrapperSlice(header, source) {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mcu-wrapper-slice-'));
+    const files = {
+      '03_Platform/platform_bsp/externflash/Inc/platform_externflash_wrapper.h': header,
+      '03_Platform/platform_bsp/externflash/Src/platform_externflash_wrapper.c': source
+    };
+    for (const [relative, content] of Object.entries(files)) {
+      const target = path.join(root, relative);
+      await fs.mkdir(path.dirname(target), { recursive: true });
+      await fs.writeFile(target, content, 'utf8');
+    }
+    return root;
+  }
+
+  const wrapperSourceFullProfile = `/* @file platform_externflash_wrapper.c
+ * @brief Platform-independent externflash Wrapper implementation.
+ * @par dependencies platform_externflash_wrapper.h
+ * Processing flow: forward API calls through the registered context-first Ops.
+ */
+#include "platform_externflash_wrapper.h"
+/* Includes */
+/* Private Defines */
+/* Private Types */
+/* Private State */
+static platform_externflash_wrapper_ops_t s_externflash_ops;
+/* Private Functions */
+/* Public Functions */
+int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops) {
+    if (p_ops == 0) return -1;
+    s_externflash_ops = *p_ops;
+    return 0;
+}`;
+
+  const pureForwardWrapperHeader = `/* @file platform_externflash_wrapper.h
+ * @brief Platform-independent externflash Wrapper (pure forward, no object identity).
+ * @par dependencies platform_error.h, platform_type.h
+ * Processing flow: register context-first Ops then forward API calls.
+ */
+#ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
+#define PLATFORM_EXTERNFLASH_WRAPPER_H
+#include <stdint.h>
+/* Includes */
+/* Public Types */
+typedef struct {
+    void *p_context;
+    int32_t (*pf_read_id)(void *p_context, uint32_t *device_id);
+} platform_externflash_wrapper_ops_t;
+/* Public Functions */
+int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops);
+#endif`;
+
+  const fourTupleBrokenWrapperHeader = `/* @file platform_externflash_wrapper.h
+ * @brief Device object wrapper carrying platform_device_t identity.
+ * @par dependencies platform_error.h, platform_type.h
+ * Processing flow: object identity plus four-tuple slots.
+ */
+#ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
+#define PLATFORM_EXTERNFLASH_WRAPPER_H
+#include <stdint.h>
+/* Includes */
+/* Public Types */
+typedef struct {
+    platform_device_t base;
+    const externflash_cfg_t *cfg;
+    externflash_ctx_t *ctx;
+    externflash_data_t *data;
+} platform_externflash_t;
+/* Public Functions */
+int32_t platform_externflash_wrapper_register(const void *p_ops);
+#endif`;
+
+  const noProfileWrapperHeader = `/* @file platform_externflash_wrapper.h
+ * @brief Minimal header without full comment profile.
+ */
+#ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
+#define PLATFORM_EXTERNFLASH_WRAPPER_H
+#include <stdint.h>
+/* Includes */
+/* Public Types */
+typedef struct {
+    void *p_context;
+    int32_t (*pf_read_id)(void *p_context, uint32_t *device_id);
+} platform_externflash_wrapper_ops_t;
+/* Public Functions */
+int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops);
+#endif`;
+
+  test('accepts a pure-forward wrapper slice with --slice wrapper and full comment profile', async () => {
+    const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
+    const result = validateLayerContract({
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+    });
+    expect(result).toMatchObject({ valid: true, errors: [] });
+  });
+
+  test('rejects a device-object wrapper that omits a four-tuple slot', async () => {
+    const root = await createWrapperSlice(fourTupleBrokenWrapperHeader, wrapperSourceFullProfile);
+    const result = validateLayerContract({
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+    });
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_FOUR_TUPLE' })
+    ]));
+  });
+
+  test('rejects a wrapper missing the full comment profile in wrapper slice', async () => {
+    const root = await createWrapperSlice(noProfileWrapperHeader, wrapperSourceFullProfile);
+    const result = validateLayerContract({
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+    });
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DOC_PROFILE' })
+    ]));
+  });
+
+  test('does not require sibling slice files when --slice wrapper is used', async () => {
+    const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
+    const result = validateLayerContract({
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+    });
+    expect(result.errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_REQUIRED_FILE' })
+    ]));
+  });
+
+  test('rejects an unknown --slice value', () => {
+    expect(() => parseArgs(['--root', 'x', '--core', 'spi', '--device-type', 'externflash', '--device', 'W25Q64', '--slice', 'bogus']))
+      .toThrow(/Unknown --slice value/);
+  });
+
+  test('tolerates the injected --self-check default when real arguments are attached via npm run', () => {
+    const parsed = parseArgs(
+      ['--self-check', '--root', 'x', '--core', 'spi', '--device-type', 'externflash', '--device', 'W25Q64', '--slice', 'wrapper'],
+      'C:/firmware'
+    );
+    expect(parsed).toEqual({
+      root: path.resolve('C:/firmware', 'x'),
+      core: 'spi',
+      deviceType: 'externflash',
+      device: 'W25Q64',
+      json: false,
+      slice: 'wrapper'
+    });
+  });
+
+  const compliantWrapperHeader = `/* @file platform_externflash_wrapper.h
+ * @brief Platform-independent externflash Wrapper (pure forward, no object identity).
+ * @par dependencies platform_error.h, platform_type.h
+ * Processing flow: register context-first Ops then forward API calls.
+ */
+#ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
+#define PLATFORM_EXTERNFLASH_WRAPPER_H
+#include <stdint.h>
+#include "platform_type.h"
+#include "platform_def.h"
+#include "platform_error.h"
+/* Includes */
+/* Public Types */
+typedef struct {
+    void *p_context;
+    platform_err_t (*pf_read_id)(void *p_context, uint32_t *device_id);
+} platform_externflash_wrapper_ops_t;
+/* Public Functions */
+platform_err_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops);
+#endif`;
+
+  const compliantWrapperSource = `/* @file platform_externflash_wrapper.c
+ * @brief Platform-independent externflash Wrapper implementation.
+ * @par dependencies platform_externflash_wrapper.h, platform_error.h
+ * Processing flow: forward API calls through the registered context-first Ops.
+ */
+#include "platform_externflash_wrapper.h"
+#include "platform_def.h"
+#include "platform_error.h"
+/* Includes */
+/* Private Defines */
+/* Private Types */
+/* Private State */
+static platform_externflash_wrapper_ops_t s_externflash_ops;
+static platform_bool_t s_externflash_registered;
+/* Private Functions */
+/* Public Functions */
+platform_err_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops) {
+    if (p_ops == 0) return PLATFORM_ERR_PARAM;
+    s_externflash_ops = *p_ops;
+    return PLATFORM_ERR_OK;
+}`;
+
+  test('accepts a compliant wrapper that includes Platform Common type headers', async () => {
+    const root = await createWrapperSlice(compliantWrapperHeader, compliantWrapperSource);
+    const result = validateLayerContract({
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+    });
+    expect(result.errors).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DEPENDENCY' }),
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_FOUR_TUPLE' }),
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DOC_PROFILE' }),
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_SOURCE_SECTION' })
+    ]));
+  });
 });

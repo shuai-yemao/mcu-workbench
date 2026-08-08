@@ -60,7 +60,7 @@
 | 类别 | 文件 | 说明 |
 |---|---|---|
 | 配置四件套 | `app_config.h` / `product_config.h` / `compile_config.h` / `feature_config.h` | 00_Config 下，固定名 |
-| 平台五件套 | `platform_def.h` / `platform_error.h` / `platform_type.h` / `platform_object.h` / `platform_registry.h` | 固定名 |
+| 平台固定头 | `platform_def.h` / `platform_error.h` / `platform_type.h` / `platform_object.h` / `platform_lifecycle.h` / `platform_device.h` / `platform_service.h` | 固定名（平台对象模型；`platform_registry.h` 已废弃移除） |
 | Service 三件套 | `service_<域>_model.h` / `_state.h` / `_fault_code.h` | 每个 service 必配（D10） |
 | 单元测试 | `test_<模块>.c` | tests/ 下，如 `test_utils_crc.c` |
 
@@ -71,7 +71,7 @@
 | 类别 | 后缀 | 示例 |
 |---|---|---|
 | 结构体 typedef | `_t` | `platform_gpio_t` |
-| 枚举 typedef | `_t`（枚举值全大写） | `platform_error_t` |
+| 枚举 typedef | `_t`（枚举值全大写） | `platform_err_t` |
 | 操作函数表 | `_ops_t` | `platform_i2c_ops_t` |
 | 事件 | `_event_t` | `platform_uart_event_t` |
 | 状态机 | `_state_t` | `service_battery_state_t` |
@@ -146,13 +146,15 @@
 
 ## 7. 错误码基线（D4，统一错误码）
 
-`platform_error.h` 定义全局基线，Service/Impl 只在其后扩展、**禁止重复编号**：
+`platform_error.h` 定义全局基线（类型 `platform_err_t`），Service/Impl 只在其后扩展、**禁止重复编号**：
 
 ```
-PLATFORM_OK / PLATFORM_ERR_PARAM / PLATFORM_ERR_TIMEOUT / PLATFORM_ERR_BUSY /
-PLATFORM_ERR_NOT_SUPPORTED / PLATFORM_ERR_IO / PLATFORM_ERR_NO_MEM /
-PLATFORM_ERR_STATE / PLATFORM_ERR_CRC
+PLATFORM_ERR_OK / PLATFORM_ERR_GENERAL / PLATFORM_ERR_TIMEOUT / PLATFORM_ERR_PARAM /
+PLATFORM_ERR_NO_MEMORY / PLATFORM_ERR_NO_RESOURCE / PLATFORM_ERR_NOT_SUPPORTED /
+PLATFORM_ERR_NOT_INITIALIZED / PLATFORM_ERR_ALREADY_INIT / PLATFORM_ERR_BUSY / PLATFORM_ERR_FAIL
 ```
+
+（`PLATFORM_ERR_RESERVED = 0x7FFFFFFF` 为枚举边界守卫；旧码 `PLATFORM_ERR_IO / PLATFORM_ERR_NO_MEM / PLATFORM_ERR_STATE / PLATFORM_ERR_CRC` 已从基线移除）
 
 扩展格式：`PLATFORM_ERR_<模块>_<原因>`（如 `PLATFORM_ERR_I2C_NACK`）。
 
@@ -164,10 +166,10 @@ PLATFORM_ERR_STATE / PLATFORM_ERR_CRC
 
 | 位置 | 落地前 | 落地后 | 状态 |
 |---|---|---|---|
-| `lib/generator.js`（Core 切片） | `core_<peripheral>_*`、`core_status_t`、`CORE_STATUS_*`、`__CORE_GPIO_H__` | `platform_<peripheral>_*`、`platform_error_t`、`PLATFORM_OK / PLATFORM_ERR_*`、`PLATFORM_GPIO_H` | ✔ |
+| `lib/generator.js`（Core 切片） | `core_<peripheral>_*`、`core_status_t`、`CORE_STATUS_*`、`__CORE_GPIO_H__` | `platform_<peripheral>_*`、`platform_err_t`、`PLATFORM_ERR_OK / PLATFORM_ERR_*`、`PLATFORM_GPIO_H` | ✔ |
 | `lib/generator.js`（BSP 切片） | `bsp_<stem>_driver`、`drv_adapter_port_*`、`drv_adapter_wrapper_*` | `impl_<stem>_driver`、`impl_<type>_port`、`platform_<type>_wrapper` | ✔ |
 | `templates/bsp-oled` | `oled_operations_t`、`__BSP_OLED_DRIVER_H__`、`oled_driver_inst()` | `impl_oled_ops_t`、`IMPL_OLED_DRIVER_H`、`impl_oled_driver_inst()` | ✔ |
-| 类型后缀 | `core_status_t`（事务语义枚举） | `platform_error_t` 对齐 §7 错误码基线 | ✔ |
+| 类型后缀 | `core_status_t`（事务语义枚举） | `platform_err_t` 对齐 §7 错误码基线 | ✔ |
 | guard 风格 | `__XXX_H__`（双下划线，MISRA 21.1 风险） | `XXX_H`（无双下划线头尾） | ✔ |
 
 > 落地依据：`lib/generator.js`（目录/符号）、`commands/mcu-new.js`（编号目录树 + CMake GLOB）、`scripts/validate-layer-contract.js` / `validate-bsp-contract.js`（锁步校验）、`tests/generator.test.js` / `tests/mcu-new.test.js` / `tests/layer-contract.test.js`（断言锁步）、`templates/bsp-oled`（模板符号）。目录映射细节见 `docs/plugin-boundaries.md`。

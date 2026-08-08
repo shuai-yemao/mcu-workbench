@@ -63,14 +63,14 @@ hardware(2)  ──────────────── 保留 →        
 | workflow | requirements-router / workflow-claude-layering / review-gate / integration-plan / final-review | 5 |
 | app | app-architecture | 1 |
 | service | service-system（由 software-system 升格）+ battery / backlight / calendar / diagnosis / log / ota / power / sensor / storage / watchdog | 11 |
-| platform | platform-mcu / platform-os / platform-bsp | 3 |
+| platform | platform-common / platform-mcu / platform-os / platform-bsp / platform-middleware | 5 |
 | impl | impl-os / impl-board / impl-bsp（含 Handler 机制） | 3 |
 | vendor | vendor-stm32 + vendor-lvgl / vendor-stack / vendor-fatfs / vendor-fal / vendor-flashdb / vendor-letter-shell / vendor-dsp | 8 |
 | tools | build / flash / linker / debug / observability / quality / git / release / learning-tutor | 9 |
 | hardware | pcb-analysis / visa-debug | 2 |
-| **合计** | | **42** |
+| **合计** | | **44** |
 
-> v2 说明：platform-common、platform-middleware、impl-mcu、impl-middleware **不建独立技能**——统一错误码/类型/对象协议作为 `platform-bsp`（或新增头文件规范章节）承载；中间件移植知识随 vendor 技能保留；芯片实现知识并入 platform-mcu / vendor-stm32。**有技能才建层，无技能不凑层。**
+> ~~v2 说明：platform-common、platform-middleware、impl-mcu、impl-middleware **不建独立技能**~~ **已被后续决策反转**（见 CONTEXT.md）：平台层定为 5 技能（含 platform_common 公共定义与 platform_middleware 中间件能力接口）；统一错误码基线在 `platform_common/platform_error.h`，对象协议在 `platform_object.h` + `platform_lifecycle.h`。
 
 ---
 
@@ -96,13 +96,15 @@ hardware(2)  ──────────────── 保留 →        
 
 ## 3. Platform / Impl / Vendor 技能结构（跟随现有归属）
 
-### Platform —— 3 个技能（v2：不为空层造技能）
+### Platform —— 5 个技能（后续决策反转"不为空层造技能"，见 CONTEXT.md）
 
 | 技能 | 来源 | 内容 |
 |---|---|---|
+| `platform-common` | 公共定义（新增） | 统一错误码 `platform_err_t`（platform_error.h）/ 类型 / 对象协议（platform_object.h + platform_lifecycle.h）+ 公共宏 |
 | `platform-mcu` | core-mcu | MCU 能力接口（io/i2c/spi/uart/adc/timer/pwm/dma/rtc/power/watchdog/interrupt）+ 统一错误码/类型/对象协议规范 |
 | `platform-os` | os-adapter | OS 能力接口（thread/mutex/sem/queue/event/timer/delay/critical/memory） |
 | `platform-bsp` | bsp-wrapper | 板级器件能力接口（board/battery/backlight/charge/display/touch/imu/…）+ 函数表/注册/对象协议 |
+| `platform-middleware` | 中间件能力接口（新增） | log/fs/kv/crypto/gui/comm 等中间件能力接口声明 |
 
 ### Impl —— 3 个技能
 
@@ -242,7 +244,7 @@ npm run build:codex-compat && git diff --exit-code   # codex 同步防漂移
 | D1 物理重排 | ✅ 已定 |
 | D2 横切层保留 | 待定（建议：保留） |
 | D3 vendor-stm32 改名 | ✅ 已定 |
-| D4 Platform 错误码基线 | 待定（建议：并入 platform-mcu 头文件规范，不另设技能） |
+| D4 Platform 错误码基线 | ✅ 已定：基线在 `platform_common/platform_error.h`（`platform_err_t`） |
 | D5 handler 是 Impl 的一层 | ✅ 已定 |
 | D6 分阶段实施 | ✅ 已定 |
 | D7 Vendor 只登记不复制 | ✅ 已定（范本实证） |
@@ -250,17 +252,17 @@ npm run build:codex-compat && git diff --exit-code   # codex 同步防漂移
 | D9 中间件归 Vendor | ✅ 已定（v2：整体归位，不强制三段切） |
 | D10 Service=业务抽象 | ✅ 已定 |
 | D11 新技能命名连字符 | 建议 `service-battery`（与现有 id 一致） |
-| **D12** 技能跟随归属、不凑层 | ✅ 已定（v2：platform-common/middleware、impl-mcu/middleware 不建独立技能） |
+| **D12** 技能跟随归属、不凑层 | ✅ 已定（v2：不建独立技能）→ **后被反转**：平台层定为 5 技能（见 CONTEXT.md） |
 
 ---
 
 ## 9. 验收标准
 
 1. 任一技能能明确说出归属层且符合依赖铁律；
-2. Platform 目录零 `.c`（静态检查）；
+2. Platform 技能目录零 `.c`（静态检查；`platform_common` 对象模型实现除外）；
 3. Vendor 目录零上层符号（grep）+ 源码不复制只登记；
 4. App 目录零 Vendor/Impl 符号（grep）；
 5. 同一 Service 在两个不同芯片 Impl 上复用（示例验证）；
 6. 生成工程目录与范本（01_App…99_Utils）对齐；
 7. 旧调用名全部经 MIGRATION_MAP 可解析（回归测试覆盖）；
-8. **不为空层造技能**：每个技能都有真实来源或真实业务需求（v2）。
+8. ~~不为空层造技能~~（v2）→ **已反转**：平台层定为 5 技能（见 CONTEXT.md）。

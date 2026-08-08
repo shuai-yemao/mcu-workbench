@@ -7,11 +7,39 @@ description: Platform 纯定义：OS 能力接口（OSAL、任务、队列、同
 
 ## 边界
 
-Platform 定义稳定的 `osal_*` 公共接口和项目错误码；Impl 以 `os_*_impl()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`osal_internal_*.h` 只是 Wrapper 与 Port 的内部边界，不构成第三层。Impl 可使用公开 `osal_*` 创建并注入 Handler 所需资源，但任务入口、任务循环、缓存和设备生命周期逻辑仍归 Handler。
+Platform 定义稳定的 `osal_*` 公共接口；错误码统一使用 [`platform_common`](../platform_common/SKILL.md) 的 `platform_error.h` 中 `platform_err_t` 枚举（`PLATFORM_ERR_*`）。Impl 以 `os_*_impl()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`osal_internal_*.h` 只是 Wrapper 与 Port 的内部边界，不构成第三层。Impl 可使用公开 `osal_*` 创建并注入 Handler 所需资源，但任务入口、任务循环、缓存和设备生命周期逻辑仍归 Handler。
+
+## 公共定义来源
+
+错误码统一使用 [`platform_common`](../platform_common/SKILL.md) 的 `platform_error.h` 中 `platform_err_t` 枚举（`PLATFORM_ERR_*`）；`osal_*` 接口返回值一律为 `platform_err_t`，语义见枚举定义，**不定义、不返回项目私有错误码数字**。数据类型统一使用 `platform_type.h` 出口类型；常用宏统一取自 `platform_def.h`。对象四元组模板见 [`object-four-tuple-template.md`](../platform_common/references/object-four-tuple-template.md)。
+
+## 必须读取（生成前 MUST，缺失任一即不得开始输出）
+
+- 对象四元组模板：`../platform_common/references/object-four-tuple-template.md`（base + cfg/ctx/data/ops 判定标准）
+- 生成代码完整注释 Profile：`../../tools/tools-quality/references/generated-bsp-comment-profile.md`
+- 生成代码审查门禁：`../../tools/tools-quality/references/review-gates.md`
+- 软件层契约：`../../workflow/workflow-review-gate/references/software-layer-contract.md`
+
+## 四元组判定规则（MUST）
+
+1. **必须套四元组**：若定义了「承载平台身份的 struct」（首字段 `platform_device_t`/`platform_service_t`，或含对象身份/生命周期字段）→ `base` 首字段 + 补齐 `cfg`/`ctx`/`data`/`ops` 四槽。
+2. **豁免（须显式声明）**：仅纯粹行为函数表（`osal_*_ops_t`，只含 `pf_*` + 上下文，无身份/生命周期字段）可豁免；豁免必须在头注释显式声明「纯转发、不承载对象身份」。
+3. **禁止**用「纯接口」边界豁免一个已定义了对象 struct 的类型。
+
+## 生成自检门禁（输出前 MUST）
+
+输出代码前逐项核对，任一不满足不得交付：
+
+- [ ] 四元组：按判定规则核对
+- [ ] 错误码：`osal_*` 一律返回 `platform_err_t`，不返回项目私有数字
+- [ ] 类型/宏：`platform_type.h` 出口类型、`platform_def.h` 宏，不自造
+- [ ] 依赖：OSAL 公共接口不暴露 RTOS 原生类型
+- [ ] 注释：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）
+- [ ] 代码质量：按 `review-gates.md` 自查
 
 ## 接口族
 
-任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义。事件、Notify、取消等能力只有在当前 Impl 已实现并经过测试时才可加入公共接口。
+任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义（统一 `platform_err_t`，见 `platform_common`）。事件、Notify、取消等能力只有在当前 Impl 已实现并经过测试时才可加入公共接口。
 
 ## 工作流
 

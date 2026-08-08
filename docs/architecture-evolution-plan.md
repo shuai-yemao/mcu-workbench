@@ -101,10 +101,10 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 
 | 属性 | 内容 |
 |---|---|
-| 职责 | 定义统一能力契约，**零实现**，不绑定任何具体芯片（范本：platform_common/mcu/os/bsp/middleware 五个子域，全部头文件） |
-| 五大统一 | ① **统一接口**：`platform_*_api.h` 能力接口 ② **统一错误码**：`platform_error.h` ③ **统一数据结构**：`platform_type.h` ④ **统一 ops 函数指针**：`platform_object.h` 对象协议 ⑤ **统一 ctx 上下文**：`platform_registry.h` 注册表 |
-| 子域 | `platform_mcu`（外设能力）/ `platform_os`（OS 能力）/ `platform_bsp`（板级器件能力）/ `platform_middleware`（中间件能力接口：log/fs/kv/crypto/gui/comm）/ `platform_common`（公共定义） |
-| 禁止 | 任何实现代码、任何芯片头文件、任何厂商类型 |
+| 职责 | 定义统一能力契约，不绑定任何具体芯片（范本：platform_common/mcu/os/bsp/middleware 五个子域）；**零实现门禁仅约束技能目录**，`platform_common` 含对象模型实现 |
+| 五大统一 | ① **统一接口**：`platform_*_api.h` 能力接口 ② **统一错误码**：`platform_error.h`（`platform_err_t`）③ **统一数据结构**：`platform_type.h` ④ **统一对象协议**：`platform_object.h`（对象身份/状态）+ `platform_lifecycle.h`（生命周期回调）⑤ **统一 ctx 上下文**：对象自携带 `p_self`/`p_parent` 关系（`platform_registry.h` 注册表已废弃） |
+| 子域 | `platform_mcu`（外设能力）/ `platform_os`（OS 能力）/ `platform_bsp`（板级器件能力）/ `platform_middleware`（中间件能力接口：log/fs/kv/crypto/gui/comm）/ `platform_common`（公共定义与对象模型） |
+| 禁止 | 任何芯片头文件、任何厂商类型；实现代码仅限技能目录之外（`platform_common` 对象模型实现为例外） |
 | 换芯片 | 接口永不因芯片改变 |
 | 交付物 | `03_Platform/` **头文件集** |
 
@@ -137,7 +137,7 @@ App → Service → Platform ← Impl → Vendor
 
 Vendor 不得 include/调用  App / Service / Platform / Impl 任何符号
 App 不得 include/调用      HAL / Platform 实现 / Impl / Vendor 任何符号
-Platform 不得包含任何实现  （只有头文件）
+Platform 技能目录不得包含实现（头文件契约；platform_common 对象模型实现除外）
 中间件源码在 Vendor；Platform 只见其中间件能力接口；Impl 做移植
 ```
 
@@ -170,7 +170,7 @@ Platform 不得包含任何实现  （只有头文件）
 
 ### 映射原则
 
-> **技能跟随现有归属，不为凑层强造技能**（v2）：无来源技能的层级（platform-common/platform-middleware/impl-mcu/impl-middleware）不建独立技能，能力并入相邻技能或头文件规范承载。
+> ~~**技能跟随现有归属，不为凑层强造技能**（v2）~~ **已被后续决策反转**（见 CONTEXT.md）：平台层定为 5 技能 `platform_common` / `platform_mcu` / `platform_os` / `platform_bsp` / `platform_middleware`，公共定义与中间件能力接口独立成技能。
 > **中间件归 Vendor**：middleware-* 整体归位 vendor-*（源码/移植/知识随底座保留，不强制三段切）。
 > **业务抽象**：App 里重复出现的业务（电池/背光/日志/OTA/存储/看门狗…）抽象为 Service，按业务域组织。
 > **机制与策略分离**：机制（多实例/缓存/重试）在 Impl/Handler；策略（何时/如何决策）在 Service。
@@ -192,17 +192,20 @@ platform_err_t platform_fs_write(platform_fs_t *fs, const char *path, const void
 ### 4.2 统一错误码
 
 ```c
-/* 03_Platform/platform_common/platform_error.h —— 全局错误码基线（唯一事实源） */
+/* 03_Platform/platform_common/platform_error.h —— 全局错误码基线（唯一事实源，类型 platform_err_t） */
 typedef enum {
-    PLATFORM_OK = 0,
-    PLATFORM_ERR_PARAM,         /* 参数错误        */
-    PLATFORM_ERR_TIMEOUT,       /* 超时            */
-    PLATFORM_ERR_BUSY,          /* 忙              */
-    PLATFORM_ERR_NOT_SUPPORTED, /* 不支持          */
-    PLATFORM_ERR_IO,            /* IO 错误          */
-    PLATFORM_ERR_NO_MEM,        /* 内存不足        */
-    PLATFORM_ERR_STATE,         /* 状态错误        */
-    PLATFORM_ERR_CRC,           /* 校验失败        */
+    PLATFORM_ERR_OK              = 0,
+    PLATFORM_ERR_GENERAL         = 1,
+    PLATFORM_ERR_TIMEOUT         = 2,
+    PLATFORM_ERR_PARAM           = 3,
+    PLATFORM_ERR_NO_MEMORY       = 4,
+    PLATFORM_ERR_NO_RESOURCE     = 5,
+    PLATFORM_ERR_NOT_SUPPORTED   = 6,
+    PLATFORM_ERR_NOT_INITIALIZED = 7,
+    PLATFORM_ERR_ALREADY_INIT    = 8,
+    PLATFORM_ERR_BUSY            = 9,
+    PLATFORM_ERR_FAIL            = 10,
+    PLATFORM_ERR_RESERVED        = 0x7FFFFFFF
     /* Service/Impl 可在其后扩展，禁止重复编号 */
 } platform_err_t;
 ```
@@ -210,16 +213,29 @@ typedef enum {
 ### 4.3 统一数据结构 / 统一 ctx
 
 ```c
-/* 03_Platform/platform_common/platform_object.h —— 对象协议 */
-typedef struct platform_object {
-    const void *ops;      /* 指向 ops 表      */
-    void       *impl;     /* Impl 私有数据    */
-    uint32_t    handle;   /* 句柄/索引        */
+/* 03_Platform/platform_common/platform_object.h —— 对象协议（身份 + 生命周期，取代注册表） */
+typedef struct {
+    uint32_t                        magic;       /* 运行时身份校验值      */
+    const char                     *name;        /* 对象名，如 display0    */
+    platform_object_type_t          type;        /* 对象高层类型          */
+    platform_object_state_t         state;       /* 对象生命周期状态      */
+    uint32_t                        flags;       /* 扩展标志位            */
+    void                           *p_self;      /* 指向具体拥有者        */
+    void                           *p_parent;    /* 指向父对象/管理器     */
+    const platform_lifecycle_ops_t *p_lifecycle; /* 生命周期回调表        */
+    void                           *user_data;   /* 用户扩展指针          */
 } platform_object_t;
 
-/* 03_Platform/platform_common/platform_registry.h —— 注册表 */
-platform_err_t platform_registry_add(const char *name, const platform_object_t *obj);
-platform_object_t *platform_registry_get(const char *name);
+/* 03_Platform/platform_common/platform_lifecycle.h —— 生命周期回调表 */
+typedef struct {
+    platform_err_t (*init)(void *p_self);    /* 对象初始化            */
+    platform_err_t (*start)(void *p_self);   /* 对象启动入口          */
+    platform_err_t (*process)(void *p_self); /* 周期处理（可选）      */
+    platform_err_t (*stop)(void *p_self);    /* 对象停止入口          */
+    platform_err_t (*sleep)(void *p_self);   /* 低功耗入口（可选）    */
+    platform_err_t (*wakeup)(void *p_self);  /* 唤醒入口（可选）      */
+    platform_err_t (*deinit)(void *p_self);  /* 对象资源释放          */
+} platform_lifecycle_ops_t;
 ```
 
 ### 4.4 统一 ops 函数指针（对象协议）
@@ -294,14 +310,14 @@ typedef struct platform_battery_ops {
 | **D8** | App 依赖门禁 | 阶段 5 统一收紧"App 只调 Service" | 待定（建议 B） |
 | **D9** | Middleware 定位 | 中间件源码与知识**整体归 Vendor**（vendor-*），不强制三段切 | ✅ 已定 |
 | **D10** | Service 定位 | App 常见业务抽象，带 _model/_state/_fault_code | ✅ 已定 |
-| **D12** | 技能跟随归属 | **不为凑层强造技能**：platform-common/middleware、impl-mcu/middleware 无来源不建独立技能 | ✅ 已定 |
+| **D12** | 技能跟随归属 | ~~不为凑层强造技能~~ → **已反转**：平台层定为 5 技能（platform_common/mcu/os/bsp/middleware），见 CONTEXT.md | ✅ 已定（后被反转） |
 
 ---
 
 ## 8. 验收标准（方案层面）
 
 1. 任一技能都能明确说出归属层，且符合该层依赖铁律；
-2. Platform 目录零实现（静态检查可验证）；
+2. Platform 技能目录零实现（静态检查可验证；`platform_common` 对象模型实现除外）；
 3. Vendor 目录零上层符号（grep 可验证），源码不复制只登记；
 4. App 目录零 Vendor/Impl 符号（grep 可验证）；
 5. 同一个 Service 可在两个不同芯片 Impl 上复用（示例验证）；

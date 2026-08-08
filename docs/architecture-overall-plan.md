@@ -39,7 +39,7 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 |---|---|---|---|---|
 | **App** | 产品业务流程：编排、状态机、交互（app_ble/app_hmi/app_ota/app_init/app_system） | **只调 Service** | HAL/Platform 实现/Impl/Vendor 符号 | 零改动 |
 | **Service** | **App 常见业务抽象**（带策略）：battery/backlight/log/ota/power/sensor/storage/watchdog…，各带 `_model/_state/_fault_code` | Platform 接口 + 其他 Service | Vendor 头文件、寄存器/HAL | 零改动 |
-| **Platform** | 平台抽象（**纯定义，零实现**）：统一接口/错误码/数据结构/ops/ctx | 仅标准类型 | 任何实现、芯片头文件 | 接口永不改 |
+| **Platform** | 平台抽象：统一接口/错误码/数据结构/对象协议/ctx（**零实现门禁仅约束技能目录**，`platform_common` 含对象模型实现） | 仅标准类型 | 芯片头文件、厂商类型 | 接口永不改 |
 | **Impl** | Platform→Vendor 适配落地：board/mcu/os/bsp 实现 + Handler 机制 | Platform 接口 + Vendor 底座 | 反向定义接口、被 App 直调、含业务策略 | 换整套 Impl |
 | **Vendor** | 厂家/第三方底座：HAL/CMSIS/CubeMX/FreeRTOS/LVGL/FatFS/算法库/SDK | — | **不反向调用任何上层** | — |
 
@@ -48,7 +48,7 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 ```text
 App → Service → Platform ← Impl → Vendor
 Vendor 不得 include 上层任何符号；App 不得 include Vendor/Impl/HAL；
-Platform 只有头文件（零 .c）；机制在 Impl/Handler，策略在 Service。
+Platform 技能目录只有头文件（零 .c；platform_common 对象模型实现除外）；机制在 Impl/Handler，策略在 Service。
 ```
 
 **目标工程目录范本（用户权威参照）**：
@@ -57,7 +57,7 @@ Platform 只有头文件（零 .c）；机制在 Impl/Handler，策略在 Servic
 00_Docs / 00_Config(app|product|compile|feature_config.h)
 01_App        app_main|init|system|ble|hmi(ui/ui_task)|ota
 02_Service    service_system|battery|backlight|calendar|diagnosis|log|ota|power|sensor|storage|watchdog
-03_Platform   platform_common(def/error/type/object/registry) | mcu | os | bsp | middleware（全头文件）
+03_Platform   platform_common(def/error/type/object/lifecycle/device/service) | mcu | os | bsp | middleware（common 含对象模型实现，其余头文件契约）
 04_Impl       impl_board | mcu(stm32f411_*) | os(freertos_*) | bsp | middleware(easylogger/fatfs/crypto/lvgl/comm port)
 05_Vendor     README + vendor_mapping.md + patch/（源码不复制）
 06_Toolchain / 99_Utils(crc|ringbuffer|filter|list)
@@ -117,12 +117,12 @@ Platform 只有头文件（零 .c）；机制在 Impl/Handler，策略在 Servic
 | workflow（插件层） | 5 | requirements-router / workflow-claude-layering / review-gate / integration-plan / final-review |
 | app（软件架构层） | 1 | app-architecture |
 | service（软件架构层） | 11 | system + battery / backlight / calendar / diagnosis / log / ota / power / sensor / storage / watchdog |
-| platform（软件架构层） | 3 | platform_mcu / platform_os / platform_bsp |
+| platform（软件架构层） | 5 | platform_common / platform_mcu / platform_os / platform_bsp / platform_middleware |
 | impl（软件架构层） | 3 | impl_os / impl_board / impl_bsp（含 Handler 机制） |
 | vendor（软件架构层） | 8 | vendor_stm32 + lvgl / stack / fatfs / fal / flashdb / letter_shell / dsp |
 | tools（插件层） | 9 | build / flash / linker / debug / observability / quality / git / release / learning-tutor |
 | hardware（插件层） | 2 | pcb-analysis / visa-debug |
-| **合计** | **42** | 33 迁移 + 10 新增 service（service_system 由 software-system 升格） |
+| **合计** | **44** | 平台层 5 技能（D12 反转后） |
 
 ## 7. 落地：catalog 改造 + 目录重排
 
@@ -198,7 +198,7 @@ MIGRATION_MAP 扩充（旧连字符 → 新下划线）：
 | D1 | 物理重排 + 迁移映射 | ✅ | 0001 |
 | D2 | workflow/tools/hardware 是插件分层，不入软件架构五层 | ✅ | 0002 |
 | D3 | mcu-platform 改名 vendor_stm32 | ✅ | 0003 |
-| D4 | 错误码基线并入 platform_mcu 头文件规范 | ✅ | 0004 |
+| D4 | 错误码基线位于 `platform_common/platform_error.h`（`platform_err_t`） | ✅ | 0004 |
 | D5 | bsp-handler 是 Impl 的一层（机制层） | ✅ | 0005 |
 | D6 | 分阶段实施、每阶段独立验证可回滚 | ✅ | 0006 |
 | D7 | Vendor 只登记映射不复制源码 | ✅ | 0007 |
@@ -206,12 +206,12 @@ MIGRATION_MAP 扩充（旧连字符 → 新下划线）：
 | D9 | 中间件整体归 Vendor（不强制三段切） | ✅ | 0009 |
 | D10 | Service = App 常见业务抽象 | ✅ | 0010 |
 | D11 | 新技能下划线命名 | ✅ | 0011 |
-| D12 | 技能跟随归属，不为凑层强造技能 | ✅ | 0012 |
+| D12 | 技能跟随归属，不为凑层强造技能 → **后被反转**：平台层定为 5 技能（见 CONTEXT.md） | ✅ | 0012 |
 
 ## 11. 验收标准
 
 1. 任一技能能明确说出归属层且符合依赖铁律；
-2. Platform 目录零 `.c`（静态检查）；
+2. Platform 技能目录零 `.c`（静态检查；`platform_common` 对象模型实现除外）；
 3. Vendor 目录零上层符号（grep）+ 源码不复制只登记；
 4. App 目录零 Vendor/Impl 符号（grep）；
 5. 同一 Service 在两个不同芯片 Impl 上复用（示例验证）；

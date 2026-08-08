@@ -11,7 +11,12 @@ const {
   normalizeDeviceType
 } = require('../lib/generator');
 
-const STANDARD_HEADERS = new Set(['stdbool.h', 'stddef.h', 'stdint.h', 'inttypes.h', 'limits.h', 'stdint.h']);
+const STANDARD_HEADERS = new Set(['stdbool.h', 'stddef.h', 'stdint.h', 'inttypes.h', 'limits.h']);
+
+// Platform Common 是共享基础层：其类型/错误码/宏出口是 wrapper 按 skill 规范
+// （platform_common/SKILL.md 输出契约）必须 include 的依赖，不属于越层泄漏。
+// 仍禁止 wrapper include platform_mcu/platform_bsp/impl_*/vendor/HAL/RTOS 头。
+const PLATFORM_COMMON_HEADERS = new Set(['platform_type.h', 'platform_error.h', 'platform_def.h']);
 
 function maskCommentsAndStrings(content) {
   let result = '';
@@ -109,6 +114,21 @@ function expectedPaths({ core, deviceType, device }) {
   };
 }
 
+const SLICE_ROLES = {
+  wrapper: ['wrapperHeader', 'wrapperSource'],
+  driver: ['driverConfig', 'driverHeader', 'driverSource'],
+  handle: ['handleHeader', 'handleSource'],
+  port: ['portHeader', 'portSource'],
+  all: null
+};
+
+function filterSlice(paths, slice) {
+  if (!slice || slice === 'all') return paths;
+  const roles = SLICE_ROLES[slice];
+  if (!roles) throw createLayerError(`Unknown slice: ${slice}. Expected wrapper, driver, handle, port, or all.`);
+  return Object.fromEntries(Object.entries(paths).filter(([role]) => roles.includes(role)));
+}
+
 function readSlice(root, paths, errors) {
   const files = {};
   for (const [role, relative] of Object.entries(paths)) {
@@ -152,9 +172,25 @@ function validateWrapper(files, errors) {
     const file = files[role];
     if (!file) continue;
     for (const include of directIncludes(file.content)) {
-      const ownHeader = role === 'wrapperSource' && include === path.basename(files.wrapperHeader.relative);
-      if (!ownHeader && !STANDARD_HEADERS.has(include)) {
+      const includeName = path.basename(include);
+      const ownHeader = role === 'wrapperSource' && includeName === path.basename(files.wrapperHeader.relative);
+      if (!ownHeader && !STANDARD_HEADERS.has(includeName) && !PLATFORM_COMMON_HEADERS.has(includeName)) {
         addError(errors, 'LAYER_WRAPPER_DEPENDENCY', file.relative, `Wrapper include is not allowed: ${include}.`);
+      }
+    }
+  }
+}
+
+function validateFourTuple(files, errors) {
+  const wrapper = files.wrapperHeader;
+  if (!wrapper) return;
+  const code = maskCommentsAndStrings(wrapper.content);
+  const definesDeviceObject = /\bplatform_device_t\b|\bplatform_service_t\b/.test(code);
+  if (definesDeviceObject) {
+    for (const slot of ['cfg', 'ctx', 'data', 'ops']) {
+      if (!new RegExp(`\\b${slot}\\s*;`).test(code)) {
+        addError(errors, 'LAYER_WRAPPER_FOUR_TUPLE', wrapper.relative,
+          `Device object struct must declare the ${slot} slot (four-tuple: base + cfg/ctx/data/ops).`);
       }
     }
   }
@@ -254,21 +290,25 @@ function validateHandle(files, type, errors) {
   }
 }
 
-function validateSsd1306Display(files, errors) {
+function validateFullCommentProfile(files, errors, { rulePrefix = 'LAYER_WORKFLOW', skipRoles = ['coreHeader', 'coreSource'] } = {}) {
   const requiredSections = ['Includes', 'Private Defines', 'Private Types', 'Private State', 'Private Functions', 'Public Functions'];
   for (const [role, file] of Object.entries(files)) {
-    if (role === 'coreHeader' || role === 'coreSource') continue;
+    if (skipRoles.includes(role)) continue;
     if (!file.content.includes('@par dependencies') || !file.content.includes('Processing flow:')) {
-      addError(errors, 'LAYER_WORKFLOW_DOC_PROFILE', file.relative, 'SSD1306 generated files must use the workflow full-documentation profile.');
+      addError(errors, `${rulePrefix}_DOC_PROFILE`, file.relative, 'Generated files must use the workflow full-documentation profile.');
     }
     if (file.relative.endsWith('.c')) {
       for (const section of requiredSections) {
         if (!file.content.includes(`/* ${section} */`)) {
-          addError(errors, 'LAYER_WORKFLOW_SOURCE_SECTION', file.relative, `Generated source must contain ${section} section.`);
+          addError(errors, `${rulePrefix}_SOURCE_SECTION`, file.relative, `Generated source must contain ${section} section.`);
         }
       }
     }
   }
+}
+
+function validateSsd1306Display(files, errors) {
+  validateFullCommentProfile(files, errors);
   for (const role of ['handleHeader', 'handleSource']) {
     const file = files[role];
     if (file && /impl_ssd1306_(?:driver|config)/i.test(file.content)) {
@@ -299,18 +339,24 @@ function validateSsd1306Display(files, errors) {
   }
 }
 
-function validateLayerContract({ root, core, deviceType, device } = {}) {
+function validateLayerContract({ root, core, deviceType, device, slice = 'all' } = {}) {
   if (!root || !core || !deviceType || !device) throw createLayerError('--root, --core, --device-type, and --device are required.');
   const normalizedCore = normalizeCorePeripheral(core);
   const type = normalizeDeviceType(deviceType);
   const normalizedDevice = normalizeDevice(device);
-  const paths = expectedPaths({ core: normalizedCore, deviceType: type, device });
+  const allPaths = expectedPaths({ core: normalizedCore, deviceType: type, device });
+  const paths = filterSlice(allPaths, slice);
   const errors = [];
   const resolvedRoot = path.resolve(root);
   const files = readSlice(resolvedRoot, paths, errors);
   validateSections(files, errors);
   validateCore(files, errors);
   validateWrapper(files, errors);
+  validateFourTuple(files, errors);
+  if (slice === 'wrapper') {
+    validateFullCommentProfile(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
+    return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
+  }
   if (normalizedDevice.stem === 'ssd1306') {
     validateSsd1306Display(files, errors);
   } else {
@@ -319,15 +365,18 @@ function validateLayerContract({ root, core, deviceType, device } = {}) {
     validatePort(files, type, errors);
     validateHandle(files, type, errors);
   }
-  return { root: resolvedRoot, paths, errors, valid: errors.length === 0 };
+  return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
 }
 
 function parseArgs(argv, cwd = process.cwd()) {
   if (argv.length === 1 && argv[0] === '--self-check') return { selfCheck: true };
-  const options = { root: null, core: null, deviceType: null, device: null, json: false };
-  const names = { '--root': 'root', '--core': 'core', '--device-type': 'deviceType', '--device': 'device' };
+  const options = { root: null, core: null, deviceType: null, device: null, json: false, slice: 'all' };
+  const names = { '--root': 'root', '--core': 'core', '--device-type': 'deviceType', '--device': 'device', '--slice': 'slice' };
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
+    // package.json 的 validate:layer 脚本固定注入 --self-check；
+    // 当用户附加真实参数（--root/--core/...）时该默认参数被忽略，走真实校验。
+    if (argument === '--self-check') continue;
     if (argument === '--json') options.json = true;
     else if (names[argument]) {
       const value = argv[++index];
@@ -338,6 +387,9 @@ function parseArgs(argv, cwd = process.cwd()) {
   }
   if (!options.root || !options.core || !options.deviceType || !options.device) {
     throw createLayerError('--root, --core, --device-type, and --device are required.');
+  }
+  if (options.slice !== 'all' && !SLICE_ROLES[options.slice]) {
+    throw createLayerError(`Unknown --slice value: ${options.slice}. Expected wrapper, driver, handle, port, or all.`);
   }
   return options;
 }
@@ -380,12 +432,16 @@ if (require.main === module) {
 }
 
 module.exports = {
+  SLICE_ROLES,
   directIncludes,
   expectedPaths,
+  filterSlice,
   findFunctionDefinitions,
   maskCommentsAndStrings,
   parseArgs,
   runSelfCheck,
+  validateFourTuple,
+  validateFullCommentProfile,
   validateHalDriver,
   validateHandler,
   validateSsd1306Display,

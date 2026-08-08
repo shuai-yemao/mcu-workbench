@@ -7,7 +7,7 @@ version: "1.0.0"
 # 格式检查
 
 > 基于 `.clang-format` 对嵌入式 C 代码进行自动化格式检查。
-> 检查项与 `style-profile` 编码规范保持一致：4 空格缩进、行宽 ≤80、K&R 大括号、if/for `{` 同行、指针 `*` 靠变量名等。
+> 检查项与 `style-profile` 编码规范保持一致：4 空格缩进、行宽 ≤80、函数/枚举/结构体大括号换行独行、if/for `{` 同行、指针 `*` 靠变量名等。
 
 ## 前置条件
 
@@ -55,9 +55,9 @@ find drivers test \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} +
 |--------|---------------------|-------------|
 | 4 空格缩进 | `IndentWidth: 4`, `UseTab: Never` | 硬性约束 #1 |
 | 行宽 ≤80 | `ColumnLimit: 80` | 硬性约束 #2 |
-| K&R 函数 `{` 同行 | `AfterFunction: false` | 排版细节 #3 |
+| 函数 `{` 换行独行 | `AfterFunction: true` | 排版细节 #3 |
 | if/for `{` 同行 | `AfterControlStatement: false` | 排版细节 #4 |
-| 枚举/结构体 `{` 换行 | `AfterEnum: true`, `AfterStruct: true` | 排版细节 #5 |
+| 枚举/结构体 `{` 换行独行 | `AfterEnum: true`, `AfterStruct: true` | 排版细节 #5 |
 | 二元运算符空格 | `SpaceBeforeAssignmentOperators: true` | 排版细节 #6 |
 | 括号内无空格 | `SpacesInParentheses: false` | 排版细节 #9 |
 | 指针 `*` 靠变量名 | `PointerAlignment: Right` | 排版细节 #10 |

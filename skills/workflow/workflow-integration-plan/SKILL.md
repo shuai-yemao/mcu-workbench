@@ -31,9 +31,9 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 ## 分发目标
 
 - APP 结构交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
-- OSAL/OS Port 交给 [`os-adapter`](../../platform/platform_os/SKILL.md) 或 [`os-runtime`](../../impl/impl_os/SKILL.md)。
-- 器件链路交给 [`bsp-wrapper`](../../platform/platform_bsp/SKILL.md)、[`bsp-port`](../../impl/impl_board/SKILL.md)、[`bsp-hal-driver`](../../impl/impl_bsp/SKILL.md) 或 [`bsp-handler`](../../impl/impl_bsp/SKILL.md)。
-- MCU/厂商库交给 [`core-mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)。
+- OSAL/OS Port 交给 [`platform_os`](../../platform/platform_os/SKILL.md) 或 [`impl_os`](../../impl/impl_os/SKILL.md)。
+- 器件链路交给 [`platform_bsp`](../../platform/platform_bsp/SKILL.md)、[`impl_board`](../../impl/impl_board/SKILL.md)、[`impl_bsp`](../../impl/impl_bsp/SKILL.md) 或 [`impl_bsp_handler`](../../impl/impl_bsp_handler/SKILL.md)。
+- MCU/厂商库交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)。
 
 分发表（请求事实 → 实现层 Skill）与 Router 的分发依据一致；本 Skill 只按表分发**一个**实现层 Skill，不预分配参考清单。
 

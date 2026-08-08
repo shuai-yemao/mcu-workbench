@@ -90,7 +90,7 @@ npm run cli -- build --platform stm32f4
 ```
 ├─ workflow/  → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
 ├─ app/       → app-architecture
-├─ platform/  → platform_mcu, platform_os, platform_bsp, platform_common, platform_middleware（纯接口契约，零实现、不绑 RTOS/芯片）
+├─ platform/  → platform_mcu, platform_os, platform_bsp, platform_common, platform_middleware（纯接口契约，不绑 RTOS/芯片；common 含对象模型实现，零实现门禁仅指技能目录）
 ├─ impl/      → impl_os, impl_board, impl_bsp, impl_bsp_handler（落地实现，隔离 HAL/RTOS/板级）
 ├─ service/   → service_system + service_backlight/battery/calendar/diagnosis/log/ota/power/sensor/storage/watchdog（业务服务，11）
 ├─ vendor/    → vendor_stm32, vendor_lvgl, vendor_stack, vendor_fatfs, vendor_fal, vendor_flashdb, vendor_letter_shell, vendor_dsp（厂家底座，8）

@@ -45,9 +45,11 @@ describe('Generator Module', () => {
     const header = files[0].content;
     expect(header).toContain('#ifndef PLATFORM_I2C_H');
     expect(header).not.toMatch(/__[A-Z0-9_]+_H__/);
-    expect(header).toContain('PLATFORM_OK = 0');
+    expect(header).toMatch(/PLATFORM_ERR_OK\s*=\s*0/);
     expect(header).toContain('PLATFORM_ERR_BUSY');
     expect(header).toContain('PLATFORM_ERR_PARAM');
+    expect(header).not.toContain('PLATFORM_ERR_IO');
+    expect(header).not.toContain('platform_error_t');
     expect(header).not.toContain('core_status_t');
   });
 

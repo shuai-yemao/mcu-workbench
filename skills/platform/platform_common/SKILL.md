@@ -20,6 +20,7 @@ description: Platform 公共对象模型与生命周期：platform_def/error/typ
 | `platform_lifecycle.h` | 生命周期回调表（init/start/process/stop/sleep/wakeup/deinit） |
 | `platform_device.h/.c` | 设备对象基类，继承 `platform_object_t` 并扩展设备类别、静态能力 |
 | `platform_service.h/.c` | 服务对象基类，继承 `platform_object_t` 并扩展服务类别与 cfg/ctx/data/ops |
+| `references/object-four-tuple-template.md` | 对象四元组模板：具体设备/服务对象 base + cfg/ctx/data/ops 规范与 C 示例 |
 
 依赖方向（上层只 include `platform_type.h`，禁直接 include `board_types.h`）：
 
@@ -65,12 +66,14 @@ typedef enum
 #define PLATFORM_IS_OK(err)     ((err) == PLATFORM_ERR_OK)
 ```
 
-要点：错误码**只用 enum，不用同名 #define**，避免预处理期把枚举名替换成数字导致编译错误。`platform_def.h` 仍保留 `PLATFORM_OK / PLATFORM_ERROR` 宏（返回码语义），与 `platform_err_t`（接口返回值语义）两套并存为命名审计确认保留的现状。
+要点：错误码**只用 enum，不用同名 #define**，避免预处理期把枚举名替换成数字导致编译错误。**平台接口返回码统一使用 `platform_err_t` 枚举与 `PLATFORM_ERR_*` 枚举值（`platform_error.h`），这是唯一返回码来源**；`platform_def.h` 中的 `PLATFORM_OK / PLATFORM_ERROR` 为遗留兼容宏（返回码语义），**仅存量代码可保留，新生成的代码一律禁用**，统一改用 `PLATFORM_ERR_OK` 等枚举值。
 
 ## 基础类型与公共宏
 
 - `platform_type.h`：`int8_t..uint64_t`、`float_t/double_t`、`char_t/uchar_t`、`bool_t`，从 `board_types.h` 映射，是 Platform/Service/App 的类型出口。
 - `platform_def.h`：`PLATFORM_OK/ERROR/TRUE/FALSE`、`platform_bool_t`、`NULL`、`PLATFORM_ALIGN_SIZE`(4u)/`PLATFORM_ALIGN(n)`、`ARRAY_SIZE`、`PLATFORM_DELAY_MS(ms)`/`PLATFORM_DELAY_US(us)` 及 `platform_delay_ms(uint32_t)`/`platform_delay_us(uint32_t)` 声明——**延时只在此声明，实现在 Impl 层**。
+
+本文件即 Platform/Service/App 的类型与宏**唯一出口**：上层只 include `platform_type.h` / `platform_def.h`，禁止直接 include `board_types.h`，禁止自造与 `PLATFORM_ALIGN`、`ARRAY_SIZE`、`PLATFORM_DELAY_MS/US` 等价的宏。
 
 ## 对象身份证 `platform_object_t`
 
@@ -163,6 +166,17 @@ typedef struct
 - **两个初始化入口**：
   - `platform_service_init()`：不带 data/ops 槽（转发给四元组版）；
   - `platform_service_model_init()`：全四元组。
+
+## 对象四元组模板（base + cfg / ctx / data / ops）
+
+Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元组模板组织结构体：`base`（继承 `platform_device_t` 或 `platform_service_t` 身份）+ `cfg`（静态配置）+ `ctx`（运行上下文）+ `data`（当前数据）+ `ops`（行为接口）。
+
+- **base 必须作为结构体首字段**，保证 `platform_object_t` 位于偏移 0，支持 C 风格向上转型与 `platform_object_is_valid()` 校验。
+- **base 选择规则**：硬件/板级能力对象（有 `dev_class`、`caps`）→ `platform_device_t`；可复用服务能力/策略编排对象（`service_class`）→ `platform_service_t`。`platform_service_t` 已内嵌四元组槽，具体服务对象直接复用、不重复声明；`platform_device_t` 未内嵌四元组，具体设备对象须在 `base` 后补齐四槽。
+- **判定标准（Platform 生成产物为 MUST）**：定义了「承载平台身份的 struct」→ 必须套四元组；仅纯粹行为函数表（`pf_*` + 上下文）可豁免，且须在头注释显式声明「纯转发、不承载对象身份」；禁止用「纯接口」边界豁免已定义对象 struct 的类型。
+- 错误码统一用 `platform_err_t`、类型统一用 `platform_type.h`、宏统一用 `platform_def.h`。
+
+权威定义与 C 模板示例见 [`object-four-tuple-template.md`](references/object-four-tuple-template.md)。
 
 ## 生成契约
 

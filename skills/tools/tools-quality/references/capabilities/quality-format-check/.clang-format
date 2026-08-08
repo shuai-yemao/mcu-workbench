@@ -22,10 +22,10 @@ AllowShortLoopsOnASingleLine: false
 # Brace style
 BreakBeforeBraces: Custom
 BraceWrapping:
-  AfterFunction: false             # K&R：函数大括号同行
-  AfterControlStatement: false    # if/for/while 大括号同行
-  AfterEnum: false                 # K&R：枚举/结构体大括号同行
-  AfterStruct: false
+  AfterFunction: true              # 函数大括号换行独行（style-profile 排版细节 #3）
+  AfterControlStatement: false    # if/for/while 大括号同行（排版细节 #4）
+  AfterEnum: true                  # 枚举/结构体大括号换行独行（排版细节 #5）
+  AfterStruct: true
   BeforeElse: false
 
 # Spacing

@@ -15,7 +15,7 @@
 | **软件架构分层** | 生成的嵌入式工程 | App → Service → Platform → Impl → Vendor | 定义生成代码的依赖铁律 |
 | **插件分层** | skills/ 目录 | workflow / tools / hardware（横切） | 定义技能的组织与执行方式 |
 
-**当前规模**：41 canonical / 43 catalog 技能，7 个 Agent，8 个技能层，174 条迁移映射（MIGRATION_MAP），全部旧调用名经映射自动兼容。
+**当前规模**：45 catalog / 43 canonical 技能，7 个 Agent，8 个技能层，174 条迁移映射（MIGRATION_MAP），全部旧调用名经映射自动兼容。
 
 ```
 ┌────────────────────────── 宿主层 ──────────────────────────┐
@@ -30,7 +30,7 @@
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ┌──────────────────────────▼─────────── 技能层 ───────────────┐
-│  workflow(5)  │  app(1)  │  service(11)  │  platform(3)    │
+│  workflow(5)  │  app(1)  │  service(11)  │  platform(5)    │
 │  impl(4)      │  vendor(8)│  tools(9)    │  hardware(2)    │
 └──────────────────────────┬──────────────────────────────────┘
                            │ 派生
@@ -54,7 +54,7 @@
 |---|---|---|---|
 | **App** | skills/app/ | `app-architecture` | 产品业务流程（main/Manager/Task/Logic/UI/Profile）。**只调 Service，不碰 HAL/Impl/Vendor**（D8 门禁，validator 强制） |
 | **Service** | skills/service/ | 11 个 `service_*`（system/battery/backlight/calendar/diagnosis/log/ota/power/sensor/storage/watchdog） | App 常见业务抽象，带 `_model/_state/_fault_code` 三件套（D10） |
-| **Platform** | skills/platform/ | `platform_mcu` / `platform_os` / `platform_bsp` | **纯定义零实现**：统一接口/错误码/类型/对象/ops 函数指针/ctx（D4 错误码并入 platform_mcu 头文件规范）。**零 .c 门禁** |
+| **Platform** | skills/platform/ | `platform_common` / `platform_mcu` / `platform_os` / `platform_bsp` / `platform_middleware` | 能力接口与公共定义：统一接口/错误码/类型/对象/ops 函数指针/ctx。错误码基线在 `platform_common/platform_error.h`（D4）。**零 .c 门禁仅约束技能目录**；`platform_common` 含对象模型实现（允许 `.c`） |
 | **Impl** | skills/impl/ | `impl_os` / `impl_board` / `impl_bsp` / `impl_bsp_handler` | Platform→Vendor 适配落地。handler 是**机制层**（多实例/生命周期/缓存/重试，D5），策略归 Service |
 | **Vendor** | skills/vendor/ | `vendor_stm32` + 7 中间件（lvgl/stack/fatfs/fal/flashdb/letter_shell/dsp） | 厂家/第三方底座（STM32 HAL、CMSIS、FreeRTOS、LVGL…）。**只登记不复制**（D7，vendor_mapping.md 管理，patch/ 存补丁） |
 

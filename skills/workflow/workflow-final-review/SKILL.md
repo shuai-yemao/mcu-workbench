@@ -13,7 +13,7 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 
 在以下时机触发：
 
-- 实现 Skill（`app-architecture`、`os-adapter`、`bsp-*`、`core-mcu`、`mcu-platform` 等）已输出最终代码、补丁或 `git diff`；
+- 实现 Skill（`app-architecture`、`platform_os`、`platform_bsp`、`impl_board`、`impl_bsp`、`impl_bsp_handler`、`platform_mcu`、`impl_os`、`vendor_stm32` 等）已输出最终代码、补丁或 `git diff`；
 - `workflow-integration-plan` 在代码产物就绪后交接最终代码/变更集与验收清单；
 - 用户要求对现有代码、补丁或 diff 做独立审查。
 
@@ -24,12 +24,12 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 1. 最终代码/变更集：目标文件路径、补丁或 `git diff`；
 2. 相关接口与约束：当前接口、资源所有权、错误处理与硬件约束；
 3. 构建或测试入口：可复现命令、绝对工作目录与产物路径；
-4. 目标工程风格证据：由 `tools-quality` 解析出的风格 profile 及来源。
+4. 目标工程风格证据：`tools-quality` 的 [style-profile 编码规范](../../tools/tools-quality/references/style-profile.md) 及来源。
 
 ## 审查流程
 
 1. **范围与证据**：确认被审版本/diff、审查基线、构建与测试入口，声明 `tool_root`、`firmware_root` 与命令绝对 `cwd`。
-2. **风格与门禁**：由 `verification-engineer` 按 `tools-quality` 的 [项目风格 profile](../../tools/tools-quality/references/style-profile.md) 与 [生成代码审查门禁](../../tools/tools-quality/references/review-gates.md) 分离风格与功能/安全问题。
+2. **风格与门禁**：由 `verification-engineer` 按 `tools-quality` 的 [style-profile 编码规范](../../tools/tools-quality/references/style-profile.md) 与 [生成代码审查门禁](../../tools/tools-quality/references/review-gates.md) 分离风格与功能/安全问题；用户或项目明确采用其他约定时以该约定优先。
 3. **功能与接口/资源所有权**：由 `system-architect` 与 `verification-engineer` 核对接口契约、调用链、错误路径与资源生命周期。
 4. **ISR/DMA/并发与安全**：由 `verification-engineer`（并发）与 `hardware-integration`（板级证据）核对 ISR 阻塞、DMA 缓冲、数组边界与硬件约束。
 5. **分层边界**：核对是否遵守 Adapter 只属于 OS 和 BSP、Core/Middleware/Driver 不创建 Adapter 等契约。

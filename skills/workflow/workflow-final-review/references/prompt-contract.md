@@ -9,7 +9,7 @@
 1. 最终代码/变更集：目标文件路径、补丁或 `git diff`，以及可复现的构建/测试命令；
 2. 相关接口与约束：当前接口、资源所有权、错误处理与硬件约束；
 3. 构建或测试入口：可复现命令、绝对工作目录与产物路径；
-4. 目标工程风格证据：由 `tools-quality` 解析出的风格 profile 及来源。
+4. 目标工程风格证据：`tools-quality` 的 [style-profile 编码规范](../../../tools/tools-quality/references/style-profile.md) 及来源。
 
 ## 输出
 
@@ -27,4 +27,4 @@
 
 - 报告必须标明代码版本或 diff、审查基线、profile 来源及未验证假设。
 - 不把静态检查或主机测试表述为板级验证。
-- 对 MCU Workbench 生成的 BSP 切片，按 `tools-quality` 的完整注释 profile 核对；对用户工程手写代码，不要求未被项目 profile 指定的文件名前缀、Doxygen 或装饰性注释。
+- 对 MCU Workbench 生成的 BSP 切片，按 `tools-quality` 的完整注释 profile 核对；对用户工程手写代码，按 `style-profile` 编码规范的硬性约束核对（`{proj}_` 文件命名、`g_/s_/p_/pf_` 变量前缀、全函数 Doxygen、80 列硬限制），用户或项目明确采用其他约定时以该约定优先。

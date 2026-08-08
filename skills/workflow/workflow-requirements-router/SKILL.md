@@ -85,14 +85,14 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 | 请求事实 | 实现层 Skill（由 workflow-integration-plan 分发） |
 |---|---|
 | APP 启动、Task、Manager、UI 结构 | `app-architecture` |
-| OSAL、任务、队列、同步原语接口 | `os-adapter` |
-| FreeRTOS/裸机运行时、调度和 Port | `os-runtime` |
-| BSP 抽象表、注册和平台无关转发 | `bsp-wrapper` |
-| 外设实例绑定、平台对象和注册 | `bsp-port` |
-| 器件协议、寄存器序列和 HAL Driver | `bsp-hal-driver` |
-| 多实例、缓存、重试、回调和工作循环 | `bsp-handler` |
-| CMSIS、寄存器、总线或 MCU 外设能力 | `core-mcu` |
-| STM32 HAL、ESP-IDF 或厂商 SDK | `mcu-platform` |
+| OSAL、任务、队列、同步原语接口 | `platform_os` |
+| FreeRTOS/裸机运行时、调度和 Port | `impl_os` |
+| BSP 抽象表、注册和平台无关转发 | `platform_bsp` |
+| 外设实例绑定、平台对象和注册 | `impl_board` |
+| 器件协议、寄存器序列和 HAL Driver | `impl_bsp` |
+| 多实例、缓存、重试、回调和工作循环 | `impl_bsp_handler` |
+| CMSIS、寄存器、总线或 MCU 外设能力 | `platform_mcu` |
+| STM32 HAL、ESP-IDF 或厂商 SDK | `vendor_stm32` |
 | LVGL | `middleware-lvgl` |
 | MQTT、BLE、CAN、USB 或网络协议 | `middleware-communication` |
 | Flash、文件系统、KV 或存储中间件 | `middleware-storage` |
