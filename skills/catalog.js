@@ -74,7 +74,7 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 const CANONICAL_ORDER = [
   'workflow-requirements-router', 'workflow-claude-layering', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
   'workflow-final-review',
-  'platform_mcu', 'platform_os', 'platform_bsp',
+  'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware',
   'impl_os', 'impl_board', 'impl_bsp', 'impl_bsp_handler',
   'service_system', 'service_battery', 'service_backlight', 'service_calendar', 'service_diagnosis',
   'service_log', 'service_ota', 'service_power', 'service_sensor', 'service_storage', 'service_watchdog',

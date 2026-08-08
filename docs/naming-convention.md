@@ -60,7 +60,7 @@
 | 类别 | 文件 | 说明 |
 |---|---|---|
 | 配置四件套 | `app_config.h` / `product_config.h` / `compile_config.h` / `feature_config.h` | 00_Config 下，固定名 |
-| 平台四件套 | `platform_error.h` / `platform_type.h` / `platform_object.h` / `platform_registry.h` | D4，固定名 |
+| 平台五件套 | `platform_def.h` / `platform_error.h` / `platform_type.h` / `platform_object.h` / `platform_registry.h` | 固定名 |
 | Service 三件套 | `service_<域>_model.h` / `_state.h` / `_fault_code.h` | 每个 service 必配（D10） |
 | 单元测试 | `test_<模块>.c` | tests/ 下，如 `test_utils_crc.c` |
 

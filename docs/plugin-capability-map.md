@@ -17,9 +17,9 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **43 catalog / 41 canonical**：
+当前 catalog 为 **45 catalog / 43 canonical**：
 
-- 41 个 canonical skills；
+- 43 个 canonical skills；
 - 2 个硬件 active 入口。
 
 ### 2.1 Workflow 请求路由与项目集成
@@ -43,7 +43,7 @@
 |---|---|---|
 | OS | `platform_os`、`impl_os` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
 | BSP | `platform_bsp`、`impl_board`、`impl_bsp`、`impl_bsp_handler` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理 |
-| Platform | `platform_mcu`、`platform_os`、`platform_bsp` | MCU 内部外设初始化、中断和 DMA |
+| Platform | `platform_mcu`、`platform_os`、`platform_bsp`、`platform_common`、`platform_middleware` | MCU 内部外设初始化、中断和 DMA；公共定义与中间件能力接口 |
 | MCU | `vendor_stm32` | CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK |
 
 当前架构约束：Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。

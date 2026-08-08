@@ -1,6 +1,6 @@
 ---
 name: platform_mcu
-description: Platform 纯定义：MCU 能力接口（GPIO、I2C、SPI、UART、ADC、TIM、DMA、中断、启动初始化）+ 统一错误码/类型/对象协议规范。
+description: Platform 纯定义：MCU 能力接口（GPIO、I2C、SPI、UART、ADC、TIM、DMA、中断、启动初始化）。
 ---
 
 # Platform MCU（平台抽象 · 纯定义）
@@ -9,12 +9,9 @@ description: Platform 纯定义：MCU 能力接口（GPIO、I2C、SPI、UART、A
 
 Platform 只定义能力契约，**零实现，不绑定芯片**。本技能面向 MCU 内置资源的能力接口：时钟、引脚、外设实例、中断/DMA、总线契约和后端算法接口。它调用厂商 Driver 的原生接口由 Impl 承接，不创建 Adapter，也不实现外部器件协议。
 
-## 统一规范（D4）
+## 公共定义来源
 
-- **统一错误码**：`platform_error.h` 全局错误码基线（PLATFORM_OK / PLATFORM_ERR_PARAM / PLATFORM_ERR_TIMEOUT / PLATFORM_ERR_BUSY / PLATFORM_ERR_NOT_SUPPORTED / PLATFORM_ERR_IO / PLATFORM_ERR_NO_MEM / PLATFORM_ERR_STATE / PLATFORM_ERR_CRC），Service/Impl 只在其后扩展，禁止重复编号；
-- **统一类型**：`platform_type.h` 基础类型与公共数据结构；
-- **统一对象协议**：`platform_object.h`（ops 指针 + impl 私有数据 + handle）与 `platform_registry.h`（注册表）。
-  以上规范作为本技能头文件规范章节承载，不另设 platform_common 技能（D12 不凑层）。
+统一错误码、基础类型、对象协议与注册表规范由 [`platform_common`](../platform_common/SKILL.md) 承载；本技能只负责 MCU 能力接口与后端契约。
 
 ## 工作流
 

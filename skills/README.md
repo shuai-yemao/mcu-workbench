@@ -7,7 +7,7 @@
 | `workflow` | 请求路由、工程集成和 AI 协作流程 |
 | `app` | 嵌入式 APP 的 main、Manager、Task、Logic、UI、Profile |
 | `service` | Service 业务层：service_system + 10 个业务服务（带业务策略，D10） |
-| `platform` | Platform 纯定义：能力接口 + 统一错误码/类型/对象协议，零实现不绑芯片/RTOS |
+| `platform` | Platform 纯定义：能力接口（mcu/os/bsp/middleware）+ 公共定义（common），零实现不绑芯片/RTOS |
 | `impl` | Impl 落地：OS Port、板级组合根、器件驱动、Handler 机制 |
 | `vendor` | Vendor 底座登记：源码只登记映射不复制（D7） |
 | `hardware` | PCB、仪器和硬件分析 |

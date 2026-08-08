@@ -83,7 +83,7 @@
 ```
 catalog-metadata.js（定义：CANONICAL/SERVICE/VENDOR/TOOL 四组定义 + 别名）
         ↓
-catalog.js（唯一目录：43 catalog / 41 canonical + legacy 别名；MIGRATION_MAP 174 条）
+catalog.js（唯一目录：45 catalog / 43 canonical + legacy 别名；MIGRATION_MAP 174 条）
         ↓
 loader.js（按磁盘加载 SKILL.md）→ registry.js（查询视图：分类/平台过滤）
         ↓

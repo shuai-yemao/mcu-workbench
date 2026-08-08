@@ -7,13 +7,13 @@ const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
   test('catalog keeps active entries and exposes 41 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(43);
-    expect(CANONICAL_SKILLS).toHaveLength(41);
+    expect(SKILL_CATALOG).toHaveLength(45);
+    expect(CANONICAL_SKILLS).toHaveLength(43);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-requirements-router', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
-      'platform_mcu', 'platform_os', 'platform_bsp', 'impl_os', 'impl_board',
+      'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware', 'impl_os', 'impl_board',
       'impl_bsp', 'impl_bsp_handler', 'vendor_stm32', 'vendor_lvgl',
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
       'vendor_flashdb', 'vendor_letter_shell',
@@ -71,8 +71,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(41);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(41);
+    expect(listAvailableSkills()).toHaveLength(43);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(43);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -200,10 +200,12 @@ describe('Skills catalog and loader', () => {
   });
 
   test('adapter rule is explicit in canonical software skills', () => {
-    for (const id of ['platform_mcu', 'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp']) {
+    for (const id of ['platform_mcu', 'platform_common', 'platform_middleware', 'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp']) {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
     expect(getSkillContent('platform_bsp')).toMatch(/函数表|函数表|注册/);
+    expect(getSkillContent('platform_common')).toMatch(/统一错误码|对象协议|注册表/);
+    expect(getSkillContent('platform_middleware')).toMatch(/log|fs|kv|crypto|gui|comm/);
     expect(getSkillContent('impl_board')).toMatch(/组合根|Port/);
     expect(getSkillContent('platform_os')).toMatch(/osal_/);
   });

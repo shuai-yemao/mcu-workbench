@@ -15,14 +15,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 43 catalog / 41 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
+| **Canonical Skills** | `skills/` | 45 catalog / 43 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移文档 |
 | **Node CLI** | `bin/` + `lib/` | 项目骨架生成、构建/烧录命令计划 |
 | **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约 |
 | **测试套件** | `tests/` | 35 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
 | **Claude 插件** | `.claude-plugin/plugin.json` | Claude Code 插件清单 |
-| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 41 个 `mcu_workbench_<skill_id>` 技能工具 + `mcu_workbench_route`（共 52 个导出键） |
+| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 43 个 `mcu_workbench_<skill_id>` 技能工具 + `mcu_workbench_route`（共 54 个导出键） |
 | **Codex 适配** | `.codex-plugin/plugin.json` + `codex/AGENTS.md` | Codex CLI 插件 + 宿主运行约束 |
 | **Codex 兼容桥** | `AGENTS.override.md` | 从 `codex/AGENTS.md` 自动生成的兼容入口 |
 
@@ -90,7 +90,7 @@ npm run cli -- build --platform stm32f4
 ```
 ├─ workflow/  → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
 ├─ app/       → app-architecture
-├─ platform/  → platform_mcu, platform_os, platform_bsp（纯接口契约，零实现、不绑 RTOS/芯片）
+├─ platform/  → platform_mcu, platform_os, platform_bsp, platform_common, platform_middleware（纯接口契约，零实现、不绑 RTOS/芯片）
 ├─ impl/      → impl_os, impl_board, impl_bsp, impl_bsp_handler（落地实现，隔离 HAL/RTOS/板级）
 ├─ service/   → service_system + service_backlight/battery/calendar/diagnosis/log/ota/power/sensor/storage/watchdog（业务服务，11）
 ├─ vendor/    → vendor_stm32, vendor_lvgl, vendor_stack, vendor_fatfs, vendor_fal, vendor_flashdb, vendor_letter_shell, vendor_dsp（厂家底座，8）
@@ -159,4 +159,4 @@ Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` at repo root + `docs/adr/` (12 ADRs, 0001-0012, recording architecture-evolution decisions D1-D12). See `docs/agents/domain.md`.
+Single-context: `CONTEXT.md` at repo root + `docs/adr/` (9 ADRs, 0001-0003/0005-0008/0010-0011, recording architecture-evolution decisions; ADR 0004/0009/0012 were superseded by the `platform_common`/`platform_middleware` split). See `docs/agents/domain.md`.

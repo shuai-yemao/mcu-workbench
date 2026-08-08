@@ -21,14 +21,14 @@ skills/
 
 ## Canonical skills
 
-当前目录为 **43 catalog / 41 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **45 catalog / 43 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering
 app-architecture
 platform_os impl_os
 platform_bsp impl_board impl_bsp impl_bsp_handler
-platform_mcu vendor_stm32
+platform_mcu platform_common platform_middleware vendor_stm32
 middleware-lvgl middleware-communication middleware-storage middleware-fal
 middleware-flashdb middleware-letter-shell middleware-algorithms
 software-system

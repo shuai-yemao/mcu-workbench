@@ -9,30 +9,28 @@
 
 - GitHub：`https://github.com/shuai-yemao/mcu-workbench`
 - 当前分支：`host_ai`
-- 仓库管理的技能位于 `skills/`（catalog 43 条 = 41 canonical + 2 hardware active；归档已删除，旧调用名经 `MIGRATION_MAP` 兼容解析）
+- 仓库管理的技能位于 `skills/`（catalog 45 条 = 43 canonical + 2 hardware active；归档已删除，旧调用名经 `MIGRATION_MAP` 兼容解析）
 
 ## 正在发生的事（2026-08 上下文）
 
-**软件架构进化**：把当前"13 层物理分层"进化为五层契约分层（App / Service / Platform / Impl / Vendor），与用户目标工程目录范本（01_App…99_Utils）对齐。方案定稿于 `docs/architecture-overall-plan.md`（v3.0），12 项决策（D1-D12）全部确认，每条对应一条 ADR（`docs/adr/`）。
+**软件架构进化**：把当前"13 层物理分层"进化为五层契约分层（App / Service / Platform / Impl / Vendor），与用户目标工程目录范本（01_App…99_Utils）对齐。方案定稿于 `docs/architecture-overall-plan.md`（v3.0），决策记录于 `docs/adr/`（D4/D9/D12 相关 ADR 已被后续变更取代而删除）。
 
 关键决策速览：
 
 | 决策 | 结论 |
 |---|---|
-| D1 | skills 目录物理重排为五层 + MIGRATION_MAP 迁移映射 |
-| D2 | workflow/tools/hardware 是**插件分层**，不入软件架构五层 |
+| D1 | mcu 目录物理重排为五层 + MIGRATION_MAP 迁移映射 |
 | D3 | mcu-platform 改名 `vendor_stm32` |
-| D4 | 统一错误码并入 platform_mcu 头文件规范 |
 | D5 | bsp-handler 是 Impl 的一层（机制层） |
 | D6 | 分阶段实施（0 定稿 → 1 Vendor → 2 Platform → 3 Impl → 4 Service → 5 App） |
 | D7 | Vendor 只登记映射不复制源码（vendor_mapping.md + patch/） |
 | D8 | App 依赖门禁阶段 5 收紧 |
-| D9 | 中间件整体归 Vendor（不强制三段切） |
 | D10 | Service = App 常见业务抽象（带 _model/_state/_fault_code） |
 | D11 | 新技能下划线命名（service_battery） |
-| D12 | 技能跟随归属，不为凑层强造技能 |
 
-目标态 43 技能 = 5 软件架构层（app×1 / service×11 / platform×3 / impl×4 / vendor×8）+ 3 插件层（workflow×5 / tools×9 / hardware×2）。
+Platform 层技能定为 5 个：`platform_common` / `platform_mcu` / `platform_os` / `platform_bsp` / `platform_middleware`（公共定义与中间件能力接口独立成技能，废弃"不为凑层造技能"）。
+
+目标态 45 技能 = 5 软件架构层（app×1 / service×11 / platform×5 / impl×4 / vendor×8）+ 3 插件层（workflow×5 / tools×9 / hardware×2）。
 
 ## 分层契约（软件架构）
 
