@@ -65,17 +65,19 @@ Core、Middleware、Driver 不设置 Adapter。
 
 约束：`registry.js` 只做兼容转发，禁止新增独立 Skill 元数据或解析逻辑。
 
-## 5. Node CLI 边界
+## 5. Node CLI 边界(已移除)
 
-| 模块 | 当前责任 | 与 Skills 的关系 |
+> Node CLI(`bin/`、`commands/`、`lib/cli.js`)已删除(2026-08-08)——交互统一走 Skill + lib Programmatic API(与 harness 同模式,ADR H13)。`lib/` 共享引擎保留,可经 Skill/API 接入;`scripts/claude-layer-api.js` 是分层能力的确定性入口。
+
+历史对应关系(供理解 lib 与 Skills 的分工):
+
+| lib 模块 | 历史责任 | 与 Skills 的关系 |
 |---|---|---|
-| `commands/mcu-new.js` | 生成项目骨架 | 不等同于 `workflow-integration-plan` 的项目集成规划 |
-| `commands/mcu-core.js` | 生成单类 MCU Core `.c/.h` | 不等同于 `core-mcu` 的完整工程审计 |
-| `commands/mcu-driver.js` | 生成 BSP Driver/Handle/Port/Wrapper 切片 | 不等同于 `bsp-hal-driver` 或 `bsp-handler` |
-| `lib/builder.js` | 生成构建命令；`--execute` 时运行 | 不等同于 `tools-build` 的完整工具链路 |
-| `lib/flasher.js` | 生成烧录命令；`--execute` 时运行 | 不等同于 `tools-flash` 的完整校验流程 |
+| `lib/generator.js` | 生成项目骨架/Core/BSP 切片 | 不等同于 `workflow-integration-plan` 的项目集成规划 |
+| `lib/builder.js` | 生成构建命令 | 不等同于 `tools-build` 的完整工具链路 |
+| `lib/flasher.js` | 生成烧录命令 | 不等同于 `tools-flash` 的完整校验流程 |
 | `lib/platform.js` | 原型平台配置 | 不等同于 `driver-vendor` 或 `core-mcu` |
-| `templates/` | Node 生成器模板 | 不等同于 BSP Skill references |
+| `lib/claude-layer.js` | 分层扫描/同步/校验 | 由 `workflow-claude-layering` skill 经 `scripts/claude-layer-api.js` 驱动 |
 
 ## 6. 当前需要避免的混淆
 

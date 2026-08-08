@@ -15,7 +15,7 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 
 ## 触发与输入
 
-使用 `mcu-workbench claude-layer <action> --root <firmware-root>`，其中 action 为：
+使用 `node scripts/claude-layer-api.js <action> --root <firmware-root>`（插件根目录下执行,经 `lib/claude-layer.js` Programmatic API;无 Node CLI）,其中 action 为：
 
 - `scan`：只读扫描目录、CMake、CubeMX、FreeRTOS 和 C/C++ include 证据。
 - `init`：建立首次配置与受管产物计划。

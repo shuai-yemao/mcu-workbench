@@ -93,20 +93,20 @@ docs/
 
 Agent 遵循分域写入和显式交接协议；Lead 维护最终汇总，写入 Obsidian 必须经过用户确认。
 
-## Node CLI
+## 脚本与 Programmatic API
 
-仓库同时提供正式的 `mcu-workbench` CLI，用于项目骨架、Core/BSP 分层模板、平台查询和构建/烧录命令计划：
+仓库不提供 Node CLI 命令(已移除——交互统一走 Skill + lib API),保留两类确定性脚本入口:
 
 ```powershell
-npm run cli -- --help
-npm run cli -- platforms
-npm run cli -- core --peripheral i2c --platform stm32f4
-npm run cli -- driver --device-type display --device SSD1306 --core i2c --platform stm32f4
-npm run cli -- build --platform stm32f4
-npm run cli -- flash --platform stm32f4 --device stlink
-```
+# 分层扫描/同步/校验(供 workflow-claude-layering skill 与人工使用)
+npm run claude:init -- --root <dir> --write
+npm run claude:scan -- --root <dir>
+npm run claude:sync -- --root <dir> --write
+npm run claude:validate -- --root <dir> --strict
 
-构建和烧录默认只生成命令；确认路径和工具链后显式追加 `--execute` 才会运行外部命令。`driver` 默认 dry-run，追加 `--write --output <dir>` 才会写入生成文件。完整用法见 [docs/node-cli.md](docs/node-cli.md)。
+# 嵌入式 AI Harness(独立插件,Programmatic API,无 CLI)
+node -e "const {createHarness}=require('./harness/lib'); const h=createHarness({baseDir:'.mcu-workbench'}); ..."
+```
 
 分层生成和闪存算法配置还可以单独校验：
 

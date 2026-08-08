@@ -9,7 +9,7 @@ flowchart TD
     U[用户请求] --> D{请求类型}
 
     D -->|架构/代码/工程问题| S0[Skills 发现]
-    D -->|Node CLI 命令| N0[bin/mcu-workbench.js]
+    D -->|确定性脚本| N0[scripts/claude-layer-api.js / lib API]
 
     S0 --> M[plugin manifest]
     M --> C[skills/catalog.js 兼容解析]
@@ -122,27 +122,16 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 必经交接 workflow-review-gate（审查门禁）→ workflow-integration-plan（分发实现层 Skill）
 ```
 
-## 3. Node CLI 执行链
+## 3. 脚本/API 执行链(原 Node CLI 已移除)
 
-Node CLI 当前是独立链路：
+Node CLI(`bin/`、`commands/`、`lib/cli.js`)已于 2026-08-08 移除——交互统一走 Skill + lib Programmatic API。保留的确定性入口：
 
 ```text
-bin/mcu-workbench.js
-  → lib/cli.js
-  → index.js 兼容 API / commands
-  → commands/mcu-new.js
-  → commands/mcu-core.js
-  → commands/mcu-driver.js
-  → commands/mcu-build.js
-  → commands/mcu-flash.js
-  → commands/mcu-debug.js
-       ↓
-     lib/platform.js
-     lib/generator.js
-     lib/builder.js
-     lib/flasher.js
-       ↓
-     templates/
+scripts/claude-layer-api.js(分层扫描/同步/校验)
+  → lib/claude-layer.js
+  → runClaudeLayer({ action, root, write, strict })
+
+lib/ 共享引擎保留(builder / flasher / generator / platform),可经 Skill/API 接入
 ```
 
 ### 当前真实行为

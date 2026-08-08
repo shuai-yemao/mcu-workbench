@@ -5,11 +5,11 @@
 在未使用 `--write` 时修改目标工程。
 
 ```powershell
-mcu-workbench claude-layer scan --root D:\firmware
-mcu-workbench claude-layer init --root D:\firmware
-mcu-workbench claude-layer init --root D:\firmware --write
-mcu-workbench claude-layer sync --root D:\firmware --write
-mcu-workbench claude-layer validate --root D:\firmware --strict
+node scripts/claude-layer-api.js scan --root D:\firmware
+node scripts/claude-layer-api.js init --root D:\firmware
+node scripts/claude-layer-api.js init --root D:\firmware --write
+node scripts/claude-layer-api.js sync --root D:\firmware --write
+node scripts/claude-layer-api.js validate --root D:\firmware --strict
 ```
 
 扫描默认识别 App、Service、Platform、Impl、Vendor（兼容旧式 App/BSP/Core/Driver/Middlewares/OS 目录），

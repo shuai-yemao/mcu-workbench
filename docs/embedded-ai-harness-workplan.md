@@ -20,7 +20,7 @@
 
 | 机制 | 事实 | 影响 harness |
 |---|---|---|
-| CLI 注册 | `lib/cli.js` 硬编码 `COMMANDS` 对象(命令名 → 模块 spec:`{name, description, options[], run}`);命令模块在 `commands/mcu-*.js`;参数解析为自写 parseArgs | **harness 无 CLI(ADR H13)**:lib 暴露 Programmatic API,`harness-pipeline` skill 引导 agent 编排;现有 cli/commands/bin 零改动 |
+| CLI 注册 | `lib/cli.js` 硬编码 `COMMANDS` 对象(命令名 → 模块 spec:`{name, description, options[], run}`);命令模块在 `commands/mcu-*.js`;参数解析为自写 parseArgs | **harness 无 CLI(ADR H13)**:lib 暴露 Programmatic API,`harness-pipeline` skill 引导 agent 编排;原 Node CLI 已于 2026-08-08 移除,lib 保留为共享引擎 |
 | 技能目录 | `skills/catalog.js` 唯一事实源,path 格式 `skills/<layer>/<id>`;registry.js 仅兼容转发 | **harness 不进 catalog**——它是独立插件,不污染 45/43 技能集 |
 | 引擎/适配器注册 | 无现成注册机制可复用;catalog 模式(定义数组 + map)可参照 | 参照 catalog.js 模式自建 `harness/lib/registry.js`(阶段 1) |
 | artifact 协议 | `scripts/agent-artifacts.js` 写 `.mcu-workbench/runs/<ts>-<agent>-<task>.json`;插件仓库本身**没有** `.mcu-workbench/`(那是目标工程目录) | harness 的 Run/Artifact 写目标工程 `.mcu-workbench/`,复用同一协议 |
@@ -74,7 +74,7 @@ harness/
 |---|---|
 | `skills/`(全部,catalog.js / catalog-metadata.js / 八层技能) | harness 独立域,不污染技能集;动这里会破坏 45/43 catalog 断言与 tests/skills.test.js |
 | `agents/`、`lib/agent-domains.js` | 阶段 0 不加 agent;ai-engineer 角色是可选演进项,阶段 4 再评估 |
-| `lib/cli.js`、`commands/`、`bin/` | 阶段 0 无 CLI;且 ADR H13 已定 harness 不新增 CLI,现有 CLI 设施零改动 |
+| ~~`lib/cli.js`、`commands/`、`bin/`~~ | 阶段 0 无 CLI;且 ADR H13 已定 harness 不新增 CLI。**注:主插件 Node CLI 已于 2026-08-08 移除**(lib 保留为共享引擎,本行随之失效) |
 | `lib/claude-layer.js`、`lib/architecture-contract.js` | 与目标工程分层无关,harness 不参与 |
 | `.claude-plugin/plugin.json`、`opencode.mjs`、`codex/`、`AGENTS.override.md` | harness 独立分发,不走主插件 manifest;改这些会触发主插件校验与 CI |
 | 现有 `tests/*.test.js` | 阶段 0 不新增对现有测试的修改,只新增 harness 自己的测试 |
@@ -132,6 +132,6 @@ harness 契约               ──✗──→ 任何第三方校验库(zod 等
 
 | # | 决策点 | 选项 | 建议 |
 |---|---|---|---|
-| **H10** | ~~harness CLI 接入方式~~ | **已作废(ADR H13,2026-08-08)**:harness 无 Node CLI;lib 暴露 Programmatic API,`harness-pipeline` skill 引导 agent 编排;现有 `lib/cli.js` / `commands/` / `bin/` 零改动 | 消费者是 agent,直调 API 拿结构化结果比解析 CLI stdout 稳定;省命令注册/参数解析/格式化成本 |
+| **H10** | ~~harness CLI 接入方式~~ | **已作废(ADR H13,2026-08-08)**:harness 无 Node CLI;lib 暴露 Programmatic API,`harness-pipeline` skill 引导 agent 编排(注:主插件 Node CLI 亦已移除) | 消费者是 agent,直调 API 拿结构化结果比解析 CLI stdout 稳定;省命令注册/参数解析/格式化成本 |
 | **H11** | harness plugin.json 的 skills 字段 | 空 / 放一个 `harness-pipeline` workflow skill 引导 agent | 阶段 1 定,倾向后者(agent 需要入口) |
 | **H12** | 首个引擎选型 | tflm(规划已定)/ 其他 | 保持 tflm;用于验证契约(H02) |

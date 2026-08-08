@@ -105,12 +105,12 @@ lib/agent-domains.js（DOMAINS → domainSkills() → agent 技能集）
 
 | 宿主 | 入口 | 能力暴露 |
 |---|---|---|
-| Claude Code | `package.json` exports require → `index.js` | 10 commands（new/core/driver/build/flash/debug/monitor/claude-layer/platforms/skills）+ skills 注册 + CLI |
+| Claude Code | `package.json` exports require → `index.js` | skills 注册 + init |
 | OpenCode | import → `opencode.mjs` | 动态注册 `mcu_agent_*`（7 个）+ `mcu_workbench_*`（技能工具）+ 路由/团队工具 |
 | Codex | `codex/AGENTS.md`（由 `build-codex-compat.js` 生成 `AGENTS.override.md`） | `@mcu-workbench` 指令 |
-| Node CLI | `bin/mcu-workbench.js` / `npm run cli` | 命令链，`--execute` 才真实执行 |
+| 脚本/API | `scripts/claude-layer-api.js` + `lib/` Programmatic API | 分层扫描/校验等确定性入口(原 Node CLI 已移除,2026-08-08) |
 
-> **设计原则**：Skills 运行链（门禁驱动）与 Node CLI 链（直接命令）**刻意分离**——CLI 不自动成为 Skills 后端，保证门禁不被绕过。
+> **设计原则**：交互统一走 Skill(门禁驱动)与 lib API;Node CLI 已移除(ADR H13 同模式)——消除双入口与 stdout 解析不稳定,门禁不被绕过。
 
 ---
 
@@ -174,7 +174,7 @@ lib/agent-domains.js（DOMAINS → domainSkills() → agent 技能集）
 |---|---|---|---|
 | **Skills 主链路** | 需求 → Router | 四门禁全走，证据驱动 | 需要交付物与文档的完整需求 |
 | **Agent 路由链** | `mcu_workbench_agent_route` | 关键词打分（精确+3/包含+1）直接选 agent | 快速咨询某领域问题 |
-| **Node CLI 链** | `npm run cli` / commands/ | 直接执行，绕过门禁（设计如此） | 已知明确的构建/烧录/调试动作 |
+| **脚本/API 链** | `scripts/claude-layer-api.js` / `lib/` | 确定性执行(原 Node CLI 已移除) | 分层扫描/校验、CI 校验、harness 编排 |
 
 ---
 

@@ -36,7 +36,7 @@ Workflow 层保留五个职责互斥的 active Skills：
 | 新增架构原则或边界 | 现有 Skill 的 `references/`；若职责独立再建 Skill |
 | 新增 MCU、厂商或工具差异 | 对应 Skill 的 `references/` |
 | 新增执行角色或写入权限 | 新建或调整 Agent，并更新 Agent 校验测试 |
-| 新增可重复命令 | `scripts/` 或 Node CLI `commands/`、`lib/` |
+| 新增可重复命令 | `scripts/`(确定性壳)或 `lib/`(Programmatic API);原 Node CLI 已移除 |
 | 新增多阶段协作流程 | 先编写文档流程；只有存在稳定运行时才建立独立 workflow extension |
 | 历史兼容实现 | 旧工作流已移除归档；旧名经 `resolveSkillId()` 兼容解析，不加入 manifest |
 

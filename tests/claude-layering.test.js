@@ -8,7 +8,6 @@ const {
   runClaudeLayer,
   scanProject
 } = require('../lib/claude-layer');
-const { runCli } = require('../lib/cli');
 
 function withFixture(callback) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-layering-'));
@@ -152,14 +151,11 @@ describe('Claude layering', () => {
     expect(fs.existsSync(legacyConfig)).toBe(true);
   }));
 
-  test('exposes claude-layer as a CLI subcommand with JSON output', async () => withFixtureAsync(async (root) => {
-    const output = [];
-    const result = await runCli(['claude-layer', 'scan', '--root', root, '--json'], {
-      stdout: (line) => output.push(line),
-      stderr: (line) => output.push(line)
-    });
+  test('runClaudeLayer scan 返回结构化结果(Programmatic API,替代原 CLI)', async () => withFixtureAsync(async (root) => {
+    const result = runClaudeLayer({ action: 'scan', root });
     expect(result.exitCode).toBe(0);
-    expect(JSON.parse(output[0])).toMatchObject({ action: 'scan', changed: false });
+    expect(result).toMatchObject({ action: 'scan', changed: false });
+    expect(Array.isArray(result.writes)).toBe(true);
   }));
 
   test('classifies five-layer template directories (01_App..05_Vendor)', () => {
