@@ -11,6 +11,7 @@
 function createTflmEngine() {
   return {
     id: 'tflm',
+    requires: [],
 
     capabilities() {
       return {

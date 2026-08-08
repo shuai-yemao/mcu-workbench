@@ -64,10 +64,10 @@ describe('planner', () => {
 
   test('未注册引擎 → 规划期失败', () => {
     const { h } = makeHarness();
-    h.createPipeline({ ...DEMO_PIPELINE, stages: DEMO_PIPELINE.stages.map((s) => (s.id === 'quantize' ? { ...s, engine: 'cubeai' } : s)) });
+    h.createPipeline({ ...DEMO_PIPELINE, stages: DEMO_PIPELINE.stages.map((s) => (s.id === 'quantize' ? { ...s, engine: 'unknown-engine' } : s)) });
     const plan = h.plan();
     expect(plan.ok).toBe(false);
-    expect(plan.errors.join()).toContain('engine not found: cubeai');
+    expect(plan.errors.join()).toContain('engine not found: unknown-engine');
   });
 });
 

@@ -1,21 +1,22 @@
 /**
- * host 目标适配器 —— 阶段 1 首个目标(PC 模拟,无板评测)。
- * build/flash 为空实现(host 无需编译烧录);exec/measure 最小占位。
+ * qemu 目标适配器 —— Cortex-M 仿真(阶段 2 占位,真实仿真执行待阶段 3 评测体系)。
+ * requires: qemu-system-arm。
  */
 
 /**
- * @returns {import('../../contracts/target-contract').TargetAdapter}
+ * @returns {import('../../contracts/target-contract').TargetAdapter & { requires: string[] }}
  */
-function createHostTarget() {
+function createQemuTarget() {
   return {
-    id: 'host',
-    requires: [],
+    id: 'qemu-stm32f4',
+    requires: ['qemu-system-arm'],
 
     capabilities() {
       return {
-        id: 'host',
-        kind: 'host',
-        toolchains: ['gcc'],
+        id: 'qemu-stm32f4',
+        kind: 'sim',
+        mcu: 'STM32F4',
+        toolchains: ['arm-none-eabi-gcc'],
         measurable: ['accuracy', 'latency', 'ram']
       };
     },
@@ -40,4 +41,4 @@ function createHostTarget() {
   };
 }
 
-module.exports = { createHostTarget };
+module.exports = { createQemuTarget };

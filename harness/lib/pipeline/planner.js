@@ -27,6 +27,8 @@ function planPipeline({ pipeline, registry }) {
       const engine = registry.getEngine(stageSpec.engine);
       if (!engine) {
         errors.push(`engine not found: ${stageSpec.engine}`);
+      } else if (engine.available === false) {
+        errors.push(`engine not available: ${stageSpec.engine}(需要 ${(engine.requires || []).join(' / ')})`);
       } else {
         entry.engineId = stageSpec.engine;
         entry.engineCaps = engine.capabilities();
@@ -42,6 +44,8 @@ function planPipeline({ pipeline, registry }) {
       const target = registry.getTarget(stageSpec.target);
       if (!target) {
         errors.push(`target not found: ${stageSpec.target}`);
+      } else if (target.available === false) {
+        errors.push(`target not available: ${stageSpec.target}(需要 ${(target.requires || []).join(' / ')})`);
       } else {
         entry.targetId = stageSpec.target;
         entry.targetCaps = target.capabilities();
