@@ -204,7 +204,7 @@ describe('Skills catalog and loader', () => {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
     expect(getSkillContent('platform_bsp')).toMatch(/函数表|函数表|注册/);
-    expect(getSkillContent('platform_common')).toMatch(/统一错误码|对象协议|注册表/);
+    expect(getSkillContent('platform_common')).toMatch(/统一错误码|对象模型|生命周期/);
     expect(getSkillContent('platform_middleware')).toMatch(/log|fs|kv|crypto|gui|comm/);
     expect(getSkillContent('impl_board')).toMatch(/组合根|Port/);
     expect(getSkillContent('platform_os')).toMatch(/osal_/);

@@ -20,7 +20,7 @@ description: Platform 纯定义：中间件能力接口（log/fs/kv/crypto/gui/c
 
 ## 依赖
 
-只能 include [`platform_common`](./platform_common/SKILL.md) 公共定义与标准 C 类型；禁止 include Vendor 头文件、HAL 或 RTOS 原生类型。
+只能 include [`platform_common`](../platform_common/SKILL.md) 公共定义与标准 C 类型；禁止 include Vendor 头文件、HAL 或 RTOS 原生类型。
 
 ## 生成契约
 

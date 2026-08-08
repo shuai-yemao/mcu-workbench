@@ -11,7 +11,7 @@ Platform 只定义能力契约，**零实现，不绑定芯片**。本技能面�
 
 ## 公共定义来源
 
-统一错误码、基础类型、对象协议与注册表规范由 [`platform_common`](../platform_common/SKILL.md) 承载；本技能只负责 MCU 能力接口与后端契约。
+统一错误码、基础类型、对象模型与生命周期由 [`platform_common`](../platform_common/SKILL.md) 承载；本技能只负责 MCU 能力接口与后端契约。
 
 ## 工作流
 
