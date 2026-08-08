@@ -7,7 +7,7 @@ version: "1.0.0"
 # I2C 总线开发指南
 
 > 总线级别的 I2C 知识与调试技能。
-> 与 bsp-device-adaptation（设备驱动开发）互补：bsp-device-adaptation 关注"给挂在 I2C 上的设备写驱动"，
+> 与 impl_board（设备驱动开发）互补：impl_board 关注"给挂在 I2C 上的设备写驱动"，
 > 本 skill 关注"I2C 总线外设本身的配置、陷阱和调试"。
 
 ## 适用场景
@@ -245,9 +245,9 @@ for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
 ## 边界定义
 
 ### 不该激活
-- 用户需要的是给 I2C 设备写驱动（传感器/存储器等）→ 使用 `bsp-device-adaptation`
-- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `platform-stm32-hal`
-- 用户需要的是 CAN/Modbus 等其他总线调试 → 使用 `protocol-can` / `protocol-modbus`
+- 用户需要的是给 I2C 设备写驱动（传感器/存储器等）→ 使用 `impl_board`
+- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `vendor_stm32`
+- 用户需要的是 CAN/Modbus 等其他总线调试 → 使用 `vendor_stack`（通信协议）
 - 用户使用软件模拟 I2C（GPIO 逐位控制）→ 不适用（本 skill 针对硬件 I2C 外设）
 
 ### 不该做
@@ -274,9 +274,9 @@ for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
 
 ## 交接关系
 
-- 上游：`platform-stm32-hal`（HAL 开发规范）
-- 下游：`bsp-device-adaptation`（I2C 设备驱动开发）
-- 调试时：`observability-serial-monitor`（输出扫描结果/调试日志）
+- 上游：`vendor_stm32`（HAL 开发规范）
+- 下游：`impl_board`（I2C 设备驱动开发）
+- 调试时：`tools-observability`（输出扫描结果/调试日志）
 
 ## 参考资料
 

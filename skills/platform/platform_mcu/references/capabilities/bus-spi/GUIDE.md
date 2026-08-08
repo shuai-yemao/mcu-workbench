@@ -7,7 +7,7 @@ version: "1.0.0"
 # SPI 总线开发指南
 
 > 总线级别的 SPI 知识与调试技能。
-> 与 bsp-device-adaptation（设备驱动开发）互补：bsp-device-adaptation 关注"给挂在 SPI 上的设备写驱动"，
+> 与 impl_board（设备驱动开发）互补：impl_board 关注"给挂在 SPI 上的设备写驱动"，
 > 本 skill 关注"SPI 总线外设本身的配置、陷阱和调试"。
 
 ## 适用场景
@@ -249,8 +249,8 @@ HAL_SPI_TransmitReceive(&hspi, &tx, &rx, 1, 100);
 ## 边界定义
 
 ### 不该激活
-- 用户需要的是给 SPI 设备写驱动（Flash/传感器/LCD 等）→ 使用 `bsp-device-adaptation`
-- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `platform-stm32-hal`
+- 用户需要的是给 SPI 设备写驱动（Flash/传感器/LCD 等）→ 使用 `impl_board`
+- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `vendor_stm32`
 - 用户需要的是 I2C/CAN/Modbus 等其他总线调试 → 使用对应 skill
 
 ### 不该做
@@ -277,7 +277,7 @@ HAL_SPI_TransmitReceive(&hspi, &tx, &rx, 1, 100);
 | Arduino | `SPI.transfer(byte)` | 全双工单字节收发 |
 
 ## 交接关系
-- 调试时：`observability-serial-monitor`（输出调试日志）、`protocol-can`（同名类似总线调试技能）
+- 调试时：`tools-observability`（输出调试日志）、`vendor_stack`（CAN/Modbus 等通信协议）
 
 ## 参考资料
 

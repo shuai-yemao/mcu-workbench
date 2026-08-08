@@ -331,5 +331,5 @@ M33 (ARMv8-M):
 
 - 上游：外设 skill（bus-uart / bus-i2c / bus-spi 等引用本 skill 的平台差异内容）
 - 互补：`workflow-code-porting`（跨平台移植时参考本 skill 的差异表）
-- 下游：`platform-stm32-hal`（ST 系开发首选）+ `tool-build-esp-idf`（ESP32 开发入口）
+- 下游：`vendor_stm32`（ST 系开发首选）+ `tools-build`（ESP32 开发入口）
 - 学习：`embedded-learning-path-framework`（根据所选芯片规划学习路径）

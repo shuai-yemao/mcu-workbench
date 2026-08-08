@@ -18,7 +18,7 @@ Platform 定义稳定的 `osal_*` 公共接口和项目错误码；Impl 以 `os_
 1. 先列出调用方需要的最小接口，不复制原生 RTOS API。
 2. 决定句柄生命周期、静态/动态内存和 ISR 边界。
 3. 定义接口，再由 Impl 创建并注入已确认的 OSAL 资源；明确创建者、Handle 所有者、失败回收、超时单位和 ISR 可用性，并用 Fake/Mock 验证上层。
-4. 只有出现具体 RTOS 或裸机运行时配置时交接 [`os-runtime`](../../impl/impl_os/SKILL.md)（Impl 层阶段 3 落地后归 impl_os）。
+4. 只有出现具体 RTOS 或裸机运行时配置时交接 [`impl_os`](../../impl/impl_os/SKILL.md)。
 
 接口验收矩阵见 [`osal-contract.md`](references/osal-contract.md)。
 

@@ -216,7 +216,7 @@ stm32h7x unlock 0                 # 解锁（清除 RDP，全片擦除）
 ## 交接关系
 
 - 上游：量产前配置流程，应在固件烧录验证后进行
-- 下游：`tool-flash-gang`（量产烧录前配置 Option Bytes 保护）
-- 烧录失败时：`tool-flash-jlink` / `tool-flash-keil` 提示检查 RDP 保护位
+- 下游：`tools-flash`（量产烧录前配置 Option Bytes 保护）
+- 烧录失败时：`tools-flash` 提示检查 RDP 保护位
 - 互补：`security-firmware-signing`（固件签名 + 读保护组合使用）
 - **不可逆操作前必须用户确认**（RDP Level 2、unlock 全片擦除）

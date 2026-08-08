@@ -411,7 +411,7 @@ printf("Flash Size: %d KB\n", *(uint16_t *)0x1FFF7A22);  // F4 唯一ID+容量
 
 注：ESP32 用 SPI Flash 控制器操作，非内部 Flash 方式，API 差异大。
 
-- **不覆盖外部 Flash (SPI NOR/NAND)** — 使用 `bsp-device-adaptation` + `bus-spi`
+- **不覆盖外部 Flash (SPI NOR/NAND)** — 使用 `impl_board` + `bus-spi`
 - **不覆盖 OTP 区域**（一次性烧录区，各系列差异大）
 - **不覆盖 Flash 加密/签名** — 使用 `security-firmware-signing` 和 `release-ota-package`
 - **Option Bytes 详细配置** — 使用专用 skill `platform-option-bytes`

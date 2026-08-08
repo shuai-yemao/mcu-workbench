@@ -7,7 +7,7 @@ version: "1.0.0"
 # STM32 ADC 开发指南
 
 > ADC 是嵌入式系统中连接模拟世界的桥梁。
-> 与 platform-stm32-hal（HAL 通用参考）互补：本 skill 覆盖 ADC 独有的时钟树、时序计算、
+> 与 vendor_stm32（HAL 通用参考）互补：本 skill 覆盖 ADC 独有的时钟树、时序计算、
 > 多通道扫描、校准、噪声消除等深度知识。
 
 ## 适用场景
@@ -392,8 +392,8 @@ uint32_t jdr1 = ADC1->JDR1;  // 独立读取，不干扰规则组
 
 ### 不该激活
 - 用户需要的是 DAC 配置（相反方向）→ 数字转模拟
-- 用户需要的是定时器/PWM 等通用外设配置 → 使用 `platform-stm32-hal`
-- 用户需要的是外设驱动（传感器通过 ADC 读取）→ 使用 `bsp-device-adaptation`
+- 用户需要的是定时器/PWM 等通用外设配置 → 使用 `vendor_stm32`
+- 用户需要的是外设驱动（传感器通过 ADC 读取）→ 使用 `impl_board`
 - 用户需要的是其他 MCU 平台（ESP32 等）
 
 ### 不该做
@@ -423,7 +423,7 @@ uint32_t jdr1 = ADC1->JDR1;  // 独立读取，不干扰规则组
 
 ## 交接关系
 - 同层：`bus-i2c` / `bus-spi`（同为外设配置+调试类 Skill）
-- 调试时：`observability-serial-monitor`（输出采样值）
+- 调试时：`tools-observability`（输出采样值）
 
 ## 参考资料
 
