@@ -4,6 +4,7 @@ const path = require('path');
 
 const {
   createDefaultConfig,
+  normalizeLayoutKeys,
   runClaudeLayer,
   scanProject
 } = require('../lib/claude-layer');
@@ -57,6 +58,8 @@ describe('Claude layering', () => {
     expect(scan.layers.app.references).toEqual(expect.arrayContaining([
       expect.objectContaining({ file: 'App/main.c', line: 1, include: 'drv_adapter_demo.h' })
     ]));
+    expect(scan.layers.platform.files.map((item) => item.path)).toContain('BSP/Wrapper/drv_adapter_demo.h');
+    expect(scan.layers.impl.files.map((item) => item.path)).toContain('Core/bus.c');
     expect(scan.unverified).toEqual(expect.arrayContaining([
       expect.objectContaining({ file: 'Misc/legacy.c' })
     ]));
@@ -74,7 +77,10 @@ describe('Claude layering', () => {
     expect(rootClaude).toContain('Keep this text.');
     expect(rootClaude).toContain('@AGENTS.md');
     expect(rootClaude).toContain('mcu-workbench:managed:start');
+    expect(rootClaude).toContain('App → Service → Platform ← Impl → Vendor');
     expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '10-app.md'))).toBe(true);
+    expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '20-service.md'))).toBe(false);
+    expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '40-vendor.md'))).toBe(false);
     expect(fs.readFileSync(path.join(root, '.claude', 'rules', 'team.md'), 'utf8')).toBe('# Team rule\n');
     expect(fs.existsSync(path.join(root, '.mcu-workbench', 'claude-layer.state.json'))).toBe(true);
   }));
@@ -116,9 +122,9 @@ describe('Claude layering', () => {
     fs.mkdirSync(path.join(root, 'Components', 'Device'), { recursive: true });
     fs.writeFileSync(path.join(root, 'Components', 'Device', 'sensor.c'), 'int sensor(void) { return 0; }\n', 'utf8');
     const config = createDefaultConfig();
-    config.layout.driver = ['^Components/Device/'];
+    config.layout.impl = ['^Components/Device/'];
     const scan = scanProject({ root, config });
-    expect(scan.layers.driver.files.map((item) => item.path)).toContain('Components/Device/sensor.c');
+    expect(scan.layers.impl.files.map((item) => item.path)).toContain('Components/Device/sensor.c');
   }));
 
   test('falls back to legacy claude-layering config and state names, then writes new names', () => withFixture((root) => {
@@ -154,5 +160,96 @@ describe('Claude layering', () => {
     });
     expect(result.exitCode).toBe(0);
     expect(JSON.parse(output[0])).toMatchObject({ action: 'scan', changed: false });
+  }));
+
+  test('classifies five-layer template directories (01_App..05_Vendor)', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-layering-'));
+    try {
+      fs.mkdirSync(path.join(root, '01_App'), { recursive: true });
+      fs.mkdirSync(path.join(root, '02_Service', 'service_battery'), { recursive: true });
+      fs.mkdirSync(path.join(root, '03_Platform', 'platform_mcu', 'Inc'), { recursive: true });
+      fs.mkdirSync(path.join(root, '04_Impl', 'impl_board'), { recursive: true });
+      fs.mkdirSync(path.join(root, '05_Vendor', 'patch'), { recursive: true });
+      fs.writeFileSync(path.join(root, '01_App', 'app_main.c'), 'int main(void) { return 0; }\n', 'utf8');
+      fs.writeFileSync(path.join(root, '02_Service', 'service_battery', 'service_battery.c'), 'int battery(void) { return 0; }\n', 'utf8');
+      fs.writeFileSync(path.join(root, '03_Platform', 'platform_mcu', 'Inc', 'platform_mcu.h'), 'int mcu_init(void);\n', 'utf8');
+      fs.writeFileSync(path.join(root, '04_Impl', 'impl_board', 'impl_board.c'), 'int board(void) { return 0; }\n', 'utf8');
+      fs.writeFileSync(path.join(root, '05_Vendor', 'patch', 'demo.c'), 'int demo(void) { return 0; }\n', 'utf8');
+
+      const scan = scanProject({ root, config: createDefaultConfig() });
+      expect(scan.layers.app.files.map((item) => item.path)).toContain('01_App/app_main.c');
+      expect(scan.layers.service.files.map((item) => item.path)).toContain('02_Service/service_battery/service_battery.c');
+      expect(scan.layers.platform.files.map((item) => item.path)).toContain('03_Platform/platform_mcu/Inc/platform_mcu.h');
+      expect(scan.layers.impl.files.map((item) => item.path)).toContain('04_Impl/impl_board/impl_board.c');
+      expect(scan.layers.vendor.files.map((item) => item.path)).toContain('05_Vendor/patch/demo.c');
+      expect(scan.unverified).toHaveLength(0);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  test('classifies vendor paths and os_adapter subpaths into the five layers', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-layering-'));
+    try {
+      fs.mkdirSync(path.join(root, 'Vendor', 'STM32'), { recursive: true });
+      fs.mkdirSync(path.join(root, 'Middlewares', 'LVGL', 'src'), { recursive: true });
+      fs.mkdirSync(path.join(root, 'Drivers', 'CMSIS', 'Device', 'ST'), { recursive: true });
+      fs.mkdirSync(path.join(root, 'Middlewares', 'os_adapter', 'inc'), { recursive: true });
+      fs.mkdirSync(path.join(root, 'Middlewares', 'os_adapter', 'FreeRTOS'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'Vendor', 'STM32', 'stm32_hal.c'), 'int hal(void) { return 0; }\n', 'utf8');
+      fs.writeFileSync(path.join(root, 'Middlewares', 'LVGL', 'src', 'lvgl.c'), 'int lvgl(void) { return 0; }\n', 'utf8');
+      fs.writeFileSync(path.join(root, 'Drivers', 'CMSIS', 'Device', 'ST', 'stm32f4xx.c'), 'int chip(void) { return 0; }\n', 'utf8');
+      fs.writeFileSync(path.join(root, 'Middlewares', 'os_adapter', 'inc', 'os_adapter.h'), 'int os_init(void);\n', 'utf8');
+      fs.writeFileSync(path.join(root, 'Middlewares', 'os_adapter', 'FreeRTOS', 'freertos_port.c'), 'int port(void) { return 0; }\n', 'utf8');
+
+      const scan = scanProject({ root, config: createDefaultConfig() });
+      expect(scan.layers.vendor.files.map((item) => item.path)).toEqual(expect.arrayContaining([
+        'Vendor/STM32/stm32_hal.c',
+        'Middlewares/LVGL/src/lvgl.c',
+        'Drivers/CMSIS/Device/ST/stm32f4xx.c'
+      ]));
+      expect(scan.layers.platform.files.map((item) => item.path)).toContain('Middlewares/os_adapter/inc/os_adapter.h');
+      expect(scan.layers.impl.files.map((item) => item.path)).toContain('Middlewares/os_adapter/FreeRTOS/freertos_port.c');
+      expect(scan.unverified).toHaveLength(0);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  test('normalizes legacy layout keys to the five-layer model', () => withFixture((root) => {
+    const config = createDefaultConfig();
+    config.layout.driver = ['^Components/Device/'];
+    config.layout.middleware = ['^ThirdParty/'];
+    const { layout, migrated } = normalizeLayoutKeys(config.layout);
+    expect(migrated).toBe(true);
+    expect(layout.impl).toEqual(['^Components/Device/']);
+    expect(layout.vendor).toEqual(['^ThirdParty/']);
+    expect(layout.driver).toBeUndefined();
+    expect(layout.middleware).toBeUndefined();
+
+    fs.mkdirSync(path.join(root, 'Components', 'Device'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'Components', 'Device', 'sensor.c'), 'int sensor(void) { return 0; }\n', 'utf8');
+    fs.mkdirSync(path.join(root, 'ThirdParty'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'ThirdParty', 'lib.c'), 'int lib(void) { return 0; }\n', 'utf8');
+    const scan = scanProject({ root, config: { ...config, layout } });
+    expect(scan.layers.impl.files.map((item) => item.path)).toContain('Components/Device/sensor.c');
+    expect(scan.layers.vendor.files.map((item) => item.path)).toContain('ThirdParty/lib.c');
+  }));
+
+  test('removes stale managed rule files on sync and keeps user files', () => withFixture((root) => {
+    runClaudeLayer({ action: 'init', root, write: true });
+    const rulesDir = path.join(root, '.claude', 'rules', 'mcu-workbench');
+    fs.writeFileSync(path.join(rulesDir, '20-middleware.md'), '# stale\n', 'utf8');
+    fs.writeFileSync(path.join(rulesDir, '60-driver.md'), '# stale\n', 'utf8');
+    fs.writeFileSync(path.join(rulesDir, 'user-note.md'), '# keep\n', 'utf8');
+
+    const preview = runClaudeLayer({ action: 'sync', root });
+    expect(preview.changes.some((item) => item.path.endsWith('20-middleware.md') && item.operation === 'delete')).toBe(true);
+    expect(preview.changes.some((item) => item.path.endsWith('60-driver.md') && item.operation === 'delete')).toBe(true);
+
+    runClaudeLayer({ action: 'sync', root, write: true });
+    expect(fs.existsSync(path.join(rulesDir, '20-middleware.md'))).toBe(false);
+    expect(fs.existsSync(path.join(rulesDir, '60-driver.md'))).toBe(false);
+    expect(fs.readFileSync(path.join(rulesDir, 'user-note.md'), 'utf8')).toBe('# keep\n');
   }));
 });

@@ -12,9 +12,10 @@ mcu-workbench claude-layer sync --root D:\firmware --write
 mcu-workbench claude-layer validate --root D:\firmware --strict
 ```
 
-扫描默认识别 APP、Middleware、OS、BSP、Core 与 Driver，并使用 CMake、CubeMX、
-FreeRTOS 配置以及 C/C++ include 作为静态证据。无法确认的路径保留为 `unverified`；
-默认只告警，`--strict` 时校验失败。
+扫描默认识别 App、Service、Platform、Impl、Vendor（兼容旧式 App/BSP/Core/Driver/Middlewares/OS 目录），
+并使用 CMake、CubeMX、FreeRTOS 配置以及 C/C++ include 作为静态证据。Vendor 底座（HAL/CMSIS/FreeRTOS/LVGL 等）
+归入 vendor 层、不生成受管规则；旧 `claude-layer.json` 的 layout 旧键（middleware/os/bsp/core/driver）
+读取时自动归一化到五层键。无法确认的路径保留为 `unverified`；默认只告警，`--strict` 时校验失败。
 
 CI 应只运行 `validate`，不能调用带 `--write` 的命令。静态规则校验与固件构建、
 烧录和实机验证是不同证据等级。

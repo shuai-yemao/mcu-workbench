@@ -26,7 +26,8 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 `--strict` 把 `unverified` 路径从告警提升为错误。
 
 可选配置位于 `.mcu-workbench/claude-layer.json`（旧版 `claude-layering.json` 自动读取兼容）。
-`layout` 可为 `app`、`middleware`、`os`、`bsp`、`core`、`driver` 指定正则表达式数组，覆盖默认目录识别。
+`layout` 可为 `app`、`service`、`platform`、`impl`、`vendor` 指定正则表达式数组，覆盖默认目录识别；
+旧键（`middleware`、`os`、`bsp`、`core`、`driver`）读取时自动归一化（middleware→vendor、os→impl、bsp→impl、core→platform、driver→impl）并输出迁移告警。
 
 ## 受管文件边界
 
@@ -35,7 +36,7 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 | `CLAUDE.md` | 共享 | 仅更新 `mcu-workbench:managed` 标记区块；保留其他手写内容。 |
 | `.claude/rules/mcu-workbench/` | 本 Skill | 每层规则使用 `paths` 限定生效目录。 |
 | `.claude/rules/` 的其他文件 | 用户/项目 | 不读取后重写，不删除。 |
-| `.mcu-workbench/claude-layer*.json` | 本 Skill | 配置由用户确认，state 由扫描器生成；旧版 `claude-layering*.json` 只读兼容。 |
+| `.mcu-workbench/claude-layer*.json` | 本 Skill | 配置由用户确认，state 由扫描器生成；旧版 `claude-layering*.json` 只读兼容；旧 layout 键（middleware/os/bsp/core/driver）读取时自动归一化到五层键。 |
 | `docs/architecture/claude-layer-map.md` | 本 Skill | 记录静态扫描事实与未确认项。 |
 
 若工程已有 `AGENTS.md`，受管区块引用 `@AGENTS.md`，不复制其内容。
@@ -45,16 +46,17 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 1. 执行 `scan`，报告 `confirmed` 目录、配置和源码引用证据，以及 `unverified` 路径。
 2. 对首次接入执行 `init` 预览；检查根文件保留内容、规则目录和配置覆盖是否正确。
 3. 在用户确认差异后运行 `init --write` 或 `sync --write`。
-4. 运行 `validate`；它必须同时报告规则漂移、架构静态错误和未确认项。
+4. 运行 `validate`；它必须同时报告规则漂移、架构静态错误、未确认项，以及旧 layout 键的迁移提示（如有）。
 5. 仅在配置确认后使用 `validate --strict` 作为 CI 门禁。CI 不调用 `--write`。
 
 ## 分层硬约束
 
-- APP 只能调用 Middleware 公共 API、OS Wrapper 和 BSP Wrapper；不得直接调用 HAL、原生 RTOS、Port 或 Driver。
-- Adapter 仅位于 OS 与 BSP，且由 Wrapper 与 Port 组成。
-- BSP Wrapper 是平台无关的函数表注册和转发层；Port 才能绑定具体 Driver、Handler、Core 和 OSAL 对象。
-- Handler 拥有工作循环、缓存、重试和回调；Port 不得复制业务缓存。
-- Core、Middleware 与 Driver 不创建项目专属 Adapter；Driver 仅处理器件协议并经 Core 公共能力访问总线。
+- 依赖铁律：App → Service → Platform ← Impl → Vendor。
+- App 只调用 Service；不得直接 include HAL、Platform 实现、Impl、Vendor 或原生 RTOS。
+- Service 依赖 Platform 接口与其他 Service；不得 include Vendor 头文件、寄存器/HAL。
+- Platform 纯定义、零实现（禁止 .c 文件）；只允许标准类型。
+- Impl 落地 Platform→Vendor 适配（board/mcu/os/bsp + Handler 机制）；不得反向定义接口、不得被 App 直调、不得含业务策略。
+- Vendor 是第三方底座（HAL/CMSIS/FreeRTOS/LVGL/FatFS/算法库/SDK），源码不复制、只登记映射（vendor_mapping.md + patch/）；不反向调用任何上层。
 
 发现层归属冲突或需要变更依赖图时，交接 `workflow-review-gate`；
 需要实施代码改动时交接 `workflow-final-review`；质量检查交接 `tools-quality`。

@@ -49,6 +49,7 @@ Platform 只有头文件（零 .c）；机制在 Impl/Handler，策略在 Servic
 - 旧调用名经 `MIGRATION_MAP` / `resolveSkillId()` 自动解析
 - Agent 路由：`lib/agent-domains.js`（AGENT_ROSTER + DOMAINS）；暴露：`opencode.mjs`
 - Node CLI 与 Skills 运行链分离：`commands/`、`lib/`、`bin/`
+- `claude-layer` 扫描/规则已对齐五层契约（`lib/claude-layer.js` LAYERS 与 `workflow-claude-layering` SKILL.md）；旧 6 层 layout 键读取时自动归一化
 
 ## 阅读规则
 

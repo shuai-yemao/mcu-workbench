@@ -53,7 +53,7 @@ npm run sync:codex              # 同步技能到 Codex 目录
 npm run codex:register          # 注册 Codex 市场
 npm run report:skills           # 技能清单报告
 
-# Claude 分层管理（目标工程受管 CLAUDE.md 与 .claude/rules 规则）
+# Claude 分层管理（目标工程受管 CLAUDE.md 与 .claude/rules 规则；分层扫描采用 App/Service/Platform/Impl/Vendor 五层契约）
 npm run claude:scan -- --root <firmware-root>              # 只读扫描分层证据
 npm run claude:init -- --root <firmware-root> --write       # 初始化受管区块与路径规则
 npm run claude:sync -- --root <firmware-root> --write       # 重新扫描并更新受管规则
