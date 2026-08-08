@@ -2,6 +2,7 @@
 
 本 profile 只适用于 MCU Workbench 生成的 BSP Driver、Handle、Port 与 Wrapper 文件。
 它不覆盖用户工程中的手写源码；手写源码继续按 `style-profile.md` 的证据优先级审查。
+注释语言默认为中文（Doxygen 描述、段注释、行尾说明），除非用户或项目明确要求英文。
 
 ## 强制结构
 
@@ -22,5 +23,5 @@
 
 ## 审查口径
 
-对生成 BSP 切片，`validate:layer` 检查文件头与源文件分区；
+对生成 BSP 切片，`validate:layer` 检查文件头、源文件分区与注释语言（注释必须含中文，见 `LAYER_COMMENT_LANGUAGE`）；
 `tools-quality` 审查函数注释是否与实际阻塞、ISR、资源所有权和错误路径一致。

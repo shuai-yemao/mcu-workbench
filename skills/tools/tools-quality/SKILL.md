@@ -27,7 +27,7 @@ AI 生成代码审查、项目风格 profile 与 clang-format 基线由本 Skill
 
 1. 风格优先级为：用户明确要求 → `.editorconfig`、`.clang-format`、IDE 或构建配置 → 相邻源码 → 保守 C 默认。
 2. 在生成或重构前说明 profile 的来源和适用目录；审查报告必须把 profile 偏差与功能/安全问题分开分级。
-3. 除非项目或用户明确采用其他约定，否则按 [项目风格 profile](references/style-profile.md) 的硬性约束执行：强制 `{proj}_`（项目简称）文件命名、`g_/s_/p_/pf_` 变量前缀、全函数 Doxygen 注释、左对齐-填充-右对齐段注释，并将 80 列作为硬限制。
+3. 除非项目或用户明确采用其他约定，否则按 [项目风格 profile](references/style-profile.md) 的硬性约束执行：强制 `{proj}_`（项目简称）文件命名、`g_/s_/p_/pf_` 变量前缀、全函数 Doxygen 注释、**注释语言默认中文**、左对齐-填充-右对齐段注释，并将 80 列作为硬限制。
 4. 先检查编译、接口、错误路径和资源所有权；再检查 ISR/DMA/并发、数组边界及硬件约束；最后报告风格偏差。
 
 ### BSP 生成代码
@@ -81,4 +81,4 @@ flowchart LR
 
 当架构扫描包含已登记基线问题时，退出码非零必须同时报告基线数量、当前数量和新增差异；只有“零新增”才能称为本阶段通过，不能把非零退出码直接改写成全量通过。
 
-对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不审计用户工程的其他自定义代码；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界与完整注释分区。
+对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不审计用户工程的其他自定义代码；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界、完整注释分区与注释语言（默认中文）。

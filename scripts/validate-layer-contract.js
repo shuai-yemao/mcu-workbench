@@ -146,6 +146,32 @@ function addError(errors, ruleId, file, message) {
   errors.push({ ruleId, file, message });
 }
 
+function extractCommentText(content) {
+  const blocks = [];
+  const pattern = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/g;
+  let match;
+  while ((match = pattern.exec(content))) blocks.push(match[0]);
+  return blocks.join('\n');
+}
+
+function validateCommentLanguage(files, errors, { rulePrefix = 'LAYER', skipRoles = ['coreHeader', 'coreSource'] } = {}) {
+  for (const [role, file] of Object.entries(files)) {
+    if (skipRoles.includes(role)) continue;
+    const text = extractCommentText(file.content)
+      .replace(/\/\*|\*\/|\/\//g, ' ')
+      .replace(/^[*\s-]+|[*\s-]+$/gm, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    if (!text) continue;
+    const hasCjk = /[\u4e00-\u9fff]/.test(text);
+    const hasEnglishWord = /[A-Za-z]{2,}/.test(text);
+    if (hasEnglishWord && !hasCjk) {
+      addError(errors, `${rulePrefix}_COMMENT_LANGUAGE`, file.relative,
+        'Generated comments must be written in Chinese by default (style-profile rule 8). Use English only when the project explicitly requires it.');
+    }
+  }
+}
+
 function validateSections(files, errors) {
   for (const file of Object.values(files)) {
     if (!file.content.includes('@file')) addError(errors, 'LAYER_FILE_DOC', file.relative, 'Generated file must have an @file documentation header.');
@@ -350,11 +376,13 @@ function validateLayerContract({ root, core, deviceType, device, slice = 'all' }
   const resolvedRoot = path.resolve(root);
   const files = readSlice(resolvedRoot, paths, errors);
   validateSections(files, errors);
+  validateCommentLanguage(files, errors);
   validateCore(files, errors);
   validateWrapper(files, errors);
   validateFourTuple(files, errors);
   if (slice === 'wrapper') {
     validateFullCommentProfile(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
+    validateCommentLanguage(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
     return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
   }
   if (normalizedDevice.stem === 'ssd1306') {
@@ -435,11 +463,13 @@ module.exports = {
   SLICE_ROLES,
   directIncludes,
   expectedPaths,
+  extractCommentText,
   filterSlice,
   findFunctionDefinitions,
   maskCommentsAndStrings,
   parseArgs,
   runSelfCheck,
+  validateCommentLanguage,
   validateFourTuple,
   validateFullCommentProfile,
   validateHalDriver,

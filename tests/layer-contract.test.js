@@ -3,7 +3,7 @@ const os = require('os');
 const path = require('path');
 const { generateBspDriver, generateCorePeripheral } = require('../lib/generator');
 const { validateArchitectureContract } = require('../lib/architecture-contract');
-const { parseArgs, validateLayerContract } = require('../scripts/validate-layer-contract');
+const { parseArgs, validateCommentLanguage, validateLayerContract } = require('../scripts/validate-layer-contract');
 
 async function createSlice() {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mcu-layer-contract-'));
@@ -206,9 +206,9 @@ describe('generated layer contract validator', () => {
   }
 
   const wrapperSourceFullProfile = `/* @file platform_externflash_wrapper.c
- * @brief Platform-independent externflash Wrapper implementation.
+ * @brief 平台无关的 externflash 封装层实现。
  * @par dependencies platform_externflash_wrapper.h
- * Processing flow: forward API calls through the registered context-first Ops.
+ * Processing flow: 通过已注册的上下文优先 Ops 转发 API 调用。
  */
 #include "platform_externflash_wrapper.h"
 /* Includes */
@@ -225,9 +225,9 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
 }`;
 
   const pureForwardWrapperHeader = `/* @file platform_externflash_wrapper.h
- * @brief Platform-independent externflash Wrapper (pure forward, no object identity).
+ * @brief 平台无关的 externflash 封装层（纯转发，无对象标识）。
  * @par dependencies platform_error.h, platform_type.h
- * Processing flow: register context-first Ops then forward API calls.
+ * Processing flow: 注册上下文优先 Ops 后再转发 API 调用。
  */
 #ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
 #define PLATFORM_EXTERNFLASH_WRAPPER_H
@@ -243,9 +243,9 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
 #endif`;
 
   const fourTupleBrokenWrapperHeader = `/* @file platform_externflash_wrapper.h
- * @brief Device object wrapper carrying platform_device_t identity.
+ * @brief 携带 platform_device_t 标识的设备对象封装层。
  * @par dependencies platform_error.h, platform_type.h
- * Processing flow: object identity plus four-tuple slots.
+ * Processing flow: 对象标识加四元组槽位。
  */
 #ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
 #define PLATFORM_EXTERNFLASH_WRAPPER_H
@@ -263,7 +263,7 @@ int32_t platform_externflash_wrapper_register(const void *p_ops);
 #endif`;
 
   const noProfileWrapperHeader = `/* @file platform_externflash_wrapper.h
- * @brief Minimal header without full comment profile.
+ * @brief 无完整注释 profile 的最小头文件。
  */
 #ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
 #define PLATFORM_EXTERNFLASH_WRAPPER_H
@@ -337,9 +337,9 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
   });
 
   const compliantWrapperHeader = `/* @file platform_externflash_wrapper.h
- * @brief Platform-independent externflash Wrapper (pure forward, no object identity).
+ * @brief 平台无关的 externflash 封装层（纯转发，无对象标识）。
  * @par dependencies platform_error.h, platform_type.h
- * Processing flow: register context-first Ops then forward API calls.
+ * Processing flow: 注册上下文优先 Ops 后再转发 API 调用。
  */
 #ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
 #define PLATFORM_EXTERNFLASH_WRAPPER_H
@@ -358,9 +358,9 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
 #endif`;
 
   const compliantWrapperSource = `/* @file platform_externflash_wrapper.c
- * @brief Platform-independent externflash Wrapper implementation.
+ * @brief 平台无关的 externflash 封装层实现。
  * @par dependencies platform_externflash_wrapper.h, platform_error.h
- * Processing flow: forward API calls through the registered context-first Ops.
+ * Processing flow: 通过已注册的上下文优先 Ops 转发 API 调用。
  */
 #include "platform_externflash_wrapper.h"
 #include "platform_def.h"
@@ -389,6 +389,61 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_FOUR_TUPLE' }),
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DOC_PROFILE' }),
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_SOURCE_SECTION' })
+    ]));
+  });
+
+  test('flags English-only comments and accepts Chinese or symbolic comments', () => {
+    const errors = [];
+    const files = {
+      zh: { relative: 'zh.h', content: '/* @brief 初始化设备。 */\nint f(void);' },
+      en: { relative: 'en.h', content: '/* @brief Initializes the device. */\nint f(void);' },
+      symbolic: { relative: 'symbolic.h', content: '/* ------------------ */\nint f(void);' },
+      mixed: { relative: 'mixed.h', content: '/* @brief 初始化 MCU Workbench backend。 */\nint f(void);' }
+    };
+    validateCommentLanguage(files, errors);
+    expect(errors).toEqual([
+      expect.objectContaining({ ruleId: 'LAYER_COMMENT_LANGUAGE', file: 'en.h' })
+    ]);
+  });
+
+  test('rejects a generated file whose comments are written in English', async () => {
+    const root = await createSlice();
+    await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => content
+      .replace('仅依赖生成的 BSP/Core 公共接口', 'generated BSP/Core public interfaces only')
+      .replace('生成的切片参与已声明的分层契约。', 'Generated slice participates in the declared layered contract.')
+      .replace('W25Q64 器件配置。', 'W25Q64 device configuration.'));
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_COMMENT_LANGUAGE',
+        file: '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h'
+      })
+    ]));
+  });
+
+  test('rejects an English-comment wrapper slice', async () => {
+    const englishWrapperHeader = `/* @file platform_externflash_wrapper.h
+ * @brief Platform-independent externflash Wrapper (pure forward, no object identity).
+ * @par dependencies platform_error.h, platform_type.h
+ * Processing flow: register context-first Ops then forward API calls.
+ */
+#ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
+#define PLATFORM_EXTERNFLASH_WRAPPER_H
+#include <stdint.h>
+/* Includes */
+/* Public Types */
+typedef struct {
+    void *p_context;
+    int32_t (*pf_read_id)(void *p_context, uint32_t *device_id);
+} platform_externflash_wrapper_ops_t;
+/* Public Functions */
+int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops);
+#endif`;
+    const root = await createWrapperSlice(englishWrapperHeader, wrapperSourceFullProfile);
+    const result = validateLayerContract({
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+    });
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_COMMENT_LANGUAGE' })
     ]));
   });
 });
