@@ -14,6 +14,9 @@ const { Registry, createDefaultRegistry } = require('./registry');
 const { compareRuns } = require('./report/compare');
 const { trendRuns } = require('./report/trend');
 const { BaselineStore } = require('./baseline/baseline-store');
+const { DecisionLog } = require('./policy/decision-log');
+const { runCampaign } = require('./campaign/campaign');
+const policies = require('./policy/policy');
 const dataset = require('./dataset/dataset-manager');
 
 /**
@@ -24,6 +27,7 @@ function createHarness({ baseDir, registry = createDefaultRegistry() }) {
   if (!baseDir) throw new Error('baseDir is required (目标工程 .mcu-workbench/ 路径)');
   const store = new RunStore({ baseDir });
   const baselineStore = new BaselineStore({ baseDir });
+  const decisionLog = new DecisionLog({ baseDir });
   const runner = new Runner({ registry, store, baselineStore });
   let pipeline;
 
@@ -76,6 +80,16 @@ function createHarness({ baseDir, registry = createDefaultRegistry() }) {
     /** 基线库(读取/管理;写入由 runner 在 eval gate 通过时自动完成) */
     baseline: baselineStore,
 
+    /** 自动决策日志(D4-4:可审计地基) */
+    decisions: decisionLog,
+
+    /** 多轮智能迭代:run → 策略分析 → 决策日志 → 下一轮(D4-1) */
+    campaign({ pipeline: spec, policy, maxRounds = 10 }) {
+      const verdict = validatePipeline(spec);
+      if (!verdict.ok) throw new Error(`invalid pipeline: ${verdict.errors.join('; ')}`);
+      return runCampaign({ registry, runner, store, decisionLog, pipeline: spec, policy, maxRounds });
+    },
+
     /** 数据集管理工具(importDir/splitDataset/makeCalibrationSet/...) */
     dataset
   };
@@ -87,5 +101,6 @@ module.exports = {
   Registry,
   RunStore,
   planPipeline,
-  validatePipeline
+  validatePipeline,
+  policies
 };
