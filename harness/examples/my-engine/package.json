@@ -1,0 +1,7 @@
+{
+  "name": "my-engine",
+  "version": "1.0.0",
+  "description": "第三方引擎示例:展示 harness 适配器接入流程(D5-5)",
+  "main": "index.js",
+  "license": "MIT"
+}

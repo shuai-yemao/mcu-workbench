@@ -17,6 +17,7 @@ const { BaselineStore } = require('./baseline/baseline-store');
 const { DecisionLog } = require('./policy/decision-log');
 const { runCampaign } = require('./campaign/campaign');
 const policies = require('./policy/policy');
+const adapterCheck = require('./adapter-check');
 const dataset = require('./dataset/dataset-manager');
 
 /**
@@ -102,5 +103,6 @@ module.exports = {
   RunStore,
   planPipeline,
   validatePipeline,
-  policies
+  policies,
+  adapterCheck
 };
