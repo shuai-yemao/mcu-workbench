@@ -5,7 +5,7 @@
  * capabilities() 用于规划期静态校验,不兼容在规划期失败而非运行期。
  */
 
-import type { ArtifactRef } from './artifact-schema';
+import type { ArtifactKind, ArtifactRef } from './artifact-schema';
 import type { TargetAdapter, TargetSpec } from './target-contract';
 
 /** 引擎能力声明 */
@@ -17,6 +17,13 @@ export interface EngineCapabilities {
   quantSchemes: string[];
   ops: string[];
   compatibleTargets: string[];
+}
+
+/** 引擎方法返回的产物载荷 —— 由 stage 落盘为 artifact(保证血缘/runId 完整,引擎无状态) */
+export interface ArtifactPayload {
+  kind: ArtifactKind;
+  content: string | Buffer;
+  labels?: Record<string, string>;
 }
 
 /** 代码生成配置 */
@@ -35,18 +42,18 @@ export interface RunResult {
 /** 引擎适配器 —— 引擎侧唯一实现面 */
 export interface EngineAdapter {
   capabilities(): EngineCapabilities;
-  /** 模型导入与转换 → converted-model */
-  convert(req: { artifact: ArtifactRef; target: TargetSpec }): Promise<ArtifactRef>;
-  /** 量化(校准集可选)→ quantized-model */
-  quantize(req: { artifact: ArtifactRef; dataset?: ArtifactRef; scheme: string }): Promise<ArtifactRef>;
-  /** 代码生成(集成到目标工程)→ generated-code */
-  generateCode(req: { artifact: ArtifactRef; config: GenConfig }): Promise<ArtifactRef>;
+  /** 模型导入与转换 → converted-model payload */
+  convert(req: { artifact: ArtifactRef; target: TargetSpec }): Promise<ArtifactPayload>;
+  /** 量化(校准集可选)→ quantized-model payload */
+  quantize(req: { artifact: ArtifactRef; dataset?: ArtifactRef; scheme: string }): Promise<ArtifactPayload>;
+  /** 代码生成(集成到目标工程)→ generated-code payload */
+  generateCode(req: { artifact: ArtifactRef; config: GenConfig }): Promise<ArtifactPayload>;
   /** 在目标上运行推理 */
   run(req: { bundle: ArtifactRef; target: TargetAdapter }): Promise<RunResult>;
-  /** 评测(精度/延迟/内存/功耗)→ eval-report */
+  /** 评测(精度/延迟/内存/功耗)→ eval-report payload */
   evaluate(req: {
     bundle: ArtifactRef;
     target: TargetAdapter;
     dataset: ArtifactRef;
-  }): Promise<ArtifactRef>;
+  }): Promise<ArtifactPayload>;
 }

@@ -92,13 +92,15 @@ export interface EngineCapabilities {
 
 export interface EngineAdapter {
   capabilities(): EngineCapabilities;
-  convert(req: { artifact: ArtifactRef; target: TargetSpec }): Promise<ArtifactRef>;      // → converted-model
-  quantize(req: { artifact: ArtifactRef; dataset?: ArtifactRef; scheme: string }): Promise<ArtifactRef>; // → quantized-model
-  generateCode(req: { artifact: ArtifactRef; config: GenConfig }): Promise<ArtifactRef>;  // → generated-code
+  convert(req: { artifact: ArtifactRef; target: TargetSpec }): Promise<ArtifactPayload>;      // → converted-model
+  quantize(req: { artifact: ArtifactRef; dataset?: ArtifactRef; scheme: string }): Promise<ArtifactPayload>; // → quantized-model
+  generateCode(req: { artifact: ArtifactRef; config: GenConfig }): Promise<ArtifactPayload>;  // → generated-code
   run(req: { bundle: ArtifactRef; target: TargetAdapter }): Promise<RunResult>;
-  evaluate(req: { bundle: ArtifactRef; target: TargetAdapter; dataset: ArtifactRef }): Promise<ArtifactRef>; // → eval-report
+  evaluate(req: { bundle: ArtifactRef; target: TargetAdapter; dataset: ArtifactRef }): Promise<ArtifactPayload>; // → eval-report
 }
 ```
+
+> **实证修正(阶段 1,2026-08-08)**:引擎方法返回 `ArtifactPayload`({ kind, content, labels })而非 `ArtifactRef`——由 Stage 层落盘为 artifact。理由:引擎保持无状态、血缘/runId 由 stage 统一注入;这是 H02"用最小引擎验证契约"的第一处修正。
 
 - 引擎差异全部封在 Adapter 内,Stage 层只见契约
 - `capabilities()` 用于**规划期静态校验**:Stage 要 int8 量化而引擎不支持 → 规划期失败,不拖到运行期
@@ -191,7 +193,7 @@ export interface StageImpl<In extends ArtifactKind[], Out extends ArtifactKind> 
 | 运行时实现 | **JS (CommonJS)**,与现有 `lib/*.js` 一致 | 零构建、与现有 loader/catalog 同栈 |
 | 测试 | **Jest**(项目已有 34 套件/190 用例) | 沿用,不引入新框架 |
 | 校验器 | 自写轻量校验函数(不引 zod) | 依赖最小化;契约简单,手写足够 |
-| CLI | 复用现有 `commands/*.js` + `bin/` 机制 | 与 mcu-new/core/driver 同模式 |
+| 交互方式 | **无 Node CLI,Programmatic API + skill 编排**(ADR H13) | 消费者是 agent,直调 lib 拿结构化结果,比解析 CLI stdout 稳定;省掉命令注册/参数解析/输出格式化 |
 | 状态存储 | 复用 `.mcu-workbench/runs/` + 新增 `.mcu-workbench/artifacts/` | 与 agent 交接协议同目录,审计统一 |
 
 ## 8. 物理目录结构(阶段 1 起步,ADR H07)
@@ -218,8 +220,8 @@ harness/                          # 当前仓库内起步;独立 manifest 表达
 │  │  └─ tflm/                    # 阶段 1 首个引擎(host 验证契约)
 │  └─ target/
 │     └─ host/                    # 阶段 1 首个目标
-├─ commands/
-│  └─ mcu-harness.js              # pipeline init/run/resume/report
+├─ skills/
+│  └─ harness-pipeline/            # workflow skill:引导 agent 调用 lib API 编排(ADR H13)
 └─ tests/
    └─ contracts.test.js           # 契约校验单测(阶段 0 验收)
 ```
@@ -233,7 +235,7 @@ harness/                          # 当前仓库内起步;独立 manifest 表达
 | artifact 协议 `.mcu-workbench/` | Run / Artifact 记录复用同一目录与协议 |
 | workflow 五入口 | requirements-router 可路由 AI 需求,RCP 扩展 AI 字段;final-review 增加评测门禁 |
 | 五层契约(固件域) | 引擎源码归 Vendor(engine vendor);推理接口归 Platform(platform_ai);移植归 Impl(impl_ai);AI 业务归 Service(service_ai) |
-| Node CLI | 新增 `pipeline init/run/resume/report` 子命令 |
+| Node CLI | **不新增**——harness 走 `harness-pipeline` skill 编排 + lib Programmatic API(ADR H13),与 workflow 层同构 |
 
 **架构决策 H01 — Harness 独立插件分发,不内嵌现有插件。** 生命周期独立(AI 节奏 ≠ 固件节奏)、可插拔(非 AI 项目零成本)、依赖单向(harness → 现有设施,不反向);代价是双 manifest 维护。
 
@@ -242,7 +244,7 @@ harness/                          # 当前仓库内起步;独立 manifest 表达
 | 阶段 | 目标 | 关键动作 | 里程碑(可验证) |
 |---|---|---|---|
 | **0 契约定稿**(1-2 周) | 三契约 + Gate 类型化 | §4 四份 .ts 契约 + 自写校验器 + 单测;pipeline.json schema;tsc --noEmit 全绿 | 契约单测通过,本文档 Accepted |
-| **1 最小闭环 MVP**(4-6 周) | 一条流水线端到端跑通 | collect→train→quantize→integrate→eval;tflm 适配器 + host target;Run/Artifact 存储;CLI init/run | host 上跑通 demo 流水线,产出 eval-report |
+| **1 最小闭环 MVP**(4-6 周) | 一条流水线端到端跑通 | collect→train→quantize→integrate→eval;tflm 适配器 + host target;Run/Artifact 存储;`harness-pipeline` skill 编排 | host 上跑通 demo 流水线,产出 eval-report |
 | **2 引擎与目标矩阵**(6-8 周) | 引擎/目标可替换 | cubeai / espdl 适配器;qemu / board target;数据集版本与血缘管理 | 同一模型在 TFLM 与 cubeai 下对比评测 |
 | **3 评测体系**(4-6 周) | 评测进发布门禁 | 基线库 + 回归 + 趋势;打通 tools-quality / tools-observability | eval-report 进入 release gate |
 | **4 流程智能化**(持续) | 自动化与自愈 | agent 自动调参(量化格式/算子选择)、失败自愈、反馈闭环(评测→训练) | 数据→模型→固件闭环,人工只在 Gate 介入 |
@@ -257,10 +259,11 @@ harness/                          # 当前仓库内起步;独立 manifest 表达
 | **H03** | ✅ Accepted | 五层契约同构(编排/阶段/契约/适配/Vendor) | 复用分层心智与依赖铁律;语义同构非代码复用 |
 | **H04** | ✅ Accepted | Artifact 不可变内容寻址 + 断点续跑 | 阶段幂等可重入、失败成本低;存储 GC 需设计 |
 | **H05** | ✅ Accepted | 评测报告是 release gate 输入 | 评测驱动发布;基线血缘需可信 |
-| **H06** | ✅ Accepted | 技术栈:契约 .ts + tsc --noEmit,运行时 .js,测试 Jest,CLI 复用 commands 机制 | 零构建、同栈;契约可静态校验 |
+| **H06** | ✅ Accepted | 技术栈:契约 .ts + tsc --noEmit,运行时 .js,测试 Jest | 零构建、同栈;契约可静态校验 |
 | **H07** | ✅ Accepted | 起步物理位置:仓库内 `harness/` 目录(独立 manifest) | 快速起步;拆独立 repo 可逆 |
 | **H08** | ✅ Accepted | Gate 三层:schema + checksum + 声明式阈值/可编程验证器 | 门禁可审计、可扩展;简单场景只需写 gates 字段 |
 | **H09** | ✅ Accepted | Run 复用 `.mcu-workbench/runs/`,Artifact 存 `.mcu-workbench/artifacts/<kind>/<id>/` | 与 agent 交接协议统一;内容寻址天然防覆盖 |
+| **H13** | ✅ Accepted | **无 Node CLI**(ADR H10 作废):lib 暴露 Programmatic API,`harness-pipeline` skill 引导 agent 编排 | agent 直调 API 拿结构化结果,无 stdout 解析不稳定;省命令注册/参数解析/格式化成本;现有 lib/cli.js 零改动 |
 
 ## 12. 风险与对策
 
