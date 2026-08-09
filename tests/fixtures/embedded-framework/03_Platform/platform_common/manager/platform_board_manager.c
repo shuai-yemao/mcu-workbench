@@ -17,12 +17,14 @@
  *
  * 1. platform_board_manager_init 使各子管理器就绪。
  * 2. platform_board_manager_start 驱动 device.init -> service.init ->
- *    device.start -> service.start。
+ *    device.start -> service.start（**机制默认顺序**；产品级策略经
+ *    platform_board_manager_set_hooks 注入或 Service 层直接调用子管理器
+ *    API 表达，平台层不持有业务先后，P3）。
  * 3. platform_board_manager_process 先驱动 device.process，再驱动
  *    service.process（数据向上流动，策略向下流动）。
  * 4. platform_board_manager_stop/deinit 驱动逆序流程。
  *
- * @version V1.2 2026-08-08
+ * @version V1.3 2026-08-09
  *
  * @note 1 个 Tab == 4 个空格！
  *
@@ -108,9 +110,17 @@ platform_err_t platform_board_manager_start(platform_board_manager_t *p_board)
     first_error = board_keep_first(
         first_error,
         platform_device_manager_init_all(&p_board->device_mgr, NULL));
+    if ((NULL != p_board->hooks.on_device_ready) && (PLATFORM_ERR_OK == first_error))
+    {
+        first_error = p_board->hooks.on_device_ready(NULL);
+    }
     first_error = board_keep_first(
         first_error,
         platform_service_manager_init_all(&p_board->service_mgr, NULL));
+    if ((NULL != p_board->hooks.on_service_ready) && (PLATFORM_ERR_OK == first_error))
+    {
+        first_error = p_board->hooks.on_service_ready(NULL);
+    }
 
     /* 步骤 2：先运行硬件，再在其上运行 service。 */
     first_error = board_keep_first(
@@ -142,6 +152,16 @@ platform_err_t platform_board_manager_process(platform_board_manager_t *p_board)
 
     if (NULL == p_board) {
         return PLATFORM_ERR_PARAM;
+    }
+
+    /* 周期开始钩子（P3）：Service 层可注入每轮业务准备。 */
+    if (NULL != p_board->hooks.on_loop_begin)
+    {
+        platform_err_t hook_err = p_board->hooks.on_loop_begin(NULL);
+        if (PLATFORM_IS_ERR(hook_err))
+        {
+            return hook_err;
+        }
     }
 
     /* 先刷新 device 数据，service 再在此基础上计算。 */
@@ -215,6 +235,28 @@ platform_err_t platform_board_manager_deinit(platform_board_manager_t *p_board)
                                      PLATFORM_OBJECT_DEINITIALIZED);
 
     return first_error;
+}
+
+platform_err_t platform_board_manager_set_hooks(platform_board_manager_t *p_board,
+                                               const platform_board_hooks_t *p_hooks)
+{
+    if (NULL == p_board)
+    {
+        return PLATFORM_ERR_PARAM;
+    }
+
+    if (NULL == p_hooks)
+    {
+        p_board->hooks.on_device_ready  = (platform_board_hook_t) 0;
+        p_board->hooks.on_service_ready = (platform_board_hook_t) 0;
+        p_board->hooks.on_loop_begin    = (platform_board_hook_t) 0;
+    }
+    else
+    {
+        p_board->hooks = *p_hooks;
+    }
+
+    return PLATFORM_ERR_OK;
 }
 
 /**

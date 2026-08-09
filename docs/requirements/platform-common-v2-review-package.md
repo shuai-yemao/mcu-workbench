@@ -46,9 +46,9 @@
 | W-01 | 修改 | `skills/platform/platform_common/SKILL.md` | Platform（技能） | 文件清单改四子域结构（core/object/manager/diag）；生成契约 3→10 个 .c；新增 manager 内置能力章节；写入 P1 准入规则、P2 日志初始化契约、P3 机制/策略边界、P4 架构契约声明、P5 槽数组契约 | 否 | F-01~F-08 | software-architect | ready |
 | W-02 | 新增 | `docs/architecture/ADR-001-platform-common-v2.md` | 文档 | ADR 记录四子域 + manager 内置 + P1-P5 决策与 trade-off | 否 | F-01~F-10 | software-architect | ready |
 | W-03 | 修改 | `docs/architecture-overall-plan.md` | 文档 | 第 3 节 platform_common 描述同步四子域（若该节有平铺清单） | 否 | F-01 | software-architect | ready |
-| W-04 | 修改 | `03_Platform/platform_common/diag/platform_assert.*` | Platform（工程） | P2：断言通道独立于日志（降级/注入原始输出） | 否 | F-04 | firmware-engineer | **blocked**（后续课程，待补证） |
-| W-05 | 修改 | `03_Platform/platform_common/manager/platform_board_manager.*` | Platform（工程） | P3：顺序来源改注册顺序/显式配置，不硬编码 device/service 先后 | 否 | F-05/F-10 | firmware-engineer | **blocked**（后续课程，待补证） |
-| W-06 | 修改 | `03_Platform/platform_common/manager/platform_manager.*` | Platform（工程） | P5：满槽返回 `PLATFORM_ERR_NO_RESOURCE`、容量宏、重复注册语义 | 否 | F-06 | firmware-engineer | **blocked**（后续课程，待补证） |
+| W-04 | 修改 | `03_Platform/platform_common/diag/platform_assert.*` | Platform（工程） | P2：断言通道独立于日志——新增 `platform_assert_output` 原语（Impl 实现 platform_assert_output.c 桥接 RTT），assert.c 不再依赖 platform_log | 否 | F-04 | firmware-engineer | **done**（2026-08-09 实施） |
+| W-05 | 修改 | `03_Platform/platform_common/manager/platform_board_manager.*` | Platform（工程） | P3：新增 `platform_board_hooks_t` 编排策略钩子（on_device_ready/on_service_ready/on_loop_begin）+ `set_hooks`；顺序为机制默认值，策略经钩子/Service 层表达 | 否 | F-05/F-10 | firmware-engineer | **done**（2026-08-09 实施） |
+| W-06 | 修改 | `03_Platform/platform_common/manager/platform_manager.*` | Platform（工程） | P5：**已实现确认**——register 满槽返回 `PLATFORM_ERR_NO_RESOURCE`、重复返回 `ALREADY_INIT`、容量由调用方 init 时提供（比编译期宏更灵活，ADR 表述以本实现为准） | 否 | F-06 | firmware-engineer | **done**（核实确认） |
 | W-07 | 新增 | `03_Platform/platform_common/references/object-four-tuple-template.md` | Platform（工程） | 四元组模板落工程（与插件 skill 对齐） | 否 | F-09 | knowledge-engineer | **blocked**（可选，后续） |
 
 ## 3. 代码生成约束清单

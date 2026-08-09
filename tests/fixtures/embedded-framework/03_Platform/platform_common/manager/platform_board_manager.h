@@ -44,6 +44,27 @@
 /* Declaring ---------------------------------------------------------------- */
 
 /**
+ * @brief 编排阶段钩子回调签名（P3：机制/策略分离）。
+ *
+ * 回调统一签名，p_context 由调用方注入；返回非 OK 时作为该阶段
+ * 首个错误码上报（continue-on-error 语义延续）。
+ */
+typedef platform_err_t (*platform_board_hook_t)(void *p_context);
+
+/**
+ * @brief 编排策略钩子表（默认全 NULL，行为与无钩子完全一致）。
+ *
+ * 顺序是**机制默认值**，产品级策略（如"先传感器稳定再启动背光"）
+ * 经钩子注入或直接调用子管理器 API 在 Service 层表达，不改平台层。
+ */
+typedef struct
+{
+    platform_board_hook_t on_device_ready;  /**< device.init_all 完成后（service.init 前），可为 NULL。 */
+    platform_board_hook_t on_service_ready; /**< service.init_all 完成后（device.start 前），可为 NULL。 */
+    platform_board_hook_t on_loop_begin;    /**< 每个主循环周期开始时，可为 NULL。 */
+} platform_board_hooks_t;
+
+/**
  * @brief 整板管理器：持有两个子管理器及其自身的对象
  *        身份。
  */
@@ -52,7 +73,24 @@ typedef struct
     platform_object_t object;               /**< MANAGER 类型身份。    */
     platform_device_manager_t device_mgr;   /**< 内嵌 device 管理器。  */
     platform_service_manager_t service_mgr; /**< 内嵌 service 管理器。 */
+    platform_board_hooks_t hooks;           /**< 编排策略钩子（默认空）。 */
 } platform_board_manager_t;
+
+/**
+ * @brief 注册编排策略钩子（P3）。
+ *
+ * 传 NULL 或全 NULL 表恢复默认顺序（无钩子行为）。钩子在 board
+ * 阶段转换点被调用，用于注入产品级准备步骤；顺序策略经此在
+ * Service 层表达，平台层不持有业务先后。
+ *
+ * @param[in] p_board : 指向整板管理器目标的指针。
+ * @param[in] p_hooks : 指向钩子表的指针；NULL 清除全部钩子。
+ *
+ * @retval PLATFORM_ERR_OK    : 钩子已注册。
+ * @retval PLATFORM_ERR_PARAM : p_board 为 NULL。
+ */
+platform_err_t platform_board_manager_set_hooks(platform_board_manager_t *p_board,
+                                               const platform_board_hooks_t *p_hooks);
 
 /**
  * @brief 初始化整板管理器及其两个子管理器。

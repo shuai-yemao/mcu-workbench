@@ -17,10 +17,11 @@
  *
  * 1. 断言失败进入 platform_assert_fail()。
  * 2. 已注册 hook（测试/冒烟注入）→ 回调 hook 后返回，程序继续。
- * 3. 未注册 hook（产品路径默认）→ 打印错误日志后 for(;;) 停机，
- *    暴露故障现场供调试器/看门狗处理。
+ * 3. 未注册 hook（产品路径默认）→ 经独立原始输出原语
+ *    platform_assert_output 输出故障信息后 for(;;) 停机，
+ *    不依赖 platform_log（P2：故障路径自足）。
  *
- * @version V1.0 2026-08-09
+ * @version V1.1 2026-08-09
  *
  * @note 1 个 Tab == 4 个空格！
  *
@@ -29,7 +30,6 @@
 /* Includes ----------------------------------------------------------------- */
 
 #include "platform_assert.h"
-#include "platform_log.h"
 
 /* Declaring ---------------------------------------------------------------- */
 
@@ -41,7 +41,7 @@ static platform_assert_hook_t s_assert_hook = (platform_assert_hook_t) 0;
 /**
  * @brief 断言失败处理入口。
  *
- * 有 hook 则回调 hook 并返回；否则打印错误日志后进入死循环。
+ * 有 hook 则回调 hook 并返回；否则经独立原始输出原语输出后进入死循环。
  *
  * @param[in] p_expr : 失败的断言表达式字符串。
  * @param[in] p_file : 断言所在源文件名。
@@ -57,8 +57,9 @@ void platform_assert_fail(const char *p_expr, const char *p_file, const char *p_
         return;
     }
 
-    PLATFORM_LOG_E("assert", "%s assert failed: %s (%s line %d)", p_file, p_expr, p_func,
-                   (int) line);
+    /* 独立输出原语：不依赖 platform_log（故障路径自足，P2）。 */
+    platform_assert_output("%s assert failed: %s (%s line %d)\n", p_file, p_expr, p_func,
+                           (int) line);
 
     /* 产品路径默认停机，等待调试器或看门狗接管。 */
     for (;;)
