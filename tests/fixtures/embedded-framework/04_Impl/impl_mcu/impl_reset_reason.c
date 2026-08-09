@@ -7,7 +7,6 @@
  *
  * @par dependencies
  * - platform_reset_reason.h
- * - platform_log.h
  *
  * @author Jack | R&D Dept. | EternalChip
  *
