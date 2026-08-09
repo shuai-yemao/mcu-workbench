@@ -1,43 +1,66 @@
-# 软件层契约
+# 软件层契约（五层 + Port 注入）
+
+> v2.0（2026-08-09）：从旧角色契约（APP/OS Wrapper/BSP 十一类）对齐为五层契约 + Port 注入模型。
+> 对齐 ADR-001（platform_common 四子域）与依赖纪律门禁（Platform 零反向）。
+
+## 依赖铁律
 
 ```text
-APP ──┬─ OS Wrapper (`osal_*`) → OS Port (`os_*_impl()`) → OS Runtime
-      ├─ BSP Wrapper → BSP Port → BSP Handler → BSP HAL Driver → Core → MCU
-      └─ Middleware Public API
-
-Middleware Port ── OS Wrapper + BSP Wrapper
-OS Port ── BSP Wrapper（仅在需要板级能力时）
+App → Service → Platform ← Impl → Vendor
 ```
+
+- **App 只调 Service**；Service 依赖 Platform 接口与其他 Service；Platform 只定义能力（统一接口/错误码/数据结构/ops/ctx）；Impl 依赖 Platform 抽象并**注入**具体能力；Vendor 是第三方底座，只经 Impl 的 port 接入，不被上层直调。
+
+## 层职责
 
 | 层 | 单一职责 | 允许依赖 | 禁止事项 |
 |---|---|---|---|
-| APP | 业务、UI、连接和应用状态 | OS Wrapper、BSP Wrapper、Middleware 公共 API | HAL、原生 RTOS、BSP Port、Handler、HAL Driver、Core、MCU |
-| Middleware | 可复用协议、GUI、存储、算法和公共 API | Middleware 公共 API；Port 仅可用 OS Wrapper、BSP Wrapper | 具体设备、BSP Port、Handler、HAL Driver、Core、MCU、原生 RTOS |
-| OS Wrapper | 稳定的 `osal_*` 公共 API、语义转换和错误码 | 内部 OS Port | 业务状态、板级协议、原生 RTOS 调用 |
-| OS Port | `os_*_impl()` 与 FreeRTOS、RT-Thread、裸机 Runtime 的绑定 | OS Runtime；必要时 BSP Wrapper | APP/BSP/Middleware 业务、直接访问 BSP Port/Handler/Driver |
-| BSP Wrapper | 函数表、注册槽位和稳定转发 | 标准类型与自身公共声明 | Port、Handler、HAL Driver、Core、MCU、OS、HAL、RTOS 具体依赖 |
-| BSP Port | 唯一组合根：构造实例、注入 Ops、注册 BSP Public Ops | Core Ops、MCU Ops、OS Wrapper Ops、Driver/Handler 实例、BSP Wrapper 注册口 | 设备协议、业务缓存、任务循环、重试、回调、直接 HAL/RTOS |
-| BSP Handler | 生命周期、任务循环、队列、缓存、重试、回调和请求串行化 | 注入的 OS Wrapper Ops、HAL Driver Ops | Port/Wrapper/Core/MCU/HAL/RTOS 具体实现、设备寄存器协议 |
-| BSP HAL Driver | 外部器件协议与事务级错误映射 | 注入的 Core Ops、MCU Ops | HAL、RTOS、OS Wrapper、Handler、Port、业务状态 |
-| Core | MCU 编程的公共能力：片上总线、GPIO、DMA、IRQ、时基与事务 API | MCU 层；公开 `osal_*` 或注入锁 Ops | 外部器件协议、BSP Adapter、业务状态 |
-| MCU | CMSIS、厂商 HAL/LL/SPL、寄存器、SDK 与芯片专有能力 | 芯片硬件 | APP/BSP/Middleware/OS Wrapper 业务逻辑 |
+| **App** | 产品业务流程、编排、状态机（app_init 组合根） | Service 接口 + 错误码类型出口（`platform_error.h`） | HAL、RTOS、Platform 能力接口、Impl、Vendor 符号 |
+| **Service** | 业务抽象（带策略）：日志/系统/电池/OTA… | Platform 接口 + 其他 Service | Vendor 头、寄存器/HAL、Impl 细节、Platform 实现 |
+| **Platform** | 统一接口/错误码/数据结构/ops 函数指针/ctx（只定义能力，不绑芯片） | 自身头 + 标准库 | 芯片头、HAL 调用、Impl 符号（反向）、厂商类型 |
+| **Impl** | Platform→Vendor 适配落地：port 文件注入具体实例 | Platform **接口头** + Vendor 底座 | 反向定义接口、被 App 直调、含业务策略、include Platform 实现 |
+| **Vendor** | 第三方底座（源码登记 + patch，D7） | 无（底座） | 被上层直调；源码不复制进工程 |
+
+## Port 注入模型（核心）
+
+Impl 通过 **port 文件**把 Vendor 的具体实例注入 Platform 抽象，上层（Service/App）只使用抽象：
+
+```text
+Vendor（elog/RTT/HAL/FreeRTOS）→ 调用 → Impl port 文件 → 实现/注入 → Platform 抽象 → 使用 → Service/App
+```
+
+**机制注入（ops 表 / 符号实现）**：Impl 的 port 实现 Platform 接口（如 `platform_log_elog.c` 实现 `platform_log_*`），Vendor 能力经 `backend_context`/`void *` 隔离后注入抽象；实例化细节藏 Impl。
+
+**策略注入（编排钩子）**：顺序/时序等产品策略由 Service 层注入（如 `board_manager_set_hooks` 的 on_device_ready/on_service_ready/on_loop_begin），Platform 管理器只提供驱动机制，不持有业务先后（ADR-001 P3）。
+
+**两类 port 方向**（都在 Impl）：
+- **平台面向**：实现 Platform 接口的 port（如 `platform_log_elog.c`、`platform_assert_output.c`）——对外是"Platform 的实现者"，命名 `platform_*_xxx`。
+- **Vendor 面向**：满足 Vendor 移植点的 port（如 `elog_port.c` 提供 elog 的 IO/lock 回调）——对外是"Vendor 的适配者"，命名 `*_port_*`。
+
+**backend_context 约定**：Platform 抽象只用 `void *` 持有上下文；HAL/RTOS 句柄（`I2C_HandleTypeDef`/`TaskHandle_t`）只出现在 Impl，不泄漏进抽象。
+
+## 依赖纪律（门禁守护）
+
+- ✅ **Impl → Platform 接口头**：合法且必要（注入的前提，实现契约必须见签名）。
+- ❌ **Platform → Impl**：反向依赖，绝对禁止（已验证器 + baseline 测试双重守护）。
+- ❌ **Impl → Platform 实现**（include 平台 `.c`）：越权，禁止。
+- ⚠️ **唯一例外**：`platform_type.h` ← `impl_board/board_types.h`（类型出口，基础类型从板级引出）。其余 Platform→Impl 一律禁止。
+- Impl include 的 `platform_*` 头必须真实存在于 03_Platform（防幽灵依赖/漂移）。
+
+## 注入点实例（实践工程）
+
+| Platform 抽象 | Impl port | Vendor 底座 |
+|---|---|---|
+| `platform_log`（diag） | `impl_middleware/platform_log_elog.c` | easylogger |
+| `platform_assert_output`（diag） | `impl_middleware/platform_assert_output.c` | SEGGER RTT |
+| elog 底层移植 | `impl_middleware/elog_port.c`（Vendor 面向） | easylogger |
+| `platform_reset_reason` / `platform_hardfault` | `impl_mcu/impl_reset_reason.c` / `impl_hardfault.c` | CMSIS/寄存器 |
+| `platform_board_manager` 钩子（策略） | `service_system` 注入 | — |
 
 ## OS 契约
 
-`osal_*` 是 APP、BSP、Middleware 与 Middleware Port 唯一可见的 OS API；`os_*_impl()` 是仅供 Wrapper 使用的 OS Port 内部函数；`os-runtime` 负责 FreeRTOS、RT-Thread 或裸机的实际运行时绑定。`osal_internal_*.h` 只表示 Wrapper/Port 的内部边界，不形成第三层。原生 RTOS 头、类型和 API 不得越过 OS Port。
-
-## BSP 注入顺序
-
-1. BSP Port 创建 HAL Driver，并注入 Core Ops 与仅表达 Core 无法表达的 MCU Ops。
-2. BSP Port 创建 Handler，并注入 OS Wrapper Ops 与 HAL Driver Ops。
-3. BSP Port 将同形 BSP Public Ops 注册到 BSP Wrapper。
-
-生产 Port 与 Fake Port 必须保留相同的 Wrapper 函数表；差异只能位于注入的 Ops。`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不是 BSP Port。
-
-## Core 与 MCU 裁决
-
-Core 优先表达项目公共 MCU 编程能力。只有芯片独有且无法用 Core 事务/资源 API 表达的能力，才作为 MCU Ops 注入 BSP HAL Driver。CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK 归 MCU；其调用应被 Core 私有后端或受职责约束的 MCU 绑定消化。
+`osal_*` 是 App/Service/Impl 可见的 OS 抽象（`platform_os`）；`os_*_impl()` 是 Impl（impl_os）的 port 实现；原生 RTOS 头/API 不得越过 impl_os 的 port。`osal_internal_*.h` 仅是 Wrapper/Port 内部边界，不形成层。
 
 ## 验收边界
 
-静态门禁只证明依赖边界。构建、烧录、RTT/串口运行和板上现象分别需要独立记录，不能互相替代。
+静态门禁只证明依赖边界。构建、烧录、RTT/串口运行和板上现象分别独立记录，不能互相替代（review-gate 五级证据）。
