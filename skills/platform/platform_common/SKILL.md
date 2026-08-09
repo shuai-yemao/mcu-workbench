@@ -24,9 +24,9 @@ description: Platform 公共对象模型、生命周期驱动与诊断可观测�
 | `manager/` | `platform_device_manager.h/.c` | 设备管理器特化（类型安全薄包装） |
 | `manager/` | `platform_service_manager.h/.c` | 服务管理器特化（类型安全薄包装） |
 | `manager/` | `platform_board_manager.h/.c` | 整板编排：device/service 生命周期推进（机制，顺序策略归 Service） |
-| `diag/` | `platform_log.h` | 日志抽象：级别/编译裁剪/统一输出宏（实现由 Impl 桥接 elog/RTT） |
+| `diag/` | `platform_log.h` | 日志抽象契约：级别宏常量/编译裁剪/统一输出宏；输出由 Impl 符号实现桥接 elog/RTT（流转见 [`diag-log-flow.md`](references/diag-log-flow.md)） |
 | `diag/` | `platform_version.h/.c` | 版本/构建信息 + 启动 banner |
-| `diag/` | `platform_assert.h/.c` | 断言统一出口 + hook（故障路径，独立于日志） |
+| `diag/` | `platform_assert.h/.c` | 断言统一出口 + hook 注册（`platform_assert_set_hook`）+ 独立输出原语 `platform_assert_output`（P2，故障路径不依赖日志） |
 | `diag/` | `platform_reset_reason.h/.c` | 复位原因枚举 + 字符串映射（读取由 Impl 提供） |
 | `diag/` | `platform_hardfault.h` | 硬件异常现场 + 处理接口（ARM 架构契约；实现由 Impl 提供） |
 | `references/` | `object-four-tuple-template.md` | 对象四元组模板：base + cfg/ctx/data/ops 规范与 C 示例 |
@@ -220,6 +220,16 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 - 槽数组：容量由编译期宏定义；**满槽返回 `PLATFORM_ERR_NO_RESOURCE`**；重复注册返回 `PLATFORM_ERR_ALREADY_INIT`（P5）。
 
 **策略边界（P3）**：manager 只提供驱动机制，**不持有产品级编排顺序策略**（如"先传感器稳定再启动背光"）。多对象编排顺序由 Service 层（如 `service_system`）表达；board_manager 的默认顺序（device.init → service.init → device.start → service.start）是**机制默认值**，可被上层配置覆盖，禁止把业务先后写死为不可变契约。
+
+## 日志与检测流转（diag 契约）
+
+diag 是**横切可观测原语**：机制在 Platform（本子域），策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。流转三方向（详见 [`diag-log-flow.md`](references/diag-log-flow.md)）：
+
+- **调用向下**：App 经 `service_log` 门面（`SERVICE_LOG_*`，禁 include `platform_log.h`，D8）；Service 其他层与 Impl 直调 `PLATFORM_LOG_*`；Vendor 永不反向。
+- **注入由 Impl**：注入为**符号实现**（链接期）——Impl port 文件直接实现 `platform_log_*` 函数体（如 `platform_log_elog.c`），**非运行期 ops 注册**（简单、零 RAM、无初始化顺序问题，禁止引入运行期注册）。
+- **输出到底**：`platform_log_output` 组帧后写 Vendor 底座（elog / SEGGER RTT / HAL UART）；日志须在任何平台对象使用前初始化（boot 第一步）。
+
+**断言旁路（P2）**：`PLATFORM_ASSERT` 失败 → `platform_assert_fail`：有 hook 则回调并返回（host 冒烟）；无 hook 则经 `platform_assert_output`（独立于日志系统的原始输出，Impl 桥接 RTT）输出后死循环——故障路径自足，不依赖日志。
 
 ## 禁止与准入
 
