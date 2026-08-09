@@ -101,7 +101,7 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 
 | 属性 | 内容 |
 |---|---|
-| 职责 | 定义统一能力契约，不绑定任何具体芯片（范本：platform_common/mcu/os/bsp/middleware 五个子域）；**零实现门禁仅约束技能目录**，`platform_common` 含对象模型实现 |
+| 职责 | 定义统一能力契约，不绑定任何具体芯片（范本：platform_common/mcu/os/bsp/middleware 五个子域）；**技能目录允许无芯片/RTOS/厂商依赖的公共实现**，`platform_common` 含对象模型实现 |
 | 五大统一 | ① **统一接口**：`platform_*_api.h` 能力接口 ② **统一错误码**：`platform_error.h`（`platform_err_t`）③ **统一数据结构**：`platform_type.h` ④ **统一对象协议**：`platform_object.h`（对象身份/状态）+ `platform_lifecycle.h`（生命周期回调）⑤ **统一 ctx 上下文**：对象自携带 `p_self`/`p_parent` 关系（`platform_registry.h` 注册表已废弃） |
 | 子域 | `platform_mcu`（外设能力）/ `platform_os`（OS 能力）/ `platform_bsp`（板级器件能力）/ `platform_middleware`（中间件能力接口：log/fs/kv/crypto/gui/comm）/ `platform_common`（公共定义与对象模型） |
 | 禁止 | 任何芯片头文件、任何厂商类型；实现代码仅限技能目录之外（`platform_common` 对象模型实现为例外） |
@@ -252,7 +252,7 @@ typedef struct platform_battery_ops {
 
 ### 4.5 落地方式
 
-- Platform 目录只含头文件，**禁止任何 `.c` 实现**（静态门禁校验）；
+- Platform 目录允许**无芯片/RTOS/厂商依赖**的公共实现（静态门禁校验；绑定硬件/OS 的实现必须在 Impl）；
 - 错误码单一事实源：现有 `bsp/references/common-error-patterns.md` 升级为 Platform 错误码规范；
 - 现状 `osal_*` / BSP 函数表 / Core 事务 API 三套契约**归一**到 Platform，旧符号走兼容别名过渡；
 - Vendor 源码不复制：`vendor_mapping.md` 登记 + `patch/` 打补丁。
@@ -317,7 +317,7 @@ typedef struct platform_battery_ops {
 ## 8. 验收标准（方案层面）
 
 1. 任一技能都能明确说出归属层，且符合该层依赖铁律；
-2. Platform 技能目录零实现（静态检查可验证；`platform_common` 对象模型实现除外）；
+2. Platform 技能目录实现不依赖芯片/RTOS/厂商符号（静态检查可验证；允许无芯片依赖的公共实现）；
 3. Vendor 目录零上层符号（grep 可验证），源码不复制只登记；
 4. App 目录零 Vendor/Impl 符号（grep 可验证）；
 5. 同一个 Service 可在两个不同芯片 Impl 上复用（示例验证）；

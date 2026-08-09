@@ -24,7 +24,7 @@ description: Platform 纯定义：中间件能力接口（log/fs/kv/crypto/gui/c
 
 ## 生成契约
 
-`03_Platform/platform_middleware/` 只含头文件（零 `.c`）。接口以 `platform_*_t` + `platform_*_ops_t` 声明，Impl 在 `04_Impl/impl_middleware/` 或 Vendor patch 中落地。
+`03_Platform/platform_middleware/` 只含头文件（零 `.c`）。接口以 `platform_*_t` + `platform_*_ops_t` 声明，Impl 在 `04_Impl/impl_middleware/` 或 Vendor patch 中落地。中间件能力接口无公共实现需求，保持零 `.c`（门禁放开的是「允许」，非「必须」）；任何实现归 Impl/Vendor patch。
 
 ## 必须读取（生成前 MUST，缺失任一即不得开始输出）
 

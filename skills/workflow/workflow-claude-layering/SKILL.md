@@ -54,7 +54,7 @@ description: 当用户要为嵌入式固件工程初始化、扫描、更新、�
 - 依赖铁律：App → Service → Platform ← Impl → Vendor。
 - App 只调用 Service；不得直接 include HAL、Platform 实现、Impl、Vendor 或原生 RTOS。
 - Service 依赖 Platform 接口与其他 Service；不得 include Vendor 头文件、寄存器/HAL。
-- Platform 纯定义、零实现（禁止 .c 文件）；只允许标准类型。
+- Platform 定义能力契约，允许无芯片/RTOS/厂商依赖的公共实现；禁止 HAL/RTOS/芯片符号，绑硬件/OS 的实现必须在 Impl。
 - Impl 落地 Platform→Vendor 适配（board/mcu/os/bsp + Handler 机制）；不得反向定义接口、不得被 App 直调、不得含业务策略。
 - Vendor 是第三方底座（HAL/CMSIS/FreeRTOS/LVGL/FatFS/算法库/SDK），源码不复制、只登记映射（vendor_mapping.md + patch/）；不反向调用任何上层。
 

@@ -39,7 +39,7 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 |---|---|---|---|---|
 | **App** | 产品业务流程：编排、状态机、交互（app_ble/app_hmi/app_ota/app_init/app_system） | **只调 Service** | HAL/Platform 实现/Impl/Vendor 符号 | 零改动 |
 | **Service** | **App 常见业务抽象**（带策略）：battery/backlight/log/ota/power/sensor/storage/watchdog…，各带 `_model/_state/_fault_code` | Platform 接口 + 其他 Service | Vendor 头文件、寄存器/HAL | 零改动 |
-| **Platform** | 平台抽象：统一接口/错误码/数据结构/对象协议/ctx（**零实现门禁仅约束技能目录**，`platform_common` 含对象模型实现） | 仅标准类型 | 芯片头文件、厂商类型 | 接口永不改 |
+| **Platform** | 平台抽象：统一接口/错误码/数据结构/对象协议/ctx（**技能目录允许无芯片/RTOS/厂商依赖的公共实现**，`platform_common` 含对象模型实现） | 仅标准类型 | 芯片头文件、厂商类型 | 接口永不改 |
 | **Impl** | Platform→Vendor 适配落地：board/mcu/os/bsp 实现 + Handler 机制 | Platform 接口 + Vendor 底座 | 反向定义接口、被 App 直调、含业务策略 | 换整套 Impl |
 | **Vendor** | 厂家/第三方底座：HAL/CMSIS/CubeMX/FreeRTOS/LVGL/FatFS/算法库/SDK | — | **不反向调用任何上层** | — |
 
@@ -110,7 +110,7 @@ Platform 技能目录只有头文件（零 .c；platform_common 对象模型实�
 | `service_storage` | 存储 | 参数存取、KV、分区管理、掉电安全 | platform_mcu/flash+fs 规范 |
 | `service_watchdog` | 看门狗 | 喂狗策略、任务存活监控、复位诊断 | platform_mcu/watchdog |
 
-## 6. 目标态：42 个技能全景
+## 6. 目标态：46 个技能全景
 
 | 层 | 数量 | 技能 |
 |---|---|---|
@@ -118,11 +118,11 @@ Platform 技能目录只有头文件（零 .c；platform_common 对象模型实�
 | app（软件架构层） | 1 | app-architecture |
 | service（软件架构层） | 11 | system + battery / backlight / calendar / diagnosis / log / ota / power / sensor / storage / watchdog |
 | platform（软件架构层） | 5 | platform_common / platform_mcu / platform_os / platform_bsp / platform_middleware |
-| impl（软件架构层） | 3 | impl_os / impl_board / impl_bsp（含 Handler 机制） |
+| impl（软件架构层） | 5 | impl_os / impl_board / impl_bsp（含 Handler 机制）/ impl_mcu / impl_middleware |
 | vendor（软件架构层） | 8 | vendor_stm32 + lvgl / stack / fatfs / fal / flashdb / letter_shell / dsp |
 | tools（插件层） | 9 | build / flash / linker / debug / observability / quality / git / release / learning-tutor |
 | hardware（插件层） | 2 | pcb-analysis / visa-debug |
-| **合计** | **44** | 平台层 5 技能（D12 反转后） |
+| **合计** | **46** | 平台层 5 技能（D12 反转后） |
 
 ## 7. 落地：catalog 改造 + 目录重排
 
@@ -211,7 +211,7 @@ MIGRATION_MAP 扩充（旧连字符 → 新下划线）：
 ## 11. 验收标准
 
 1. 任一技能能明确说出归属层且符合依赖铁律；
-2. Platform 技能目录零 `.c`（静态检查；`platform_common` 对象模型实现除外）；
+2. Platform 技能目录 `.c` 不依赖芯片/RTOS/厂商符号（允许无芯片依赖的公共实现）；
 3. Vendor 目录零上层符号（grep）+ 源码不复制只登记；
 4. App 目录零 Vendor/Impl 符号（grep）；
 5. 同一 Service 在两个不同芯片 Impl 上复用（示例验证）；

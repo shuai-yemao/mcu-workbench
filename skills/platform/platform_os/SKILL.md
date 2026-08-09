@@ -41,6 +41,12 @@ Platform 定义稳定的 `osal_*` 公共接口；错误码统一使用 [`platfor
 
 任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义（统一 `platform_err_t`，见 `platform_common`）。事件、Notify、取消等能力只有在当前 Impl 已实现并经过测试时才可加入公共接口。
 
+## 生成契约
+
+OSAL 接口族收敛为单一公共头 `03_Platform/platform_os/Inc/osal.h`，按接口族（任务/队列/信号量/互斥锁/软件定时器/延时/时基/内存/临界区）分段声明 `osal_*` 原型；零 `.c`（OSAL 是纯接口，`os_*_impl()` 实现由 [`impl_os`](../../impl/impl_os/SKILL.md) 绑定具体 RTOS 或裸机）。`osal_internal_*.h` 仅作 Wrapper/Port 内部边界，不对外输出。
+
+公共头不包含 RTOS 原生类型；句柄所有权、超时单位、ISR 可用性与错误语义（`platform_err_t`）在接口文档固定（见 [`osal-contract.md`](references/osal-contract.md)）。技能目录允许的无芯片依赖公共实现不适用于 OSAL——OSAL 实现必然绑定 RTOS，归 Impl。
+
 ## 工作流
 
 1. 先列出调用方需要的最小接口，不复制原生 RTOS API。

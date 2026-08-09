@@ -48,6 +48,8 @@ Platform BSP 定义平台无关的板级器件能力接口与对象协议：抽�
 - 板级常量不硬编码在 wrapper 内，预留 `bsp_<type>_config.h` 位置说明。
 - GPIO 绑定未定前保留 `UNRESOLVED_GPIO_BINDING` 标记。
 
+wrapper 为无芯片依赖的转发实现（不含 HAL/RTOS/具体 Driver），技能目录同样允许承载（门禁禁止芯片/RTOS/厂商依赖；绑定实现在 Impl）。
+
 ## 生成自检门禁（输出前 MUST）
 
 输出代码前逐项核对，任一不满足不得交付：

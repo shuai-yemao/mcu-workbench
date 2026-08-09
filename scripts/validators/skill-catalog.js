@@ -51,7 +51,8 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
     if (!expectedDirectories.has(directory)) errors.push(`未登记的 skill 目录：${path.relative(ROOT, directory)}`);
   }
 
-  // D12/阶段 2 门禁：Platform 层只允许头文件与文档，禁止任何实现（.c / .cpp）。
+  // D12/阶段 2 门禁（2026-08-09 放开）：Platform 层允许无芯片/RTOS/厂商依赖的公共实现（.c/.cpp）。
+  // include 仅限 platform_*.h 与标准库；芯片/RTOS/厂商符号禁止——绑定硬件/OS 的实现必须在 Impl。
   const platformRoot = path.join(ROOT, 'skills', 'platform');
   if (fs.existsSync(platformRoot)) {
     const implFiles = (function collect(dir, results) {
@@ -62,8 +63,15 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
       }
       return results;
     })(platformRoot, []);
+    const forbiddenInclude = /#include\s*[<"](?:stm32|hal|freertos|FreeRTOS|cmsis|arm_|core_|esp_|rte_|vendor)/i;
+    const forbiddenSymbols = /(?:HAL_[A-Za-z_]+|xTask[A-Za-z_]*|osKernel|NVIC_|RCC_|__HAL_)/;
     for (const impl of implFiles) {
-      errors.push(`Platform 层禁止实现文件：${path.relative(ROOT, impl)}（Platform 只定义接口）`);
+      const content = fs.readFileSync(impl, 'utf8');
+      const incMatches = content.match(forbiddenInclude) || [];
+      const symMatches = content.match(forbiddenSymbols) || [];
+      if (incMatches.length || symMatches.length) {
+        errors.push(`Platform 层实现禁止芯片/RTOS/厂商依赖：${path.relative(ROOT, impl)}（命中：${[...incMatches, ...symMatches].slice(0, 3).join(', ')}；绑定硬件/OS 的实现必须在 Impl）`);
+      }
     }
   }
 

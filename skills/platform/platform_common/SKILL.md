@@ -178,11 +178,22 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 
 权威定义与 C 模板示例见 [`object-four-tuple-template.md`](references/object-four-tuple-template.md)。
 
+## 生成自检门禁（输出前 MUST）
+
+输出代码前逐项核对，任一不满足不得交付：
+
+- [ ] 四元组：base 首字段 + cfg/ctx/data/ops 四槽；纯转发豁免须在头注释显式声明
+- [ ] 错误码：统一 `platform_err_t`/`PLATFORM_ERR_*`，不压平为 -1
+- [ ] 类型/宏：出口自 `platform_type.h`/`platform_def.h`，不自造等价物
+- [ ] 依赖：不包含芯片/HAL/RTOS/厂商类型
+- [ ] 注释：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）
+- [ ] 代码质量：按 `review-gates.md` 自查
+
 ## 生成契约
 
 `03_Platform/platform_common/` 含 **3 个 `.c`**（`platform_object.c` / `platform_device.c` / `platform_service.c`）与对应头文件。上层统一 include `platform_common/platform_*.h`，不得复制定义；**禁直接 include `04_Impl/impl_board/board_types.h`**（类型出口是 `platform_type.h`）。
 
-说明：插件 `skills/platform` 技能目录本身仍只存文档（零 `.c` 门禁扫描的是技能目录内的实体文件）；生成工程内 `platform_common` 含对象模型实现。
+说明：插件 `skills/platform` 技能目录允许无芯片/RTOS/厂商依赖的公共实现（门禁检查 `.c` 的 include 与符号，禁止 HAL/RTOS/芯片依赖）；`platform_common` 的对象模型实现可直接落在技能目录，生成工程 `03_Platform/platform_common/` 同样含实现。
 
 ## 禁止
 

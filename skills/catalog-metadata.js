@@ -26,8 +26,9 @@ const CANONICAL_DEFINITIONS = [
   ['platform_middleware', 'platform', 'Platform 纯定义：中间件能力接口（log/fs/kv/crypto/gui/comm），零实现不绑芯片/RTOS'],
   ['impl_os', 'impl', 'Impl 落地：具体 RTOS（FreeRTOS）或裸机的 os_*_impl() 原生 Port 实现、调度调试和迁移验收'],
   ['impl_board', 'impl', 'Impl 落地：板级组合根——构造实例、注入 Ops、资源绑定（board_resource_config + board_bsp_register）'],
-  ['impl_bsp', 'impl', 'Impl 落地：器件驱动实现（Driver 协议子层），隔离 HAL/RTOS/板级绑定'],
-  ['impl_bsp_handler', 'impl', 'Impl 落地：Handler 机制子层——实例注册、生命周期、队列、工作线程、ISR 延后、缓存与回调（D5）'],
+  ['impl_bsp', 'impl', 'Impl 落地：器件驱动实现（Driver 协议子层）+ Handler 机制子层（多实例/生命周期/缓存/重试），隔离 HAL/RTOS/板级绑定'],
+  ['impl_mcu', 'impl', 'Impl 落地：platform_mcu 能力接口在具体芯片上的移植实现（GPIO/I2C/SPI/UART/ADC/TIM/DMA/中断/启动 Port），隔离厂商 HAL 与平台契约'],
+  ['impl_middleware', 'impl', 'Impl 落地：中间件 port 适配——把 easylogger/fatfs/crypto/lvgl/comm 源码接进 platform_middleware 契约（log/fs/kv/crypto/gui/comm Port）'],
   ['service_system', 'service', 'Service 系统业务：Bootloader、低功耗、看门狗、固件安全和跨层系统能力（带业务策略）']
 ];
 
@@ -108,8 +109,7 @@ const CANONICAL_ALIASES = {
   'platform_mcu': ['core-mcu', 'platform-cortex-registers', 'platform-cortex-interrupts', 'platform-cortex-memory', 'platform-mcu-architecture', 'platform-peripheral-registers', 'platform-option-bytes', 'platform-sram', 'platform-internal-flash', 'arm-core-registers', 'arm-interrupt-exception', 'arm-memory-architecture', 'chip-architecture', 'mcu-peripheral-registers', 'option-bytes', 'sram-module', 'flash-module'],
   'platform_bsp': ['bsp-wrapper'],
   'impl_board': ['bsp-port', 'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter', 'peripheral-driver', 'embedded-adapter'],
-  'impl_bsp': ['bsp-hal-driver', 'bsp-device-driver', 'bsp-peripheral-driver'],
-  'impl_bsp_handler': ['bsp-handler', 'bsp-device-service', 'bsp-peripheral-handler'],
+  'impl_bsp': ['bsp-hal-driver', 'bsp-device-driver', 'bsp-peripheral-driver', 'bsp-handler', 'bsp-device-service', 'bsp-peripheral-handler'],
   'vendor_stm32': [
     'mcu-platform', 'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
     'stm32-hal-development', 'stm32-spl-development'

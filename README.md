@@ -21,7 +21,7 @@ skills/
 
 ## Canonical skills
 
-当前目录为 **45 catalog / 43 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **46 catalog / 44 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering

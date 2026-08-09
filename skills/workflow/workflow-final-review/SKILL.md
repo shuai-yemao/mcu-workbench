@@ -13,7 +13,7 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 
 在以下时机触发：
 
-- 实现 Skill（`app-architecture`、`platform_os`、`platform_bsp`、`impl_board`、`impl_bsp`、`impl_bsp_handler`、`platform_mcu`、`impl_os`、`vendor_stm32` 等）已输出最终代码、补丁或 `git diff`；
+- 实现 Skill（`app-architecture`、`platform_os`、`platform_bsp`、`impl_board`、`impl_bsp`、`platform_mcu`、`impl_os`、`vendor_stm32` 等）已输出最终代码、补丁或 `git diff`；
 - `workflow-integration-plan` 在代码产物就绪后交接最终代码/变更集与验收清单；
 - 用户要求对现有代码、补丁或 diff 做独立审查。
 

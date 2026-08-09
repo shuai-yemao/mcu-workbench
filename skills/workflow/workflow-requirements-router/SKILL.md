@@ -90,7 +90,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 | BSP 抽象表、注册和平台无关转发 | `platform_bsp` |
 | 外设实例绑定、平台对象和注册 | `impl_board` |
 | 器件协议、寄存器序列和 HAL Driver | `impl_bsp` |
-| 多实例、缓存、重试、回调和工作循环 | `impl_bsp_handler` |
+| 多实例、缓存、重试、回调和工作循环 | `impl_bsp`（Handler 机制子层） |
 | CMSIS、寄存器、总线或 MCU 外设能力 | `platform_mcu` |
 | STM32 HAL、ESP-IDF 或厂商 SDK | `vendor_stm32` |
 | LVGL | `middleware-lvgl` |

@@ -7,7 +7,7 @@
 | `workflow` | 请求路由、工程集成和 AI 协作流程 |
 | `app` | 嵌入式 APP 的 main、Manager、Task、Logic、UI、Profile |
 | `service` | Service 业务层：service_system + 10 个业务服务（带业务策略，D10） |
-| `platform` | Platform 能力接口（mcu/os/bsp/middleware）+ 公共定义（common），不绑芯片/RTOS；零实现门禁仅指技能目录（common 含对象模型实现） |
+| `platform` | Platform 能力接口（mcu/os/bsp/middleware）+ 公共定义（common），不绑芯片/RTOS；允许无芯片/RTOS/厂商依赖的公共实现（common 含对象模型实现） |
 | `impl` | Impl 落地：OS Port、板级组合根、器件驱动、Handler 机制 |
 | `vendor` | Vendor 底座登记：源码只登记映射不复制（D7） |
 | `hardware` | PCB、仪器和硬件分析 |
@@ -34,6 +34,6 @@ tools-learning-tutor 项目提问与 Obsidian 学习笔记
 App → Service → Platform 接口 ← Impl → Vendor
 ```
 
-App 只依赖 Service（D8 门禁）；Service 只依赖 Platform 接口；Platform 技能目录零实现（`platform_common` 对象模型实现除外）；Impl 落地实现；Vendor 只登记映射不复制。
+App 只依赖 Service（D8 门禁）；Service 只依赖 Platform 接口；Platform 技能目录实现不依赖芯片/RTOS/厂商符号；Impl 落地实现；Vendor 只登记映射不复制。
 
 旧 skill 目录已从 `archive/` 移除；旧调用名经 catalog 的 `resolveSkillId()` 兼容解析到当前 active skill。
