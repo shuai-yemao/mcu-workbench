@@ -64,16 +64,29 @@ describe('embedded-framework 基准工程（五层契约黄金样本）', () => 
     }
   });
 
-  test('App/Service 的 include 只落在自身或 platform_*/std', () => {
+  test('App 只依赖 Service（自身/service_*/std + 错误码类型出口）', () => {
     const violations = [];
-    for (const layer of ['01_App', '02_Service']) {
-      const root = path.join(FIXTURE, layer);
-      const ownHeaders = new Set(listFiles(root, ['.h']).map((f) => path.basename(f)));
-      for (const { file, include } of collectIncludes(root, ['.c', '.h'])) {
-        if (ownHeaders.has(include)) continue;
-        if (/^(?:platform_|std)/.test(include)) continue;
-        violations.push(`${file} 非法 include ${include}`);
-      }
+    const root = path.join(FIXTURE, '01_App');
+    const ownHeaders = new Set(listFiles(root, ['.h']).map((f) => path.basename(f)));
+    for (const { file, include } of collectIncludes(root, ['.c', '.h'])) {
+      if (ownHeaders.has(include)) continue;
+      // platform_error.h 是错误码类型出口（platform_err_t），属平台基础类型契约，
+      // 全层可用（与 platform_type.h 同类）；App 禁的是 Platform 能力接口/实现。
+      if (include === 'platform_error.h') continue;
+      if (/^(?:service_|std)/.test(include)) continue;
+      violations.push(`${file} 非法 include ${include}（App 只调 Service）`);
+    }
+    expect(violations).toEqual([]);
+  });
+
+  test('Service 依赖自身/platform_*/service_*/std（禁 vendor/impl 直连）', () => {
+    const violations = [];
+    const root = path.join(FIXTURE, '02_Service');
+    const ownHeaders = new Set(listFiles(root, ['.h']).map((f) => path.basename(f)));
+    for (const { file, include } of collectIncludes(root, ['.c', '.h'])) {
+      if (ownHeaders.has(include)) continue;
+      if (/^(?:platform_|service_|std)/.test(include)) continue;
+      violations.push(`${file} 非法 include ${include}（Service 只依赖 Platform/Service）`);
     }
     expect(violations).toEqual([]);
   });
