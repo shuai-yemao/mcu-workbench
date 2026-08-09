@@ -73,6 +73,23 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
         errors.push(`Platform 层实现禁止芯片/RTOS/厂商依赖：${path.relative(ROOT, impl)}（命中：${[...incMatches, ...symMatches].slice(0, 3).join(', ')}；绑定硬件/OS 的实现必须在 Impl）`);
       }
     }
+    // 2026-08-09 扩展：Platform 层禁反向依赖——目录内文本（.c/.h/.md）禁 include impl_* 或 04_Impl 路径。
+    const platformTextFiles = (function collect(dir, results) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) collect(full, results);
+        else if (/\.(?:c|h|md|cpp)$/.test(entry.name)) results.push(full);
+      }
+      return results;
+    })(platformRoot, []);
+    const forbiddenImplInclude = /#include\s*[<"](?:impl_|\.\.\/.*04_Impl)/;
+    for (const file of platformTextFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      const matches = content.match(forbiddenImplInclude) || [];
+      if (matches.length) {
+        errors.push(`Platform 层禁止反向依赖 Impl：${path.relative(ROOT, file)}（命中：${matches.slice(0, 3).map((m) => m.trim()).join(', ')}；Platform 不依赖 Impl）`);
+      }
+    }
   }
 
   // D8/阶段 5 门禁：App 只调 Service——App 目录禁止 include Vendor / Impl / HAL 符号。

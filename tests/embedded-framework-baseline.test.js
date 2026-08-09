@@ -100,6 +100,47 @@ describe('embedded-framework 基准工程（五层契约黄金样本）', () => 
     expect(leaks.sort()).toEqual([...KNOWN_PLATFORM_CHIP_LEAKS].sort());
   });
 
+  test('Platform 层零反向依赖（禁 include impl_*/04_Impl 路径）', () => {
+    const violations = [];
+    const platformRoot = path.join(FIXTURE, '03_Platform');
+    const platformHeaders = new Set(listFiles(platformRoot, ['.h']).map((f) => path.basename(f)));
+    for (const { file, include } of collectIncludes(platformRoot, ['.c', '.h'])) {
+      if (/^(?:impl_|app_|service_)/.test(include) || include.includes('04_Impl')) {
+        violations.push(`${file} 反向依赖 Impl: ${include}`);
+      }
+      if (platformHeaders.has(include)) continue;      // 平台内部头
+      // board_types.h 是类型出口唯一例外：platform_type.h 从 impl_board 引出基础类型
+      if (include === 'board_types.h' && file.endsWith('platform_type.h')) continue;
+      if (/^(?:platform_|std)/.test(include)) continue; // 平台接口/标准库
+      violations.push(`${file} 非法 include ${include}（Platform 只依赖自身/std）`);
+    }
+    expect(violations).toEqual([]);
+  });
+
+  test('Impl 只依赖 Platform 接口头（零反向定义/零实现依赖）', () => {
+    const violations = [];
+    const platformRoot = path.join(FIXTURE, '03_Platform');
+    const platformHeaders = new Set(listFiles(platformRoot, ['.h']).map((f) => path.basename(f)));
+    const implRoot = path.join(FIXTURE, '04_Impl');
+    for (const { file, include } of collectIncludes(implRoot, ['.c', '.h'])) {
+      if (include.endsWith('.c')) {
+        violations.push(`${file} include 实现文件: ${include}（Impl 只依赖 Platform 接口头）`);
+        continue;
+      }
+      if (/^impl_/.test(include)) continue;          // Impl 内部头
+      if (VENDOR_PREFIXES.some((p) => include.includes(p))) continue; // Vendor 源码头
+      if (/^(?:platform_|std|vendor)/.test(include)) {
+        // platform_* 头必须真实存在于 03_Platform（防幽灵依赖/漂移）
+        if (/^platform_/.test(include) && !platformHeaders.has(include)) {
+          violations.push(`${file} 引用不存在的 Platform 头: ${include}`);
+        }
+        continue;
+      }
+      violations.push(`${file} 非法 include ${include}（Impl 只依赖 Platform/Impl/Vendor）`);
+    }
+    expect(violations).toEqual([]);
+  });
+
   test('Vendor 源码只被 04_Impl 引用（上层零 vendor include）', () => {
     const violations = [];
     for (const layer of ['00_Config', '01_App', '02_Service', '03_Platform', '99_Utils']) {
