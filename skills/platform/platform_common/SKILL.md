@@ -1,26 +1,35 @@
 ---
 name: platform_common
-description: Platform 公共对象模型与生命周期：platform_def/error/type 基础、platform_object 身份证 + platform_lifecycle 回调表、device/service 基类（含 object/device/service 三个 .c 实现），不绑芯片/RTOS。
+description: Platform 公共对象模型、生命周期驱动与诊断可观测：四子域 core（基础定义）/ object（对象模型）/ manager（生命周期驱动，内置能力）/ diag（诊断可观测），含 10 个 .c，不绑芯片/RTOS。
 ---
 
 # Platform Common（平台抽象 · 公共对象模型与生命周期）
 
 ## 边界
 
-承载全平台共享的**公共对象模型与生命周期**：类型出口、统一错误码、公共宏、对象身份证、生命周期回调表、设备/服务基类。**含实现**（3 个 `.c`）。不依赖具体芯片、HAL、RTOS 或厂商类型。
+承载全平台共享的**公共对象模型、生命周期驱动与诊断可观测**，四子域：`core`（基础定义）/ `object`（对象模型）/ `manager`（生命周期驱动引擎，**内置能力**）/ `diag`（诊断可观测）。**含实现**（10 个 `.c`）。不依赖具体芯片、HAL、RTOS 或厂商类型（架构范围声明见"禁止与准入"）。
 
-## 文件清单（依赖方向）
+## 文件清单（四子域，依赖方向）
 
-| 文件 | 职责 |
-| --- | --- |
-| `platform_type.h` | 类型出口：从 `04_Impl/impl_board/board_types.h` 引出统一基础类型 |
-| `platform_error.h` | 定义 `platform_err_t` 与统一成功/失败判断宏 |
-| `platform_def.h` | 收纳通用状态、布尔、NULL、对齐、数组长度和延时声明 |
-| `platform_object.h/.c` | 所有平台对象共有的 magic、name、type、state 与基础校验 |
-| `platform_lifecycle.h` | 生命周期回调表（init/start/process/stop/sleep/wakeup/deinit） |
-| `platform_device.h/.c` | 设备对象基类，继承 `platform_object_t` 并扩展设备类别、静态能力 |
-| `platform_service.h/.c` | 服务对象基类，继承 `platform_object_t` 并扩展服务类别与 cfg/ctx/data/ops |
-| `references/object-four-tuple-template.md` | 对象四元组模板：具体设备/服务对象 base + cfg/ctx/data/ops 规范与 C 示例 |
+| 子域 | 文件 | 职责 |
+| --- | --- | --- |
+| `core/` | `platform_type.h` | 类型出口：从 `04_Impl/impl_board/board_types.h` 引出统一基础类型 |
+| `core/` | `platform_error.h` | 定义 `platform_err_t` 与统一成功/失败判断宏 |
+| `core/` | `platform_def.h` | 收纳通用状态、布尔、NULL、对齐、数组长度和延时声明 |
+| `object/` | `platform_object.h/.c` | 对象身份证：magic、name、type、state 与基础校验 |
+| `object/` | `platform_lifecycle.h` | 生命周期回调表（init/start/process/stop/sleep/wakeup/deinit） |
+| `object/` | `platform_device.h/.c` | 设备对象基类（dev_class + caps），继承 `platform_object_t` |
+| `object/` | `platform_service.h/.c` | 服务对象基类（service_class + cfg/ctx/data/ops），继承 `platform_object_t` |
+| `manager/` | `platform_manager.h/.c` | 通用管理器基类：静态对象槽数组 + 生命周期统一驱动（机制） |
+| `manager/` | `platform_device_manager.h/.c` | 设备管理器特化（类型安全薄包装） |
+| `manager/` | `platform_service_manager.h/.c` | 服务管理器特化（类型安全薄包装） |
+| `manager/` | `platform_board_manager.h/.c` | 整板编排：device/service 生命周期推进（机制，顺序策略归 Service） |
+| `diag/` | `platform_log.h` | 日志抽象：级别/编译裁剪/统一输出宏（实现由 Impl 桥接 elog/RTT） |
+| `diag/` | `platform_version.h/.c` | 版本/构建信息 + 启动 banner |
+| `diag/` | `platform_assert.h/.c` | 断言统一出口 + hook（故障路径，独立于日志） |
+| `diag/` | `platform_reset_reason.h/.c` | 复位原因枚举 + 字符串映射（读取由 Impl 提供） |
+| `diag/` | `platform_hardfault.h` | 硬件异常现场 + 处理接口（ARM 架构契约；实现由 Impl 提供） |
+| `references/` | `object-four-tuple-template.md` | 对象四元组模板：base + cfg/ctx/data/ops 规范与 C 示例 |
 
 依赖方向（上层只 include `platform_type.h`，禁直接 include `board_types.h`）：
 
@@ -28,17 +37,24 @@ description: Platform 公共对象模型与生命周期：platform_def/error/typ
 04_Impl/impl_board/board_types.h
         |
         v
-platform_type.h
+platform_type.h  (core/)
         |
-        +--> platform_error.h
+        +--> platform_error.h  (core/)
         |
-        +--> platform_def.h
+        +--> platform_def.h    (core/)
         |
-        +--> platform_object.h  <-- platform_lifecycle.h
+        +--> platform_object.h  <-- platform_lifecycle.h   (object/)
               |
-              +--> platform_device.h
+              +--> platform_device.h                       (object/)
               |
-              +--> platform_service.h
+              +--> platform_service.h                      (object/)
+              |
+              +--> platform_manager.h  (manager/，驱动 object 身份与生命周期)
+                    |
+                    +--> platform_device_manager.h / platform_service_manager.h
+                    |
+                    +--> platform_board_manager.h
+diag/（log/version/assert/reset_reason/hardfault）依赖 core/ 类型与错误码；实现由 Impl 提供
 ```
 
 ## 统一错误码
@@ -191,12 +207,25 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 
 ## 生成契约
 
-`03_Platform/platform_common/` 含 **3 个 `.c`**（`platform_object.c` / `platform_device.c` / `platform_service.c`）与对应头文件。上层统一 include `platform_common/platform_*.h`，不得复制定义；**禁直接 include `04_Impl/impl_board/board_types.h`**（类型出口是 `platform_type.h`）。
+`03_Platform/platform_common/` 四子域共含 **10 个 `.c`**（`object/`：platform_object/device/service 3 个；`manager/`：platform_manager/device_manager/service_manager/board_manager 4 个；`diag/`：platform_assert/reset_reason/version 3 个；`core/` 零 `.c` 纯头契约）。上层统一 include `platform_common/platform_*.h`（编译路径须覆盖四个子域），不得复制定义；**禁直接 include `04_Impl/impl_board/board_types.h`**（类型出口是 `platform_type.h`）。
 
-说明：插件 `skills/platform` 技能目录允许无芯片/RTOS/厂商依赖的公共实现（门禁检查 `.c` 的 include 与符号，禁止 HAL/RTOS/芯片依赖）；`platform_common` 的对象模型实现可直接落在技能目录，生成工程 `03_Platform/platform_common/` 同样含实现。
+说明：插件 `skills/platform` 技能目录允许无芯片/RTOS/厂商依赖的公共实现（门禁检查 `.c` 的 include 与符号，禁止 HAL/RTOS/芯片依赖）；`platform_common` 的对象模型/管理器/诊断实现可直接落在技能目录，生成工程 `03_Platform/platform_common/` 同样含实现。
 
-## 禁止
+## Manager 内置能力（机制，非策略）
 
+`manager/` 是 platform_common 的**内置能力**（不拆独立技能）：提供对象生命周期统一驱动**机制**——
+
+- 注册动作：register → `state=REGISTERED` → `p_parent=manager`（注册不是回调）。
+- 驱动循环：init → start → process → stop → deinit，continue-on-error 批量统计。
+- 槽数组：容量由编译期宏定义；**满槽返回 `PLATFORM_ERR_NO_RESOURCE`**；重复注册返回 `PLATFORM_ERR_ALREADY_INIT`（P5）。
+
+**策略边界（P3）**：manager 只提供驱动机制，**不持有产品级编排顺序策略**（如"先传感器稳定再启动背光"）。多对象编排顺序由 Service 层（如 `service_system`）表达；board_manager 的默认顺序（device.init → service.init → device.start → service.start）是**机制默认值**，可被上层配置覆盖，禁止把业务先后写死为不可变契约。
+
+## 禁止与准入
+
+- **准入规则（P1）**：新能力须被 ≥2 个子域/层共享且零芯片/RTOS/厂商依赖方可进入 platform_common；单域使用的公共能力归属对应层。diag 是平台内建可观测原语，**只声明接口、实现永远在 Impl**。
+- **日志契约（P2）**：断言（故障路径）**不依赖日志系统**，须有独立输出通道或注入式输出；日志实现由 Impl 提供，且须在任何平台对象使用前初始化（boot 阶段第一步）。
+- **架构范围（P4）**：`platform_hardfault_frame_t` 为 **ARM Cortex-M 架构契约**，跨架构（如 RISC-V）由 Impl 提供等价契约；禁止在平台层做寄存器级通用抽象。
 - 禁止在此放芯片专有能力、Vendor 类型、RTOS 句柄或业务状态。
 - 不把具体设备操作强行塞进统一 `read/write/control`；typed ops 属后续课程。
 - `caps` 是静态能力，休眠状态由 `object.state` 记录。

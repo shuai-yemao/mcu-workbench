@@ -39,7 +39,7 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 |---|---|---|---|---|
 | **App** | 产品业务流程：编排、状态机、交互（app_ble/app_hmi/app_ota/app_init/app_system） | **只调 Service** | HAL/Platform 实现/Impl/Vendor 符号 | 零改动 |
 | **Service** | **App 常见业务抽象**（带策略）：battery/backlight/log/ota/power/sensor/storage/watchdog…，各带 `_model/_state/_fault_code` | Platform 接口 + 其他 Service | Vendor 头文件、寄存器/HAL | 零改动 |
-| **Platform** | 平台抽象：统一接口/错误码/数据结构/对象协议/ctx（**技能目录允许无芯片/RTOS/厂商依赖的公共实现**，`platform_common` 含对象模型实现） | 仅标准类型 | 芯片头文件、厂商类型 | 接口永不改 |
+| **Platform** | 平台抽象：统一接口/错误码/数据结构/对象协议/ctx（**技能目录允许无芯片/RTOS/厂商依赖的公共实现**；`platform_common` 四子域 core/object/manager/diag，manager 为内置生命周期驱动、diag 只声明接口，见 ADR-001） | 仅标准类型 | 芯片头文件、厂商类型 | 接口永不改 |
 | **Impl** | Platform→Vendor 适配落地：board/mcu/os/bsp 实现 + Handler 机制 | Platform 接口 + Vendor 底座 | 反向定义接口、被 App 直调、含业务策略 | 换整套 Impl |
 | **Vendor** | 厂家/第三方底座：HAL/CMSIS/CubeMX/FreeRTOS/LVGL/FatFS/算法库/SDK | — | **不反向调用任何上层** | — |
 
@@ -57,7 +57,7 @@ Platform 技能目录只有头文件（零 .c；platform_common 对象模型实�
 00_Docs / 00_Config(app|product|compile|feature_config.h)
 01_App        app_main|init|system|ble|hmi(ui/ui_task)|ota
 02_Service    service_system|battery|backlight|calendar|diagnosis|log|ota|power|sensor|storage|watchdog
-03_Platform   platform_common(def/error/type/object/lifecycle/device/service) | mcu | os | bsp | middleware（common 含对象模型实现，其余头文件契约）
+03_Platform   platform_common(core|object|manager|diag 四子域) | mcu | os | bsp | middleware（common 含 10 个 .c 实现：object 3 + manager 4 + diag 3；core 纯头契约）
 04_Impl       impl_board | mcu(stm32f411_*) | os(freertos_*) | bsp | middleware(easylogger/fatfs/crypto/lvgl/comm port)
 05_Vendor     README + vendor_mapping.md + patch/（源码不复制）
 06_Toolchain / 99_Utils(crc|ringbuffer|filter|list)
