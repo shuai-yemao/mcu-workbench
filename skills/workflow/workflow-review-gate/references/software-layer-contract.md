@@ -29,13 +29,13 @@ Impl 通过 **port 文件**把 Vendor 的具体实例注入 Platform 抽象，�
 Vendor（elog/RTT/HAL/FreeRTOS）→ 调用 → Impl port 文件 → 实现/注入 → Platform 抽象 → 使用 → Service/App
 ```
 
-**机制注入（ops 表 / 符号实现）**：Impl 的 port 实现 Platform 接口（如 `platform_log_elog.c` 实现 `platform_log_*`），Vendor 能力经 `backend_context`/`void *` 隔离后注入抽象；实例化细节藏 Impl。
+**机制注入（ops 表 / 符号实现）**：Impl 的 port 实现 Platform 接口（如 `impl_log_elog.c` 实现 `platform_log_*`），Vendor 能力经 `backend_context`/`void *` 隔离后注入抽象；实例化细节藏 Impl。
 
 **策略注入（编排钩子）**：顺序/时序等产品策略由 Service 层注入（如 `board_manager_set_hooks` 的 on_device_ready/on_service_ready/on_loop_begin），Platform 管理器只提供驱动机制，不持有业务先后（ADR-001 P3）。
 
-**两类 port 方向**（都在 Impl）：
-- **平台面向**：实现 Platform 接口的 port（如 `platform_log_elog.c`、`platform_assert_output.c`）——对外是"Platform 的实现者"，命名 `platform_*_xxx`。
-- **Vendor 面向**：满足 Vendor 移植点的 port（如 `elog_port.c` 提供 elog 的 IO/lock 回调）——对外是"Vendor 的适配者"，命名 `*_port_*`。
+**两类 port 方向**（都在 Impl，文件名一律 `impl_` 前缀承载层归属，对齐命名规范 §2.1；函数符号名跟随所实现契约/底座，不改）：
+- **平台面向**：实现 Platform 接口的 port（如 `impl_log_elog.c` 实现 `platform_log_*`、`impl_assert_output.c` 实现 `platform_assert_output`）——对外是"Platform 的实现者"，命名 `impl_<契约>[_<后端>]`（如 `impl_log_elog.c`、`impl_log_uart.c`、`impl_assert_output.c`）。
+- **Vendor 面向**：满足 Vendor 移植点的 port（如 `impl_elog_port.c` 提供 elog 的 IO/lock 回调）——对外是"Vendor 的适配者"，命名 `impl_<底座>_port`（如 `impl_elog_port.c`），函数符号保留底座要求名（`elog_port_*`）。
 
 **backend_context 约定**：Platform 抽象只用 `void *` 持有上下文；HAL/RTOS 句柄（`I2C_HandleTypeDef`/`TaskHandle_t`）只出现在 Impl，不泄漏进抽象。
 
@@ -51,9 +51,9 @@ Vendor（elog/RTT/HAL/FreeRTOS）→ 调用 → Impl port 文件 → 实现/注�
 
 | Platform 抽象 | Impl port | Vendor 底座 |
 |---|---|---|
-| `platform_log`（diag） | `impl_middleware/platform_log_elog.c` | easylogger |
-| `platform_assert_output`（diag） | `impl_middleware/platform_assert_output.c` | SEGGER RTT |
-| elog 底层移植 | `impl_middleware/elog_port.c`（Vendor 面向） | easylogger |
+| `platform_log`（diag） | `impl_middleware/impl_log_elog.c` | easylogger |
+| `platform_assert_output`（diag） | `impl_middleware/impl_assert_output.c` | SEGGER RTT |
+| elog 底层移植 | `impl_middleware/impl_elog_port.c`（Vendor 面向） | easylogger |
 | `platform_reset_reason` / `platform_hardfault` | `impl_mcu/impl_reset_reason.c` / `impl_hardfault.c` | CMSIS/寄存器 |
 | `platform_board_manager` 钩子（策略） | `service_system` 注入 | — |
 

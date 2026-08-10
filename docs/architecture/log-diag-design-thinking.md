@@ -49,7 +49,7 @@ flowchart TD
 |---|---|---|
 | 级别/裁剪/格式化/输出通道（**机制**） | Platform：接口永不改，所有层共用 | `platform_log.h`（级别宏 + `PLATFORM_LOG_LEVEL` 裁剪 + `PLATFORM_LOG_A/E/W/I/D/V` 宏） |
 | 级别过滤策略、环形缓冲、按需导出（**策略**） | Service：带产品决策，允许演进 | `service_log`（App 门面 `SERVICE_LOG_*`） |
-| 真正写字节到硬件（**落地**） | Impl：绑定具体中间件/硬件 | `platform_log_elog.c`（桥接 elog/RTT） |
+| 真正写字节到硬件（**落地**） | Impl：绑定具体中间件/硬件 | `impl_log_elog.c`（桥接 elog/RTT） |
 
 **为什么 App 不能直接用 `PLATFORM_LOG_*`？** 依赖铁律 App→Service→Platform：App 直连能力实现，换实现时 App 跟着动（P3 痛点，`app_init.c` 曾直连 4 个 platform 头被拉回 service_log 门面）。
 
@@ -61,7 +61,7 @@ flowchart LR
     SL -->|"转发"| PL["platform_log 契约内核<br/>裁剪/格式化"]
     OS["Service 其他"] -->|"PLATFORM_LOG_* 直调"| PL
     IM["Impl"] -->|"PLATFORM_LOG_* 直调"| PL
-    P1["impl_middleware<br/>platform_log_elog.c"] -.->|"符号实现（注入）"| PL
+    P1["impl_middleware<br/>impl_log_elog.c"] -.->|"符号实现（注入）"| PL
     PL -->|"组帧分发"| CH["输出通道"]
     CH -->|"写字节"| V["elog / SEGGER RTT / HAL UART"]
     style PL fill:#E1F5EE,stroke:#0F6E56,color:#04342C
@@ -110,7 +110,7 @@ typedef enum { PLATFORM_ERR_OK = 0, ... } platform_err_t;
 假设加"串口通道"：
 
 1. **Platform 头已声明**——不用改 Platform！
-2. **Impl 写符号实现**：新建 `04_Impl/impl_bsp/platform_log_uart.c`，实现 `platform_log_output()` 函数体，字节经 HAL UART 发出。注意链接期同名覆盖——**全工程只能有一个 `platform_log_output` 实现**（elog 或 uart 二选一）。
+2. **Impl 写符号实现**：新建 `04_Impl/impl_bsp/impl_log_uart.c`，实现 `platform_log_output()` 函数体，字节经 HAL UART 发出。注意链接期同名覆盖——**全工程只能有一个 `platform_log_output` 实现**（elog 或 uart 二选一）。
 3. **验证**：gcc -fsyntax-only + include 白名单检查。
 
 要点：**加通道不改 Platform、不改 Service**——这就是注入模型的价值。
@@ -151,7 +151,7 @@ grep -rn '#include' 01_App
 
 | 症状 | 根因 | 解法 |
 |---|---|---|
-| `undefined reference to 'platform_log_output'` | **注入缺失**：没有 Impl 实现该符号 | 检查 `platform_log_elog.c`（或 uart 版）是否参与编译 |
+| `undefined reference to 'platform_log_output'` | **注入缺失**：没有 Impl 实现该符号 | 检查 `impl_log_elog.c`（或 uart 版）是否参与编译 |
 | `multiple definition of 'platform_log_output'` | **重复注入**：两个 Impl 实现同一符号 | 全工程只能有一个实现，删掉不用的 |
 
 ### 3.3 运行期问题（在板上）
@@ -161,7 +161,7 @@ flowchart TD
     Q["日志完全不输出？"] --> Q1["service_log_init()<br/>在 boot 第一步调了吗？"]
     Q1 -->|"没调"| A1["组合根最前面补上<br/>（app_init 的 boot 阶段）"]
     Q1 -->|"调了"| Q2["输出通道就绪了吗？<br/>（elog port / RTT 初始化）"]
-    Q2 -->|"没有"| A2["检查 impl_middleware 桥接<br/>与 elog_port 的 IO 回调"]
+    Q2 -->|"没有"| A2["检查 impl_middleware 桥接<br/>与 impl_elog_port 的 IO 回调"]
     Q2 -->|"有"| Q3["PLATFORM_LOG_LEVEL<br/>把该级别裁了吗？"]
     Q3 -->|"裁了"| A3["调高编译裁剪级别<br/>（默认 VERBOSE 全开）"]
     Q3 -->|"没裁"| A4["查硬件/调试器接线<br/>（串口 / RTT 通道）"]

@@ -327,7 +327,7 @@ sequenceDiagram
 - **编译裁剪**：`PLATFORM_LOG_LEVEL`（默认 VERBOSE），低于它的宏整体编译为 `((void)0)`——省 Flash（格式串字面量）/运行时间/栈。
 - **API**：`platform_log_init/deinit`、`platform_log_output(level, tag, file, func, line, fmt, ...)`、`platform_log_raw_write`（无前缀原始输出，供 banner）。
 - **宏**：`PLATFORM_LOG_A/E/W/I/D/V(tag, fmt, ...)`，调用点捕获 `__FILE__/__FUNCTION__/__LINE__`。
-- **注入**：符号实现（链接期占坑）——`impl_middleware/platform_log_elog.c` 直接实现函数体（va_list 组帧，平台头在前防 bool 冲突）。
+- **注入**：符号实现（链接期占坑）——`impl_middleware/impl_log_elog.c` 直接实现函数体（va_list 组帧，平台头在前防 bool 冲突）。
 - **级别宏用 #define 不用 enum**：`#if` 裁剪在预处理期比较，enum 成员预处理不可见（被视为 0），裁剪会失效。
 
 ### 4.2 `platform_assert.h/.c` —— 断言统一出口（P2 故障路径自足）

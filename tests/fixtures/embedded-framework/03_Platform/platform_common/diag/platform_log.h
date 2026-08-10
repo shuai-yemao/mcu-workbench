@@ -15,7 +15,7 @@
  *
  * 平台日志系统第一版：定义日志级别、编译裁剪开关与统一输出宏。
  * 抽象层只声明接口，不依赖任何第三方库；实际输出由 Impl 层
- * （impl_middleware/platform_log_elog.c）桥接到 EasyLogger/RTT。
+ * （impl_middleware/impl_log_elog.c）桥接到 EasyLogger/RTT。
  *
  * 处理流程：
  *

@@ -3,7 +3,7 @@
  *
  * All Rights Reserved.
  *
- * @file platform_assert_output.c
+ * @file impl_assert_output.c
  *
  * @par dependencies
  * - platform_assert.h

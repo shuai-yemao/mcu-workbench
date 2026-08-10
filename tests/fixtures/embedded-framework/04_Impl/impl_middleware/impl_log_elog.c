@@ -3,7 +3,7 @@
  *
  * All Rights Reserved.
  *
- * @file platform_log_elog.c
+ * @file impl_log_elog.c
  *
  * @par dependencies
  * - platform_log.h

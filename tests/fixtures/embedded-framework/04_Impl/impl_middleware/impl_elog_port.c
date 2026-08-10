@@ -3,7 +3,7 @@
  *
  * All Rights Reserved.
  *
- * @file elog_port.c
+ * @file impl_elog_port.c
  *
  * @par dependencies
  * - elog.h

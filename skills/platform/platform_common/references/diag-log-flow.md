@@ -16,7 +16,7 @@
 ```
 
 - **调用向下**：日志产生方在各层，统一汇聚到 `platform_log` 契约（无逐层接力）。
-- **注入由 Impl**：注入是**符号实现**（链接期），非运行期 ops 表——Impl port 文件直接实现 `platform_log_*` 函数体（如 `platform_log_elog.c`），Vendor 句柄经 `void *`/backend_context 隔离，不泄漏进抽象。简单、零 RAM、无初始化顺序问题；多通道切换属过度设计，禁止引入运行期注册。
+- **注入由 Impl**：注入是**符号实现**（链接期），非运行期 ops 表——Impl port 文件直接实现 `platform_log_*` 函数体（如 `impl_log_elog.c`），Vendor 句柄经 `void *`/backend_context 隔离，不泄漏进抽象。简单、零 RAM、无初始化顺序问题；多通道切换属过度设计，禁止引入运行期注册。
 - **输出到底**：`platform_log_output` 组帧（级别前缀/时间戳由 Impl 决定）后写 Vendor 底座（elog/RTT/HAL UART）。
 
 ## 调用面访问规则（谁用什么）
@@ -46,7 +46,7 @@
                                             然后 for(;;) 死循环（配合调试器/看门狗暴露现场）
 ```
 
-断言**不经过 platform_log**（日志可能未初始化或本身故障，故障路径必须自足）。`platform_assert_output` 由 Impl 实现（`platform_assert_output.c`），独立于日志系统。
+断言**不经过 platform_log**（日志可能未初始化或本身故障，故障路径必须自足）。`platform_assert_output` 由 Impl 实现（`impl_assert_output.c`），独立于日志系统。
 
 ## 与 Service 的分工（机制 vs 策略）
 
@@ -63,7 +63,7 @@
 
 | Platform 抽象 | Impl port | Vendor 底座 |
 |---|---|---|
-| `platform_log` | `impl_middleware/platform_log_elog.c` | easylogger |
-| `platform_assert_output` | `impl_middleware/platform_assert_output.c` | SEGGER RTT |
-| elog 底层移植 | `impl_middleware/elog_port.c`（Vendor 面向） | easylogger |
+| `platform_log` | `impl_middleware/impl_log_elog.c` | easylogger |
+| `platform_assert_output` | `impl_middleware/impl_assert_output.c` | SEGGER RTT |
+| elog 底层移植 | `impl_middleware/impl_elog_port.c`（Vendor 面向） | easylogger |
 | `platform_reset_reason` / `platform_hardfault` | `impl_mcu/impl_reset_reason.c` / `impl_hardfault.c` | CMSIS/寄存器 |

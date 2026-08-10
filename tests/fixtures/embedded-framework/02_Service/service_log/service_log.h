@@ -20,7 +20,7 @@
  * - SERVICE_LOG_A/E/W/I/D/V()：日志宏转发，App 调用点捕获文件/函数/行号。
  *
  * 服务实现依赖 Platform 接口（合法方向 Service → Platform），
- * 实际输出由 Impl 层（impl_middleware/platform_log_elog.c）提供。
+ * 实际输出由 Impl 层（impl_middleware/impl_log_elog.c）提供。
  *
  * @version V1.0 2026-08-09
  *

@@ -226,7 +226,7 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 diag 是**横切可观测原语**：机制在 Platform（本子域），策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。流转三方向（详见 [`diag-log-flow.md`](references/diag-log-flow.md)）：
 
 - **调用向下**：App 经 `service_log` 门面（`SERVICE_LOG_*`，禁 include `platform_log.h`，D8）；Service 其他层与 Impl 直调 `PLATFORM_LOG_*`；Vendor 永不反向。
-- **注入由 Impl**：注入为**符号实现**（链接期）——Impl port 文件直接实现 `platform_log_*` 函数体（如 `platform_log_elog.c`），**非运行期 ops 注册**（简单、零 RAM、无初始化顺序问题，禁止引入运行期注册）。
+- **注入由 Impl**：注入为**符号实现**（链接期）——Impl port 文件直接实现 `platform_log_*` 函数体（如 `impl_log_elog.c`），**非运行期 ops 注册**（简单、零 RAM、无初始化顺序问题，禁止引入运行期注册）。
 - **输出到底**：`platform_log_output` 组帧后写 Vendor 底座（elog / SEGGER RTT / HAL UART）；日志须在任何平台对象使用前初始化（boot 第一步）。
 
 **断言旁路（P2）**：`PLATFORM_ASSERT` 失败 → `platform_assert_fail`：有 hook 则回调并返回（host 冒烟）；无 hook 则经 `platform_assert_output`（独立于日志系统的原始输出，Impl 桥接 RTT）输出后死循环——故障路径自足，不依赖日志。
