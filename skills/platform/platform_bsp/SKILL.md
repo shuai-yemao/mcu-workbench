@@ -36,12 +36,33 @@ Platform BSP 定义平台无关的板级器件能力接口与对象协议：抽�
 
 ## 输出契约
 
-每个器件类型 `<type>` 产出两个文件：
+每个器件类型 `<type>` 产出三个文件（**模型头 → wrapper → 注册**三步，ADR-013）：
 
+- `03_Platform/platform_bsp/<type>/Inc/platform_<type>_model.h` —— **设备模型头**
 - `03_Platform/platform_bsp/<type>/Inc/platform_<type>_wrapper.h`
 - `03_Platform/platform_bsp/<type>/Src/platform_<type>_wrapper.c`
 
-文件结构要求：
+### 设备模型头（platform_<type>_model.h，ADR-013）
+
+模型头定义"设备长什么样"，**不写"怎么落地"**（契约，接口永不改；Service 可直接 include）：
+
+- 四件套命名强制：`<type>_cfg_t` / `<type>_ctx_t` / `<type>_data_t` / `<type>_ops_t`（见四元组模板 v2）。
+- 布局规则：`cfg` / `ops` = const 指针（共享），`ctx` / `data` = **内联值**（独有）——"共享的用指针，独有的用内联"。
+- 设备对象 struct：`<type>_device_t`，`base` 首字段 + 四槽（偏移 0）。
+- 模型 ops 首参**具体设备指针**（`<type>_device_t *p_dev`），裸名（`read`/`sleep`）——Service 层类型安全调用（两层 ops 的第一层）。
+- 可选：厂商型号别名（`mpu6050_cfg_t = <type>_cfg_t`），换芯片只改别名。
+- guard 用 `PLATFORM_<TYPE>_MODEL_H`（禁 `__XXX_H__` 双下划线）。
+- `platform_<type>_init()` 声明（填身份证 + 绑四槽）；实现落 `model.c`（无芯片依赖公共实现）或 Impl port（绑硬件时）。
+
+完整样例（含与 wrapper 的衔接与生成自检要点）见 [`device-model-example.md`](references/device-model-example.md)。
+
+### 生成流程（三步）
+
+```text
+① 模型头（类型契约）→ ② wrapper（转发实现 + 注册入口）→ ③ Impl 绑定实现并注册
+```
+
+文件结构要求（wrapper）：
 
 - 完整注释 Profile：`@file` / `@brief` / `@par dependencies` / `@author` / 版本，及 `Includes`、`Private Defines`、`Private Types`、`Private State`、`Private Functions`、`Public Functions` 六分区（头文件无私有实现时可省略私有分区）。
 - 至少包含：逻辑状态枚举、物理极性枚举（GPIO 输出设备）、`platform_<type>_ops_t`（`pf_*` 首参 `void *p_context`）、注册入口 `platform_<type>_wrapper_register`（仅启动期注册、重复注册返回 `PLATFORM_ERR_ALREADY_INIT`）、初始化失败回滚与 deinit。
