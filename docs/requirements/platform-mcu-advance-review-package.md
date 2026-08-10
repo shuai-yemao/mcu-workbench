@@ -1,6 +1,6 @@
 # platform_mcu 外设接口推进计划（审查包）
 
-> 版本：v1.0 | 日期：2026-08-10 | 状态：待用户审查确认
+> 版本：v1.0 | 日期：2026-08-10 | 状态：**已执行（2026-08-10，范围调整为"最基础 4 能力 + 第一版实现"）**
 > 分支：D 盘实仓 `feature/platform-mcu`（由 feature/log-diagnosis-system 切出）
 > 前置：platform_common 四子域已就绪；既有方案 v1.1（platform-mcu-interfaces-and-dependency-gate-plan.md）方案 B 升级为执行计划；依赖门禁已落地（baseline 7 断言）
 > 流程：四张清单（工程现状 / 差距 / 生成约束 / 文件施工）+ 验收测试 + 不做清单
@@ -10,6 +10,20 @@
 platform_common（core/object/manager/diag）搭建完毕，平台层下一子域：**platform_mcu 外设能力接口**——纯契约、零芯片依赖、零 .c，实现后端留 impl_mcu（下一课）。
 
 目标：按 SKILL 生成契约补齐 6 个接口头（gpio/i2c/spi/uart/timer/power），为换芯片零改动立桩。
+
+## 0.1 执行记录（2026-08-10，用户决策调整范围）
+
+本课按用户要求**先做最基础 4 能力并打通第一版实现**（而非原计划的 6 头纯契约）：
+
+| 项 | 本课实际 | 说明 |
+|---|---|---|
+| 接口头 | `platform_irq.h` / `platform_tick.h` / `platform_gpio.h` / `platform_uart.h`（03_Platform/platform_mcu/Inc/） | 比原计划少 i2c/spi/timer/power；irq/tick 为新增项 |
+| Impl 实现 | `impl_irq.c` / `impl_tick.c` / `impl_gpio.c` / `impl_uart.c`（04_Impl/impl_mcu/） | **原计划"下一课"提前到本课**；STM32F411 寄存器直操（自包含定义，D7 不复制 HAL） |
+| 接口形态 | 直接函数 + 符号实现（链接期注入） | 与 platform_log 注入模式统一，非 ops 表（单后端场景 YAGNI） |
+| 已打通 | GPIO 输出/输入/翻转、UART 最小发送（USART1 8N1）、Tick 1ms 时基、IRQ token 式开关 | 上层可脱离 HAL 直调 |
+| 未做（后续） | i2c/spi/timer/power 接口头、lesson10 课程文档、多 UART（USART2/6）映射、rx 接收链、Impl 后端补全 | 见 §6 |
+
+验收结果：双分支 gcc -fsyntax-only 零警告；平台层零芯片符号（含注释）/零 .c/guard 规范；实仓提交 `e04f545` 之后分支继续，详见提交记录。
 
 ## 1. 工程现状清单（盘点结论）
 
