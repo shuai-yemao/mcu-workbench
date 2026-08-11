@@ -55,7 +55,7 @@
 | **App** | skills/app/ | `app-architecture` | 产品业务流程（main/Manager/Task/Logic/UI/Profile）。**只调 Service，不碰 HAL/Impl/Vendor**（D8 门禁，validator 强制） |
 | **Service** | skills/service/ | 11 个 `service_*`（system/battery/backlight/calendar/diagnosis/log/ota/power/sensor/storage/watchdog） | App 常见业务抽象，带 `_model/_state/_fault_code` 三件套（D10） |
 | **Platform** | skills/platform/ | `platform_common` / `platform_mcu` / `platform_os` / `platform_bsp` / `platform_middleware` | 能力接口与公共定义：统一接口/错误码/类型/对象/ops 函数指针/ctx。错误码基线在 `platform_common/platform_error.h`（D4）。**零 .c 门禁仅约束技能目录**；`platform_common` 含对象模型实现（允许 `.c`） |
-| **Impl** | skills/impl/ | `impl_os` / `impl_board` / `impl_bsp`（含 Handler 机制子层）/ `impl_mcu` / `impl_middleware` | Platform→Vendor 适配落地。handler 是**机制层**（多实例/生命周期/缓存/重试，D5），策略归 Service |
+| **Impl** | skills/impl/ | `impl_os` / `impl_board` / `impl_bsp`（含 Handler 机制子层）/ `impl_middleware` | Platform→Vendor 适配落地。handler 是**机制层**（多实例/生命周期/缓存/重试，D5），策略归 Service |
 | **Vendor** | skills/vendor/ | `vendor_stm32` + 7 中间件（lvgl/stack/fatfs/fal/flashdb/letter_shell/dsp） | 厂家/第三方底座（STM32 HAL、CMSIS、FreeRTOS、LVGL…）。**只登记不复制**（D7，vendor_mapping.md 管理，patch/ 存补丁） |
 
 **三层联动范式**：App 发业务请求 → Service 编排能力 → Platform 定义接口 → Impl 落地适配 → Vendor 提供底座。

@@ -27,7 +27,6 @@ const CANONICAL_DEFINITIONS = [
   ['impl_os', 'impl', 'Impl 落地：具体 RTOS（FreeRTOS）或裸机的 os_*_impl() 原生 Port 实现、调度调试和迁移验收'],
   ['impl_board', 'impl', 'Impl 落地：板级组合根——构造实例、注入 Ops、资源绑定（board_resource_config + board_bsp_register）'],
   ['impl_bsp', 'impl', 'Impl 落地：器件驱动实现（Driver 协议子层）+ Handler 机制子层（多实例/生命周期/缓存/重试），隔离 HAL/RTOS/板级绑定'],
-  ['impl_mcu', 'impl', 'Impl 落地：platform_mcu 能力接口在具体芯片上的移植实现（GPIO/I2C/SPI/UART/ADC/TIM/DMA/中断/启动 Port），隔离厂商 HAL 与平台契约'],
   ['impl_middleware', 'impl', 'Impl 落地：中间件 port 适配——把 easylogger/fatfs/crypto/lvgl/comm 源码接进 platform_middleware 契约（log/fs/kv/crypto/gui/comm Port）'],
   ['service_system', 'service', 'Service 系统业务：Bootloader、低功耗、看门狗、固件安全和跨层系统能力（带业务策略）']
 ];

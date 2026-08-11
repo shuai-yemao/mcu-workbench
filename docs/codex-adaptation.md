@@ -34,7 +34,7 @@ npm run sync:codex -- --dry-run --target "$env:USERPROFILE\.agents\skills"
 npm run sync:codex -- --target "$env:USERPROFILE\.agents\skills"
 ```
 
-同步脚本安装 **46 catalog / 44 canonical** Skills；当前 OS/BSP/Core/MCU 入口为 `platform_os`、`impl_os`、`platform_bsp`、`platform_common`、`platform_middleware`、`impl_board`、`platform_mcu`、`vendor_stm32`。旧名称只按兼容映射迁移到这些 canonical 目录；发生新旧目录并存或多个旧别名冲突时会停止覆盖，并在替换前创建备份。
+同步脚本安装 **45 catalog / 43 canonical** Skills；当前 OS/BSP/Core/MCU 入口为 `platform_os`、`impl_os`、`platform_bsp`、`platform_common`、`platform_middleware`、`impl_board`、`platform_mcu`、`vendor_stm32`。旧名称只按兼容映射迁移到这些 canonical 目录；发生新旧目录并存或多个旧别名冲突时会停止覆盖，并在替换前创建备份。
 
 安装插件：
 

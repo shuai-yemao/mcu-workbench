@@ -118,11 +118,11 @@ Platform 技能目录只有头文件（零 .c；platform_common 对象模型实�
 | app（软件架构层） | 1 | app-architecture |
 | service（软件架构层） | 11 | system + battery / backlight / calendar / diagnosis / log / ota / power / sensor / storage / watchdog |
 | platform（软件架构层） | 5 | platform_common / platform_mcu / platform_os / platform_bsp / platform_middleware |
-| impl（软件架构层） | 5 | impl_os / impl_board / impl_bsp（含 Handler 机制）/ impl_mcu / impl_middleware |
+| impl（软件架构层） | 4 | impl_os / impl_board / impl_bsp（含 Handler 机制）/ impl_middleware |
 | vendor（软件架构层） | 8 | vendor_stm32 + lvgl / stack / fatfs / fal / flashdb / letter_shell / dsp |
 | tools（插件层） | 9 | build / flash / linker / debug / observability / quality / git / release / learning-tutor |
 | hardware（插件层） | 2 | pcb-analysis / visa-debug |
-| **合计** | **46** | 平台层 5 技能（D12 反转后） |
+| **合计** | **45** | 平台层 5 技能（D12 反转后） |
 
 ## 7. 落地：catalog 改造 + 目录重排
 

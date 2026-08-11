@@ -83,7 +83,7 @@ describe('embedded architecture skill contracts', () => {
     ];
     for (const relativePath of documents) {
       const content = read(relativePath);
-      expect(content).toContain('46 catalog / 44 canonical');
+      expect(content).toContain('45 catalog / 43 canonical');
       expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
       for (const entry of ['platform_os', 'impl_os', 'platform_bsp', 'impl_board', 'platform_mcu', 'vendor_stm32']) {
         expect(content).toContain(entry);

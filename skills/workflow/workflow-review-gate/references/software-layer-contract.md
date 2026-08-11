@@ -54,7 +54,7 @@ Vendor（elog/RTT/HAL/FreeRTOS）→ 调用 → Impl port 文件 → 实现/注�
 | `platform_log`（diag） | `impl_middleware/impl_log_elog.c` | easylogger |
 | `platform_assert_output`（diag） | `impl_middleware/impl_assert_output.c` | SEGGER RTT |
 | elog 底层移植 | `impl_middleware/impl_elog_port.c`（Vendor 面向） | easylogger |
-| `platform_reset_reason` / `platform_hardfault` | `impl_mcu/impl_reset_reason.c` / `impl_hardfault.c` | CMSIS/寄存器 |
+| `platform_reset_reason` / `platform_hardfault` | Impl 芯片 Port（当前未设独立 MCU 子域，留待后续） | CMSIS/寄存器 |
 | `platform_board_manager` 钩子（策略） | `service_system` 注入 | — |
 
 ## OS 契约

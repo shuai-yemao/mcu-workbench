@@ -13,7 +13,7 @@
  * @brief 平台复位原因定义与预留接口。
  *
  * 复位原因枚举与字符串映射为纯逻辑（platform_reset_reason.c），
- * 复位原因读取由 Impl 层实现（impl_mcu/impl_reset_reason.c）：
+ * 复位原因读取由 Impl 层芯片 Port 实现：
  * 目标端从复位状态寄存器解析并清标志，host 端守卫分支返回
  * PLATFORM_RESET_REASON_UNKNOWN。
  *

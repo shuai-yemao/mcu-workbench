@@ -100,7 +100,7 @@ Claude Code 的 plugin skill 没有原生别名：请把 `/mcu-workbench:<旧名
 
 ## 软件方向重分类（兼容入口）
 
-当前状态为 **46 catalog / 44 canonical**；OS/BSP/Core/MCU 当前入口固定为 `platform_os`、`impl_os`、`platform_bsp`、`platform_common`、`platform_middleware`、`impl_board`、`platform_mcu`、`vendor_stm32`。旧目录已从 `archive/` 移除，旧名只经 `resolveSkillId()` 的兼容映射解析到新技能。
+当前状态为 **45 catalog / 43 canonical**；OS/BSP/Core/MCU 当前入口固定为 `platform_os`、`impl_os`、`platform_bsp`、`platform_common`、`platform_middleware`、`impl_board`、`platform_mcu`、`vendor_stm32`。旧目录已从 `archive/` 移除，旧名只经 `resolveSkillId()` 的兼容映射解析到新技能。
 
 | Canonical skill | 合并/交接的旧入口 |
 |---|---|

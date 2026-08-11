@@ -16,7 +16,7 @@ const FIXTURE = path.join(__dirname, 'fixtures', 'embedded-framework');
 
 const TOP_LEVEL_DIRS = ['00_Config', '00_Docs', '01_App', '02_Service', '03_Platform', '04_Impl', '05_Vendor', '06_Toolchain', '99_Utils'];
 const PLATFORM_SUBDOMAINS = ['platform_bsp', 'platform_common', 'platform_mcu', 'platform_middlewares', 'platform_os'];
-const IMPL_SUBDOMAINS = ['impl_board', 'impl_bsp', 'impl_mcu', 'impl_middleware', 'impl_os'];
+const IMPL_SUBDOMAINS = ['impl_board', 'impl_bsp', 'impl_middleware', 'impl_os'];
 
 // Platform 层门禁黑名单：芯片/RTOS/厂商符号（与 scripts/validators/skill-catalog.js 对齐）。
 const CHIP_RTOS_PATTERN = /(?:RCC_CSR|SCB\s*->|stm32|STM32|HAL_[A-Za-z_]+|xTask[A-Za-z_]*|CMSIS)/;

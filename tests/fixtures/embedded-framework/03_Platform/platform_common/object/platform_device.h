@@ -21,7 +21,7 @@
  * 注意：生命周期（lifecycle）现存储于 platform_object_t 中，此处不再重复。
  * 电源状态由对象生命周期（lifecycle）状态机跟踪。
  *
- * @version V1.2 2026-08-08
+ * @version V1.3 2026-08-11
  *
  * @note 1 个 Tab == 4 个空格！
  *
@@ -52,6 +52,10 @@ typedef enum
     PLATFORM_DEVICE_CLASS_MOTOR,      /**< 振动电机设备。          */
     PLATFORM_DEVICE_CLASS_CPU,        /**< CPU 或内核时钟控制对象。*/
     PLATFORM_DEVICE_CLASS_CLOCK,      /**< 系统时钟树控制对象。*/
+    PLATFORM_DEVICE_CLASS_TICK,       /**< 系统时间基准对象。      */
+    PLATFORM_DEVICE_CLASS_UART,       /**< 异步串行控制器对象。    */
+    PLATFORM_DEVICE_CLASS_GPIO,       /**< 通用输入输出对象。      */
+    PLATFORM_DEVICE_CLASS_IRQ,        /**< 全局中断控制对象。      */
     PLATFORM_DEVICE_CLASS_POWER,      /**< PMIC 或板级电源控制对象。 */
     PLATFORM_DEVICE_CLASS_RTC,        /**< 实时时钟设备。          */
     PLATFORM_DEVICE_CLASS_KEY         /**< 物理按键或按钮设备。   */

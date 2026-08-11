@@ -6,29 +6,19 @@
  * @file platform_tick.h
  *
  * @par dependencies
- * - platform_type.h
+ * - platform_device.h
  * - platform_error.h
+ * - platform_type.h
  *
  * @author Jack | R&D Dept. | EternalChip
  *
- * @brief 统一时间基准接口（平台契约，零芯片依赖）。
+ * @brief 系统时间基准设备契约。
  *
- * 提供系统级 1ms 时基：init 启动硬件定时器（目标端 SysTick），
- * get_ms 返回自 init 起的运行毫秒计数。所有层统一从本接口取时间，
- * 不直接触碰芯片定时器寄存器。
+ * 本文件只定义平台能力，不绑定具体芯片、寄存器或操作系统。时间基准
+ * 以 platform_device_t 为对象身份，使用 platform_common 的生命周期回调
+ * 统一管理初始化、启动、停止和释放。
  *
- * 与延时接口的分工：
- * - platform_tick_get_ms()：读时间基准（非阻塞，供轮询/超时判定）。
- * - PLATFORM_DELAY_MS()：阻塞等待（platform_def.h 宏，Impl 符号实现）。
- *   两者可共用同一时基，但语义不同：前者"看表"，后者"睡觉"。
- *
- * 回绕语义：uint32 计数约 49.7 天回绕（@96MHz 无关，按计数），
- * 时长比较一律用差值：(end - start) < duration 判定，禁止直接比较
- * 大小（回绕后大值可能变小）。
- *
- * 实现落地：04_Impl/impl_mcu/impl_tick.c（符号实现，链接期注入）。
- *
- * @version V1.0 2026-08-10
+ * @version V2.0 2026-08-11
  *
  * @note 1 个 Tab == 4 个空格！
  *
@@ -39,27 +29,71 @@
 
 /* Includes ----------------------------------------------------------------- */
 
-#include "platform_type.h"
+#include "platform_device.h"
 #include "platform_error.h"
+#include "platform_type.h"
+
+/* Types -------------------------------------------------------------------- */
+
+typedef struct platform_tick_device platform_tick_device_t;
+
+/** @brief 时间基准静态配置。 */
+typedef struct
+{
+    uint32_t period_ms; /**< 基础节拍周期，当前契约要求为 1 ms。 */
+} platform_tick_cfg_t;
+
+/** @brief 时间基准实例运行上下文。 */
+typedef struct
+{
+    void *backend_context; /**< 后端上下文，不透明且不归平台层解释。 */
+    bool_t ready;           /**< 后端是否已完成启动。 */
+} platform_tick_ctx_t;
+
+/** @brief 时间基准实例当前数据。 */
+typedef struct
+{
+    uint32_t elapsed_ms; /**< 自启动以来的毫秒计数，允许自然回绕。 */
+} platform_tick_data_t;
+
+/**
+ * @brief 时间基准行为表。
+ *
+ * 这是对象模型 ops，不是全局状态入口；调用者必须传入已经通过
+ * platform_tick_init() 建立身份的对象。
+ */
+typedef struct
+{
+    platform_err_t (*get_ms)(const platform_tick_device_t *p_dev,
+                             uint32_t *p_elapsed_ms);
+} platform_tick_ops_t;
+
+/**
+ * @brief 时间基准设备对象。
+ *
+ * base 必须是首字段，以保证 platform_common 的对象身份校验和生命周期
+ * 管理可以向上转换；cfg/ops 为共享只读契约，ctx/data 为实例独有状态。
+ */
+struct platform_tick_device
+{
+    platform_device_t base;
+    const platform_tick_cfg_t *cfg;
+    platform_tick_ctx_t ctx;
+    platform_tick_data_t data;
+    const platform_tick_ops_t *ops;
+};
 
 /* Functions ---------------------------------------------------------------- */
 
 /**
- * @brief 初始化系统时基（1ms 节拍）。
+ * @brief 初始化时间基准对象的公共身份和四元组绑定。
  *
- * 目标端启动硬件定时器中断并清零计数；须在任意依赖时间的服务
- * 使用前调用（boot 阶段，早于 platform_log 之外的业务）。
- *
- * @retval PLATFORM_ERR_OK        : 初始化成功。
- * @retval 其他 platform_err_t    : 初始化失败（目标端相关）。
+ * 该函数是对象构造入口；硬件初始化、启动和释放由 p_lifecycle 回调表
+ * 提供，不在 Platform 公共头中暴露具体后端类型。
  */
-platform_err_t platform_tick_init(void);
-
-/**
- * @brief 获取自初始化起的系统运行毫秒计数。
- *
- * @return 运行毫秒（uint32，约 49.7 天回绕；差值比较语义见头注释）。
- */
-uint32_t platform_tick_get_ms(void);
+platform_err_t platform_tick_init(platform_tick_device_t *p_dev, const char *p_name,
+                                  const platform_tick_cfg_t *p_cfg,
+                                  const platform_tick_ops_t *p_ops,
+                                  const platform_lifecycle_ops_t *p_lifecycle);
 
 #endif /* PLATFORM_TICK_H */

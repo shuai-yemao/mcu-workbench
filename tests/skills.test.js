@@ -6,15 +6,15 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps active entries and exposes 44 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(46);
-    expect(CANONICAL_SKILLS).toHaveLength(44);
+  test('catalog keeps active entries and exposes 43 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(45);
+    expect(CANONICAL_SKILLS).toHaveLength(43);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-requirements-router', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
       'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware', 'impl_os', 'impl_board',
-      'impl_bsp', 'impl_mcu', 'impl_middleware', 'vendor_stm32', 'vendor_lvgl',
+      'impl_bsp', 'impl_middleware', 'vendor_stm32', 'vendor_lvgl',
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
       'vendor_flashdb', 'vendor_letter_shell',
       'vendor_dsp',
@@ -71,8 +71,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(44);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(44);
+    expect(listAvailableSkills()).toHaveLength(43);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(43);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');

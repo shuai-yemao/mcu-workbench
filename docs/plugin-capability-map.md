@@ -17,7 +17,7 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **46 catalog / 44 canonical**：
+当前 catalog 为 **45 catalog / 43 canonical**：
 
 - 43 个 canonical skills；
 - 2 个硬件 active 入口。
@@ -42,7 +42,7 @@
 | 层级 | Canonical skills | 主要职责 |
 |---|---|---|
 | OS | `platform_os`、`impl_os` | OSAL、Wrapper、Port、任务、队列、同步和 Runtime 实现 |
-| BSP | `platform_bsp`、`impl_board`、`impl_bsp`（含 Handler 机制子层）、`impl_mcu` | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理、芯片移植 |
+| BSP | `platform_bsp`、`impl_board`、`impl_bsp`（含 Handler 机制子层） | Wrapper/Port、器件 HAL Driver、Handler 生命周期和资源管理（芯片移植暂缓，当前专注平台层 MCU 抽象） |
 | Platform | `platform_mcu`、`platform_os`、`platform_bsp`、`platform_common`、`platform_middleware` | MCU 内部外设初始化、中断和 DMA；公共定义与中间件能力接口 |
 | MCU | `vendor_stm32` | CMSIS、厂商 HAL/LL/SPL、寄存器和 SDK |
 

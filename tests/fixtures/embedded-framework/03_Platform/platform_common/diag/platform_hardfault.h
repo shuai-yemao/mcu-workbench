@@ -12,8 +12,8 @@
  *
  * @brief HardFault 处理框架预留。
  *
- * 定义硬件异常现场结构体与处理接口。实现由 Impl 层提供
- * （impl_mcu/impl_hardfault.c，目标端守卫分支）：
+ * 定义硬件异常现场结构体与处理接口。实现由 Impl 层芯片 Port 提供
+ * （目标端守卫分支）：
  *
  * 1. platform_hardfault_handler()：解析现场并 dump，随后停机。
  * 2. platform_hardfault_dump()：打印 PC/LR、异常类型与状态寄存器置位解析。
