@@ -1,64 +1,54 @@
 ---
 name: platform_os
-description: Platform 纯定义：OS 能力接口（任务、队列、同步、定时、内存抽象），零实现不绑 RTOS。
+description: Platform OS：定义不泄漏 RTOS 原生类型的 OS 能力契约，并审查其与 impl_os Port 的真实映射。用户提到 OSAL、任务/队列/同步/Timer/heap、公共句柄、超时单位或 ISR 边界时使用本 Skill。
 ---
 
-# Platform OS（平台抽象 · 纯定义）
+# Platform OS（平台抽象 · 公共契约）
 
 ## 边界
 
-Platform 定义稳定的 `platform_os_*` 公共接口；错误码统一使用 [`platform_common`](../platform_common/SKILL.md) 的 `platform_error.h` 中 `platform_err_t` 枚举（`PLATFORM_ERR_*`）。Impl 以 `impl_os_*()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`platform_os_internal_*.h` 只是 Platform/Impl 的内部边界，不构成第三层。Impl 可使用公开 `platform_os_*` 创建并注入 Handler 所需资源，但任务入口、任务循环、缓存和设备生命周期逻辑仍归 Handler。
+Platform 定义稳定的 `platform_os_*` 公共接口；规范上错误码应归一到 `platform_common` 的 `platform_err_t`/`PLATFORM_ERR_*`，但审查现有工程时必须以真实公共头的返回类型和别名为准。Impl 以 `impl_os_*()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`platform_os_internal_*.h` 只是 Platform/Impl 的内部边界，不构成第三层。Impl 可使用公开 `platform_os_*` 创建并注入 Handler 所需资源，但任务入口、任务循环、缓存和设备生命周期逻辑仍归 Handler。
 
 ## 公共定义来源
 
-错误码统一使用 [`platform_common`](../platform_common/SKILL.md) 的 `platform_error.h` 中 `platform_err_t` 枚举（`PLATFORM_ERR_*`）；`platform_os_*` 接口返回值一律为 `platform_err_t`，语义见枚举定义，**不定义、不返回项目私有错误码数字**。数据类型统一使用 `platform_type.h` 出口类型；常用宏统一取自 `platform_def.h`。对象四元组模板见 [`object-four-tuple-template.md`](../platform_common/references/object-four-tuple-template.md)。
+新接口应使用 [`platform_common`](../platform_common/SKILL.md) 的 `platform_err_t`/`PLATFORM_ERR_*`，不定义项目私有错误码。分析既有工程时，必须同时记录实际返回类型、宏别名和 Impl 的失败映射；不能用规范目标覆盖源码事实。数据类型统一使用 `platform_type.h` 出口类型；常用宏统一取自 `platform_def.h`。
 
-## 必须读取（生成前 MUST，缺失任一即不得开始输出）
+## 必须读取（生成前）
 
-- 对象四元组模板：`../platform_common/references/object-four-tuple-template.md`（base + cfg/ctx/data/ops 判定标准）
-- 生成代码格式、命名和注释统一遵循：`../../tools/tools-quality/references/style-profile.md`
+- 生成代码格式、命名和注释：`../../tools/tools-quality/references/style-profile.md`
 - 生成代码审查门禁：`../../tools/tools-quality/references/review-gates.md`
 - 软件层契约：`../../workflow/workflow-review-gate/references/software-layer-contract.md`
+- 当前工程的公共头、`platform_os_internal_*.h`、Wrapper `.c`、Impl `.c` 和 RTOS 配置
 
-## 四元组判定规则（MUST）
+## 生成自检门禁
 
-1. **必须套四元组**：若定义了「承载平台身份的 struct」（首字段 `platform_device_t`/`platform_service_t`，或含对象身份/生命周期字段）→ `base` 首字段 + 补齐 `cfg`/`ctx`/`data`/`ops` 四槽。
-2. **豁免（须显式声明）**：仅纯粹行为函数表（`platform_os_*_ops_t`，只含 `pf_*` + 上下文，无身份/生命周期字段）可豁免；豁免必须在头注释显式声明「纯转发、不承载对象身份」。
-3. **禁止**用「纯接口」边界豁免一个已定义了对象 struct 的类型。
-
-## 生成自检门禁（输出前 MUST）
-
-输出代码前逐项核对，任一不满足不得交付：
-
-- [ ] 四元组：按判定规则核对
-- [ ] 错误码：`platform_os_*` 一律返回 `platform_err_t`，不返回项目私有数字
-- [ ] 类型/宏：`platform_type.h` 出口类型、`platform_def.h` 宏，不自造
-- [ ] 依赖：Platform OS 公共接口不暴露 RTOS 原生类型
-- [ ] 注释：按 `style-profile.md` 检查文件头、公开 API 和必要约束
-- [ ] 代码质量：按 `review-gates.md` 自查
+- [ ] 公共头不暴露 FreeRTOS、RT-Thread、CMSIS-OS 或芯片类型
+- [ ] 句柄、所有权、超时单位、阻塞属性、ISR 可用性、可重入性和错误语义已写入接口契约
+- [ ] 新接口使用 `platform_err_t`；既有接口核对真实返回类型与 `PLATFORM_ERR_*` 别名
+- [ ] 只声明当前调用方需要且 Impl/测试确实支持的能力
+- [ ] `platform_os_internal_*.h` 仍是两层内部边界，不被当成第三层
+- [ ] 规范要求、目标工程观察和未验证项分开记录
 
 ## 接口族
 
-任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义（统一 `platform_err_t`，见 `platform_common`）。事件、Notify、取消等能力只有在当前 Impl 已实现并经过测试时才可加入公共接口。
+任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区分别定义句柄所有权、超时单位、ISR 可用性和错误语义。事件、Notify、取消等能力只有在当前 Impl 已实现并经过测试时才可加入公共接口；FreeRTOS 原生存在不等于 Platform OS 已公开。
 
 ## 生成契约
 
-Platform OS 接口族收敛为单一公共头 `03_Platform/platform_os/Inc/platform_os.h`，按接口族（任务/队列/信号量/互斥锁/软件定时器/延时/时基/内存/临界区）分段声明 `platform_os_*` 原型；零 `.c`（Platform OS 是纯接口，`impl_os_*()` 实现由 [`impl_os`](../../impl/impl_os/SKILL.md) 绑定具体 RTOS 或裸机）。`platform_os_internal_*.h` 仅作 Platform/Impl 内部边界，不对外输出。
+Platform OS 公共头按接口族声明 `platform_os_*` 原型；是否存在 `platform_os_*.c` 转发实现必须以目标工程为准。当前证据工程确有 `03_Platform/platform_os/src/platform_os_*.c`，其内部调用 `impl_os_*()`；`platform_os_internal_*.h` 仅作两层内部边界，不对外输出。
 
-公共头不包含 RTOS 原生类型；句柄所有权、超时单位、ISR 可用性与错误语义（`platform_err_t`）在接口文档固定（见 [`platform-os-contract.md`](references/platform-os-contract.md)）。技能目录允许的无芯片依赖公共实现不适用于 Platform OS——实现必然绑定 RTOS，归 Impl。
+公共头不包含 RTOS 原生类型；具体 RTOS 绑定归 [`impl_os`](../../impl/impl_os/SKILL.md)。Wrapper 只做参数检查、公共语义和稳定转发，不保存业务状态。
 
 ## 工作流
 
 1. 先列出调用方需要的最小接口，不复制原生 RTOS API。
 2. 决定句柄生命周期、静态/动态内存和 ISR 边界。
 3. 定义接口，再由 Impl 创建并注入已确认的 Platform OS 资源；明确创建者、Handle 所有者、失败回收、超时单位和 ISR 可用性，并用 Fake/Mock 验证上层。
-4. 只有出现具体 RTOS 或裸机运行时配置时交接 [`impl_os`](../../impl/impl_os/SKILL.md)。
+4. 读取目标工程的公共头、internal 头、Wrapper `.c`、Impl `.c` 和 RTOS 配置，逐函数核对 `platform_os_* → impl_os_* → native API`。
+5. 只有出现具体 RTOS 或裸机运行时配置时交接 [`impl_os`](../../impl/impl_os/SKILL.md)。
 
-接口验收矩阵见 [`platform-os-contract.md`](references/platform-os-contract.md)。
+接口验收矩阵见 [`platform-os-contract.md`](references/platform-os-contract.md)；FreeRTOS 案例见 [`platform-os-freertos-case.md`](references/platform-os-freertos-case.md)。
 
 ## 禁止
 
-不在 Platform OS 中放 BSP 设备协议，不让 APP 或 Service 绕过接口调用原生 RTOS。
-
-共享层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。
-固定源码映射案例见 [`platform-os-freertos-case.md`](references/platform-os-freertos-case.md)。
+不在 Platform OS 中放 BSP 设备协议，不让 APP、Service、BSP Driver 或 Middleware 绕过接口调用原生 RTOS。不要把静态源码映射、主机测试或日志推断写成目标构建或板上验证。

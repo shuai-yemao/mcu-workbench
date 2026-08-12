@@ -1,139 +1,82 @@
-# FreeRTOS API 速查
+# FreeRTOS API 速查：原生能力与当前 Port 分开
+
+> 本表是原生 API 的核对工具，不等于当前 Platform OS 已公开能力。当前 Port 的实际映射以 `freertos-source-map.md` 和目标工程 `04_Impl/impl_os/src/impl_os_*.c` 为准。
 
 ## 任务
 
 | API | 功能 | ISR 安全 | 阻塞 |
-|-----|------|---------|------|
+|---|---|---|---|
 | `xTaskCreate` | 创建任务 | ❌ | ❌ |
-| `xTaskCreateStatic` | 创建任务(静态栈) | ❌ | ❌ |
 | `vTaskDelete` | 删除任务 | ❌ | ❌ |
 | `vTaskDelay` | 相对延时 | ❌ | ✅ |
-| `vTaskDelayUntil` | 绝对延时(精确周期) | ❌ | ✅ |
-| `vTaskSuspend` | 挂起任务 | ❌ | ❌ |
-| `vTaskResume` | 恢复任务 | ❌ | ❌ |
+| `vTaskSuspend`/`vTaskResume` | 挂起/恢复 | ❌ | ❌ |
 | `xTaskResumeFromISR` | ISR 中恢复任务 | ✅ | ❌ |
-| `uxTaskPriorityGet` | 获取优先级 | ✅ | ❌ |
-| `vTaskPrioritySet` | 设置优先级 | ❌ | ❌ |
 | `uxTaskGetStackHighWaterMark` | 查看栈余量 | ❌ | ❌ |
-| `vTaskList` | 列出所有任务(文本) | ❌ | ❌ |
-| `vTaskGetRunTimeStats` | 运行时统计 | ❌ | ❌ |
-| `xTaskGetTickCount` | 获取 tick 计数值 | ✅ | ❌ |
-| `xTaskGetTickCountFromISR` | ISR 中获取 tick | ✅ | ❌ |
+| `xTaskGetTickCount`/`FromISR` | 获取 tick | ✅ | ❌ |
 
 ## 队列
 
 | API | 功能 | ISR 安全 | 阻塞 |
-|-----|------|---------|------|
+|---|---|---|---|
 | `xQueueCreate` | 创建队列 | ❌ | ❌ |
-| `xQueueSend` | 发送(尾部) | ❌ | ✅ |
-| `xQueueSendToFront` | 发送(头部) | ❌ | ✅ |
-| `xQueueSendToBack` | 发送(尾部=Send) | ❌ | ✅ |
-| `xQueueReceive` | 接收 | ❌ | ✅ |
-| `xQueuePeek` | 查看不移除 | ❌ | ✅ |
-| `xQueueSendFromISR` | ISR 中发送 | ✅ | ❌ |
-| `xQueueReceiveFromISR` | ISR 中接收 | ✅ | ❌ |
-| `xQueueReset` | 重置队列 | ❌ | ❌ |
-| `uxQueueMessagesWaiting` | 队列中消息数 | ✅ | ❌ |
-| `uxQueueSpacesAvailable` | 队列中空余空间 | ❌ | ❌ |
+| `xQueueSend`/`xQueueReceive` | 任务上下文发送/接收 | ❌ | ✅ |
+| `xQueueSendFromISR`/`xQueueReceiveFromISR` | ISR 发送/接收 | ✅ | ❌ |
+| `uxQueueMessagesWaiting`/`FromISR` | 等待消息数量 | ✅ | ❌ |
 
 ## 信号量与互斥锁
 
 | API | 功能 | ISR 安全 | 阻塞 |
-|-----|------|---------|------|
+|---|---|---|---|
 | `xSemaphoreCreateBinary` | 创建二值信号量 | ❌ | ❌ |
 | `xSemaphoreCreateCounting` | 创建计数信号量 | ❌ | ❌ |
 | `xSemaphoreCreateMutex` | 创建互斥锁 | ❌ | ❌ |
-| `xSemaphoreCreateRecursiveMutex` | 创建递归互斥锁 | ❌ | ❌ |
-| `xSemaphoreGive` | 释放 | ❌ | ❌ |
-| `xSemaphoreTake` | 获取 | ❌ | ✅ |
-| `xSemaphoreGiveFromISR` | ISR 释放 | ✅ | ❌ |
-| `xSemaphoreTakeFromISR` | ISR 获取 | ✅ | ❌ |
+| `xSemaphoreGive`/`xSemaphoreTake` | 任务上下文释放/获取 | ❌ | take 可阻塞 |
+| `xSemaphoreGiveFromISR`/`xSemaphoreTakeFromISR` | ISR 变体 | ✅（按对象类型核验） | ❌ |
 
-## 事件组
+### Port 审查提示
 
-| API | 功能 | ISR 安全 | 阻塞 |
-|-----|------|---------|------|
-| `xEventGroupCreate` | 创建事件组 | ❌ | ❌ |
-| `xEventGroupSetBits` | 设置事件位 | ❌ | ❌ |
-| `xEventGroupSetBitsFromISR` | ISR 设置事件位 | ✅ | ❌ |
-| `xEventGroupClearBits` | 清除事件位 | ❌ | ❌ |
-| `xEventGroupWaitBits` | 等待事件位 | ❌ | ✅ |
-| `xEventGroupGetBits` | 获取事件位 | ✅ | ❌ |
-| `xEventGroupGetBitsFromISR` | ISR 获取事件位 | ✅ | ❌ |
-
-## 任务通知
-
-| API | 功能 | ISR 安全 | 阻塞 |
-|-----|------|---------|------|
-| `xTaskNotifyGive` | 通知+1(信号量语义) | ❌ | ❌ |
-| `vTaskNotifyGiveFromISR` | ISR 通知+1 | ✅ | ❌ |
-| `xTaskNotify` | 通知(8种操作) | ❌ | ❌ |
-| `xTaskNotifyFromISR` | ISR 通知 | ✅ | ❌ |
-| `xTaskNotifyWait` | 等待通知 | ❌ | ✅ |
-| `ulTaskNotifyTake` | 等待通知+1(信号量风格) | ❌ | ✅ |
-| `xTaskNotifyStateClear` | 清除通知状态 | ❌ | ❌ |
+- FreeRTOS mutex 具有所有权/优先级继承语义，不能把 `xSemaphoreTakeFromISR` 当成 mutex 的通用替代。
+- 目标工程的 `impl_os_mutex.c` 存在 ISR 分支；这是一项需要确认的源码风险，不是“已验证 ISR 安全”的证据。
+- 创建、删除、give/take 的句柄所有权和失败映射必须回到 `platform_os_*` 公共头核对。
 
 ## 软件定时器
 
-| API | 功能 | 阻塞 |
-|-----|------|------|
+| API | 功能 | 调用者阻塞 |
+|---|---|---|
 | `xTimerCreate` | 创建定时器 | ❌ |
-| `xTimerStart` | 启动定时器 | ✅ (调用者阻塞直到命令队列有空间) |
-| `xTimerStop` | 停止定时器 | ✅ |
-| `xTimerReset` | 复位定时器 | ✅ |
+| `xTimerStart`/`Stop`/`Reset` | 任务上下文命令 | ✅，等待 timer command queue |
+| `xTimerStartFromISR`/`StopFromISR`/`ResetFromISR` | ISR 命令 | ❌ |
 | `xTimerChangePeriod` | 修改周期 | ✅ |
 | `xTimerDelete` | 删除定时器 | ✅ |
-| `xTimerIsTimerActive` | 检查是否运行 | ❌ |
+
+目标 Port 已观察到 create/start/stop/change/delete/reset/period-get 和 callback 转发。callback 运行在 timer service task 上下文；若 Timer ID 借用外部 record，必须在设计中闭合 record 的创建者、释放者、删除时机和并发关系。
 
 ## 内存管理
 
 | API | 功能 |
-|-----|------|
-| `pvPortMalloc` | 从 FreeRTOS 堆分配内存 |
-| `vPortFree` | 释放内存 |
-| `xPortGetFreeHeapSize` | 获取剩余堆空间 |
-| `xPortGetMinimumEverFreeHeapSize` | 获取历史最小堆(碎片指标) |
+|---|---|
+| `pvPortMalloc` | 从 FreeRTOS 堆分配 |
+| `vPortFree` | 释放 FreeRTOS 堆 |
+| `xPortGetFreeHeapSize` | 获取剩余堆 |
+| `xPortGetMinimumEverFreeHeapSize` | 获取历史最小堆 |
 
-## 任务通知 vs 信号量 vs 事件组 选型
+当前目标 Port 只直接映射 `pvPortMalloc`/`vPortFree`。不要因为存在 heap API 就在 ISR、实时关键路径或没有失败策略的代码中随意引入动态分配。
 
-| 场景 | 推荐方案 | 原因 |
-|------|---------|------|
-| ISR → 单任务同步 | 任务通知 | 速度最快 (~25% 比信号量快) |
-| ISR → 多任务广播 | 二值信号量(每个任务一个) | 通知只能一对一 |
-| 资源管理(互斥) | 互斥锁 (Mutex) | 优先级继承防反转 |
-| 多事件等待(任意/全部) | 事件组 | 原生支持 |
-| 数据传递 | 队列 | 带数据 |
-| 多生产者-单消费者 | 计数信号量 + 队列 | 灵活 |
-| 后台任务执行 | 软件定时器 | 简单周期调用 |
+## 临界区与 tick 转换门禁
 
-## 配置裁剪与资源占用
+- `taskENTER_CRITICAL_FROM_ISR()` 若返回屏蔽状态 token，必须保存并由对应 exit 使用；包装成 `void enter/void exit(0)` 只能标记为风险。
+- `IMPL_OS_MS_TO_TICKS` 只应转换明确声明为毫秒的参数；period 和 timeout 若均以 ticks 表达，不能重复转换。
+- `portMAX_DELAY` 与 Platform 的最大延时常量、tick 宽度和 `configUSE_16_BIT_TICKS` 必须一致核对。
 
-| 特性 | 启用宏 | ROM 增量 | RAM 增量 |
-|------|-------|---------|---------|
-| 任务通知 | 默认 | ~200B | 4B/任务 |
-| 队列 | 默认 | ~1KB | 队列大小相关 |
-| 信号量 | 默认 | ~200B | — |
-| 互斥锁 | 默认 | ~100B | — |
-| 事件组 | `configUSE_EVENT_GROUPS` | ~500B | 12B/事件组 |
-| 软件定时器 | `configUSE_TIMERS` | ~800B | 定时器命令队列 |
-| 运行时统计 | `configGENERATE_RUN_TIME_STATS` | ~600B | — |
-| Co-routine | `configUSE_CO_ROUTINES` | ~400B | — |
-| 递归互斥锁 | `configUSE_RECURSIVE_MUTEXES` | ~100B | — |
-| Tickless Idle | `configUSE_TICKLESS_IDLE` | ~500B | — |
+## 配置读取顺序
 
-## 常见 CubeMX 集成问题
+若项目使用 CubeMX，先确认生成边界；本案例目标工程不是由本表证明 CubeMX 配置。建议按以下顺序读取：`FreeRTOSConfig.h` → `portable/heap` → `impl_os_freertos.h` → `impl_os_*.c`。任务优先级、栈单位、tick 宽度和中断优先级不得依赖默认值。
 
-```c
-// CubeMX FreeRTOS 配置位置：
-// Project Manager → Advanced Settings → FreeRTOS Heap
-// Pinout → Middleware → FREERTOS → Configuration
+## 选型提示
 
-// 默认配置问题：
-// 1. configTOTAL_HEAP_SIZE 默认 10KB → 大工程需要加大
-// 2. configMINIMAL_STACK_SIZE 默认 128 → 带 printf 需要 256+
-// 3. configMAX_PRIORITIES 默认 7 → 够用
-
-// CubeMX 生成的任务优先级 vs FreeRTOS 优先级：
-// CubeMX 中优先级数值 = 实际 FreeRTOS 优先级
-// 不需要做映射
-```
+| 场景 | 常见原生选择 | 仍需确认 |
+|---|---|---|
+| ISR → 单任务同步 | task notification 或 binary semaphore | 当前 Platform OS 是否公开该能力 |
+| 资源管理 | mutex | 优先级继承、ISR 禁止和 owner |
+| 数据传递 | queue | 消息大小、复制语义和容量 |
+| 周期回调 | software timer | timer service task 上下文和 callback 时长 |

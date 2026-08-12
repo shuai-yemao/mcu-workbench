@@ -159,6 +159,24 @@ describe('embedded architecture skill contracts', () => {
     expect(freertosMap).not.toContain(removedFunctionName);
   });
 
+  test('keeps OS skills grounded in the embedded_framework impl_os evidence', () => {
+    const implOs = read('skills/impl/impl_os/SKILL.md');
+    const sourceMap = read('skills/impl/impl_os/references/freertos-source-map.md');
+    const quickref = read('skills/impl/impl_os/references/freertos-api-quickref.md');
+    const platformOs = read('skills/platform/platform_os/SKILL.md');
+    const contract = read('skills/platform/platform_os/references/platform-os-contract.md');
+
+    expect(implOs).toContain('platform_os_internal_*.h');
+    expect(implOs).toContain('Timer record');
+    expect(implOs).toContain('UNRESOLVED_RTOS_CONFIG');
+    expect(sourceMap).toContain('platform_os_timer_start → impl_os_timer_start → xTimerStart');
+    expect(sourceMap).toContain('05_Vendor/freertos');
+    expect(quickref).toContain('屏蔽状态 token');
+    expect(quickref).toContain('原生能力与当前 Port 分开');
+    expect(platformOs).toContain('是否存在 `platform_os_*.c` 转发实现必须以目标工程为准');
+    expect(contract).toContain('Timer ID/record 生命周期');
+  });
+
   test('keeps repository-relative BSP adapter script paths valid', () => {
     const usagePath = 'skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/usage.md';
     const usage = read(usagePath);
