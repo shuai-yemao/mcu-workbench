@@ -9,6 +9,7 @@ import subprocess
 import sys
 import os
 import json
+import re
 import time
 import xml.etree.ElementTree as ET
 import tempfile
@@ -23,12 +24,39 @@ SEVERITY_LABEL = {
     "information": "INFORMATION (提示信息)",
 }
 
-# MISRA 规则级别映射（示例常见规则，其余归为 Required）
-MISRA_MANDATORY = {"misra-c2012-1.3", "misra-c2012-2.1", "misra-c2012-18.6"}
-MISRA_ADVISORY  = {
-    "misra-c2012-4.1", "misra-c2012-4.2", "misra-c2012-7.1",
-    "misra-c2012-15.5", "misra-c2012-17.7",
-}
+MISRA_METADATA_PATH = os.path.join(
+    os.path.dirname(__file__), "misra-rule-metadata.json"
+)
+MISRA_BLOCKING_LEVELS = {"Mandatory", "Required", "UNMAPPED"}
+
+
+def load_misra_rule_metadata():
+    """加载 MISRA 规则元数据；缺失或非法时返回空映射。"""
+    try:
+        with open(MISRA_METADATA_PATH, "r", encoding="utf-8") as metadata_file:
+            metadata = json.load(metadata_file)
+        return metadata.get("guidelines", {})
+    except (OSError, json.JSONDecodeError, AttributeError):
+        print("警告：MISRA 规则元数据不可用，未知规则将标记为 UNMAPPED")
+        return {}
+
+
+MISRA_RULE_METADATA = load_misra_rule_metadata()
+
+
+def get_cppcheck_executable():
+    """获取 cppcheck 可执行文件，允许用户级工具目录显式配置。"""
+    return os.environ.get("MCU_QUALITY_CPPCHECK_EXE", "cppcheck")
+
+
+def get_misra_addon():
+    """获取 MISRA addon 配置；未配置时保留 cppcheck 默认查找行为。"""
+    return os.environ.get("MCU_QUALITY_CPPCHECK_MISRA_ADDON", "misra")
+
+
+def get_addon_python():
+    """获取 addon 使用的 Python 解释器，默认复用当前解释器。"""
+    return os.environ.get("MCU_QUALITY_CPPCHECK_PYTHON", sys.executable)
 
 # 三类高危 ERROR 的通用修复模板
 FIX_TEMPLATES = {
@@ -78,14 +106,18 @@ FIX_TEMPLATES = {
 
 
 def check_cppcheck():
-    if not shutil.which("cppcheck"):
+    cppcheck = get_cppcheck_executable()
+    if not os.path.isfile(cppcheck) and not shutil.which(cppcheck):
         print("错误：未找到 cppcheck")
         print("安装方法：")
         print("  Windows : winget install Cppcheck.Cppcheck")
         print("  Ubuntu  : sudo apt install cppcheck")
         print("  macOS   : brew install cppcheck")
         sys.exit(1)
-    result = subprocess.run(["cppcheck", "--version"], capture_output=True, text=True)
+    result = subprocess.run([cppcheck, "--version"], capture_output=True, text=True)
+    if result.returncode != 0:
+        print(f"错误：cppcheck 版本检查失败: {result.stderr.strip()}")
+        sys.exit(result.returncode or 1)
     return result.stdout.strip()
 
 
@@ -128,7 +160,7 @@ def run_analysis(src_dir, include_dirs, defines, std, suppress_list,
         xml_path = f.name
 
     cmd = [
-        "cppcheck",
+        get_cppcheck_executable(),
         "--enable=all",
         f"--std={std}",
         "--platform=arm32-wchar_t2",
@@ -156,14 +188,21 @@ def run_analysis(src_dir, include_dirs, defines, std, suppress_list,
         cmd.append(f"--suppress={sup}")
 
     if misra:
-        cmd.append("--addon=misra")
+        cmd.append(f"--addon={get_misra_addon()}")
+        cmd.append(f"--addon-python={get_addon_python()}")
 
     if not compile_db:
         cmd.append(src_dir)
 
     print(f"[static-analysis] 执行: {' '.join(cmd[:6])} ... {src_dir}")
     t0 = time.time()
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    except subprocess.TimeoutExpired:
+        if os.path.exists(xml_path):
+            os.unlink(xml_path)
+        print("错误：cppcheck 扫描超过 300 秒，门禁阻断")
+        sys.exit(1)
     elapsed = time.time() - t0
     return xml_path, result, elapsed
 
@@ -179,12 +218,20 @@ def count_source_files(src_dir):
 
 
 def classify_misra_level(err_id):
-    """将 MISRA 规则 ID 分级"""
-    if err_id in MISRA_MANDATORY:
-        return "Mandatory"
-    if err_id in MISRA_ADVISORY:
-        return "Advisory"
-    return "Required"
+    """根据规则元数据分级，无法确认时不得推断为 Required。"""
+    normalized_id = err_id.lower().replace("_", "-")
+    directive_match = re.search(
+        r"(?:^|[-])(dir|directive)[-]?([0-9]+\.[0-9]+)$",
+        normalized_id,
+    )
+    if directive_match:
+        metadata_key = f"dir-{directive_match.group(2)}"
+    else:
+        rule_match = re.search(r"([0-9]+\.[0-9]+)$", normalized_id)
+        if not rule_match:
+            return "UNMAPPED"
+        metadata_key = f"rule-{rule_match.group(1)}"
+    return MISRA_RULE_METADATA.get(metadata_key, "UNMAPPED")
 
 
 def parse_issues(xml_path):
@@ -201,14 +248,19 @@ def parse_issues(xml_path):
         msg = error.get("msg", "")
         err_id = error.get("id", "")
 
-        issues.setdefault(sev, []).append({
+        is_misra = err_id.lower().startswith("misra")
+        item = {
             "file": os.path.basename(file_path),
             "file_full": file_path,
             "line": line,
             "id":   err_id,
             "msg":  msg,
             "severity": sev,
-        })
+            "checker": "MISRA" if is_misra else "Cppcheck",
+        }
+        if is_misra:
+            item["misra_level"] = classify_misra_level(err_id)
+        issues.setdefault(sev, []).append(item)
     return issues
 
 
@@ -249,18 +301,54 @@ def filter_new_issues(issues, baseline_set):
     return new_issues
 
 
-def print_report(issues, src_dir, file_count, elapsed, baseline_mode=False):
-    """输出格式化报告，返回 error_count"""
+def evaluate_gate(issues, misra_enabled=False):
+    """按统一 Cppcheck 结果计算门禁，不按报告 severity 单独判断 MISRA。"""
+    cppcheck_errors = [
+        item for item in issues.get("error", [])
+        if item.get("checker") != "MISRA"
+    ]
+    misra_items = [
+        item
+        for items in issues.values()
+        for item in items
+        if item.get("checker") == "MISRA"
+    ]
+    misra_by_level = {
+        level: [item for item in misra_items
+                if item.get("misra_level") == level]
+        for level in ["Mandatory", "Required", "Advisory", "UNMAPPED"]
+    }
+    metadata_error = misra_enabled and not MISRA_RULE_METADATA
+    blocked = (
+        bool(cppcheck_errors)
+        or any(misra_by_level[level] for level in MISRA_BLOCKING_LEVELS)
+        or metadata_error
+    )
+    return {
+        "blocked": blocked,
+        "cppcheck_errors": cppcheck_errors,
+        "misra_by_level": misra_by_level,
+        "metadata_error": metadata_error,
+    }
+
+
+def print_report(issues, src_dir, file_count, elapsed, baseline_mode=False,
+                 misra_enabled=False):
+    """输出统一 Cppcheck 报告，返回门禁判定。"""
     total = sum(len(v) for v in issues.values())
 
     print("\n═══════════════ 静态分析报告 (cppcheck) ═══════════════")
     mode_tag = " [增量模式 - 仅显示新增问题]" if baseline_mode else ""
     print(f"扫描目录: {src_dir}  |  扫描文件: {file_count}  |  耗时: {elapsed:.1f}s{mode_tag}")
 
+    gate = evaluate_gate(issues, misra_enabled=misra_enabled)
+
     if total == 0:
         print("未发现问题！")
+        if gate["metadata_error"]:
+            print("错误：MISRA 元数据不可用，统一 Cppcheck 门禁阻断")
         print("═══════════════════════════════════════════════════════\n")
-        return 0
+        return gate
 
     misra_items = []
 
@@ -272,17 +360,22 @@ def print_report(issues, src_dir, file_count, elapsed, baseline_mode=False):
         print(f"\n{label} — {len(items)} 项")
         for item in items:
             print(f"  {item['file']}:{item['line']:<6} [{item['id']:<35}] {item['msg']}")
-            if item["id"].startswith("misra"):
+            if item.get("checker") == "MISRA":
                 misra_items.append(item)
 
     # MISRA 问题分级汇总
     if misra_items:
         print("\n--- MISRA C 问题分级汇总 ---")
-        by_level = {"Mandatory": [], "Required": [], "Advisory": []}
+        by_level = {
+            "Mandatory": [],
+            "Required": [],
+            "Advisory": [],
+            "UNMAPPED": [],
+        }
         for item in misra_items:
-            level = classify_misra_level(item["id"])
+            level = item.get("misra_level", "UNMAPPED")
             by_level[level].append(item)
-        for level in ["Mandatory", "Required", "Advisory"]:
+        for level in ["Mandatory", "Required", "Advisory", "UNMAPPED"]:
             lvl_items = by_level[level]
             if lvl_items:
                 print(f"  [{level}] {len(lvl_items)} 项")
@@ -292,6 +385,14 @@ def print_report(issues, src_dir, file_count, elapsed, baseline_mode=False):
     error_count   = len(issues.get("error", []))
     warning_count = len(issues.get("warning", []))
     print(f"\n总计: {total} 项问题  |  ERROR: {error_count}  WARNING: {warning_count}")
+    print("\n--- 统一 Cppcheck 门禁 ---")
+    print(f"  Cppcheck ERROR: {len(gate['cppcheck_errors'])} 项（阻断）")
+    for level in ["Mandatory", "Required", "Advisory", "UNMAPPED"]:
+        action = "阻断" if level in MISRA_BLOCKING_LEVELS else "不阻断"
+        print(f"  MISRA {level}: {len(gate['misra_by_level'][level])} 项（{action}）")
+    if gate["metadata_error"]:
+        print("  MISRA 元数据：不可用（阻断）")
+    print(f"  结论：{'BLOCKED' if gate['blocked'] else 'PASS'}")
     print("═══════════════════════════════════════════════════════\n")
 
     # 高危问题修复模板
@@ -305,15 +406,15 @@ def print_report(issues, src_dir, file_count, elapsed, baseline_mode=False):
             print(FIX_TEMPLATES[eid])
             print()
 
-    return error_count
+    return gate
 
 
 def export_html(xml_path, output_dir):
     """调用 cppcheck-htmlreport 将 XML 转为 HTML 报告"""
     if not shutil.which("cppcheck-htmlreport"):
-        print("警告：未找到 cppcheck-htmlreport，跳过 HTML 导出")
-        print("      可通过 pip install cppcheck-htmlreport 安装")
-        return
+        print("错误：未找到 cppcheck-htmlreport，HTML 导出失败")
+        print("      请配置 Cppcheck 官方 htmlreport 工具")
+        return False
     os.makedirs(output_dir, exist_ok=True)
     cmd = [
         "cppcheck-htmlreport",
@@ -324,9 +425,14 @@ def export_html(xml_path, output_dir):
     result = subprocess.run(cmd, capture_output=True, text=True)
     if result.returncode == 0:
         index_path = os.path.join(output_dir, "index.html")
-        print(f"[static-analysis] HTML 报告已生成: {index_path}")
+        if os.path.isfile(index_path) and os.path.getsize(index_path) > 0:
+            print(f"[static-analysis] HTML 报告已生成: {index_path}")
+            return True
+        print("错误：HTML 工具返回成功，但 index.html 缺失或为空")
+        return False
     else:
-        print(f"[static-analysis] HTML 报告生成失败: {result.stderr.strip()}")
+        print(f"错误：HTML 报告生成失败: {result.stderr.strip()}")
+        return False
 
 
 def export_json(issues, output_path):
@@ -396,6 +502,13 @@ def main():
     )
 
     try:
+        if proc.returncode != 0:
+            output = (proc.stderr or proc.stdout or "").strip()
+            print(f"错误：cppcheck 扫描失败（退出码 {proc.returncode}）")
+            if output:
+                print(output)
+            sys.exit(proc.returncode or 1)
+
         issues = parse_issues(xml_path)
 
         # 基线处理
@@ -414,12 +527,19 @@ def main():
                 baseline_mode = True
                 print(f"[static-analysis] 增量模式：全量 {original_total} 项，新增 {new_total} 项")
 
-        error_count = print_report(issues, args.src, file_count, elapsed,
-                                   baseline_mode=baseline_mode)
+        gate = print_report(
+            issues,
+            args.src,
+            file_count,
+            elapsed,
+            baseline_mode=baseline_mode,
+            misra_enabled=args.misra,
+        )
 
         # 导出处理
         if args.export == "html":
-            export_html(xml_path, args.export_dir)
+            if not export_html(xml_path, args.export_dir):
+                gate["blocked"] = True
         elif args.export == "json":
             out_file = args.export_file or "cppcheck_report.json"
             export_json(issues, out_file)
@@ -431,7 +551,7 @@ def main():
         if os.path.exists(xml_path):
             os.unlink(xml_path)
 
-    sys.exit(1 if error_count > 0 else 0)
+    sys.exit(1 if gate["blocked"] else 0)
 
 
 if __name__ == "__main__":

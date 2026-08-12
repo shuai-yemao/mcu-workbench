@@ -84,7 +84,7 @@ AI 生成代码
 | 3.1 | **所有指针使用前判空** `if (NULL == p_xxx)` | 搜索每个 `p_` 变量 | **CRITICAL** |
 | 3.2 | **所有函数调用检查返回值** | 搜索每个函数调用 | **CRITICAL** |
 | 3.3 | 判断语句常数放左边 `if (0 == ret)` | 搜索 `if (` | **HIGH** |
-| 3.4 | 不越层调用（BSP 不调 App，App 不直接调 HAL） | 检查 `#include` 和调用链 | **HIGH** |
+| 3.4 | 遵守 `App → Service → Platform 接口 ← Impl → Vendor`，App 不直接调用 Impl/Vendor/HAL | 检查 `#include` 和调用链 | **HIGH** |
 | 3.5 | 错误路径有 return，不会"fall through" | 跟踪每个 `if (err)` 分支 | **CRITICAL** |
 | 3.6 | 循环有退出条件，不会死循环 | 检查 `while`/`for` | **CRITICAL** |
 | 3.7 | 数组索引不越界 | 检查数组访问 | **HIGH** |
@@ -115,7 +115,7 @@ AI 生成代码
 | 5.2 | 数组访问前索引判界 | 检查数组访问处是否有边界判断 | **CRITICAL** |
 | 5.3 | 所有指针使用前判 NULL | 搜索每个 `p_` 变量 | **CRITICAL** |
 | 5.4 | 无动态内存分配（malloc/free） | 搜索 `malloc`/`free` | **HIGH** |
-| 5.5 | RTOS 任务栈留有 50% 余量 | 检查栈大小声明与 HighWaterMark | **HIGH** |
+| 5.5 | RTOS 任务栈留有 20% 余量 | 检查栈大小声明、HighWaterMark、峰值路径和异常路径 | **HIGH** |
 
 ---
 
@@ -125,7 +125,7 @@ AI 生成代码
 |---|--------|------|--------|
 | 6.1 | ISR 中无阻塞调用（HAL_Delay/I2C/SPI transmit） | 检查 ISR 函数体 | **CRITICAL** |
 | 6.2 | ISR→Task 通信使用 FromISR API | 检查 `xQueueSend`/`xSemaphoreGive` 是否带 `FromISR` | **CRITICAL** |
-| 6.3 | ISR 与 Task 共享变量声明 `volatile` | 检查中断内访问的全局变量 | **CRITICAL** |
+| 6.3 | `volatile` 只保证编译器可见性；多字节变量、复合状态和读改写操作必须使用临界区、原子操作、队列、通知或其他同步机制 | 检查共享数据类型、访问方式和同步原语 | **CRITICAL** |
 | 6.4 | ISR 中无 printf/semihosting | 搜索 ISR 中 `printf` 等 | **HIGH** |
 | 6.5 | 中断优先级分组合理 | 检查 NVIC 配置 | **HIGH** |
 
