@@ -53,14 +53,17 @@
 
 ```mermaid
 flowchart TD
-    APP["APP / Middleware"] --> BW["BSP Wrapper"]
-    BW --> BP["BSP Port: construct and inject"]
+    APP["APP"] --> SERVICE["Service"]
+    SERVICE --> PB["Platform BSP"]
+    PB --> BW["BSP Wrapper"]
+    BW --> BP["Impl Board Port: construct and inject"]
     BP --> BH["BSP Handler: lifecycle and serialization"]
     BH --> BD["BSP Driver: device protocol"]
     BD --> CB["Core Bus transaction API"]
-    CB --> HW["Hardware backend: HAL / LL / CMSIS"]
+    CB --> HW["Impl/Vendor backend: HAL / LL / CMSIS"]
     CB --> SW["Software backend: Core GPIO + microsecond timebase"]
-    APP --> OW["OS Wrapper: osal_*"]
+    SERVICE --> PO["Platform OS"]
+    PO --> OW["OS Wrapper: osal_*"]
     OW --> OP["OS Port: os_*_impl()"]
     OP --> RTOS["FreeRTOS / RT-Thread / bare metal"]
 ```

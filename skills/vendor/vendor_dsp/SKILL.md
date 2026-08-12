@@ -18,4 +18,4 @@ description: Vendor 底座登记：DSP、FFT、电机控制及其他可复用嵌
 CMSIS-DSP 的源码路径、浮点 ABI 和性能验收见 [`cmsis-dsp.md`](references/cmsis-dsp.md)。
 DSP、FFT 和电机控制的算法选择、实现步骤与性能基线见 [`capability-index.md`](references/capability-index.md)。
 
-交接：公共算法不触碰设备；任何 Middleware Port 获取设备能力只能经 BSP Wrapper（[`bsp-wrapper`](../../platform/platform_bsp/SKILL.md)），调度、任务和等待只能经 [`os-adapter`](../../platform/platform_os/SKILL.md) 提供的 OS Wrapper。`core-mcu` 只承载底层 MCU 公共能力，不是 Middleware 的设备直连入口。
+交接：公共算法不触碰设备；任何中间件实现由 `impl_middleware` 经 [`platform_bsp`](../../platform/platform_bsp/SKILL.md) 的 BSP Wrapper 内部角色获取设备能力，经 [`platform_os`](../../platform/platform_os/SKILL.md) 的 OS Wrapper 内部角色获取调度、任务和等待能力。`platform_mcu` 只承载 MCU 公共能力，不是 Vendor 或 App 的设备直连入口。

@@ -72,7 +72,7 @@ Router 固定交付需求约束包（RCP），本 Skill 是其唯一接收方。
 
 - Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成。
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
-- 上层调用下层时，调用下层 Adapter 的 Wrapper；Middleware 仅通过公共 API 使用 OS/BSP 能力。
+- 唯一规范调用链是 `App → Service → Platform ← Impl → Vendor`；Service 调用 Platform 公共契约，Wrapper/Port 只在 OS/BSP 内部承担适配职责，Middleware 不直接越过 Service/Platform 调用具体实现。
 - 本 skill 只输出工程事实、反猜测审查结论、必选的 BRD/PRD/SRSys 产品文档和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 - 分层审计、迁移路线、文件级改造顺序与实现层分发交给 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。

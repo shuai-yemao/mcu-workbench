@@ -8,7 +8,7 @@ description: Vendor 底座登记：按项目锁定的 LVGL 版本维护 GUI 源�
 ## 职责边界
 
 负责 LVGL 公共 API、对象树、控件、样式、布局、事件、动画、显示刷新和输入分发。
-显示、触摸、按键、背光、DMA 与缓存通过 BSP Wrapper 提供；Tick、任务、锁和等待通过 OS Wrapper 提供。
+显示、触摸、按键、背光、DMA 与缓存由 `impl_middleware`/`impl_board` 通过 `platform_bsp` 提供（其内部适配角色为 BSP Wrapper/Port）；Tick、任务、锁和等待由 `impl_os` 通过 `platform_os` 提供（其内部适配角色为 OS Wrapper/Port）。
 LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务规则仍由 `app-architecture` 负责。
 
 设备回调只发布拥有明确生命周期的快照或事件，不能直接操作 LVGL；UI 所有者任务在自己的上下文读取公共服务状态后刷新页面。
@@ -37,8 +37,8 @@ LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务
 
 ## 交接与验收
 
-- 设备能力只经 [`bsp-wrapper`](../../platform/platform_bsp/SKILL.md)；器件协议交给 [`bsp-hal-driver`](../../impl/impl_bsp/SKILL.md)。
-- 任务、Tick、互斥和等待交给 [`os-adapter`](../../platform/platform_os/SKILL.md)。
+- 设备能力由 Impl 通过 [`platform_bsp`](../../platform/platform_bsp/SKILL.md) 接入；器件协议交给 [`impl_bsp`](../../impl/impl_bsp/SKILL.md)。
+- 任务、Tick、互斥和等待由 [`impl_os`](../../impl/impl_os/SKILL.md) 实现 [`platform_os`](../../platform/platform_os/SKILL.md)（legacy Skill alias：`os-adapter`）。
 - 业务页面和业务状态交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
 - 构建、日志、性能和回归证据交给 [`tools-quality`](../../tools/tools-quality/SKILL.md) 或 [`tools-observability`](../../tools/tools-observability/SKILL.md)。
 
@@ -46,4 +46,4 @@ LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务
 
 ## GR5526 验收
 
-以 LVGL 8.3.x 工程检查 `lvgl_*`、`lvgl_port.*`、`task_gui`、`task_indev`，确认显示和触摸调用经过 BSP Wrapper，Tick、任务和锁经过 OS Wrapper，并保留一次编译与实际刷新证据。
+以 LVGL 8.3.x 工程检查 `lvgl_*`、`lvgl_port.*`、`task_gui`、`task_indev`，确认具体接入由 Impl 通过 Platform BSP/OS 契约完成，并保留一次编译与实际刷新证据。

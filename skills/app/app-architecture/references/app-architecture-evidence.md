@@ -44,6 +44,7 @@ CMakeLists.txt
 - [ ] 每个 Manager/Task 都有状态、消息、资源所有权和错误处理说明。
 - [ ] UI 事件先转为 Logic 命令，设备事件先转为 Manager 状态。
 - [ ] APP 没有直接包含 Core、Driver、BSP Port、`hal_driver` 或 FreeRTOS 原生头文件。
-- [ ] 需要设备能力时走 BSP Wrapper，需要系统能力时走 OS Wrapper。
+- [ ] 需要设备或系统能力时先走 Service；Service 再调用 `platform_bsp`、`platform_os` 或其他 Platform 公共契约。
+- [ ] APP 不直接 include 或调用 `platform_os`、`platform_bsp`、任何 Wrapper/Port、Impl 或 Vendor 符号。
 - [ ] 业务代码与 LVGL、MQTT 等 Middleware 的公共 API 交接点已记录。
 - [ ] 产物包含 APP 层图、启动链、依赖审计和未决风险，不覆盖其他 Agent 的运行记录。

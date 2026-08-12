@@ -35,6 +35,19 @@ describe('software layered architecture knowledge graph', () => {
   test('preserves layer boundaries and adapter placement', () => {
     const relations = new Set(graph.edges.map((edge) => edge.relation));
     expect(relations.has('must-not-call')).toBe(true);
+    expect(graph.edges.find((edge) => edge.id === 'app-main-to-service')).toEqual(
+      expect.objectContaining({ from: 'app-main', to: 'service-api', relation: 'calls-contract' })
+    );
+    expect(graph.edges).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({ id: 'main-to-os-wrapper' }),
+      expect.objectContaining({ id: 'main-to-bsp-wrapper' })
+    ]));
+    expect(graph.edges.find((edge) => edge.id === 'service-to-platform-os')).toEqual(
+      expect.objectContaining({ from: 'service-api', to: 'platform-os-contract', relation: 'uses-contract' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'service-to-platform-bsp')).toEqual(
+      expect.objectContaining({ from: 'service-api', to: 'platform-bsp-contract', relation: 'uses-contract' })
+    );
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-core').to).toBe('skill-core-mcu');
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-driver').to).toBe('skill-mcu-platform');
     expect(graph.edges.find((edge) => edge.id === 'core-to-driver').relation).toBe('uses-native-api');

@@ -4,7 +4,7 @@
 
 | 目标 skill | 工程证据 | 验收问题 |
 |---|---|---|
-| `app-architecture` | `Src/app/main.c`、`manager/`、`task/`、`ux_logic/` | 启动、Manager、Task、UI 是否只调用 Wrapper/API |
+| `app-architecture` | `Src/app/main.c`、`manager/`、`task/`、`ux_logic/` | 启动、Manager、Task、UI 是否只调用 Service 公共 API |
 | `os-adapter` | `components/graphics/lvgl_port/os_adapter/shared/src/osal_*.c` | Wrapper 是否不暴露 FreeRTOS 类型 |
 | `os-runtime` | `os_adapter/FreeRTOS/src/os_impl_*.c` | Port 是否只绑定原生 `xTask*` 等实现 |
 | `bsp-wrapper`/`bsp-port` | `drv_adapter_display.*`、`drv_adapter_port_*.c` | Wrapper/Port/函数表边界是否清晰 |

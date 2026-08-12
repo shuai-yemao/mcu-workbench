@@ -42,7 +42,7 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 - 本 skill 不审查既有实现方案的可行性：门禁判定收敛在 `workflow-review-gate`，本 Skill 只消费放行结果。
 - 本 skill 不生成实现代码、不承担最终代码审查（`workflow-final-review`）与代码生成阶段。
 - 审查包门禁状态非放行时不得分发实现层 Skill；发现新事实必须回传 `workflow-review-gate` 更新审查包。
-- Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成；上层调用下层时调用下层 Adapter 的 Wrapper。
+- Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成；唯一规范调用链是 `App → Service → Platform ← Impl → Vendor`。Service 调用 Platform 公共契约，Wrapper/Port 只在 OS/BSP 内部承担适配职责。
 
 ## 参考
 

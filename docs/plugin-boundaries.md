@@ -18,18 +18,20 @@
 
 | 层 | 可以调用 | 不应调用 | 责任 |
 |---|---|---|---|
-| APP | OS Wrapper、BSP Wrapper、Middleware API | Core、Driver、具体寄存器 | 业务逻辑、UI、Manager、Task、Profile |
-| OS | BSP Wrapper、Core/Driver 所需的系统适配 | APP 业务逻辑 | 任务、队列、同步、定时和资源调度 |
-| BSP Handler | BSP Wrapper、OS Wrapper | 直接访问厂商 Driver | 多实例、生命周期、缓存、事件和资源所有权 |
-| BSP Adapter | BSP Port、hal_driver | APP 业务逻辑 | 平台绑定、接口表、Mock 和移植隔离 |
-| BSP hal_driver | Core 接口 | OS 调度、APP 逻辑 | 器件初始化、协议、读写和睡眠唤醒 |
-| Core | Driver | OS、BSP、APP | MCU 内部外设初始化和中断/DMA组织 |
-| Driver | 无上层 Adapter | APP、OS、BSP 业务逻辑 | 厂商 HAL/LL/CMSIS/寄存器和 SDK |
-| Middleware | OS Wrapper、BSP Wrapper | 直接依赖具体平台实现 | 通用 GUI、通信、存储和算法 |
+| APP | Service 公共接口 | Platform、Wrapper、Port、Impl、Vendor、HAL、RTOS | 业务逻辑、UI、Manager、Task、Profile |
+| Service | Platform 公共接口、其他 Service | Impl、Vendor、HAL、RTOS 和具体 Driver | 业务策略、业务状态和跨能力编排 |
+| Platform | `platform_common` 及自身公共契约 | Impl、Vendor、HAL、RTOS、具体 Driver | 能力接口、错误码、对象、生命周期和 Ops |
+| Impl | Platform 接口、Vendor 底座 | 反向定义 Platform、被 App/Service 直调、承载业务策略 | 具体绑定、资源装配和实现注入 |
+| BSP Handle | OS Wrapper、Driver Ops | 直接访问 HAL、复制 Port 状态 | 多实例、生命周期、缓存、事件和资源所有权 |
+| BSP Driver | Core/Platform MCU 事务接口 | OS 调度、APP/Service 逻辑、原生 HAL | 器件初始化、协议、读写和睡眠唤醒 |
+| OS/BSP Wrapper | 自身 Platform 公共契约 | 具体 Impl、HAL、RTOS、Driver/Handle 对象 | 函数表、注册槽位和稳定转发 |
+| OS/BSP Port | Platform 接口、具体 Impl/Vendor 依赖 | 业务策略、协议状态机、重复缓存 | 具体对象构造、Ops 注入、注册和回滚 |
+| Middleware | Service 或 Platform Middleware 公共接口 | 直接依赖具体平台实现 | 通用 GUI、通信、存储和算法 |
 
 核心规则：
 
 ```text
+App → Service → Platform ← Impl → Vendor 是唯一规范调用链。
 OS 只能通过 OS Adapter 的 Wrapper/Port 解耦。
 BSP 只能通过 BSP Adapter 的 Wrapper/Port 解耦。
 Core、Middleware、Driver 不设置 Adapter。

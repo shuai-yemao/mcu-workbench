@@ -14,12 +14,12 @@ description: |
 
 ## 技能说明
 
-此 Skill 以五层模型（Platform → Driver → Adapter → Middleware → APP）为基准，
+此 Skill 以五层模型（App → Service → Platform ← Impl → Vendor）为基准，
 对嵌入式 C 工程做**文件级别**的集成审计，并给出结构化修复清单。
 也可按 8 步路线图从零指导搭建完整项目。
 
 **参考标杆**：GR5526 SDK `graphics_lvgl_831_gpu_demo_360p` 工程 —
-完整实现了 OSAL、三段式 Adapter、Manager 状态机、生产者-消费者任务、低功耗编排。
+完整实现了 OSAL、Wrapper/Port 内部适配、Manager 状态机、生产者-消费者任务、低功耗编排。
 
 ---
 
@@ -83,7 +83,7 @@ description: |
 | Porting（第二段） | 存在 `impl_*_port.c`（legacy `drv_adapter_port_*.c`）完成函数指针绑定 | 有→✅ / 无→❌ |
 | Driver（第三段） | 存在具体驱动的 `.c/.h` 文件 | 有→✅ / 无→❌ |
 | 三段绑定完整 | Wrapper → Porting → Driver 调用链完整 | 完整→✅ / 断开→⚠️ |
-| 调用方不越层 | Middleware/APP 只调 `platform_*_wrapper_*()` / `impl_*_port_*()`（legacy `drv_adapter_*()`），不直接调 `lcd_*` 等 | 不越层→✅ / 直接调→❌ |
+| 调用方不越层 | APP 只调 Service；Service 调 Platform 公共接口；不直接调 `impl_*_port_*()`、legacy `drv_adapter_*()` 或 `lcd_*` 等具体实现 | 不越层→✅ / 直接调→❌ |
 
 **外设检查矩阵**（审计时按实际外设展开）：
 
@@ -240,7 +240,7 @@ description: |
 |------|------|------------|
 | **单向依赖** | 上层可调下层，下层不能调上层 | grep 反向 include |
 | **横向隔离** | 同层模块通过接口通信，不直接耦合 | 检查同层 .c 是否互相 include |
-| **跨层禁止** | APP 不能跳过 Adapter 调 Driver/OS | grep APP 层是否含 `xTask`/`lcd_*` |
+| **跨层禁止** | APP 不能跳过 Service 调 Platform/OS/BSP/Driver | grep APP 层是否含 `platform_*`、`osal_*`、`xTask`/`lcd_*` |
 | **配置只读** | 所有层读 `custom_config.h`，它不读任何层 | 检查 `custom_config.h` 的 `#include` |
 
 ### Adapter 三段式速查

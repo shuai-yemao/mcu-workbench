@@ -3,10 +3,10 @@
 `platform_*_wrapper.c/.h` 是 BSP Wrapper（legacy 名 `drv_adapter_wrapper_*`）；`impl_*_port.c/.h` 是 BSP Port（legacy 名 `drv_adapter_port_*`）；`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。
 
 ```text
-APP / Middleware → BSP Wrapper → BSP Public Ops
+Service → platform_bsp Wrapper → BSP Public Ops
                                   ↑ register
-BSP Port ── inject Core Ops + MCU Ops ──→ BSP HAL Driver
-    └──── inject OS Wrapper Ops + HAL Driver Ops ──→ BSP Handler
+impl_board Port ── inject Core Ops + MCU Ops ──→ BSP Driver
+    └──────────── inject OSAL Ops + Driver Ops ──→ BSP Handle/Handler
 ```
 
 ## 四个独立层
@@ -15,8 +15,8 @@ BSP Port ── inject Core Ops + MCU Ops ──→ BSP HAL Driver
 |---|---|---|
 | Wrapper | 函数表、注册槽位、稳定转发 | 标准类型、自身声明 |
 | Port | 唯一组合根；创建实例、注入 Ops、向 Wrapper 注册 Public Ops | 注入源、实例构造接口、Wrapper 注册口 |
-| Handler | 任务循环、缓存、重试、回调、生命周期和请求串行化；设备类别级缓存 | 注入的 OS Wrapper Ops 与 HAL Driver Ops |
-| HAL Driver | 器件协议和事务级错误映射 | 注入的 Core Ops 与 MCU Ops |
+| Handler/Handle | 任务循环、缓存、重试、回调、生命周期和请求串行化；设备类别级缓存 | 注入的 OSAL Ops 与 Driver Ops |
+| Driver | 器件协议和事务级错误映射 | 注入的 Core Ops 与 MCU Ops |
 
 非 Port BSP 层不得包含或依赖其他层的具体实现。Wrapper 不保存平台对象；Handler 不访问具体 Driver 成员；HAL Driver 不直接包含 HAL、RTOS、OS Wrapper、Port 或 Handler。Core/MCU 的具体对象只由 Port 选择并通过 Ops 注入。
 

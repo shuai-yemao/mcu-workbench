@@ -52,6 +52,18 @@ describe('embedded architecture skill contracts', () => {
     expect(`${abstraction}\n${contract}\n${freertos}\n${freertosMap}`).not.toContain('os_impl_task_create');
   });
 
+  test('uses App to Service as the only application call chain', () => {
+    const graph = read('skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md');
+    const boundaries = read('docs/plugin-boundaries.md');
+    const evidence = read('skills/app/app-architecture/references/app-architecture-evidence.md');
+
+    expect(graph).toContain('APP["APP"] --> SERVICE["Service public APIs"]');
+    expect(graph).not.toContain('APP["APP"] --> OW');
+    expect(boundaries).toContain('| APP | Service 公共接口 |');
+    expect(boundaries).not.toContain('| APP | OS Wrapper、BSP Wrapper、Middleware API |');
+    expect(evidence).toContain('先走 Service');
+  });
+
   test('publishes all evidence references at their canonical locations', () => {
     for (const relativePath of [
       'skills/workflow/workflow-review-gate/references/ec-s100-architecture-audit.md',

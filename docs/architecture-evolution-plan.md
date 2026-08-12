@@ -22,9 +22,12 @@
 ### 1.1 现状（11 层契约 / 13 个技能层）
 
 ```text
-APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
-      ├─ BSP Wrapper → BSP Port → BSP Handler → BSP HAL Driver → Core → MCU
-      └─ Middleware Public API
+APP → Service ──┬─ platform_os → OS Wrapper (osal_*) → OS Port → OS Runtime
+                ├─ platform_bsp → BSP Wrapper → BSP Port → Handle → Driver → platform_mcu
+                ├─ platform_middleware
+                └─ platform_common
+
+Platform ← Impl → Vendor
 横切：workflow（AI 流程）、tools（工程操作）、hardware（PCB/VISA）
 ```
 
@@ -34,7 +37,7 @@ APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
 |---|---|---|
 | P1 | **契约三套体系分散** | `osal_*`（OS）、BSP Wrapper 函数表（板级）、Core 事务 API（MCU）各成体系，错误码、ctx、ops 没有统一基线 |
 | P2 | **Middlewares 源码与能力混放** | LVGL/FatFS/FlashDB/letter_shell 的"源码底座"与"能力接口/移植"在同一个技能里，无法区分"拿来"与"沉淀" |
-| P3 | **APP 允许直连 Wrapper** | 当前 APP 可直接调 OS Wrapper、BSP Wrapper——"怎么干"泄漏到业务层，换板/换芯片时 App 跟着动 |
+| P3 | **历史 APP 直连 Wrapper** | 目标调用链已收敛为 App → Service；旧资料仍需清理，避免 Router/Review 继续输出旧链 |
 | P4 | **分层粒度不一** | BSP 内部细到 4 层（Wrapper/Port/Handler/Driver），OS 与 Middleware 只有粗粒度，抽象粒度不齐 |
 | P5 | **Platform 与 Vendor 未切开** | Core（抽象能力）与 MCU（CMSIS/HAL/寄存器）边界靠约定，代码上无强约束，Impl 层缺位 |
 | P6 | **缺 Service 业务层** | 现有技能没有"从 App 常见业务抽象出的服务"这一层——电池/背光/日志/OTA 等业务能力无归属 |

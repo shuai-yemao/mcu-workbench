@@ -19,16 +19,19 @@
 ## 2. 为什么改：现状痛点
 
 ```text
-APP ──┬─ OS Wrapper (osal_*) → OS Port → OS Runtime
-      ├─ BSP Wrapper → BSP Port → BSP Handler → BSP HAL Driver → Core → MCU
-      └─ Middleware Public API
+APP → Service ──┬─ platform_os → OS Wrapper (osal_*) → OS Port → OS Runtime
+                ├─ platform_bsp → BSP Wrapper → BSP Port → Handle → Driver → platform_mcu
+                ├─ platform_middleware
+                └─ platform_common
+
+Platform ← Impl → Vendor
 ```
 
 | # | 痛点 | 表现 |
 |---|---|---|
 | P1 | 契约三套分散 | `osal_*` / BSP 函数表 / Core 事务 API 各成体系，错误码/ctx/ops 无统一基线 |
 | P2 | 中间件源码与能力混放 | LVGL/FatFS/FlashDB 的"源码底座"与"能力"在同一技能，无法区分拿来与沉淀 |
-| P3 | APP 允许直连 Wrapper | "怎么干"泄漏到业务层，换板/换芯片时 App 跟着动 |
+| P3 | 历史上 APP 允许直连 Wrapper | 已由目标架构收敛为 App → Service；施工阶段需同步清理残留规范文字 |
 | P4 | 分层粒度不一 | BSP 细到 4 层，OS/Middleware 只有粗粒度 |
 | P5 | Platform 与 Vendor 未切开 | Core 与 MCU 边界靠约定，Impl 层缺位 |
 | P6 | 缺 Service 业务层 | 电池/背光/日志/OTA 等"App 常见业务"无归属 |
