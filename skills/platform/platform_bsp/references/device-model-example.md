@@ -140,4 +140,4 @@ manager 注册 → 生命周期驱动
 - [ ] `base` 首字段（偏移 0），设备 struct 名 `<type>_device_t`
 - [ ] 零芯片/HAL/Vendor 依赖（显式 include `platform_type.h`）
 - [ ] 模型 ops 首参具体设备指针、裸名
-- [ ] 注释 Profile 完整（@file/@brief/@par dependencies/@author/版本 + 分区）
+- [ ] 注释遵循 `style-profile.md`（文件头、公开 API、必要约束和源文件分区）

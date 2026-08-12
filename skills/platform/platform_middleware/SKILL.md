@@ -29,7 +29,7 @@ description: Platform 纯定义：中间件能力接口（log/fs/kv/crypto/gui/c
 ## 必须读取（生成前 MUST，缺失任一即不得开始输出）
 
 - 对象四元组模板：`../platform_common/references/object-four-tuple-template.md`（base + cfg/ctx/data/ops 判定标准）
-- 生成代码完整注释 Profile：`../../tools/tools-quality/references/generated-bsp-comment-profile.md`
+- 生成代码格式、命名和注释统一遵循：`../../tools/tools-quality/references/style-profile.md`
 - 生成代码审查门禁：`../../tools/tools-quality/references/review-gates.md`
 - 软件层契约：`../../workflow/workflow-review-gate/references/software-layer-contract.md`
 
@@ -46,7 +46,7 @@ description: Platform 纯定义：中间件能力接口（log/fs/kv/crypto/gui/c
 - [ ] 四元组：按判定规则核对
 - [ ] 错误码：全部使用 `platform_err_t`/`PLATFORM_ERR_*`，不压平为 -1
 - [ ] 类型/宏：`platform_type.h` 出口类型、`platform_def.h` 宏，不自造、不 include Vendor 头
-- [ ] 注释：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）
+- [ ] 注释：按 `style-profile.md` 检查文件头、公开 API 和必要约束
 - [ ] 代码质量：按 `review-gates.md` 自查
 
 ## 禁止

@@ -16,7 +16,7 @@ Platform 定义稳定的 `osal_*` 公共接口；错误码统一使用 [`platfor
 ## 必须读取（生成前 MUST，缺失任一即不得开始输出）
 
 - 对象四元组模板：`../platform_common/references/object-four-tuple-template.md`（base + cfg/ctx/data/ops 判定标准）
-- 生成代码完整注释 Profile：`../../tools/tools-quality/references/generated-bsp-comment-profile.md`
+- 生成代码格式、命名和注释统一遵循：`../../tools/tools-quality/references/style-profile.md`
 - 生成代码审查门禁：`../../tools/tools-quality/references/review-gates.md`
 - 软件层契约：`../../workflow/workflow-review-gate/references/software-layer-contract.md`
 
@@ -34,7 +34,7 @@ Platform 定义稳定的 `osal_*` 公共接口；错误码统一使用 [`platfor
 - [ ] 错误码：`osal_*` 一律返回 `platform_err_t`，不返回项目私有数字
 - [ ] 类型/宏：`platform_type.h` 出口类型、`platform_def.h` 宏，不自造
 - [ ] 依赖：OSAL 公共接口不暴露 RTOS 原生类型
-- [ ] 注释：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）
+- [ ] 注释：按 `style-profile.md` 检查文件头、公开 API 和必要约束
 - [ ] 代码质量：按 `review-gates.md` 自查
 
 ## 接口族

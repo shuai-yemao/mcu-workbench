@@ -58,7 +58,7 @@ platform_common（core/object/manager/diag）搭建完毕，平台层下一子�
 5. **四元组判定**：纯行为函数表（pf_* + context，无身份/生命周期字段）→ 豁免，头注释显式声明「纯转发、不承载对象身份」。
 6. **Guard**：`PLATFORM_<NAME>_H`，禁用双下划线头尾（MISRA 21.1）。
 7. **文件形态**：`03_Platform/platform_mcu/Inc/platform_<name>.h` 纯契约，**零 .c**（Src 实现留 impl_mcu 后端课；本阶段不生成 Src）。
-8. **注释**：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）。
+8. **注释**：统一遵循 `style-profile.md`，文件头、公开 API、必要约束和源文件分区按同一规则输出。
 9. **iic→i2c**：文件/API/文档一律 `i2c`，不产生 iic.h。
 
 ## 4. 文件施工清单

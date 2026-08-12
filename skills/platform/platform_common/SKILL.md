@@ -202,7 +202,7 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 - [ ] 错误码：统一 `platform_err_t`/`PLATFORM_ERR_*`，不压平为 -1
 - [ ] 类型/宏：出口自 `platform_type.h`/`platform_def.h`，不自造等价物
 - [ ] 依赖：不包含芯片/HAL/RTOS/厂商类型
-- [ ] 注释：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）
+- [ ] 注释：统一遵循 `style-profile.md`，覆盖文件头、公开 API、必要约束和源文件分区
 - [ ] 代码质量：按 `review-gates.md` 自查
 
 ## 生成契约

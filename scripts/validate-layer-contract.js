@@ -316,25 +316,7 @@ function validateHandle(files, type, errors) {
   }
 }
 
-function validateFullCommentProfile(files, errors, { rulePrefix = 'LAYER_WORKFLOW', skipRoles = ['coreHeader', 'coreSource'] } = {}) {
-  const requiredSections = ['Includes', 'Private Defines', 'Private Types', 'Private State', 'Private Functions', 'Public Functions'];
-  for (const [role, file] of Object.entries(files)) {
-    if (skipRoles.includes(role)) continue;
-    if (!file.content.includes('@par dependencies') || !file.content.includes('Processing flow:')) {
-      addError(errors, `${rulePrefix}_DOC_PROFILE`, file.relative, 'Generated files must use the workflow full-documentation profile.');
-    }
-    if (file.relative.endsWith('.c')) {
-      for (const section of requiredSections) {
-        if (!file.content.includes(`/* ${section} */`)) {
-          addError(errors, `${rulePrefix}_SOURCE_SECTION`, file.relative, `Generated source must contain ${section} section.`);
-        }
-      }
-    }
-  }
-}
-
 function validateSsd1306Display(files, errors) {
-  validateFullCommentProfile(files, errors);
   for (const role of ['handleHeader', 'handleSource']) {
     const file = files[role];
     if (file && /impl_ssd1306_(?:driver|config)/i.test(file.content)) {
@@ -381,7 +363,6 @@ function validateLayerContract({ root, core, deviceType, device, slice = 'all' }
   validateWrapper(files, errors);
   validateFourTuple(files, errors);
   if (slice === 'wrapper') {
-    validateFullCommentProfile(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
     validateCommentLanguage(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
     return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
   }
@@ -471,7 +452,6 @@ module.exports = {
   runSelfCheck,
   validateCommentLanguage,
   validateFourTuple,
-  validateFullCommentProfile,
   validateHalDriver,
   validateHandler,
   validateSsd1306Display,

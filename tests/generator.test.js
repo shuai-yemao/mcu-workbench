@@ -95,7 +95,7 @@ describe('Generator Module', () => {
       device: 'SSD1306',
       deviceType: 'display',
       osalResources: ['mutex'],
-      commentProfile: 'workflow-full-doc'
+      styleProfile: 'style-profile'
     });
     expect(byPath['04_Impl/impl_bsp_handler/display/Inc/impl_display_handle.h'])
       .not.toContain('impl_ssd1306_');

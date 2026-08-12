@@ -2,7 +2,7 @@
 
 本目录保留为早期两文件 OLED Driver 样例，不再是 `mcu-workbench driver`
 的生成入口。它没有表达当前的 Driver / 类别 Handle / Port / Wrapper 边界，
-也没有 OSAL 资源注入或完整注释 profile。
+也没有 OSAL 资源注入；生成代码统一遵循 `style-profile.md`。
 
 请使用：
 

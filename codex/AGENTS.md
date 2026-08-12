@@ -27,7 +27,7 @@
 - `platform_*` 是能力接口层：只保存能力接口、统一错误码/类型（基线在 `platform_common/platform_error.h`，`platform_err_t`）、对象协议（`platform_object.h` + `platform_lifecycle.h`）与带 `void *context` 的抽象函数表、稳定转发 API，不绑定芯片/RTOS；零实现门禁仅指技能目录，`platform_common` 含对象模型实现。`impl_board` 是板级组合根：装配 `impl_bsp` 驱动与 `impl_bsp_handler` 后端及已确认的 OSAL 资源，并在启动期注册到 Platform 接口。
 - 固定依赖方向为 App → Service → Platform 接口 ← Impl → Vendor。`impl_bsp` 只处理器件协议并隔离 HAL、RTOS 与板级绑定；`impl_bsp_handler` 承担实例生命周期、队列/工作循环、缓存、重试和回调。组合根不得复制 Handler 的业务缓存，也不得承载协议状态机。
 - Vendor 底座（`vendor_*`）源码只登记映射不复制（D7），仅经 patch 落地；Service 携带业务策略，机制留在 Impl。
-- 生成 Platform/Impl 切片前先输出设备 profile、Ops 映射、资源生命周期、阻塞/ISR 限制、注释 profile 和未验证项；缺少目标 `osal.h`、Platform 公共头或板级绑定证据时，标记 `UNRESOLVED_OSAL_API`（或相应未解析标记），不得伪称可编译。
+- 生成 Platform/Impl 切片前先输出设备 profile、Ops 映射、资源生命周期、阻塞/ISR 限制、`style-profile.md` 适用范围和未验证项；缺少目标 `osal.h`、Platform 公共头或板级绑定证据时，标记 `UNRESOLVED_OSAL_API`（或相应未解析标记），不得伪称可编译。
 
 ## 4. Skill 路由与协作
 

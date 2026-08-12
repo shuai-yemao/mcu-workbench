@@ -141,7 +141,7 @@ SPI/I2C/UART/ADC/Flash 的带 `timeout_ms` 接口均为同步接口：调用者�
 生成或修改 `platform_mcu` 文件前必须读取：
 
 - 对象四元组模板：[`platform_common` object-four-tuple-template](../platform_common/references/object-four-tuple-template.md)
-- 代码注释 Profile：[`generated-bsp-comment-profile.md`](../../tools/tools-quality/references/generated-bsp-comment-profile.md)
+- 代码格式、分层命名和注释唯一规则：[`style-profile.md`](../../tools/tools-quality/references/style-profile.md)
 - 生成审查门禁：[`review-gates.md`](../../tools/tools-quality/references/review-gates.md)
 - 软件层契约：[`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)
 - 能力路由索引：[`capability-index.md`](references/capability-index.md)

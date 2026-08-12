@@ -193,7 +193,7 @@ flowchart LR
 - 每个 .h 文件头部要有"阅读指引"，告诉新人先看哪里
 - 每个设计决策要有"为什么"注释（不解释"做了什么"，解释"为什么这样做"）
 - 每个 OOP 驱动配套一份 `references/oop-usage-guide.md` 级别的使用文档
-- 代码生成工具 (bsp_adapter.py --oop) 要生成带完整注释的代码
+- 代码生成工具（bsp_adapter.py --oop）必须按统一 `style-profile.md` 生成文件头、公开 API 和必要约束注释
 
 **适用判断**：
 ```

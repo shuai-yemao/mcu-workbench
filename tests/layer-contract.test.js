@@ -41,7 +41,7 @@ describe('generated layer contract validator', () => {
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
-  test('accepts an SSD1306 display slice with OSAL mutex injection and full documentation', async () => {
+  test('accepts an SSD1306 display slice with OSAL mutex injection and style profile documentation', async () => {
     const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mcu-ssd1306-layer-contract-'));
     const files = [
       ...(await generateCorePeripheral('i2c', 'stm32f4')),
@@ -263,7 +263,7 @@ int32_t platform_externflash_wrapper_register(const void *p_ops);
 #endif`;
 
   const noProfileWrapperHeader = `/* @file platform_externflash_wrapper.h
- * @brief 无完整注释 profile 的最小头文件。
+ * @brief 只有统一 style-profile 最小头信息的头文件。
  */
 #ifndef PLATFORM_EXTERNFLASH_WRAPPER_H
 #define PLATFORM_EXTERNFLASH_WRAPPER_H
@@ -278,7 +278,7 @@ typedef struct {
 int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper_ops_t *p_ops);
 #endif`;
 
-  test('accepts a pure-forward wrapper slice with --slice wrapper and full comment profile', async () => {
+  test('accepts a pure-forward wrapper slice with --slice wrapper and style profile documentation', async () => {
     const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
       root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
@@ -296,14 +296,12 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
     ]));
   });
 
-  test('rejects a wrapper missing the full comment profile in wrapper slice', async () => {
+  test('accepts a wrapper with minimal style profile documentation in wrapper slice', async () => {
     const root = await createWrapperSlice(noProfileWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
       root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
     });
-    expect(result.errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DOC_PROFILE' })
-    ]));
+    expect(result).toMatchObject({ valid: true, errors: [] });
   });
 
   test('does not require sibling slice files when --slice wrapper is used', async () => {
@@ -386,9 +384,7 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
     });
     expect(result.errors).not.toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DEPENDENCY' }),
-      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_FOUR_TUPLE' }),
-      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DOC_PROFILE' }),
-      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_SOURCE_SECTION' })
+      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_FOUR_TUPLE' })
     ]));
   });
 
@@ -409,7 +405,7 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
   test('rejects a generated file whose comments are written in English', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => content
-      .replace('仅依赖生成的 BSP/Core 公共接口', 'generated BSP/Core public interfaces only')
+      .replace('生成的 Platform、Impl 或公共接口', 'generated Platform, Impl, or public interfaces')
       .replace('生成的切片参与已声明的分层契约。', 'Generated slice participates in the declared layered contract.')
       .replace('W25Q64 器件配置。', 'W25Q64 device configuration.'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([

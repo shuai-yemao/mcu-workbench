@@ -1,7 +1,7 @@
 # platform_common 代码质量审查报告
 
 > 审查日期：2026-08-08
-> 审查依据：mcu-workbench 插件 `tools-quality` skill（`review-gates.md` 检查顺序 + `quality-code-review` 检查维度 + `style-profile.md` 证据优先级 + `generated-bsp-comment-profile.md` 注释格式）
+> 审查依据：mcu-workbench 插件 `tools-quality` skill（`review-gates.md` 检查顺序 + `quality-code-review` 检查维度 + `style-profile.md` 统一格式、命名和注释规则）
 > 审查方式：人工逐文件核查（静态分析流，仅「可疑模式」判定，不替代目标运行与实物验收）
 
 ## 1. 审查范围与证据
@@ -9,7 +9,7 @@
 - **被审对象**：`03_Platform/platform_common/` 全部 18 个文件（7 `.c` + 11 `.h` + `README.md`）
 - **审查基线**：git 分支 `feature/platform-object-model`（审查开始时工作树 clean）
 - **风格 profile**：
-  - 来源 1（用户明确要求）：使用 mcu-workbench 插件已设置的完整注释格式（英文 doxygen）
+  - 来源 1（用户明确要求）：使用 mcu-workbench 插件已设置的统一 Doxygen 注释格式（本历史报告记录为英文）
   - 来源 2（工程配置）：`d:\zhuomian\embedded_framework\.clang-format`（LLVM 基 / 4 空格 / Allman 大括号 / 100 列 / PointerAlignment Right / AlignTrailingComments）
   - 来源 3（相邻源码）：platform_common 现有 18 个文件全量英文 doxygen，与本报告口径一致
 - **静态分析**：cppcheck 未安装，经用户确认本次跳过
@@ -48,7 +48,7 @@
 
 ### 风格偏差（独立分级）
 
-- 注释：18 个文件文件头块、函数 doxygen、字段行内注释统一（英文 / doxygen / 对齐），与插件完整注释 Profile 一致，**无偏差**。
+- 注释：18 个文件文件头块、函数 doxygen、字段行内注释统一（英文 / doxygen / 对齐），与 `style-profile.md` 一致，**无偏差**。
 - 注释缺口（本次已修复，见 §3）：`platform_manager.c` / `platform_device_manager.c` / `platform_service_manager.c` / `platform_board_manager.c` 的公共函数缺少 `.c` 侧 doxygen（`.h` 侧全部完整）。
 - 轻微格式：`platform_device.c:69` 存在含尾随空格的空行；`platform_object.h:74` 字段注释对齐列使该行超 100 列。均为可选项。
 - 命名：guard 为 `__PLATFORM_XXX_H__`（双下划线）、生命周期回调裸名（无 `pf_` 前缀）——属命名审计 P1 可选对齐项，不强制（`platform_common/SKILL.md` 已声明）。

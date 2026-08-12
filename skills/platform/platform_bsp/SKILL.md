@@ -18,7 +18,7 @@ Platform BSP 定义平台无关的板级器件能力接口与对象协议：抽�
 - 对象四元组模板：`../platform_common/references/object-four-tuple-template.md`（base + cfg/ctx/data/ops 判定标准）
 - BSP 架构专用契约：`../../bsp/references/bsp-architecture-contract.md`
 - GPIO 输出外设检查表：`../../bsp/references/gpio-output-peripheral-checklist.md`
-- 生成代码完整注释 Profile：`../../tools/tools-quality/references/generated-bsp-comment-profile.md`
+- 生成代码格式、命名和注释统一遵循：`../../tools/tools-quality/references/style-profile.md`
 - 生成代码审查门禁：`../../tools/tools-quality/references/review-gates.md`
 - 软件层契约：`../../workflow/workflow-review-gate/references/software-layer-contract.md`
 
@@ -64,7 +64,7 @@ Platform BSP 定义平台无关的板级器件能力接口与对象协议：抽�
 
 文件结构要求（wrapper）：
 
-- 完整注释 Profile：`@file` / `@brief` / `@par dependencies` / `@author` / 版本，及 `Includes`、`Private Defines`、`Private Types`、`Private State`、`Private Functions`、`Public Functions` 六分区（头文件无私有实现时可省略私有分区）。
+- 统一注释规则：按 `style-profile.md` 生成文件头、公开 API Doxygen、必要的资源/并发/硬件约束说明和源文件分区。
 - 至少包含：逻辑状态枚举、物理极性枚举（GPIO 输出设备）、`platform_<type>_ops_t`（`pf_*` 首参 `void *p_context`）、注册入口 `platform_<type>_wrapper_register`（仅启动期注册、重复注册返回 `PLATFORM_ERR_ALREADY_INIT`）、初始化失败回滚与 deinit。
 - 板级常量不硬编码在 wrapper 内，预留 `bsp_<type>_config.h` 位置说明。
 - GPIO 绑定未定前保留 `UNRESOLVED_GPIO_BINDING` 标记。
@@ -78,7 +78,7 @@ wrapper 为无芯片依赖的转发实现（不含 HAL/RTOS/具体 Driver），�
 - [ ] 四元组：按上述判定规则核对（设备对象 struct 是否 base 首字段 + 四槽齐全；纯转发是否有显式豁免声明）
 - [ ] 错误码：全部使用 `platform_err_t` / `PLATFORM_ERR_*`，不压平为 -1
 - [ ] 类型/宏：字段类型来自 `platform_type.h`，宏来自 `platform_def.h`，不自造等价物
-- [ ] 注释：完整注释 Profile（`@file`/`@brief`/`@par dependencies`/`@author`/版本 + 六分区）
+- [ ] 注释：按 `style-profile.md` 检查文件头、公开 API、必要约束和源文件分区
 - [ ] GPIO 输出设备：逻辑态/物理电平极性映射、Core GPIO 上下文所有权、失败初始化状态、Port 回滚边界、deinit 规则
 - [ ] 代码质量：按 `review-gates.md` 自查风格/功能/安全三类问题
 - [ ] 门禁命令：在固件工程根运行

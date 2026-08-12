@@ -34,7 +34,7 @@ Handler 管理设备生命周期、请求串行化、缓存、队列、线程、
 
 ## 生成目录与 DMA/IRQ
 
-按设备类别创建 `04_Impl/impl_bsp/<type>/<DEVICE>/Inc|Src`，Driver 使用 `impl_<device>_driver.c/.h` 与独立的 `impl_<device>_config.h`；同一类别的 Handle 位于 `04_Impl/impl_bsp_handler/<type>/Inc|Src`（工程目录保持独立子层，D5）。Driver 必须把 platform_mcu 的 DMA/IRQ 完成事件转换为设备事件，不直接配置 HAL/NVIC，也不创建任务。生成代码采用 [`完整注释 Profile`](../../tools/tools-quality/references/generated-bsp-comment-profile.md) 的文件/API 注释和 `Includes`、`Private Defines`、`Private Types`、`Private State`、`Private Functions`、`Public Functions` 分区。
+按设备类别创建 `04_Impl/impl_bsp/<type>/<DEVICE>/Inc|Src`，Driver 使用 `impl_<device>_driver.c/.h` 与独立的 `impl_<device>_config.h`；同一类别的 Handle 位于 `04_Impl/impl_bsp_handler/<type>/Inc|Src`（工程目录保持独立子层，D5）。Driver 必须把 platform_mcu 的 DMA/IRQ 完成事件转换为设备事件，不直接配置 HAL/NVIC，也不创建任务。生成代码统一采用 [`项目风格 profile`](../../tools/tools-quality/references/style-profile.md) 的文件/API 注释和源文件分区。
 
 Port 可长期持有具体 Driver 并把其北向回调注册到 Wrapper；这种所有权不允许 Port 复制设备协议、命令常量或状态机。
 

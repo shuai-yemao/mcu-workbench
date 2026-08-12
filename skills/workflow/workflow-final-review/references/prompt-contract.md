@@ -27,4 +27,4 @@
 
 - 报告必须标明代码版本或 diff、审查基线、profile 来源及未验证假设。
 - 不把静态检查或主机测试表述为板级验证。
-- 对 MCU Workbench 生成的 BSP 切片，按 `tools-quality` 的完整注释 profile 核对；对用户工程手写代码，按 `style-profile` 编码规范的硬性约束核对（`{proj}_` 文件命名、`g_/s_/p_/pf_` 变量前缀、全函数 Doxygen、80 列硬限制），用户或项目明确采用其他约定时以该约定优先。
+- 对 MCU Workbench 生成的 BSP、Core、Driver、Handler、Port 与 Wrapper，以及用户工程手写代码，统一按 `tools-quality` 的 `style-profile` 编码规范核对（分层命名、`g_/s_/p_/pf_` 变量前缀、公开函数 Doxygen、中文注释、80 列硬限制和对齐规则），用户或项目明确采用其他约定时以该约定优先。
