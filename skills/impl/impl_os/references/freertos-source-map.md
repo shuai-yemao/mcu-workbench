@@ -19,5 +19,5 @@
 
 - 通过 tag 或 commit 固定 FreeRTOS 源码，不能把 `main` 当作永久版本。
 - `FreeRTOSConfig.h`、Heap、Port 和中断优先级必须作为构建证据保存。
-- 只验证 `osal_task_create → os_task_create_impl → xTaskCreate` 等调用链，不把 FreeRTOS 原生 API 传播到 APP、BSP 或 Middleware。源文件可以命名为 `os_impl_*.c`，内部函数统一采用 `os_*_impl()`。
-- GR5526 验收检查 `components/graphics/lvgl_port/os_adapter/FreeRTOS/src/os_impl_*.c` 是否只负责原生绑定。
+- 只验证 `platform_os_task_create → impl_os_task_create → xTaskCreate` 等调用链，不把 FreeRTOS 原生 API 传播到 APP、BSP 或 Middleware。源文件统一命名为 `impl_os_*.c`，内部函数统一采用 `impl_os_*()`。
+- 实践工程静态检查 `04_Impl/impl_os/src/impl_os_*.c` 是否只负责 FreeRTOS 原生绑定；该检查不替代目标构建、烧录或板上验收。

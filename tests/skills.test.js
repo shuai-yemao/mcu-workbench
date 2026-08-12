@@ -207,6 +207,6 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('platform_common')).toMatch(/统一错误码|对象模型|生命周期/);
     expect(getSkillContent('platform_middleware')).toMatch(/log|fs|kv|crypto|gui|comm/);
     expect(getSkillContent('impl_board')).toMatch(/组合根|Port/);
-    expect(getSkillContent('platform_os')).toMatch(/osal_/);
+    expect(getSkillContent('platform_os')).toMatch(/platform_os_/);
   });
 });

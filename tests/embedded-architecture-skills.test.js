@@ -42,14 +42,29 @@ describe('embedded architecture skill contracts', () => {
 
   test('uses the verified two-layer OS naming consistently', () => {
     const abstraction = read('skills/platform/platform_os/SKILL.md');
-    const contract = read('skills/platform/platform_os/references/osal-contract.md');
+    const contract = read('skills/platform/platform_os/references/platform-os-contract.md');
     const freertos = read('skills/impl/impl_os/SKILL.md');
     const freertosMap = read('skills/impl/impl_os/references/freertos-source-map.md');
 
-    expect(abstraction).toContain('os_*_impl()');
-    expect(contract).toContain('osal_task_create() → os_task_create_impl()');
-    expect(freertosMap).toContain('osal_task_create → os_task_create_impl → xTaskCreate');
-    expect(`${abstraction}\n${contract}\n${freertos}\n${freertosMap}`).not.toContain('os_impl_task_create');
+    expect(abstraction).toContain('impl_os_*()');
+    expect(contract).toContain('platform_os_task_create() → impl_os_task_create()');
+    expect(freertosMap).toContain('platform_os_task_create → impl_os_task_create → xTaskCreate');
+    const removedFunctionName = ['os', 'task', 'create', 'impl'].join('_');
+    expect(`${abstraction}\n${contract}\n${freertos}\n${freertosMap}`).not.toContain(removedFunctionName);
+  });
+
+  test('does not retain removed OS names in the canonical OS Skill content', () => {
+    const canonicalContent = [
+      read('skills/platform/platform_os/SKILL.md'),
+      read('skills/platform/platform_os/references/platform-os-contract.md'),
+      read('skills/platform/platform_os/references/platform-os-freertos-case.md'),
+      read('skills/impl/impl_os/SKILL.md'),
+      read('skills/impl/impl_os/references/freertos-source-map.md')
+    ].join('\n');
+
+    expect(canonicalContent).toMatch(/platform_os_/);
+    expect(canonicalContent).toMatch(/impl_os_/);
+    expect(canonicalContent).not.toMatch(/\bosal_|\bos_[a-z0-9_]+_impl\b|\bos_impl_/i);
   });
 
   test('uses App to Service as the only application call chain', () => {
@@ -69,7 +84,7 @@ describe('embedded architecture skill contracts', () => {
       'skills/workflow/workflow-review-gate/references/ec-s100-architecture-audit.md',
       'skills/platform/platform_mcu/references/core-iic-backends-case.md',
       'skills/bsp/references/bsp-aht21-case.md',
-      'skills/platform/platform_os/references/osal-freertos-case.md',
+      'skills/platform/platform_os/references/platform-os-freertos-case.md',
       'skills/tools/tools-observability/references/debugcomponent-rtt-case.md'
     ]) {
       expect(fs.existsSync(path.join(ROOT, relativePath))).toBe(true);
@@ -139,8 +154,9 @@ describe('embedded architecture skill contracts', () => {
     expect(adapterGuide).not.toContain('Adapter 才调用 HAL');
     expect(driverGuide).toContain('START、STOP、ACK、SDA 方向、总线锁和临界区不注入 Driver');
     expect(handlerGuide).toContain('必须先在当前 OSAL Port');
-    expect(freertosMap).toContain('os_task_create_impl');
-    expect(freertosMap).not.toContain('os_impl_task_create');
+    expect(freertosMap).toContain('impl_os_task_create');
+    const removedFunctionName = ['os', 'task', 'create', 'impl'].join('_');
+    expect(freertosMap).not.toContain(removedFunctionName);
   });
 
   test('keeps repository-relative BSP adapter script paths valid', () => {

@@ -53,7 +53,7 @@ description: |
 |----|---------|---------|
 | **Platform** | 外设初始化编排、引脚配置 | `user_periph_setup.c`、`board_init.c` |
 | **Driver** | Adapter 绑定或具体硬件驱动 | `impl_*_port.c`（legacy `drv_adapter_port_*.c`）、`*_driver.c`、`lcd_*.c` |
-| **OS** | OS 抽象层、FreeRTOS 绑定 | `os_adapter/`、`osal.h`、`os_impl_*.c` |
+| **OS** | OS 抽象层、FreeRTOS 绑定 | `os_adapter/`、`platform_os.h`、`impl_os_*.c` |
 | **Middleware** | 框架 port 层、协议栈端口 | `lv_port_*.c`、`ble_*.c` |
 | **APP** | 业务逻辑、状态机、任务、UI | `main.c`、`manager/`、`task/`、`logic/`、`ui_layout/` |
 
@@ -98,25 +98,25 @@ description: |
 
 | 检查项 | 评估标准 | 判定 |
 |--------|---------|------|
-| `osal.h` 存在 | 有统一的 OSAL 头文件 | 有→✅ / 无→❌ |
-| `os_impl_*.c` 存在 | 有具体 RTOS 的实现文件 | 有→✅ / 无→❌ |
-| OSAL API 覆盖度 | 至少 6 个核心 API | 全有→✅ / 缺→⚠️ |
+| `platform_os.h` 存在 | 有统一的 Platform OS 头文件 | 有→✅ / 无→❌ |
+| `impl_os_*.c` 存在 | 有具体 RTOS 的实现文件 | 有→✅ / 无→❌ |
+| Platform OS API 覆盖度 | 至少 6 个核心 API | 全有→✅ / 缺→⚠️ |
 | 业务代码不越层 | `app/**/*.c` 中不出现 `xTask`/`xSemaphore`/`vTask` 等 | 无直接调用→✅ / 有→❌ |
 | `FreeRTOSConfig.h` | 有且核心参数配置正确 | 有→✅ / 无→⚠️ |
 
 **越层检查的具体做法**：在 `Src/app/` 中 grep `xTask|vTask|xSemaphore|xQueue|vPort`，命中即 ❌。
 
-**OSAL API 覆盖度速查表**（按业务代码实际使用扫描）：
+**Platform OS API 覆盖度速查表**（按业务代码实际使用扫描）：
 
 | API | 业务是否用到 | OSAL 提供 | 状态 |
 |-----|:---:|:---:|:---:|
-| `osal_task_create` | ☐ | ☐ | — |
-| `osal_task_delay` | ☐ | ☐ | — |
-| `osal_task_start` | ☐ | ☐ | — |
-| `osal_sema_*` (create/take/give) | ☐ | ☐ | — |
-| `osal_mutex_*` | ☐ | ☐ | — |
-| `osal_queue_*` | ☐ | ☐ | — |
-| `osal_heap_malloc/free` | ☐ | ☐ | — |
+| `platform_os_task_create` | ☐ | ☐ | — |
+| `platform_os_task_delay` | ☐ | ☐ | — |
+| `platform_os_task_start` | ☐ | ☐ | — |
+| `platform_os_sema_*` (create/take/give) | ☐ | ☐ | — |
+| `platform_os_mutex_*` | ☐ | ☐ | — |
+| `platform_os_queue_*` | ☐ | ☐ | — |
+| `platform_os_heap_malloc/free` | ☐ | ☐ | — |
 
 #### Middleware 层
 
@@ -136,7 +136,7 @@ description: |
 | Manager 纯 C | 不 include 任何 OS/HAL/驱动头文件 | 是→✅ / 否→❌ |
 | Task 间通信 | 用信号量/队列，不直接调对方函数 | 异步→✅ / 直接调→⚠️ |
 | Logic 可测试 | 只调标准 C 库（`<math.h>`、`<string.h>` 等） | 是→✅ / 否→❌ |
-| 启动任务自毁 | `start_tasks()` 完成后 `osal_task_delete(NULL)` | 有→✅ / 无→⚠️ |
+| 启动任务自毁 | `start_tasks()` 完成后 `platform_os_task_delete(NULL)` | 有→✅ / 无→⚠️ |
 | UI 与业务分离 | `ui_layout/` 只调 LVGL API | 是→✅ / 混合→⚠️ |
 
 #### 横向关注点
@@ -240,7 +240,7 @@ description: |
 |------|------|------------|
 | **单向依赖** | 上层可调下层，下层不能调上层 | grep 反向 include |
 | **横向隔离** | 同层模块通过接口通信，不直接耦合 | 检查同层 .c 是否互相 include |
-| **跨层禁止** | APP 不能跳过 Service 调 Platform/OS/BSP/Driver | grep APP 层是否含 `platform_*`、`osal_*`、`xTask`/`lcd_*` |
+| **跨层禁止** | APP 不能跳过 Service 调 Platform/OS/BSP/Driver | grep APP 层是否含 `platform_*`、`platform_os_*`、`xTask`/`lcd_*` |
 | **配置只读** | 所有层读 `custom_config.h`，它不读任何层 | 检查 `custom_config.h` 的 `#include` |
 
 ### Adapter 三段式速查

@@ -44,7 +44,7 @@
 | Driver 公共头包含 `debug.h` 并绑定 EasyLogger 宏。 | 设备协议被具体观测后端污染。 | 注入可选 trace Ops，或由上层记录状态码。 |
 | Handler 事件包含调用方输出指针。 | 异步执行时可能出现指针生命周期问题。 | 队列消息拥有值或稳定副本，完成回调传值。 |
 | Port 注释同时把 timeout 描述为 ticks，而 Handler 接口写 ms。 | 超时单位歧义。 | API 名或文档固定 `_ms`/`_ticks`，边界只转换一次。 |
-| `osal_queue_receive` 输出缓冲区被声明为 `const void *`。 | const 方向错误，Port 需要强制转换。 | OSAL 接口修正为可写输出参数并补回归测试。 |
+| `platform_os_queue_receive` 输出缓冲区被声明为 `const void *`。 | const 方向错误，Port 需要强制转换。 | OSAL 接口修正为可写输出参数并补回归测试。 |
 | Handler 临界区接口没有保存 ISR/任务锁 token。 | 某些 RTOS/架构不能正确恢复先前屏蔽状态。 | 使用带 token 的 enter/exit，或只在任务上下文用 mutex。 |
 
 ## 目标调用链
@@ -62,7 +62,7 @@ Port 的构造动作可以分别指向 Handler 和 Driver；它不改变运行�
 
 ## 补充证据：Flash 与 APP Facade
 
-- 用户提供的 `drv_adapter_port_flash.c:199-200` 使用 `osal_task_create(..., flash_handler_thread, ...)`。Port 创建并注入 Handler OSAL 资源是允许的；`flash_handler_thread` 的定义、循环和业务处理必须位于 Handler。
+- 用户提供的 `drv_adapter_port_flash.c:199-200` 使用 `platform_os_task_create(..., flash_handler_thread, ...)`。Port 创建并注入 Handler Platform OS 资源是允许的；`flash_handler_thread` 的定义、循环和业务处理必须位于 Handler。
 - `User_Task/*/Platform/*_port/` 中 `temphumi_read_temp() → drv_adapter_temphumi_read_temp()` 一类代码是 APP Facade，只做上层转发，不能视为 BSP Port。本节是补充案例，不属于 `eb5f38b` 固定提交事实。
 
 ## 协议模式配置

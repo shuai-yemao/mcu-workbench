@@ -14,7 +14,7 @@ description: Impl 落地：板级组合根——构造实例、注入 Ops、资�
 - 允许：持有具体 Driver/Handler/平台对象，选择并绑定平台后端，并创建后注入 Handler 所需 OSAL 任务、队列或同步资源。
 - 禁止：放置设备命令、寄存器语义、协议状态机、软件 IIC/SPI 位时序，或在 Impl 定义 Handler 的任务入口、业务循环、重试、缓存更新和回调逻辑。
 - Handler 的业务缓存只能保留在 Handler 实例；组合根不得维护重复的 `latest`/`cache` 数据副本。
-- 先从目标工程公开 `osal.h` 确认 profile 声明的 mutex、queue、task 或时基 API；组合根创建资源、注入 Handle、在装配失败时回收。缺少该证据时只能输出带 `UNRESOLVED_OSAL_API` 的预览，不能虚构可编译 OSAL 名称。
+- 先从目标工程公开 `platform_os.h` 确认 profile 声明的 mutex、queue、task 或时基 API；组合根创建资源、注入 Handle、在装配失败时回收。缺少该证据时只能输出带 `UNRESOLVED_PLATFORM_OS_API` 的预览，不能虚构可编译 Platform OS 名称。
 - 对 context-first Ops，直接复制 `pf_*` 与 `p_context` 到下一层函数表；禁止函数指针强转和仅为签名转换而存在的桥接函数。
 - 生产组合根与 Fake 组合根必须注册同形函数表。生产实现绑定具体芯片/平台/OSAL，Fake 实现绑定 Fake Bus/时基/OSAL，接口不因测试而分叉。
 - GPIO 输出实现必须以 platform_mcu 公开头和板级 pin/极性证据构造上下文；裸 `extern` 回调或无说明的 `NULL` context 只能是带 `UNRESOLVED_GPIO_BINDING` 的预览。按阶段装配，任一步失败必须恢复先前注册状态。

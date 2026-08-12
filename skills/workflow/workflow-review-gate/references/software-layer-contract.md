@@ -59,7 +59,7 @@ Vendor（elog/RTT/HAL/FreeRTOS）→ 调用 → Impl port 文件 → 实现/注�
 
 ## OS 契约
 
-`osal_*` 是 Service/Impl 可见的 OS 抽象（`platform_os`）；`os_*_impl()` 是 Impl（impl_os）的 port 实现；原生 RTOS 头/API 不得越过 impl_os 的 port。`osal_internal_*.h` 仅是 Wrapper/Port 内部边界，不形成层。
+`platform_os_*` 是 Service/Impl 可见的 OS 抽象（`platform_os`）；`impl_os_*()` 是 Impl（impl_os）的 port 实现；原生 RTOS 头/API 不得越过 impl_os 的 port。`platform_os_internal_*.h` 仅是 Wrapper/Port 内部边界，不形成层。
 
 ## 验收边界
 
