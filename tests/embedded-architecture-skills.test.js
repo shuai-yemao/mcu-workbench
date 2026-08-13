@@ -103,6 +103,25 @@ describe('embedded architecture skill contracts', () => {
     expect(algorithms).toContain('不直接操作外设');
   });
 
+  test('keeps Middleware Platform-to-Impl exception scoped to implementation boundaries', () => {
+    const platform = read('skills/platform/platform_middleware/SKILL.md');
+    const impl = read('skills/impl/impl_middleware/SKILL.md');
+    const contract = read('skills/workflow/workflow-review-gate/references/software-layer-contract.md');
+
+    expect(platform).toContain('Platform→Impl 受限例外');
+    expect(platform).toContain('不出现在 Platform 公共头的 include、类型或宏中');
+    expect(platform).toContain('当前日志基线');
+    expect(platform).toContain('一个公共头');
+    expect(platform).toContain('platform_log.h');
+    expect(impl).toContain('单一 Port 文件职责');
+    expect(impl).toContain('impl_log_port.c/.h');
+    expect(impl).toContain('不复制、不格式化、不直接修改');
+    expect(impl).toContain('时间戳必须绑定到 Impl Port');
+    expect(impl).toContain('不引入 OS/FreeRTOS');
+    expect(contract).toContain('Middleware 受限例外');
+    expect(contract).toContain('不适用于 OS、BSP、MCU 或其他 Platform 子域');
+  });
+
   test('keeps public documentation aligned with the 45 catalog and 43 canonical entries', () => {
     const documents = [
       'README.md', 'CLAUDE.md', 'docs/skills-migration.md', 'docs/codex-adaptation.md',
