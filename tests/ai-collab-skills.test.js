@@ -14,6 +14,9 @@ describe('AI collaboration skills', () => {
     expect(review).toContain('构建');
     expect(review).toContain('review-gates.md');
     expect(review).toContain('style-profile.md');
+    expect(review).toContain('格式与注释门禁');
+    expect(review).toContain('80 列');
+    expect(review).toContain('目标工程 `.clang-format` 只作为补充证据');
   });
 
   test('keeps a read-only review boundary with fixed report fields', () => {
@@ -29,6 +32,8 @@ describe('AI collaboration skills', () => {
     expect(review).toContain('不产生替换代码或修复补丁');
     expect(review).toContain('静态检查');
     expect(review).toContain('实物验证');
+    expect(review).toContain('格式或注释任一失败');
+    expect(review).toContain('最终门禁结论');
 
     // 固定报告字段：范围与证据、严重级别、定位、影响、修复建议、验证与阻塞项
     for (const field of [
@@ -42,6 +47,10 @@ describe('AI collaboration skills', () => {
     expect(contract).toContain('审查基线');
     expect(contract).toContain('profile');
     expect(contract).toContain('未验证假设');
+    expect(contract).toContain('格式检查证据');
+    expect(contract).toContain('注释完整性证据');
+    expect(contract).toContain('禁止自动运行写回式格式化');
+    expect(contract).toContain('插件 `tools-quality/style-profile` 优先');
   });
 
   test('only delegates to active agents and never claims board-level verification from static checks', () => {
