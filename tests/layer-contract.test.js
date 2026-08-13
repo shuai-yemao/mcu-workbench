@@ -3,7 +3,11 @@ const os = require('os');
 const path = require('path');
 const { generateBspDriver, generateCorePeripheral } = require('../lib/generator');
 const { validateArchitectureContract } = require('../lib/architecture-contract');
-const { parseArgs, validateCommentLanguage, validateLayerContract } = require('../scripts/validate-layer-contract');
+const {
+  parseArgs,
+  validateCommentLanguage,
+  validateLayerContract
+} = require('../scripts/validate-layer-contract');
 
 async function createSlice() {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mcu-layer-contract-'));
@@ -39,6 +43,50 @@ describe('generated layer contract validator', () => {
   test('accepts a generated Core and BSP slice', async () => {
     const root = await createSlice();
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
+  });
+
+  test('rejects a generated function when its Doxygen block is removed', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => content
+      .replace(/\/\*\*\n \* @brief 以毫秒超时执行同步事务。[\s\S]*?\*\//, ''));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_FUNCTION_DOC',
+        file: '03_Platform/platform_mcu/Inc/platform_spi.h'
+      })
+    ]));
+  });
+
+  test('rejects a generated source when its step comments are removed', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => (
+      content.replace(/\/\* [^\n]*-{3,} [^\n]*\*\//g, '')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_SOURCE_STEP_DOC',
+        file: '03_Platform/platform_mcu/Src/platform_spi.c'
+      })
+    ]));
+  });
+
+  test('rejects a generated macro when its preceding comment is removed', async () => {
+    const root = await createSlice();
+    await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => {
+      const lines = content.split(/\r?\n/);
+      const index = lines.findIndex((line) => line.includes('#define IMPL_W25Q64_DEFAULT_TIMEOUT_MS'));
+      lines.splice(index - 1, 1);
+      return lines.join('\n');
+    });
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_MACRO_DOC',
+        file: '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h'
+      })
+    ]));
   });
 
   test('accepts an SSD1306 display slice with OSAL mutex injection and style profile documentation', async () => {

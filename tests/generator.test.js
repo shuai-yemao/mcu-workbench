@@ -102,7 +102,7 @@ describe('Generator Module', () => {
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
       .toContain('osal_mutex_create');
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
-      .toContain('if (platform_display_wrapper_register(&wrapper_ops) != 0) goto cleanup_mutex;');
+      .toMatch(/if \(platform_display_wrapper_register\(&wrapper_ops\) != 0\)\s+goto cleanup_mutex;/);
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
       .not.toMatch(/\(\s*int32_t\s*\(\s*\*/);
     expect(byPath['04_Impl/impl_bsp/display/SSD1306/Inc/impl_ssd1306_config.h'])
@@ -114,5 +114,28 @@ describe('Generator Module', () => {
     }
     expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_wrapper.h'])
       .toContain('void *p_context');
+  });
+
+  test('formats every generated file with the current header date and 80-column layout', async () => {
+    const files = [
+      ...(await generateCorePeripheral('spi', 'stm32f4')),
+      ...(await generateBspDriver({
+        deviceType: 'externflash', device: 'W25Q64', cores: ['spi'], platform: 'stm32f4'
+      })),
+      ...(await generateBspDriver({
+        deviceType: 'display', device: 'SSD1306', cores: ['i2c'], platform: 'stm32f4'
+      }))
+    ];
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    for (const file of files) {
+      const lines = file.content.split(/\r?\n/);
+      expect(file.content).toContain(`@version V1.0 ${currentDate}`);
+      expect(lines.some((line) => line.length > 80)).toBe(false);
+      expect(lines.some((line) => line.includes('\t'))).toBe(false);
+      expect(lines.some((line) => /typedef\s+(?:struct|enum)\s*\{/.test(line))).toBe(false);
+      expect(lines.some((line) => /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/.test(line))).toBe(false);
+      expect(lines.some((line) => /\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78)).toBe(false);
+    }
   });
 });

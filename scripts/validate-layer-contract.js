@@ -86,6 +86,138 @@ function findFunctionDefinitions(content) {
   return definitions;
 }
 
+function splitFunctionParameters(parameters) {
+  const result = [];
+  let start = 0;
+  let depth = 0;
+  for (let index = 0; index < parameters.length; index += 1) {
+    if (parameters[index] === '(') depth += 1;
+    if (parameters[index] === ')') depth -= 1;
+    if (parameters[index] === ',' && depth === 0) {
+      result.push(parameters.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  const last = parameters.slice(start).trim();
+  if (last) result.push(last);
+  return result.filter((parameter) => parameter !== 'void' && parameter !== '...');
+}
+
+function parameterName(parameter) {
+  const match = parameter.replace(/\s*=.*$/, '').trim().match(/([A-Za-z_]\w*)(?:\s*\[[^\]]*\])?$/);
+  return match ? match[1] : null;
+}
+
+function findFunctionComments(content, start) {
+  const prefix = content.slice(0, start);
+  const commentEnd = prefix.lastIndexOf('*/');
+  if (commentEnd < 0) return '';
+  const afterComment = prefix.slice(commentEnd + 2);
+  if (/[^\s]/.test(afterComment)) return '';
+  const commentStart = prefix.lastIndexOf('/**', commentEnd);
+  return commentStart >= 0 ? prefix.slice(commentStart, commentEnd + 2) : '';
+}
+
+function findFunctionContracts(content) {
+  const code = maskCommentsAndStrings(content);
+  const expression = /(^|\n)[ \t]*(?:(?:static|extern)\s+)?(?:const\s+)?[A-Za-z_]\w*(?:[ \t]+|\s*\*)+([A-Za-z_]\w*)\s*\(([\s\S]*?)\)\s*(;|\{)/g;
+  const contracts = [];
+  for (const match of code.matchAll(expression)) {
+    const name = match[2];
+    if (['if', 'for', 'while', 'switch', 'return', 'void'].includes(name)
+      || /\(\s*\*\s*\w+\s*\)/.test(match[0])) continue;
+    const lineStart = (match.index || 0) + (match[1] === '\n' ? 1 : 0);
+    const nameStart = lineStart + match[0].slice(lineStart - (match.index || 0)).indexOf(name);
+    const terminator = match[4];
+    const openBrace = terminator === '{' ? (match.index || 0) + match[0].lastIndexOf('{') : -1;
+    let body = '';
+    if (openBrace >= 0) {
+      let depth = 0;
+      let cursor = openBrace;
+      for (; cursor < code.length; cursor += 1) {
+        if (code[cursor] === '{') depth += 1;
+        else if (code[cursor] === '}') {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+      }
+      body = content.slice(openBrace + 1, cursor);
+    }
+    contracts.push({
+      name,
+      start: lineStart,
+      returnType: code.slice(lineStart, nameStart).trim(),
+      parameters: match[3],
+      body,
+      comment: findFunctionComments(content, lineStart),
+      isDefinition: terminator === '{'
+    });
+  }
+  return contracts;
+}
+
+function validateCommentCompleteness(files, errors) {
+  for (const file of Object.values(files)) {
+    if (!file.content.includes('@version')) continue;
+    const contracts = findFunctionContracts(file.content);
+    for (const contract of contracts) {
+      if (!contract.comment || !/@brief\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_DOC', file.relative,
+          `Function ${contract.name} must have a Doxygen @brief comment.`);
+        continue;
+      }
+      for (const parameter of splitFunctionParameters(contract.parameters)) {
+        const name = parameterName(parameter);
+        if (!name) continue;
+        if (!new RegExp(`@param\\s+[^\\n]*\\b${name}\\b`).test(contract.comment)) {
+          addError(errors, 'LAYER_FUNCTION_PARAM_DOC', file.relative,
+            `Function ${contract.name} must document parameter ${name} with @param.`);
+        }
+      }
+      if (!/\bvoid\b/.test(contract.returnType) || /\*/.test(contract.returnType)) {
+        if (!/@retval\b/.test(contract.comment)) {
+          addError(errors, 'LAYER_FUNCTION_RETVAL_DOC', file.relative,
+            `Function ${contract.name} must document its return value with @retval.`);
+        }
+      }
+      const source = `${contract.name} ${contract.parameters} ${contract.body}`;
+      if (/from_isr|\b(?:irq|isr)\b/i.test(source) && !/@warning\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_WARNING_DOC', file.relative,
+          `Function ${contract.name} must document its ISR restriction with @warning.`);
+      }
+      if (/timeout|transfer|flush|\block\b|\bunlock\b/i.test(source) && !/@note\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_NOTE_DOC', file.relative,
+          `Function ${contract.name} must document blocking or timeout behavior with @note.`);
+      }
+      if (/dma/i.test(source) && !/@warning\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_WARNING_DOC', file.relative,
+          `Function ${contract.name} must document DMA prerequisites with @warning.`);
+      }
+    }
+    if (file.relative.endsWith('.c') && !/\/\*[\s\S]*-{3,}/.test(file.content)) {
+      addError(errors, 'LAYER_SOURCE_STEP_DOC', file.relative,
+        'Generated source must contain at least one dashed step comment for key logic.');
+    }
+    const typePattern = /typedef\s+(?:enum|struct)\s*\{/g;
+    for (const match of file.content.matchAll(typePattern)) {
+      const preceding = file.content.slice(0, match.index);
+      const comment = preceding.match(/\/\*[\s\S]*?\*\/\s*$/);
+      if (!comment || !/@brief\b/.test(comment[0])) {
+        addError(errors, 'LAYER_TYPE_DOC', file.relative, 'Enum or struct typedef must have a Doxygen @brief comment.');
+      }
+    }
+    const lines = file.content.split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!/^\s*#define\s+[A-Z][A-Z0-9_]*\b/.test(line) || /_H\b/.test(line)) return;
+      const previous = lines[index - 1] || '';
+      if (!/^\s*\/\*/.test(previous) || /\b(?:Includes|Public|Private|Functions|Types|Defines|State)\b/.test(previous)) {
+        addError(errors, 'LAYER_MACRO_DOC', file.relative,
+          `Macro on line ${index + 1} must have a preceding block comment.`);
+      }
+    });
+  }
+}
+
 function createLayerError(message) {
   const error = new Error(message);
   error.code = 'LAYER';
@@ -157,15 +289,12 @@ function extractCommentText(content) {
 function validateCommentLanguage(files, errors, { rulePrefix = 'LAYER', skipRoles = ['coreHeader', 'coreSource'] } = {}) {
   for (const [role, file] of Object.entries(files)) {
     if (skipRoles.includes(role)) continue;
-    const text = extractCommentText(file.content)
-      .replace(/\/\*|\*\/|\/\//g, ' ')
-      .replace(/^[*\s-]+|[*\s-]+$/gm, ' ')
-      .replace(/\s+/g, ' ')
-      .trim();
-    if (!text) continue;
-    const hasCjk = /[\u4e00-\u9fff]/.test(text);
-    const hasEnglishWord = /[A-Za-z]{2,}/.test(text);
-    if (hasEnglishWord && !hasCjk) {
+    const englishOnly = [...file.content.matchAll(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g)].some((match) => {
+      const text = match[0].replace(/\/\*|\*\/|\/\//g, ' ').replace(/\s+/g, ' ').trim();
+      if (/^(?:Includes|Public|Private|Functions|Types|Defines|State|Composition|Composition Root|Functions|Defines)\b/.test(text)) return false;
+      return /[A-Za-z]{2,}/.test(text) && !/[\u4e00-\u9fff]/.test(text);
+    });
+    if (englishOnly) {
       addError(errors, `${rulePrefix}_COMMENT_LANGUAGE`, file.relative,
         'Generated comments must be written in Chinese by default (style-profile rule 8). Use English only when the project explicitly requires it.');
     }
@@ -182,6 +311,42 @@ function validateSections(files, errors) {
         }
       }
     }
+  }
+}
+
+function validateGeneratedStyle(files, errors) {
+  const datePattern = new RegExp(`@version\\s+V1\\.0\\s+${new Date().toISOString().slice(0, 10)}`);
+  const functionDefinition = /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/;
+  for (const file of Object.values(files)) {
+    const lines = file.content.split(/\r?\n/);
+    const isGeneratedFile = file.content.includes('@version');
+    if (!isGeneratedFile) continue;
+    if (file.content.includes('@version') && !datePattern.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DATE', file.relative,
+        'Generated file header must contain the current date in @version.');
+    }
+    lines.forEach((line, index) => {
+      if (line.includes('\t')) {
+        addError(errors, 'LAYER_FORMAT_TAB', file.relative,
+          `Generated source must not contain TAB characters (line ${index + 1}).`);
+      }
+      if (line.length > 80) {
+        addError(errors, 'LAYER_FORMAT_WIDTH', file.relative,
+          `Generated source must not exceed 80 columns (line ${index + 1}).`);
+      }
+      if (/typedef\s+(?:struct|enum)\s*\{/.test(line)) {
+        addError(errors, 'LAYER_FORMAT_TYPE_BRACE', file.relative,
+          `Type definition brace must be on its own line (line ${index + 1}).`);
+      }
+      if (functionDefinition.test(line)) {
+        addError(errors, 'LAYER_FORMAT_FUNCTION_BRACE', file.relative,
+          `Function brace must be on its own line (line ${index + 1}).`);
+      }
+      if (/\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78) {
+        addError(errors, 'LAYER_FORMAT_TAIL_COMMENT', file.relative,
+          `Trailing comment terminator must be aligned to column 80 (line ${index + 1}).`);
+      }
+    });
   }
 }
 
@@ -358,6 +523,8 @@ function validateLayerContract({ root, core, deviceType, device, slice = 'all' }
   const resolvedRoot = path.resolve(root);
   const files = readSlice(resolvedRoot, paths, errors);
   validateSections(files, errors);
+  validateGeneratedStyle(files, errors);
+  validateCommentCompleteness(files, errors);
   validateCommentLanguage(files, errors);
   validateCore(files, errors);
   validateWrapper(files, errors);
@@ -446,11 +613,14 @@ module.exports = {
   expectedPaths,
   extractCommentText,
   filterSlice,
+  findFunctionContracts,
   findFunctionDefinitions,
   maskCommentsAndStrings,
   parseArgs,
+  validateCommentCompleteness,
   runSelfCheck,
   validateCommentLanguage,
+  validateGeneratedStyle,
   validateFourTuple,
   validateHalDriver,
   validateHandler,
