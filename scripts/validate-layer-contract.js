@@ -125,6 +125,8 @@ function findFunctionContracts(content) {
   for (const match of code.matchAll(expression)) {
     const name = match[2];
     if (['if', 'for', 'while', 'switch', 'return', 'void'].includes(name)
+      || /\breturn\s+[A-Za-z_]\w*\s*\(/.test(match[0])
+      || /^\s*(?:if|for|while|switch)\b/.test(match[0])
       || /\(\s*\*\s*\w+\s*\)/.test(match[0])) continue;
     const lineStart = (match.index || 0) + (match[1] === '\n' ? 1 : 0);
     const nameStart = lineStart + match[0].slice(lineStart - (match.index || 0)).indexOf(name);
@@ -159,6 +161,12 @@ function findFunctionContracts(content) {
 function validateCommentCompleteness(files, errors) {
   for (const file of Object.values(files)) {
     if (!file.content.includes('@version')) continue;
+    for (const tag of ['@file', '@brief', '@author', '@version', '@par dependencies']) {
+      if (!file.content.includes(tag)) {
+        addError(errors, 'LAYER_FILE_DOC', file.relative,
+          `Generated file header must contain ${tag}.`);
+      }
+    }
     const contracts = findFunctionContracts(file.content);
     for (const contract of contracts) {
       if (!contract.comment || !/@brief\b/.test(contract.comment)) {
@@ -197,6 +205,10 @@ function validateCommentCompleteness(files, errors) {
     if (file.relative.endsWith('.c') && !/\/\*[\s\S]*-{3,}/.test(file.content)) {
       addError(errors, 'LAYER_SOURCE_STEP_DOC', file.relative,
         'Generated source must contain at least one dashed step comment for key logic.');
+    }
+    if (file.relative.endsWith('.c') && /入口检查与核心处理/.test(file.content)) {
+      addError(errors, 'LAYER_SOURCE_STEP_DOC', file.relative,
+        'Generated source must use a semantic step comment instead of the generic placeholder.');
     }
     const typePattern = /typedef\s+(?:enum|struct)\s*\{/g;
     for (const match of file.content.matchAll(typePattern)) {

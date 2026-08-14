@@ -138,4 +138,18 @@ describe('Generator Module', () => {
       expect(lines.some((line) => /\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78)).toBe(false);
     }
   });
+
+  test('generates complete semantic comments without documenting calls as functions', async () => {
+    const files = await generateBspDriver({
+      deviceType: 'externflash', device: 'W25Q64', cores: ['spi'], platform: 'stm32f4'
+    });
+    const port = files.find((file) => file.path.endsWith('impl_externflash_port.c')).content;
+    const driver = files.find((file) => file.path.endsWith('impl_w25q64_driver.c')).content;
+
+    expect(driver).toContain('@note 缩进使用 4 个空格，禁止使用 TAB。');
+    expect(driver).toContain('@brief 读取设备标识。');
+    expect(driver).toContain('校验依赖后调用已注入的底层操作。');
+    expect(driver).not.toContain('入口检查与核心处理');
+    expect(port).not.toMatch(/\{\s*\/\*\*[^]*?\*\/\s*return\s+[A-Za-z_]\w*\(/);
+  });
 });

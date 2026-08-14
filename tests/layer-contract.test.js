@@ -72,6 +72,19 @@ describe('generated layer contract validator', () => {
     ]));
   });
 
+  test('rejects a generated source that keeps the generic step placeholder', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => content
+      .replace(/\/\* [^\n]*-{3,} [^\n]*\*\//, '/* 入口检查与核心处理 ---------------------------------------------- */'));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_SOURCE_STEP_DOC',
+        file: '03_Platform/platform_mcu/Src/platform_spi.c'
+      })
+    ]));
+  });
+
   test('rejects a generated macro when its preceding comment is removed', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => {
@@ -455,7 +468,8 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => content
       .replace('生成的 Platform、Impl 或公共接口', 'generated Platform, Impl, or public interfaces')
       .replace('生成的切片参与已声明的分层契约。', 'Generated slice participates in the declared layered contract.')
-      .replace('W25Q64 器件配置。', 'W25Q64 device configuration.'));
+      .replace('W25Q64 器件配置。', 'W25Q64 device configuration.')
+      .replace('缩进使用 4 个空格，禁止使用 TAB。', 'Use four spaces and no TAB characters.'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
         ruleId: 'LAYER_COMMENT_LANGUAGE',
