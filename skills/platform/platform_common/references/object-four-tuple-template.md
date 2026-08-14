@@ -1,6 +1,6 @@
 # 对象四元组模板（base + cfg / ctx / data / ops）
 
-> v2.0（2026-08-10）：布局规则修正（ADR-013）——cfg/ops = const 指针（共享）、ctx/data = 内联值（独有）；新增两层 ops 签名、通用/厂商双名、四件套命名约定。
+> v2.1（2026-08-15）：布局规则修正（ADR-013）——cfg/ops = const 指针（共享）、ctx/data = 内联值（独有）；明确对象 Ops 与纯能力 Ops 的边界，BSP 不再生成 Wrapper。
 
 ## 为什么需要模板
 
@@ -116,18 +116,18 @@ platform_err_t svc_init(svc_t *p_svc, const char *p_name, const svc_cfg_t *p_cfg
 }
 ```
 
-## 两层 ops 签名（ADR-013）
+## Ops 签名与对象化边界
 
-**模型 ops 与转发表 ops 是两层，签名不同、用途不同、并存不冲突：**
+不同 Platform 能力可以采用不同的 Ops 形态，关键是先判定是否承载对象身份；不要为了抽象层次额外引入 BSP Wrapper：
 
 | 层 | 位置 | 首参 | 命名 | 调用方 |
 |---|---|---|---|---|
-| **模型 ops**（设备行为接口） | 模型头（`<type>_ops_t`） | **具体设备指针**（`imu_device_t *p_dev`） | 裸名（`read`/`sleep`） | **Service 层**（类型安全直接调用） |
-| **转发表 ops**（wrapper 转发） | wrapper（`platform_<type>_ops_t`，`pf_*`） | **`void *context`** | `pf_` 前缀（`pf_read`） | **Impl 注册**、manager 统一驱动 |
+| **对象行为 Ops** | 设备/服务模型头（`<type>_ops_t`） | **具体对象指针**（如 `imu_device_t *p_dev`） | 能力名（`read`/`sleep`） | Service 或已确认的对象调用方 |
+| **纯能力 Ops** | MCU/OS/Middleware 公共接口 | **`void *context`** 或能力专用句柄 | `pf_*` 前缀 | Platform 公共 API 经 Impl 注入 |
 
-- 模型 ops 用具体类型：类型安全、自文档，Service 调用零 cast。
-- 转发表用 `void *`：函数签名统一，Impl 可批量注册、manager 可统一遍历驱动。
-- 两者通过 wrapper 衔接：wrapper 的 `pf_read(void *ctx, ...)` 内部 cast 回具体设备指针后调用模型 ops。
+- 对象 Ops 用具体类型：类型安全、自文档，调用方无需 cast。
+- 纯能力 Ops 可以用 `void *context` 隔离后端句柄，但必须在接口注释中说明上下文所有权、生命周期和线程边界。
+- 设备模型直接由 Impl/组合根绑定并交给公共管理器，不经过额外的 BSP Wrapper 转发表或注册层。
 
 ## 通用类型 + 型号别名（可选约定，ADR-013）
 
@@ -148,7 +148,7 @@ typedef imu_data_t mpu6050_data_t;  /* 上层用 imu_* 通用名，换型号只�
 
 - 在具体对象字段里直接放 HAL 句柄、RTOS 句柄或厂商类型（如 `I2C_HandleTypeDef`、`GPIO_TypeDef`、`TaskHandle_t`）——须通过 `ctx` 持有 `void *` 隔离上下文。
 - `cfg` 声明为非常量——静态配置应 `const`。
-- `ops` 函数指针签名与两层 ops 约定不一致（模型 ops 首参非具体设备指针、转发表首参非 `void *context`）——见"两层 ops 签名"。
+- `ops` 函数指针签名与对象/纯能力 Ops 约定不一致（对象 Ops 首参非具体对象指针，或纯能力 Ops 未说明 `void *context` 的所有权与生命周期）。
 - 把 `base` 放在非首字段——破坏偏移 0 与向上转型假设。
 - 服务对象重复声明 `cfg / ctx / data / ops` 四槽——`platform_service_t` 已内嵌，重复声明造成歧义。
 - 头文件 guard 用双下划线前缀（`__XXX_H__`）——双下划线保留给编译器，用 `XXX_H`（如 `PLATFORM_IMU_MODEL_H`）。
@@ -156,7 +156,7 @@ typedef imu_data_t mpu6050_data_t;  /* 上层用 imu_* 通用名，换型号只�
 
 ## 边界与判定标准（Platform 生成产物为 MUST）
 
-对 Platform 层生成产物（含 platform_bsp / platform_mcu / platform_os / platform_middleware 的模型头、wrapper 与接口文件），本模板是**必须遵守**的规范，不是可选项。
+对 Platform 层生成产物（含 platform_bsp / platform_mcu / platform_os / platform_middleware 的模型头与接口文件），本模板是**必须遵守**的规范，不是可选项；BSP 不再生成 Wrapper 文件。
 
 ### 判定标准
 
@@ -173,4 +173,4 @@ typedef imu_data_t mpu6050_data_t;  /* 上层用 imu_* 通用名，换型号只�
 | 仅纯粹行为函数表（`pf_*` + `p_context`，无身份/生命周期字段） | 否（豁免） | 头注释显式声明「纯转发、不承载对象身份」 |
 | 非对象化的纯接口（如 `platform_i2c_t` ops 表 + `backend_context`） | 否（豁免） | 同上，须显式声明 |
 
-示例：wrapper 若定义 `platform_led_t`（首字段 `platform_device_t`）→ 必须套四元组；wrapper 仅提供 `platform_led_ops_t` 转发表 → 豁免但须显式声明。设备模型头（`platform_<type>_model.h`）内定义的设备 struct → 必须套四元组，且**只含类型契约与 init 声明，不含转发实现**（见 platform_bsp 输出契约）。
+示例：设备模型头（`platform_<type>_model.h`）内定义的设备 struct → 必须套四元组；纯 `platform_<type>_ops_t` 能力表若不承载身份，可按纯能力 Ops 规则豁免，但必须显式声明“纯转发、不承载对象身份”。模型头只含类型契约与 init 声明，具体绑定和协议实现交给 Impl。

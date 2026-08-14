@@ -1,16 +1,16 @@
-# 日志与检测跨层流转契约（diag 子域）
+# 日志与检测跨层流转契约（跨 Platform 参考）
 
 > 版本：v1.0（2026-08-09）| 依据：软件层契约 v2.0（Port 注入模型）、ADR-001（platform_common 四子域、P2 断言独立于日志）
-> 范围：日志（`platform_log`）与检测（`platform_assert` / `platform_reset_reason` / `platform_hardfault`）在五层之间的流转方式。
+> 范围：日志（`platform_middleware/platform_log`）与检测（Common 的 `platform_assert`、MCU 的 `platform_reset_reason` / `platform_hardfault`）在五层之间的流转方式。
 
 ## 定位
 
-日志与检测是**横切可观测原语**：机制在 Platform（`platform_common/diag`），策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。
+日志与检测是**横切可观测原语**：日志机制在 `platform_middleware`，断言机制在 `platform_common/diag`，复位原因与 HardFault 契约在 `platform_mcu`；策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。
 
 ## 流转三方向
 
 ```text
-调用向下：App/Service/Impl ──日志宏──► platform_log（契约内核）
+调用向下：App/Service/Impl ──日志宏──► platform_middleware/platform_log（契约内核）
 注入由 Impl：Impl 契约适配/受审查 registry ──► Vendor Port ──► Vendor 底座
 输出到底：platform_log 转发 ──► Impl 通道 ──► elog / SEGGER RTT / HAL UART
 ```
@@ -29,7 +29,7 @@
 | App | `SERVICE_LOG_*`（经 `service_log` 门面） | 禁 include `platform_log.h`（D8：App 只调 Service） |
 | Service 其他 | `PLATFORM_LOG_*` 直调 | 依赖 Platform 接口，合法 |
 | Impl | `PLATFORM_LOG_*` 直调 | 依赖 Platform 接口头，合法 |
-| Platform 内部 | `PLATFORM_LOG_*` 自用 | 机制日志 |
+| Platform 内部 | `PLATFORM_LOG_*` 自用 | 机制日志；日志契约属于 `platform_middleware` |
 | Vendor | — | **永不反向**；elog 等中间件自身日志由 Impl port 桥接进平台通道 |
 
 ## platform_log.h 契约要点（工程 V1.0 已验证）
@@ -69,4 +69,4 @@
 | `platform_log` | `platform_log.c` + `impl_middleware/elog/impl_elog_log.c` | easylogger |
 | `platform_assert_output` | `impl_middleware/impl_assert_output.c` | SEGGER RTT |
 | elog 底层移植 | `impl_middleware/impl_elog_port.c`（Vendor 面向） | easylogger |
-| `platform_reset_reason` / `platform_hardfault` | Impl 芯片 Port（当前未设独立 MCU 子域，留待后续） | CMSIS/寄存器 |
+| `platform_reset_reason` / `platform_hardfault` | `impl_mcu` 芯片 Port | CMSIS/寄存器 |

@@ -18,7 +18,7 @@ Platform 定义稳定的 `platform_os_*` 公共接口；规范上错误码应归
 - 生成代码格式、命名和注释：`../../tools/tools-quality/references/style-profile.md`
 - 生成代码审查门禁：`../../tools/tools-quality/references/review-gates.md`
 - 软件层契约：`../../workflow/workflow-review-gate/references/software-layer-contract.md`
-- 当前工程的公共头、`platform_os_internal_*.h`、Wrapper `.c`、Impl `.c` 和 RTOS 配置
+- 当前工程的公共头、`platform_os_internal_*.h`、Platform OS 转发 `.c`、Impl `.c` 和 RTOS 配置
 
 ## 生成自检门禁
 
@@ -37,14 +37,14 @@ Platform 定义稳定的 `platform_os_*` 公共接口；规范上错误码应归
 
 Platform OS 公共头按接口族声明 `platform_os_*` 原型；是否存在 `platform_os_*.c` 转发实现必须以目标工程为准。当前证据工程确有 `03_Platform/platform_os/src/platform_os_*.c`，其内部调用 `impl_os_*()`；`platform_os_internal_*.h` 仅作两层内部边界，不对外输出。
 
-公共头不包含 RTOS 原生类型；具体 RTOS 绑定归 [`impl_os`](../../impl/impl_os/SKILL.md)。Wrapper 只做参数检查、公共语义和稳定转发，不保存业务状态。
+公共头不包含 RTOS 原生类型；具体 RTOS 绑定归 [`impl_os`](../../impl/impl_os/SKILL.md)。Platform OS 转发层只做参数检查、公共语义和稳定转发，不保存业务状态；这里的转发层不是已废弃的 BSP Wrapper。
 
 ## 工作流
 
 1. 先列出调用方需要的最小接口，不复制原生 RTOS API。
 2. 决定句柄生命周期、静态/动态内存和 ISR 边界。
 3. 定义接口，再由 Impl 创建并注入已确认的 Platform OS 资源；明确创建者、Handle 所有者、失败回收、超时单位和 ISR 可用性，并用 Fake/Mock 验证上层。
-4. 读取目标工程的公共头、internal 头、Wrapper `.c`、Impl `.c` 和 RTOS 配置，逐函数核对 `platform_os_* → impl_os_* → native API`。
+4. 读取目标工程的公共头、internal 头、Platform OS 转发 `.c`、Impl `.c` 和 RTOS 配置，逐函数核对 `platform_os_* → impl_os_* → native API`。
 5. 只有出现具体 RTOS 或裸机运行时配置时交接 [`impl_os`](../../impl/impl_os/SKILL.md)。
 
 接口验收矩阵见 [`platform-os-contract.md`](references/platform-os-contract.md)；FreeRTOS 案例见 [`platform-os-freertos-case.md`](references/platform-os-freertos-case.md)。

@@ -1,6 +1,6 @@
 # 设备模型头样例（platform_<type>_model.h）
 
-> v1.0（2026-08-10）| 依据：ADR-013（模型头产出 + 布局规则）、四元组模板 v2、platform_bsp 输出契约
+> v1.1（2026-08-15）| 依据：当前工程 `03_Platform/platform_bsp` 的 Model 产出、四元组模板 v2、platform_bsp 输出契约
 > 来源：吸收 `watch_device.h`（EC-S100 手表设备模型）实例形态，按插件规范对齐。
 
 ## 完整样例：platform_imu_model.h
@@ -23,7 +23,7 @@
  * @brief IMU 设备模型：cfg/ctx/data/ops 类型契约 + 设备对象 struct。
  *
  * 模型头只定义"设备长什么样"（类型契约，芯片无关，接口永不改）；
- * 转发实现与注册入口在 platform_imu_wrapper.h/.c（另一产出物）。
+ * Model 源文件只完成公共对象初始化；硬件绑定、器件协议和注册装配由 Impl/组合根负责。
  *
  * 布局规则：cfg/ops = const 指针（共享），ctx/data = 内联值（独有）。
  *
@@ -112,25 +112,25 @@ platform_err_t platform_imu_init(imu_device_t *p_dev, const char *p_name,
 |---|---|---|
 | `__WATCH_DEVICE_H__` | `PLATFORM_IMU_MODEL_H` | guard 修正（双下划线保留给编译器） |
 | ctx/data 内联值 | 保留内联 | 布局规则确认（ADR-013） |
-| ops 首参具体类型 | 保留 | 模型 ops 层（两层 ops 之一） |
-| ops 裸名 | 保留裸名 | 模型 ops 裸名；wrapper 转发表才用 `pf_` |
+| ops 首参具体类型 | 保留 | Model Ops 保持类型安全 |
+| ops 裸名 | 保留裸名 | 模型 Ops 首参为具体设备指针，保持类型安全 |
 | 类型间接传递 | 显式 include `platform_type.h` | 依赖链清晰 |
 | 注释分区 `//**** //` | `/* --- */` | 插件规范 |
 | 纯模型无 init | 补 `platform_imu_init` 声明 | 模型头含初始化入口（实现分离） |
 | 聚合 4 设备 | 单设备模型头 | 生成契约单设备独立演进（聚合仅课程样例） |
 
-## 与 wrapper 的衔接
+## 与 Impl/组合根的衔接
 
 ```text
 platform_imu_model.h（类型契约：四件套 + 设备 struct + init 声明）
-        ↓ 实现 init（model.c / Impl port）
-platform_imu_wrapper.h/.c（转发表 pf_* 首参 void*：转发到模型 ops + 注册入口）
-        ↓ Impl 绑定
+        ↓ platform_imu_model.c（公共对象初始化）
+Impl/组合根绑定 typed Ops、板级资源和生命周期
+        ↓
 manager 注册 → 生命周期驱动
 ```
 
 - **模型 ops**（`imu_ops_t`）：Service 层直接调用，首参 `imu_device_t *`，零 cast。
-- **转发表 ops**（wrapper `pf_*`）：`void *context`，wrapper 内部 cast 回 `imu_device_t *` 后调模型 ops——两层衔接点在此。
+- **Impl 绑定**：由组合根把已确认的 Driver/Handler、板级资源和生命周期 Ops 直接装配到模型对象；Model 不保存协议状态机和业务缓存。
 
 ## 生成自检要点（对齐本样例）
 
@@ -139,5 +139,5 @@ manager 注册 → 生命周期驱动
 - [ ] `cfg`/`ops` = const 指针；`ctx`/`data` = 内联值
 - [ ] `base` 首字段（偏移 0），设备 struct 名 `<type>_device_t`
 - [ ] 零芯片/HAL/Vendor 依赖（显式 include `platform_type.h`）
-- [ ] 模型 ops 首参具体设备指针、裸名
+- [ ] 模型 ops 首参具体设备指针、裸名；没有额外 BSP Wrapper 转发表
 - [ ] 注释遵循 `style-profile.md`（文件头、公开 API、必要约束和源文件分区）

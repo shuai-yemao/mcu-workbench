@@ -1,8 +1,8 @@
-# Platform OS / FreeRTOS 两层映射案例
+# Platform OS / FreeRTOS 两层映射案例（非 BSP Wrapper）
 
 ## 固定源码
 
-证据来自实践工程 `D:\zhuomian\embedded_framework` 的 `codex/platform-os` 分支、提交 `0bc86f209a8d7025dbd4e8432e469e1c7a7713fd`：已确认文件、include、类型、宏、配置与函数映射。这是静态源码证据，不构成目标构建、烧录或板上运行证明。
+证据来自实践工程 `D:\zhuomian\embedded_framework` 当前工作树：已确认文件、include、类型、宏、配置与函数映射。这是静态源码证据，不构成目标构建、烧录或板上运行证明；工作树中存在的未提交修改不应被本参考覆盖。
 
 ```text
 03_Platform/platform_os/
@@ -31,7 +31,7 @@ platform_os_heap_malloc() → impl_os_heap_malloc() → pvPortMalloc()
 
 1. 调用方确实需要该语义。
 2. 公共头定义句柄、所有权、单位、ISR 能力和错误码。
-3. Wrapper 只做校验与语义转换，调用 `impl_os_*()`。
+3. Platform OS 转发层只做校验与语义转换，调用 `impl_os_*()`；它不属于已废弃的 BSP Wrapper。
 4. 每个启用的 Impl 都实现或显式报告不支持。
 5. Fake 与具体 RTOS 测试覆盖成功、超时、ISR 和资源回收。
 

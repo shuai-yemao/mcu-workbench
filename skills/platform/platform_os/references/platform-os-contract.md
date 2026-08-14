@@ -1,12 +1,12 @@
-# Platform OS Wrapper/Impl 契约
+# Platform OS 公共转发/Impl 契约
 
 ## 稳定接口
 
-Wrapper 只暴露项目需要且 Impl 已实现的最小 `platform_os_*` API：任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区。事件、Notify、取消等能力不得从某个 RTOS 的能力反推为 Platform OS 已具备。句柄、超时单位、ISR 可用性、所有权和错误码必须在接口文档中固定；现有工程的实际返回类型和错误别名还要与规范目标分开记录。
+Platform OS 公共转发层只暴露项目需要且 Impl 已实现的最小 `platform_os_*` API：任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区。事件、Notify、取消等能力不得从某个 RTOS 的能力反推为 Platform OS 已具备。句柄、超时单位、ISR 可用性、所有权和错误码必须在接口文档中固定；现有工程的实际返回类型和错误别名还要与规范目标分开记录。该层不是 BSP Wrapper。
 
 ## Impl 责任
 
-公开 Wrapper 调用内部 `impl_os_*()`，Impl 再绑定 FreeRTOS、RT-Thread 或裸机。`platform_os_internal_*.h` 只声明两层内部接口，不是第三层。原生 RTOS 头文件、`xTask*`、`xQueue*` 等只能出现在 Impl 和具体 RTOS reference 中。Wrapper 不包含 RTOS 头文件，也不保存业务状态。
+公开 `platform_os_*` 转发调用内部 `impl_os_*()`，Impl 再绑定 FreeRTOS、RT-Thread 或裸机。`platform_os_internal_*.h` 只声明两层内部接口，不是第三层。原生 RTOS 头文件、`xTask*`、`xQueue*` 等只能出现在 Impl 和具体 RTOS reference 中。转发层不包含 RTOS 头文件，也不保存业务状态。
 
 ```text
 Caller → platform_os_task_create() → impl_os_task_create() → native RTOS API

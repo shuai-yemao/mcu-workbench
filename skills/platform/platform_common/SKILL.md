@@ -1,13 +1,13 @@
 ---
 name: platform_common
-description: Platform 公共对象模型、生命周期驱动与诊断可观测：四子域 core（基础定义）/ object（对象模型）/ manager（生命周期驱动，内置能力）/ diag（诊断可观测），含 10 个 .c，不绑芯片/RTOS。
+description: Platform 公共对象模型、生命周期驱动与基础诊断：四子域 core（基础定义）/ object（对象模型）/ manager（生命周期驱动，内置能力）/ diag（断言与版本），含 9 个 .c，不绑芯片/RTOS。
 ---
 
 # Platform Common（平台抽象 · 公共对象模型与生命周期）
 
 ## 边界
 
-承载全平台共享的**公共对象模型、生命周期驱动与诊断可观测**，四子域：`core`（基础定义）/ `object`（对象模型）/ `manager`（生命周期驱动引擎，**内置能力**）/ `diag`（诊断可观测）。**含实现**（10 个 `.c`）。不依赖具体芯片、HAL、RTOS 或厂商类型（架构范围声明见"禁止与准入"）。
+承载全平台共享的**公共对象模型、生命周期驱动与基础诊断**，四子域：`core`（基础定义）/ `object`（对象模型）/ `manager`（生命周期驱动引擎，**内置能力**）/ `diag`（断言与版本）。**含实现**（当前工程为 9 个 `.c`）。不依赖具体芯片、HAL、RTOS 或厂商类型（架构范围声明见"禁止与准入"）。日志归属 `platform_middleware`；复位原因与 HardFault 契约归属 `platform_mcu`。
 
 ## 文件清单（四子域，依赖方向）
 
@@ -24,11 +24,8 @@ description: Platform 公共对象模型、生命周期驱动与诊断可观测�
 | `manager/` | `platform_device_manager.h/.c` | 设备管理器特化（类型安全薄包装） |
 | `manager/` | `platform_service_manager.h/.c` | 服务管理器特化（类型安全薄包装） |
 | `manager/` | `platform_board_manager.h/.c` | 整板编排：device/service 生命周期推进（机制，顺序策略归 Service） |
-| `diag/` | `platform_log.h/.c` | 日志抽象契约：级别宏常量/编译裁剪/统一输出宏；`.c` 仅在经审查时提供 Ops/context registry 与转发，具体输出由 Impl 桥接 elog/RTT（流转见 [`diag-log-flow.md`](references/diag-log-flow.md)） |
 | `diag/` | `platform_version.h/.c` | 版本/构建信息 + 启动 banner |
 | `diag/` | `platform_assert.h/.c` | 断言统一出口 + hook 注册（`platform_assert_set_hook`）+ 独立输出原语 `platform_assert_output`（P2，故障路径不依赖日志） |
-| `diag/` | `platform_reset_reason.h/.c` | 复位原因枚举 + 字符串映射（读取由 Impl 提供） |
-| `diag/` | `platform_hardfault.h` | 硬件异常现场 + 处理接口（ARM 架构契约；实现由 Impl 提供） |
 | `references/` | `object-four-tuple-template.md` | 对象四元组模板：base + cfg/ctx/data/ops 规范与 C 示例 |
 
 依赖方向（上层只 include `platform_type.h`，禁直接 include `board_types.h`）：
@@ -54,7 +51,7 @@ platform_type.h  (core/)
                     +--> platform_device_manager.h / platform_service_manager.h
                     |
                     +--> platform_board_manager.h
-diag/（log/version/assert/reset_reason/hardfault）依赖 core/ 类型与错误码；实现由 Impl 提供
+diag/（version/assert）依赖 core/ 类型与错误码；日志在 `platform_middleware`，reset_reason/hardfault 在 `platform_mcu`，具体绑定由 Impl 提供
 ```
 
 ## 统一错误码
@@ -122,24 +119,21 @@ typedef struct
 
 ## 生命周期 `platform_lifecycle_ops_t`
 
-所有对象统一的生命周期回调表（7 回调，签名统一 `platform_err_t (*)(void *p_self)`）：
+所有对象统一使用**动作集合 + 单一分发入口**的生命周期契约。当前工程不是 7 个直接回调字段，而是由 `supported_actions` 声明能力，并通过 `invoke(p_self, action)` 分发动作：
 
 ```c
 typedef struct
 {
-    platform_err_t (*init)(void *p_self);    /* Object initialization.       */
-    platform_err_t (*start)(void *p_self);   /* Object start entry.          */
-    platform_err_t (*process)(void *p_self); /* Optional period processing.  */
-    platform_err_t (*stop)(void *p_self);    /* Object stop entry.           */
-    platform_err_t (*sleep)(void *p_self);   /* Optional low-power entry.    */
-    platform_err_t (*wakeup)(void *p_self);  /* Optional wake-up entry.      */
-    platform_err_t (*deinit)(void *p_self);  /* Object resource release.     */
+    uint32_t supported_actions; /* Supported PLATFORM_LIFECYCLE_ACTION_* bits. */
+    platform_err_t (*invoke)(void *p_self,
+                             platform_lifecycle_action_t action);
 } platform_lifecycle_ops_t;
 ```
 
 设计要点：
-- `state` 只记录对象所处阶段，**真正动作入口在回调表**，Manager 通过该表统一驱动。
-- 含 `sleep/wakeup`，适配低功耗策略。
+- `state` 只记录对象所处阶段，Manager 通过 `invoke()` 驱动具体动作；动作是否支持由 `supported_actions` 表达。
+- 当前动作集合包含 `INIT/START/PROCESS/STOP/SLEEP/WAKEUP/DEINIT`，新增动作必须扩展枚举和能力位，不得凭空增加结构体回调字段。
+- `invoke()` 的 `p_self` 是对象所有者，调用者不得把临时对象或已失效上下文交给生命周期实现。
 - 生命周期是横切能力（cross-cutting），不属于单类对象的专属逻辑。
 
 ## 设备基类 `platform_device_t`
@@ -207,7 +201,7 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 
 ## 生成契约
 
-`03_Platform/platform_common/` 四子域共含 **10 个 `.c`**（`object/`：platform_object/device/service 3 个；`manager/`：platform_manager/device_manager/service_manager/board_manager 4 个；`diag/`：platform_assert/reset_reason/version 3 个；`core/` 零 `.c` 纯头契约）。上层统一 include `platform_common/platform_*.h`（编译路径须覆盖四个子域），不得复制定义；**禁直接 include `04_Impl/impl_board/board_types.h`**（类型出口是 `platform_type.h`）。
+`03_Platform/platform_common/` 当前四子域共含 **9 个 `.c`**（`object/`：platform_object/device/service 3 个；`manager/`：platform_manager/device_manager/service_manager/board_manager 4 个；`diag/`：platform_assert/version 2 个；`core/` 零 `.c` 纯头契约）。上层统一 include `platform_common/platform_*.h`（编译路径须覆盖四个子域），不得复制定义；**禁直接 include `04_Impl/impl_board/board_types.h`**（类型出口是 `platform_type.h`）。日志不计入 Common 文件清单，复位原因和 HardFault 由 `platform_mcu` 提供。
 
 说明：插件 `skills/platform` 技能目录允许无芯片/RTOS/厂商依赖的公共实现（门禁检查 `.c` 的 include 与符号，禁止 HAL/RTOS/芯片依赖）；`platform_common` 的对象模型/管理器/诊断实现可直接落在技能目录，生成工程 `03_Platform/platform_common/` 同样含实现。
 
@@ -221,19 +215,19 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 
 **策略边界（P3）**：manager 只提供驱动机制，**不持有产品级编排顺序策略**（如"先传感器稳定再启动背光"）。多对象编排顺序由 Service 层（如 `service_system`）表达；board_manager 的默认顺序（device.init → service.init → device.start → service.start）是**机制默认值**，可被上层配置覆盖，禁止把业务先后写死为不可变契约。
 
-## 日志与检测流转（diag 契约）
+## 断言与跨层诊断流转
 
-diag 是**横切可观测原语**：机制在 Platform（本子域），策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。流转三方向（详见 [`diag-log-flow.md`](references/diag-log-flow.md)）：
+Common 的 `diag` 只提供断言和版本基础原语；日志机制在 `platform_middleware`，复位原因和 HardFault 契约在 `platform_mcu`。策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。跨层参考见 [`diag-log-flow.md`](references/diag-log-flow.md)：
 
-- **调用向下**：App 经 `service_log` 门面（`SERVICE_LOG_*`，禁 include `platform_log.h`，D8）；Service 其他层与 Impl 直调 `PLATFORM_LOG_*`；Vendor 永不反向。
-- **注入由 Impl**：默认可采用链接期符号实现；若工程已通过 RCP 放行 registry，则由 Platform `.c` 保存借用 Ops/context，Impl 在启动期注册并由 Platform 稳定转发。registry 不含 Vendor/HAL/RTOS、格式化、缓存、锁、重试或业务策略，运行期切换仍禁止。
-- **输出到底**：`platform_log_output` 组帧后写 Vendor 底座（elog / SEGGER RTT / HAL UART）；日志须在任何平台对象使用前初始化（boot 第一步）。
+- **断言旁路**：`PLATFORM_ASSERT` 失败进入 `platform_assert_fail`；故障输出不依赖日志初始化。
+- **日志归属**：`platform_log` 的 Ops/context registry（若经审查放行）属于 `platform_middleware`，不计入 `platform_common` 的实现清单。
+- **复位与异常**：`platform_reset_reason`、`platform_hardfault` 只定义 MCU/架构能力，具体寄存器读取和现场处理由 Impl 提供。
 
 **断言旁路（P2）**：`PLATFORM_ASSERT` 失败 → `platform_assert_fail`：有 hook 则回调并返回（host 冒烟）；无 hook 则经 `platform_assert_output`（独立于日志系统的原始输出，Impl 桥接 RTT）输出后死循环——故障路径自足，不依赖日志。
 
 ## 禁止与准入
 
-- **准入规则（P1）**：新能力须被 ≥2 个子域/层共享且零芯片/RTOS/厂商依赖方可进入 platform_common；单域使用的公共能力归属对应层。diag 是平台内建可观测原语，**只声明接口、实现永远在 Impl**。
+- **准入规则（P1）**：新能力须被 ≥2 个子域/层共享且零芯片/RTOS/厂商依赖方可进入 platform_common；单域使用的公共能力归属对应层。Common `diag` 当前只覆盖版本与断言，日志、复位原因和 HardFault 不因“诊断”名称而跨域归入 Common。
 - **日志契约（P2）**：断言（故障路径）**不依赖日志系统**，须有独立输出通道或注入式输出；日志实现由 Impl 提供，且须在任何平台对象使用前初始化（boot 阶段第一步）。若采用 registry，必须由 Board 组合根在 Service 使用前完成注册。
 - **架构范围（P4）**：`platform_hardfault_frame_t` 为 **ARM Cortex-M 架构契约**，跨架构（如 RISC-V）由 Impl 提供等价契约；禁止在平台层做寄存器级通用抽象。
 - 禁止在此放芯片专有能力、Vendor 类型、RTOS 句柄或业务状态。

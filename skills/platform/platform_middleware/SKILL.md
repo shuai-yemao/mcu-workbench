@@ -18,10 +18,11 @@ description: Platform 中间件能力契约：每个中间件默认只提供一�
 默认文件边界是“一个能力域，一个公共头”：
 
 ```text
-03_Platform/platform_middleware/<domain>/platform_<domain>.h
+03_Platform/platform_middleware/platform_<domain>.h
 ```
 
-例如日志使用 `platform_log.h`。不要为同一能力再拆出 `platform_<domain>_config.h`、
+例如当前工程日志使用 `03_Platform/platform_middleware/platform_log.h` 与窄职责实现
+`03_Platform/platform_middleware/platform_log.c`。不要为同一能力再拆出 `platform_<domain>_config.h`、
 `platform_<vendor>.h` 或第二个公共契约头。Platform `.c` 默认不生成；若工程确实需要稳定的
 注册槽、状态校验或转发，可在 RCP/Review Gate 明确放行一个窄职责 `.c`。公开配置
 语义可以并入唯一公共头；Vendor、板级、工具链和后端私有配置必须下沉到 Impl/工程配置。
@@ -76,14 +77,14 @@ Platform 不承载第三方库初始化、格式化、缓存、输出、锁、�
    `Ops/context`、执行状态校验和稳定转发，不得含 Vendor/HAL/RTOS、格式化、缓存、锁、重试或业务策略。
    注册/注销仅限启动期或完全停机后，重复注册、未初始化和忙状态必须有明确错误语义。
 
-当前日志基线采用受审查的窄职责 registry：`platform_log.h/.c` 是 Platform Middleware
+当前日志基线采用受审查的窄职责 registry：`03_Platform/platform_middleware/platform_log.h/.c` 是 Platform Middleware
 契约与注册/转发槽；`04_Impl/impl_middleware/elog/impl_elog_log.c/.h` 提供 Ops/context
 适配，`impl_elog_port.c` 负责 EasyLogger→SEGGER RTT 的 Vendor Port。Platform `.c` 不包含
 任何 Elog、RTT、HAL 或 FreeRTOS 依赖。
 
 ## 生成和对象契约
 
-`03_Platform/platform_middleware/` 默认只生成每个能力域的一个公共头；只有经 RCP 放行的
+`03_Platform/platform_middleware/` 当前按扁平目录组织能力文件，默认每个能力域只有一个公共头；只有经 RCP 放行的
 registry/dispatch 才增加窄职责 `.c`。接口可使用 `platform_*_t`、`platform_*_ops_t` 和 `void *context`；不要在公共头中暴露
 Vendor、HAL、RTOS 或 Impl Port 的类型。
 
