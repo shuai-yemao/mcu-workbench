@@ -8,7 +8,7 @@ Workflow 层保留五个职责互斥的 active Skills：
 - `workflow-review-gate`：接收所有请求的 RCP（必经审查门禁），反猜测审查既有实现方案，必选产出四张审查清单并重组为 BRD/PRD/SRSys，判定放行/阻塞。
 - `workflow-integration-plan`：消费放行后的审查包，完成项目审计、分层设计、调用链、迁移路线和文件级改造顺序后分发唯一实现层 Skill。
 - `workflow-claude-layering`：目标工程 Claude 分层规则的扫描、预览同步和漂移校验。
-- `workflow-final-review`：最终代码、补丁或 diff 的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告。
+- `workflow-final-review`：最终代码、补丁或 diff 的独立 Review 编排，作为输出前最后一层门禁；格式或必要注释初检失败时仅作受限整改并复检，交付按严重级别分组的结构化审查报告。
 
 `app-architecture` 是 APP 领域 Skill，不承担跨领域编排。实际团队协作由 `embedded-lead` Agent 负责，专业工作交给对应 Agent，执行记录写入 `.mcu-workbench/runs/`。
 
@@ -25,6 +25,8 @@ Workflow 层保留五个职责互斥的 active Skills：
      → verification-engineer 验证
      → knowledge-engineer 整理
      → embedded-lead 汇总
+     → workflow-final-review（格式/必要注释初检 → 受限整改 → 同条件复检）
+     → 交付
 ```
 
 每个阶段必须具备输入、证据、变更文件、测试、产物、阻塞项和下一步交接。使用 `scripts/agent-artifacts.js` 记录，不覆盖已有运行记录。

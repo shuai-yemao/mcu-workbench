@@ -40,12 +40,39 @@
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
 | 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档（`docs/requirements/`）供用户审查，判定放行/阻塞 |
 | 放行后的集成规划与分发 | `workflow-integration-plan` | 分层/审计/迁移设计、文件级改造顺序，只分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
-| 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 按 profile 与门禁输出审查报告，不生成实现或自动修复 |
+| 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 强制执行格式/注释初检；失败时仅作格式与必要注释整改并复检，复检通过才放行 |
 | 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |
 | App、Service、Platform、Impl、Vendor | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
 | 烧录、调试、观测和发布 | `tools-flash`、`tools-debug`、`tools-observability`、`tools-release` | 先确认工具、产物、目标和观测通道 |
 
 `embedded-lead` 负责协调需求、冲突和风险；按需邀请 `system-architect`、`firmware-engineer`、`hardware-integration`、`toolchain-engineer`、`verification-engineer` 或 `knowledge-engineer`。每个参与者只陈述本领域证据，并输出 Summary、Evidence、Changed files、Tests、Artifacts、Blockers 和 Next handoff。
+
+### Codex 最终质量整改闭环
+
+对 Codex 产出的最终代码、补丁或 `git diff`，`workflow-final-review` 的只读
+Review 结论之外，必须执行以下宿主专项闭环。此规则仅覆盖格式和注释质量，
+不授权修改逻辑、接口、资源生命周期、错误处理或分层设计。
+
+1. **强制初检**：在最终放行前，依据 `tools-quality` 检查变更范围的格式和注释。
+   风格优先级为用户明确要求、目标工程已确认的 `.clang-format`/`.editorconfig`
+   或等效构建配置、相邻源码，最后才是 `style-profile.md` 基线。记录命令、绝对
+   `cwd`、工具版本、退出码、检查范围与每个问题的 `relative/path:line`。
+2. **必要注释判定**：补齐项目规范要求的文件/模块说明、公开 API 的 Doxygen、参数和
+   返回值，以及表达所有权、阻塞/ISR/DMA/并发、硬件约束、错误恢复或非显然步骤所必需的
+   注释。不得为逐行翻译代码、推测硬件事实，或用注释掩盖功能问题；注释语言遵从项目约定，
+   未约定时使用中文。
+3. **受限整改**：初检发现格式或必要注释缺失时，允许直接写回目标变更文件，但只能进行
+   格式化和补充/更正注释。整改前后必须审阅 `git diff`，确认没有改动函数签名、控制流、
+   常量/宏取值、数据结构、资源/错误路径、包含依赖或分层关系。发现任何超出此范围的差异，
+   立即回退该次整改并以 `阻塞` 交回对应实现 Skill，不得在最终门禁中顺带修复。
+4. **同条件复检**：对整改后的同一文件范围，用初检采用的同一格式工具和注释清单复检；
+   同时执行 `git diff --check`。适用且已有可复现入口时，再执行原有主机测试或构建，
+   并如实区分静态、主机、构建、目标运行与实物证据。工具不可用、检查无法复现或任一
+   格式/注释项仍失败，最终结论必须为 `阻塞`。
+5. **放行条件与记录**：只有初检问题已被限定整改、差异范围确认无行为变化、同条件复检
+   及 `git diff --check` 全部通过时，才可给出 `通过`。最终报告必须同时保留初检问题、
+   整改文件和理由、整改后差异审阅、复检命令/退出码与未验证项；不得把这些静态或主机
+   结果表述为目标板或实物验证。
 
 ## 5. 验证与运行记录
 

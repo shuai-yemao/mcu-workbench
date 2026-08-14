@@ -28,6 +28,26 @@ describe('Codex host boundary', () => {
     expect(content).toContain('npm run validate:layer -- --root <firmware-root>');
   });
 
+  test('requires a format and comment remediation loop before Codex final approval', () => {
+    const content = fs.readFileSync(source, 'utf8');
+
+    for (const requirement of [
+      'Codex 最终质量整改闭环',
+      '强制初检',
+      '必要注释判定',
+      '受限整改',
+      '同条件复检',
+      'git diff --check',
+      '格式化和补充/更正注释',
+      '函数签名、控制流',
+      '常量/宏取值、数据结构',
+      '最终结论必须为 `阻塞`',
+      '才可给出 `通过`'
+    ]) {
+      expect(content).toContain(requirement);
+    }
+  });
+
   test('can regenerate the bridge in an isolated temporary path', () => {
     const temporaryTarget = path.join(root, 'tests', '.tmp-codex-compat.md');
     try {

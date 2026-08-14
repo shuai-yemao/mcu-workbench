@@ -14,25 +14,27 @@ describe('AI collaboration skills', () => {
     expect(review).toContain('构建');
     expect(review).toContain('review-gates.md');
     expect(review).toContain('style-profile.md');
-    expect(review).toContain('格式与注释门禁');
+    expect(review).toContain('格式与注释初检');
     expect(review).toContain('80 列');
-    expect(review).toContain('目标工程 `.clang-format` 只作为补充证据');
+    expect(review).toContain('目标工程已确认的 `.clang-format`/`.editorconfig`');
   });
 
-  test('keeps a read-only review boundary with fixed report fields', () => {
+  test('keeps a format/comment remediation boundary with fixed report fields', () => {
     const review = getSkillContent('workflow-final-review');
     const contract = fs.readFileSync(
       path.join(ROOT, 'skills', 'workflow', 'workflow-final-review', 'references', 'prompt-contract.md'),
       'utf8'
     );
 
-    // 只读 Review 边界：不生成实现、不自动修复、不把静态/主机检查写成板级验证
+    // 仅格式/注释整改边界：不生成实现、不修复功能或架构、不把静态/主机检查写成板级验证
     expect(review).toContain('不生成实现');
-    expect(review).toContain('不自动修复');
-    expect(review).toContain('不产生替换代码或修复补丁');
+    expect(review).toContain('只允许格式化和补充/更正必要注释');
+    expect(review).toContain('不得修改函数签名、控制流');
+    expect(review).toContain('同条件复检');
+    expect(review).toContain('git diff --check');
     expect(review).toContain('静态检查');
     expect(review).toContain('实物验证');
-    expect(review).toContain('格式或注释任一失败');
+    expect(review).toContain('格式或注释检查失败');
     expect(review).toContain('最终门禁结论');
 
     // 固定报告字段：范围与证据、严重级别、定位、影响、修复建议、验证与阻塞项
@@ -49,8 +51,9 @@ describe('AI collaboration skills', () => {
     expect(contract).toContain('未验证假设');
     expect(contract).toContain('格式检查证据');
     expect(contract).toContain('注释完整性证据');
-    expect(contract).toContain('禁止自动运行写回式格式化');
-    expect(contract).toContain('插件 `tools-quality/style-profile` 优先');
+    expect(contract).toContain('必须执行受限整改和复检');
+    expect(contract).toContain('函数签名、控制流、常量/宏取值');
+    expect(contract).toContain('最后才是插件 `tools-quality/style-profile` 基线');
   });
 
   test('only delegates to active agents and never claims board-level verification from static checks', () => {

@@ -1,6 +1,6 @@
 ---
 name: workflow-integration-plan
-description: 放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发，交接 workflow-final-review。
+description: 放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发，携带 RCP/审查包/验收信息交接 workflow-final-review。
 ---
 
 # 集成规划与分发
@@ -16,7 +16,7 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 3. 画出调用链，确认上层只依赖下层公开契约，识别 APP、Middleware、OS、BSP、Core、Driver 归属。
 4. 输出文件级改造顺序、分阶段集成计划、验收点和未决风险。
 5. 只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
-6. 代码产物就绪后，把最终代码/变更集与验收清单交接给 `workflow-final-review`。
+6. 代码产物就绪后，把最终代码/变更集、RCP、`workflow-review-gate` 放行结论、文件施工表、验收清单、格式 profile/命令和目标文件范围交接给 `workflow-final-review`；该门禁必须执行格式与必要注释整改闭环，复检通过前不得放行。
 
 ## 分层审计与迁移设计
 
@@ -25,6 +25,8 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 ## 交付计划最低产物
 
 每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表（区别于审查包的四张清单——后者由 `workflow-review-gate` 必选重组为 BRD/PRD/SRSys 产品文档）；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与分发，不代替下游实现。
+
+交接 `workflow-final-review` 时还必须列出：格式与注释规则来源、可复现格式检查命令、初始代码范围、允许整改的文件范围和预期验证层级。这样最终门禁能在格式或必要注释缺失时实施受限整改、审阅差异并同条件复检，而不会重开功能或架构设计。
 
 固件分层交付作为本 Skill 的模式 C：基线、Tools 观测通道、最小系统、OS Adapter、Core、BSP Driver/Handle、Port、Wrapper、集成回归。它扩展模式 A 的审计证据并可映射模式 B 的路线图，但不将 UART 日志定义为软件层，也不在本 Skill 中实现任何一层代码。
 

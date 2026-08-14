@@ -137,12 +137,19 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('阻塞风险');
     expect(reviewPackage).toContain('代码阶段判定');
     expect(integration).toContain('必选产品文档输出（BRD / PRD / SRSys）');
-    expect(integration).toContain('docs/requirements/');
+    expect(integration).toContain('00_Docs/04_需求文档/');
+    expect(integration).toContain('项目文档输出边界');
+    expect(integration).toContain('不得回退到插件内部保存');
+    expect(integration).toContain('process.cwd()');
+    expect(integration).toContain('项目路径缺失');
     expect(integration).toContain('SRSys');
     expect(reviewPackage).toContain('## 5. 产品文档映射（BRD / PRD / SRSys）');
     expect(reviewPackage).toContain('<request_id>-BRD.md');
     expect(reviewPackage).toContain('<request_id>-PRD.md');
     expect(reviewPackage).toContain('<request_id>-SRSys.md');
+    expect(reviewPackage).toContain('文档落盘前置条件');
+    expect(reviewPackage).toContain('不得写入插件仓库内部');
+    expect(reviewPackage).toContain('不生成插件内占位文件');
   });
 
   test('integration plan dispatches a single implementation skill after gate clearance', () => {
@@ -150,6 +157,7 @@ describe('Skills catalog and loader', () => {
     expect(plan).toContain('只分发一个实现层 Skill');
     expect(plan).toContain('审查包门禁状态非放行不得分发');
     expect(plan).toContain('workflow-final-review');
+    expect(plan).toContain('格式与必要注释整改闭环');
     expect(plan).toContain('现状表');
     expect(plan).toContain('文件修改表');
   });
