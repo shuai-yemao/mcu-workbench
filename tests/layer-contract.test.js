@@ -72,6 +72,20 @@ describe('generated layer contract validator', () => {
     ]));
   });
 
+  test('rejects a generated source whose secondary partition width is wrong', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => (
+      content.replace(/\/\* 初始化 -+ \*\//, '/* 初始化 ---------------- */')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_FORMAT_SECONDARY_PARTITION',
+        file: '03_Platform/platform_mcu/Src/platform_spi.c'
+      })
+    ]));
+  });
+
   test('rejects a generated source that keeps the generic step placeholder', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => content
@@ -469,6 +483,10 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
       .replace('生成的 Platform、Impl 或公共接口', 'generated Platform, Impl, or public interfaces')
       .replace('生成的切片参与已声明的分层契约。', 'Generated slice participates in the declared layered contract.')
       .replace('W25Q64 器件配置。', 'W25Q64 device configuration.')
+      .replace('@par 依赖关系', '@par dependencies')
+      .replace('处理流程：', 'Processing flow:')
+      .replace('研发部门', 'Research Department')
+      .replace('项目名称', 'ProjectName')
       .replace('缩进使用 4 个空格，禁止使用 TAB。', 'Use four spaces and no TAB characters.'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({

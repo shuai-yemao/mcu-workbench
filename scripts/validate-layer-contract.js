@@ -161,11 +161,19 @@ function findFunctionContracts(content) {
 function validateCommentCompleteness(files, errors) {
   for (const file of Object.values(files)) {
     if (!file.content.includes('@version')) continue;
-    for (const tag of ['@file', '@brief', '@author', '@version', '@par dependencies']) {
+    for (const tag of ['Copyright', 'All Rights Reserved.', '@file', '@brief', '@author', '@version']) {
       if (!file.content.includes(tag)) {
         addError(errors, 'LAYER_FILE_DOC', file.relative,
           `Generated file header must contain ${tag}.`);
       }
+    }
+    if (!/@par\s+(?:依赖关系|dependencies)/.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DOC', file.relative,
+        'Generated file header must contain @par 依赖关系.');
+    }
+    if (!/处理流程：|Processing flow:/.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DOC', file.relative,
+        'Generated file header must contain a processing flow section.');
     }
     const contracts = findFunctionContracts(file.content);
     for (const contract of contracts) {
@@ -222,7 +230,13 @@ function validateCommentCompleteness(files, errors) {
     lines.forEach((line, index) => {
       if (!/^\s*#define\s+[A-Z][A-Z0-9_]*\b/.test(line) || /_H\b/.test(line)) return;
       const previous = lines[index - 1] || '';
-      if (!/^\s*\/\*/.test(previous) || /\b(?:Includes|Public|Private|Functions|Types|Defines|State)\b/.test(previous)) {
+      const sectionPattern = /(?:Includes|Public|Private|Functions|Types|Defines|State|Composition|包含文件|公开类型|公开宏定义|公开函数|私有宏定义|私有类型|私有状态|私有组合对象|私有函数)/;
+      const isSectionComment = /^\s*\/\*\s*.*(?: -+)?\s*\*\/$/.test(previous)
+        && sectionPattern.test(previous);
+      const subsectionPattern = /(?:返回值|超时值|事件|配置|默认值)\s+-+\s*\*\/$/;
+      const isSubsectionComment = /^\s*\/\*\s*/.test(previous)
+        && subsectionPattern.test(previous);
+      if (!/^\s*\/\*/.test(previous) || isSectionComment || isSubsectionComment) {
         addError(errors, 'LAYER_MACRO_DOC', file.relative,
           `Macro on line ${index + 1} must have a preceding block comment.`);
       }
@@ -318,9 +332,14 @@ function validateSections(files, errors) {
   for (const file of Object.values(files)) {
     if (!file.content.includes('@file')) addError(errors, 'LAYER_FILE_DOC', file.relative, 'Generated file must have an @file documentation header.');
     if (file.relative.endsWith('.c')) {
-      for (const section of ['Includes', 'Public Functions']) {
-        if (!new RegExp(`/\\* ${section}(?: -+)? \\*/`).test(file.content)) {
-          addError(errors, 'LAYER_SOURCE_SECTION', file.relative, `Generated source must contain ${section} section.`);
+      for (const section of [
+        ['Includes', '包含文件'],
+        ['Public Functions', '公开函数']
+      ]) {
+        const sectionPattern = new RegExp(`/\\* (?:${section[0]}|${section[1]})(?: -+)? \\*/`);
+        if (!sectionPattern.test(file.content)) {
+          addError(errors, 'LAYER_SOURCE_SECTION', file.relative,
+            `Generated source must contain ${section[1]} section.`);
         }
       }
     }
@@ -330,6 +349,36 @@ function validateSections(files, errors) {
 function validateGeneratedStyle(files, errors) {
   const datePattern = new RegExp(`@version\\s+V1\\.0\\s+${new Date().toISOString().slice(0, 10)}`);
   const functionDefinition = /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/;
+  const primaryLabels = Object.values({
+    includes: '包含文件',
+    publicTypes: '公开类型',
+    publicDefines: '公开宏定义',
+    publicFunctions: '公开函数',
+    privateDefines: '私有宏定义',
+    privateTypes: '私有类型',
+    privateState: '私有状态',
+    privateComposition: '私有组合对象',
+    privateFunctions: '私有函数'
+  });
+  const secondaryLabels = ['返回值', '超时值', '事件', '配置', '默认值', '初始化', '读写', '回调', '辅助', '接口'];
+  const tertiaryLabels = ['清理', '事件', '回调', '转发', '校验', '状态', '处理'];
+  const validatePartitionWidth = (line, labels, width, ruleId, currentFile) => {
+    const start = line.indexOf('/*');
+    if (start < 0) return;
+    const comment = line.slice(start);
+    for (const label of labels) {
+      const isMatch = new RegExp(`^/\\* ${label} -+ \\*/$`).test(comment);
+      const isShortOverlappingLabel = ['事件', '回调'].includes(label)
+        && width === 40 && comment.length <= 25;
+      const isLongOverlappingLabel = ['事件', '回调'].includes(label)
+        && width === 20 && comment.length >= 30;
+      if (isMatch && !isShortOverlappingLabel && !isLongOverlappingLabel
+        && comment.length !== width) {
+        addError(errors, ruleId, currentFile.relative,
+          `${label} partition must be ${width} columns from /*.`);
+      }
+    }
+  };
   for (const file of Object.values(files)) {
     const lines = file.content.split(/\r?\n/);
     const isGeneratedFile = file.content.includes('@version');
@@ -359,6 +408,9 @@ function validateGeneratedStyle(files, errors) {
         addError(errors, 'LAYER_FORMAT_TAIL_COMMENT', file.relative,
           `Trailing comment terminator must be aligned to column 80 (line ${index + 1}).`);
       }
+      validatePartitionWidth(line, primaryLabels, 80, 'LAYER_FORMAT_PRIMARY_PARTITION', file);
+      validatePartitionWidth(line, secondaryLabels, 40, 'LAYER_FORMAT_SECONDARY_PARTITION', file);
+      validatePartitionWidth(line, tertiaryLabels, 20, 'LAYER_FORMAT_TERTIARY_PARTITION', file);
     });
   }
 }

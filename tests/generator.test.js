@@ -109,8 +109,10 @@ describe('Generator Module', () => {
       .toContain('IMPL_SSD1306_COLUMN_OFFSET');
     for (const file of files) {
       expect(file.content).toContain('@file');
-      expect(file.content).toContain('@par dependencies');
-      expect(file.content).toContain('Processing flow');
+      expect(file.content).toContain('@par 依赖关系');
+      expect(file.content).toContain('处理流程：');
+      expect(file.content).toContain('Copyright (C) 2024 ProjectName, Inc.(Gmbh) or its affiliates.');
+      expect(file.content).toContain('All Rights Reserved.');
     }
     expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_wrapper.h'])
       .toContain('void *p_context');
@@ -136,7 +138,18 @@ describe('Generator Module', () => {
       expect(lines.some((line) => /typedef\s+(?:struct|enum)\s*\{/.test(line))).toBe(false);
       expect(lines.some((line) => /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/.test(line))).toBe(false);
       expect(lines.some((line) => /\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78)).toBe(false);
-      expect(lines.filter((line) => /\/\*.*-{5,}.*\*\//.test(line)).every((line) => line.length === 80)).toBe(true);
+      const paddedComments = lines.filter((line) => /\/\*.*-{5,}.*\*\//.test(line));
+      expect(paddedComments
+        .filter((line) => /\/\* (?:包含文件|公开|私有)/.test(line))
+        .every((line) => line.length === 80)).toBe(true);
+      expect(paddedComments
+        .filter((line) => /\/\* (?:返回值|超时值|事件|配置|默认值|初始化|读写|回调|辅助|接口)/.test(line))
+        .filter((line) => line.slice(line.indexOf('/*')).length > 30)
+        .every((line) => line.slice(line.indexOf('/*')).length === 40)).toBe(true);
+      expect(lines
+        .filter((line) => /\/\* (?:清理|事件|回调|转发|校验|状态|处理) -+ \*\//.test(line))
+        .filter((line) => line.slice(line.indexOf('/*')).length < 30)
+        .every((line) => line.slice(line.indexOf('/*')).length === 20)).toBe(true);
     }
   });
 
@@ -150,7 +163,7 @@ describe('Generator Module', () => {
 
     expect(driver).toContain('@note 缩进使用 4 个空格，禁止使用 TAB。');
     expect(driver).toContain('@brief 读取设备标识。');
-    expect(driver).toContain('校验依赖后调用已注入的底层操作。');
+    expect(driver).toMatch(/\/\* 转发 -+ \*\//);
     expect(driver).not.toContain('入口检查与核心处理');
     expect(driver).not.toContain('成员或枚举值说明');
     expect(driverHeader).toContain('#endif /* IMPL_W25Q64_DRIVER_H */');
@@ -162,7 +175,8 @@ describe('Generator Module', () => {
     const header = files.find((file) => file.path.endsWith('platform_spi.h')).content;
     const source = files.find((file) => file.path.endsWith('platform_spi.c')).content;
 
-    expect(header).toContain('/* Includes ');
+    expect(header).toContain('/* 包含文件 ');
+    expect(header).not.toContain('/* Includes');
     expect(header).toContain('event_id; /**< 待处理的事件标识。');
     expect(header).not.toContain('成员或枚举值说明');
     expect(source).toContain('/* IRQ 功能开关或事件标识 ');
