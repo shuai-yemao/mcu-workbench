@@ -4,8 +4,9 @@
 
 Workflow 层保留五个职责互斥的 active Skills：
 
-- `workflow-requirements-router`：需求分析、约束补证、Agent 分配和需求约束包生成；RCP 固定交接给 `workflow-review-gate`（必经审查门禁）。
-- `workflow-review-gate`：接收所有请求的 RCP（必经审查门禁），反猜测审查既有实现方案，必选产出四张审查清单并重组为 BRD/PRD/SRSys，判定放行/阻塞。
+- `workflow-requirements-router`：需求分析、约束补证、Agent 分配和初步需求约束包生成；初步 RCP 固定交接给 `workflow-requirements-challenge`。
+- `workflow-requirements-challenge`：质疑需求目的与可行性，生成两个可比较方案，等待用户选择并回填 RCP。
+- `workflow-review-gate`：接收带用户选择记录的 RCP（必经审查门禁），反猜测审查既有实现方案，必选产出四张审查清单并重组为 BRD/PRD/SRSys，判定放行/阻塞。
 - `workflow-integration-plan`：消费放行后的审查包，完成项目审计、分层设计、调用链、迁移路线和文件级改造顺序后分发唯一实现层 Skill。
 - `workflow-claude-layering`：目标工程 Claude 分层规则的扫描、预览同步和漂移校验。
 - `workflow-final-review`：最终代码、补丁或 diff 的独立 Review 编排，作为输出前最后一层门禁；格式或必要注释初检失败时仅作受限整改并复检，交付按严重级别分组的结构化审查报告。

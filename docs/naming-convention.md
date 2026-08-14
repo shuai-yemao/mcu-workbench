@@ -46,14 +46,14 @@
 ### 2.1 源文件与头文件
 
 - 规则：`<模块>_<对象>.c/.h`（snake_case），同名成对。
-- 头文件 guard：**`<模块大写>_<对象大写>_H`，禁用双下划线头尾**（MISRA 21.1 保留给实现）。
+- 头文件 guard：**`__<模块大写>_<对象大写>_H__`，头尾必须使用双下划线**。
 
 | 模块 | 文件名 | Guard |
 |---|---|---|
-| GPIO Platform 接口 | `platform_gpio.c/.h` | `PLATFORM_GPIO_H` |
-| I2C ops 定义 | `platform_i2c_ops.h` | `PLATFORM_I2C_OPS_H` |
-| 板级 LED 适配 | `impl_board_led.c/.h` | `IMPL_BOARD_LED_H` |
-| CRC 工具 | `utils_crc.c/.h` | `UTILS_CRC_H` |
+| GPIO Platform 接口 | `platform_gpio.c/.h` | `__PLATFORM_GPIO_H__` |
+| I2C ops 定义 | `platform_i2c_ops.h` | `__PLATFORM_I2C_OPS_H__` |
+| 板级 LED 适配 | `impl_board_led.c/.h` | `__IMPL_BOARD_LED_H__` |
+| CRC 工具 | `utils_crc.c/.h` | `__UTILS_CRC_H__` |
 
 ### 2.2 固定配套文件
 
@@ -162,15 +162,15 @@ PLATFORM_ERR_NOT_INITIALIZED / PLATFORM_ERR_ALREADY_INIT / PLATFORM_ERR_BUSY / P
 
 ## 8. 统一命名重构落地记录（v1.2 已清零）
 
-> v1.1 的差距清单（`core_*` 前缀、`__XXX_H__` guard、`templates/bsp-oled` 反例）已在 v1.2 随"生成代码对齐五层分层架构"重构全部落地，生成器 / 模板 / 分层校验器 / 测试锁步对齐本规范。
+> v1.1 的差距清单（`core_*` 前缀、`XXX_H` guard、`templates/bsp-oled` 反例）已在 v1.2 随"生成代码对齐五层分层架构"重构全部落地，生成器 / 模板 / 分层校验器 / 测试锁步对齐本规范。
 
 | 位置 | 落地前 | 落地后 | 状态 |
 |---|---|---|---|
-| `lib/generator.js`（Core 切片） | `core_<peripheral>_*`、`core_status_t`、`CORE_STATUS_*`、`__CORE_GPIO_H__` | `platform_<peripheral>_*`、`platform_err_t`、`PLATFORM_ERR_OK / PLATFORM_ERR_*`、`PLATFORM_GPIO_H` | ✔ |
+| `lib/generator.js`（Core 切片） | `core_<peripheral>_*`、`core_status_t`、`CORE_STATUS_*`、`CORE_GPIO_H` | `platform_<peripheral>_*`、`platform_err_t`、`PLATFORM_ERR_OK / PLATFORM_ERR_*`、`__PLATFORM_GPIO_H__` | ✔ |
 | `lib/generator.js`（BSP 切片） | `bsp_<stem>_driver`、`drv_adapter_port_*`、`drv_adapter_wrapper_*` | `impl_<stem>_driver`、`impl_<type>_port`、`platform_<type>_wrapper` | ✔ |
-| `templates/bsp-oled` | `oled_operations_t`、`__BSP_OLED_DRIVER_H__`、`oled_driver_inst()` | `impl_oled_ops_t`、`IMPL_OLED_DRIVER_H`、`impl_oled_driver_inst()` | ✔ |
+| `templates/bsp-oled` | `oled_operations_t`、`BSP_OLED_DRIVER_H`、`oled_driver_inst()` | `impl_oled_ops_t`、`__IMPL_OLED_DRIVER_H__`、`impl_oled_driver_inst()` | ✔ |
 | 类型后缀 | `core_status_t`（事务语义枚举） | `platform_err_t` 对齐 §7 错误码基线 | ✔ |
-| guard 风格 | `__XXX_H__`（双下划线，MISRA 21.1 风险） | `XXX_H`（无双下划线头尾） | ✔ |
+| guard 风格 | `XXX_H`（无双下划线头尾） | `__XXX_H__`（头尾双下划线） | ✔ |
 
 > 落地依据：`lib/generator.js`（目录/符号）、`commands/mcu-new.js`（编号目录树 + CMake GLOB）、`scripts/validate-layer-contract.js` / `validate-bsp-contract.js`（锁步校验）、`tests/generator.test.js` / `tests/mcu-new.test.js` / `tests/layer-contract.test.js`（断言锁步）、`templates/bsp-oled`（模板符号）。目录映射细节见 `docs/plugin-boundaries.md`。
 
@@ -205,7 +205,7 @@ skill id 是**三宿主注册契约**（`opencode.mjs` 派生 `mcu_workbench_<id
 ```
 目录  00_Config / 01_App / 02_Service/service_battery / 03_Platform/platform_mcu /
       04_Impl/impl_bsp / 05_Vendor / 99_Utils/utils_crc
-文件  platform_gpio.c/.h + guard PLATFORM_GPIO_H
+文件  platform_gpio.c/.h + guard __PLATFORM_GPIO_H__
 类型  platform_gpio_t / platform_i2c_ops_t / service_battery_state_t
 函数  platform_i2c_transfer() / service_battery_read_voltage() / utils_crc16()
 变量  g_全局 / s_静态 / p_指针成员 / pf_函数指针 / is_布尔

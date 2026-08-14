@@ -140,7 +140,7 @@ function buildRequirementsIntake(request, projectRoot, agents) {
       `用户需求：${request}`,
       `项目路径：${projectRoot || "待用户提供"}`,
       `必须覆盖：${fields.join("、")}`,
-      "RCP 完成前不得生成实现代码；完成后将 RCP 固定交接给 workflow-review-gate，由其完成审查与门禁判定，放行后由 workflow-integration-plan 完成分层/审计/迁移设计并分发实现层 Skill。",
+      "RCP 完成后先交给 workflow-requirements-challenge，质疑需求目的与可行性并生成两个候选方案；用户选择后将带决策记录的 RCP 交给 workflow-review-gate 完成审查与门禁判定，放行后由 workflow-integration-plan 完成分层/审计/迁移设计并分发实现层 Skill。",
     ].join("\n"),
   };
 }

@@ -17,7 +17,7 @@
 
 ## 2. Skills 能力地图
 
-当前 catalog 为 **45 catalog / 43 canonical**：
+当前 catalog 为 **46 catalog / 44 canonical**：
 
 - 43 个 canonical skills；
 - 2 个硬件 active 入口。
@@ -26,7 +26,8 @@
 
 | Skill | 功能 | 典型输出 |
 |---|---|---|
-| `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和需求约束包 | 需求约束包 → workflow-review-gate（必经） |
+| `workflow-requirements-router` | 需求分析、约束补证、Agent 分配和初步需求约束包 | 初步 RCP → workflow-requirements-challenge |
+| `workflow-requirements-challenge` | 质疑需求目的与可行性，生成方案 A/B 并等待选择 | 带用户选择的 RCP → workflow-review-gate |
 | `workflow-review-gate` | 代码前审查与门禁、BRD/PRD/SRSys | 审查包、放行/阻塞判定 |
 | `workflow-integration-plan` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划、分发 |
 | `workflow-final-review` | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | 按严重级别分组的审查报告与阻塞项 |

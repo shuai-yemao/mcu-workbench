@@ -38,7 +38,7 @@
 | 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
-| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档（`docs/requirements/`）供用户审查，判定放行/阻塞 |
+| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档，写入目标项目 `<project_root>/00_Docs/04_需求文档/`，不得写入插件内部，判定放行/阻塞 |
 | 放行后的集成规划与分发 | `workflow-integration-plan` | 分层/审计/迁移设计、文件级改造顺序，只分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 强制执行格式/注释初检；失败时仅作格式与必要注释整改并复检，复检通过才放行 |
 | 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |

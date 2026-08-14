@@ -21,10 +21,10 @@ skills/
 
 ## Canonical skills
 
-当前目录为 **45 catalog / 43 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **46 catalog / 44 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
-workflow-requirements-router workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering
+workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering
 app-architecture
 platform_os impl_os
 platform_bsp impl_board impl_bsp impl_bsp_handler
@@ -60,11 +60,11 @@ claude plugin validate .
 
 插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。详细职责、写入边界和交接协议见 [docs/agents.md](docs/agents.md)。
 
-Workflow 层有五个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张审查清单并重组为 BRD/PRD/SRSys），`workflow-integration-plan` 负责跨层规划与实现层分发，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
+Workflow 层有六个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责质疑需求目的与可行性、生成两个方案并等待用户选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张审查清单并重组为 BRD/PRD/SRSys），`workflow-integration-plan` 负责跨层规划与实现层分发，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
 
 ### 需求约束入口
 
-`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。最终输出可审计的需求约束包（RCP），覆盖项目背景、硬件资源、软件环境、FreeRTOS 任务与队列、分层边界、功能/非功能需求、优先级、依赖关系、验收标准和人工确认项，并将唯一正式输入（RCP）固定交接给 `workflow-review-gate`（必经审查门禁），由其完成反猜测审查与放行/阻塞判定；放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计并分发实现层。
+`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。Router 输出可审计的初步需求约束包（RCP）后，固定交接给 `workflow-requirements-challenge`，由其质疑需求目的与工程可行性、生成两个可比较方案并等待用户选择；带选择记录的更新 RCP 再交给 `workflow-review-gate`（必经审查门禁）完成反猜测审查与放行/阻塞判定；放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计并分发实现层。
 
 RCP 会区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，同时携带证据位置、责任边界与验证边界；`workflow-review-gate` 发现新约束时必须回传 Router 更新 RCP，不能静默扩大范围。
 

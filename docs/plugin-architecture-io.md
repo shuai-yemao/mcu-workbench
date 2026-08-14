@@ -15,7 +15,7 @@
 | **软件架构分层** | 生成的嵌入式工程 | App → Service → Platform → Impl → Vendor | 定义生成代码的依赖铁律 |
 | **插件分层** | skills/ 目录 | workflow / tools / hardware（横切） | 定义技能的组织与执行方式 |
 
-**当前规模**：45 catalog / 43 canonical 技能，7 个 Agent，8 个技能层，174 条迁移映射（MIGRATION_MAP），全部旧调用名经映射自动兼容。
+**当前规模**：46 catalog / 44 canonical 技能，7 个 Agent，8 个技能层，174 条迁移映射（MIGRATION_MAP），全部旧调用名经映射自动兼容。
 
 ```
 ┌────────────────────────── 宿主层 ──────────────────────────┐
@@ -30,7 +30,7 @@
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ┌──────────────────────────▼─────────── 技能层 ───────────────┐
-│  workflow(5)  │  app(1)  │  service(11)  │  platform(5)    │
+│  workflow(6)  │  app(1)  │  service(11)  │  platform(5)    │
 │  impl(4)      │  vendor(8)│  tools(9)    │  hardware(2)    │
 └──────────────────────────┬──────────────────────────────────┘
                            │ 派生
@@ -70,7 +70,7 @@
 
 | 层 | 数量 | 技能 | 职责 |
 |---|---|---|---|
-| workflow | 5 | `workflow-requirements-router`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-final-review`、`workflow-claude-layering` | **门禁与流程编排**（见第 6 节主链路） |
+| workflow | 6 | `workflow-requirements-router`、`workflow-requirements-challenge`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-final-review`、`workflow-claude-layering` | **门禁与流程编排**（见第 6 节主链路） |
 | tools | 9 | build / flash / linker / debug / observability / quality / git / release / learning-tutor | 工具链生命周期（构建→烧录→调试→观测→质量→发布） |
 | hardware | 2 | `hardware-pcb-analysis`、`hardware-visa-debug` | 板级集成（原理图/PCB 分析、仪器调试） |
 
@@ -83,7 +83,7 @@
 ```
 catalog-metadata.js（定义：CANONICAL/SERVICE/VENDOR/TOOL 四组定义 + 别名）
         ↓
-catalog.js（唯一目录：45 catalog / 43 canonical + legacy 别名；MIGRATION_MAP 174 条）
+catalog.js（唯一目录：46 catalog / 44 canonical + legacy 别名；MIGRATION_MAP 174 条）
         ↓
 loader.js（按磁盘加载 SKILL.md）→ registry.js（查询视图：分类/平台过滤）
         ↓
@@ -130,23 +130,28 @@ lib/agent-domains.js（DOMAINS → domainSkills() → agent 技能集）
    └─ 产出：RCP（需求约束包，11 约束域 + 四态可信等级 + 路由单）
         ⚠ 硬规则：RCP 完成前不得生成实现代码
    ▼
-② workflow-review-gate（代码前审查门禁，RCP 唯一接收方）
+② workflow-requirements-challenge（需求质疑与方案选择）
+   ├─ 质疑需求目的、技术可行性和工程边界
+   ├─ 生成方案 A/B，比较优缺点、风险、成本和验收
+   └─ 等待用户选择并回填 RCP
+   ▼
+③ workflow-review-gate（代码前审查门禁，选定方案 RCP 唯一接收方）
    ├─ 反猜测审查（假 API / CubeMX 假配置 / 假构建命令 / 主机测试冒充目标验证）
    ├─ 必选产出四张清单：工程现状 / 文件施工 / 代码生成约束 / 验收测试
    │    （保留在审查包内，作为实现层施工边界与 final-review 验收依据）
-   ├─ 重组三份产品文档 → docs/requirements/<req_id>-BRD.md / -PRD.md / -SRSys.md（给用户审查）
+   ├─ 重组三份产品文档 → <project_root>/00_Docs/04_需求文档/<req_id>-BRD.md / -PRD.md / -SRSys.md（给用户审查；禁止写入插件仓库）
    └─ 门禁判定：存在 inferred/unverified 事实 或 未关闭阻塞项 → 【阻塞】回退补证
    ▼ （放行）
-③ workflow-integration-plan（集成规划与分发）
+④ workflow-integration-plan（集成规划与分发）
    ├─ 分层审计（现状 → 目标五层）
    ├─ 迁移路线 + 文件级改造顺序
    └─ 分发：只分发 1 个实现层 Skill；执行 agent 执行中按需自行查阅其他领域知识
         （不预分配参考清单、不设数量上限）
    ▼
-④ 实现层 Skill（platform_* / impl_* / service_* / vendor_* / app-architecture / tools-*）
+⑤ 实现层 Skill（platform_* / impl_* / service_* / vendor_* / app-architecture / tools-*）
    └─ 按分层契约施工，产出代码
    ▼
-⑤ workflow-final-review（输出前最后一层门禁）
+⑥ workflow-final-review（输出前最后一层门禁）
    ├─ 对最终代码/补丁/git diff 独立审查
    ├─ 按 tools-quality 的 profile 输出结构化审查报告（分级发现 + 结论）
    └─ 默认不生成实现、不自动修复

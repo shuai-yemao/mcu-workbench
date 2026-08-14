@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | 部分 | 路径 | 说明 |
 |------|------|------|
-| **Canonical Skills** | `skills/` | 45 catalog / 43 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
+| **Canonical Skills** | `skills/` | 46 catalog / 44 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
 | **文档站点** | `docs/` | VitePress — 架构、验证、迁移文档 |
 | **脚本/API** | `scripts/` + `lib/` | 分层扫描(`scripts/claude-layer-api.js`)、校验、harness Programmatic API(原 Node CLI 已移除) |
@@ -87,7 +87,7 @@ node scripts/claude-layer-api.js validate --root <firmware-root> --strict
 ### 分层架构
 
 ```
-├─ workflow/  → workflow-requirements-router, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
+├─ workflow/  → workflow-requirements-router, workflow-requirements-challenge, workflow-review-gate, workflow-integration-plan, workflow-final-review, workflow-claude-layering
 ├─ app/       → app-architecture
 ├─ platform/  → platform_mcu, platform_os, platform_bsp, platform_common, platform_middleware（纯接口契约，不绑 RTOS/芯片；common 含对象模型实现，零实现门禁仅指技能目录）
 ├─ impl/      → impl_os, impl_board, impl_bsp, impl_bsp_handler（落地实现，隔离 HAL/RTOS/板级）

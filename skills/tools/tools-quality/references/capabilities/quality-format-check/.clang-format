@@ -28,6 +28,9 @@ BraceWrapping:
   AfterStruct: true
   BeforeElse: false
 
+# Control statements
+InsertBraces: true                  # 控制语句统一使用大括号
+
 # Spacing
 SpaceBeforeParens: ControlStatements  # if ( 加空格，func( 不加
 SpaceAfterCStyleCast: true

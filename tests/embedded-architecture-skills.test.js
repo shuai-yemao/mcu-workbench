@@ -28,6 +28,7 @@ describe('embedded architecture skill contracts', () => {
     'skills/platform/platform_os/SKILL.md',
     'skills/impl/impl_os/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
+    'skills/workflow/workflow-requirements-challenge/SKILL.md',
     'skills/workflow/workflow-review-gate/SKILL.md',
     'skills/workflow/workflow-integration-plan/SKILL.md'
   ];
@@ -132,14 +133,14 @@ describe('embedded architecture skill contracts', () => {
     expect(contract).toContain('不适用于 OS、BSP、MCU 或其他 Platform 子域');
   });
 
-  test('keeps public documentation aligned with the 45 catalog and 43 canonical entries', () => {
+  test('keeps public documentation aligned with the 46 catalog and 44 canonical entries', () => {
     const documents = [
       'README.md', 'CLAUDE.md', 'docs/skills-migration.md', 'docs/codex-adaptation.md',
       'docs/plugin-capability-map.md', 'docs/plugin-execution-flow.md'
     ];
     for (const relativePath of documents) {
       const content = read(relativePath);
-      expect(content).toContain('45 catalog / 43 canonical');
+      expect(content).toContain('46 catalog / 44 canonical');
       expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
       for (const entry of ['platform_os', 'impl_os', 'platform_bsp', 'impl_board', 'platform_mcu', 'vendor_stm32']) {
         expect(content).toContain(entry);

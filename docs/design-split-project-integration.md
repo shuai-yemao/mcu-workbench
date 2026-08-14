@@ -24,15 +24,15 @@
 
 | | workflow-review-gate（审查门禁） | workflow-integration-plan（集成规划与分发） |
 |---|---|---|
-| 定位 | RCP 唯一接收方，代码前门禁 | 放行后的集成规划与分发 |
+| 定位 | 接收完成质疑与用户选择的 RCP，代码前门禁 | 放行后的集成规划与分发 |
 | 核心问题 | 方案站得住吗？ | 怎么集成、交给谁？ |
-| 输入 | RCP + 既有实现方案 + 项目证据 | 放行后的审查包 |
+| 输入 | 选定方案 RCP + 质疑决策包 + 既有实现方案 + 项目证据 | 放行后的审查包 |
 | 职责 | 工程事实整理（四态可信等级）、反猜测审查、四张清单、BRD/PRD/SRSys、门禁判定 | 分层审计/调用链、迁移路线、文件级改造顺序、分发唯一实现层 Skill、交接 final-review |
 | 输出 | 审查包（放行/阻塞）+ 三份产品文档 | 施工计划（现状/边界/文件修改/验收四张表）+ 分发结论 |
 | 硬边界 | 不实现代码；不分层迁移设计；不分发 | 不审查既有方案可行性（门禁已过）；不生成实现代码；非放行不得分发 |
-| 交接 | 放行 → workflow-integration-plan；阻塞 → 回传 Router 补证 | 实现层 Skill（唯一）→ 完成后交 workflow-final-review |
+| 交接 | 放行 → workflow-integration-plan；阻塞 → 回传 Router/requirements-challenge 补证 | 实现层 Skill（唯一）→ 完成后交 workflow-final-review |
 
-**门禁不变量如何保证**：调用链单向强制——Router → `workflow-review-gate`（判定）→ 仅放行交 `workflow-integration-plan` → 分发。`workflow-integration-plan` 的硬边界明文"审查包门禁状态非放行不得分发"，阻塞不会越过边界。
+**门禁不变量如何保证**：调用链单向强制——Router → `workflow-requirements-challenge`（目的/可行性与双方案选择）→ `workflow-review-gate`（判定）→ 仅放行交 `workflow-integration-plan` → 分发。`workflow-integration-plan` 的硬边界明文"审查包门禁状态非放行不得分发"，阻塞不会越过边界。
 
 ## 3. 新旧职责对照
 
@@ -41,7 +41,7 @@
 | 适用范围/工作流 1-2 步：读工程、画调用链 | workflow-integration-plan（分层审计） |
 | 实现方案审查与代码前门禁（反猜测审查、四类假证据） | workflow-review-gate |
 | 固定审查包与门禁判定（四张清单必选 + inferred/unverified 阻塞规则） | workflow-review-gate |
-| 必选产品文档输出（BRD/PRD/SRSys，docs/requirements/） | workflow-review-gate |
+| 必选产品文档输出（BRD/PRD/SRSys，`<project_root>/00_Docs/04_需求文档/`） | workflow-review-gate |
 | 交付计划最低产物（现状/边界/文件修改/验收四张表、模式 C） | workflow-integration-plan |
 | 分层证据图（knowledge-graph 读取） | workflow-review-gate（审查证据源） |
 | 分发目标（唯一实现层 Skill） | workflow-integration-plan |

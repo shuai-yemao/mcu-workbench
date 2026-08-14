@@ -8,13 +8,14 @@ const LEGACY_SKILL_ENTRIES = [
   // - workflow-requirements-router 是核心路由 Skill，纳入 canonical；
   // - hardware-* 独立于软件分层，作为 active 入口保留。
   // 其余旧 skill 已删除归档，旧调用名经 catalog.js 的 MIGRATION_MAP 兼容解析。
-  ['workflow-requirements-router', 'embedded', 'workflow', '嵌入式需求约束分析、Agent 编排与固定交接给 workflow-review-gate'],
+  ['workflow-requirements-router', 'embedded', 'workflow', '嵌入式需求约束分析、Agent 编排与固定交接给 workflow-requirements-challenge'],
   ['hardware-pcb-analysis', 'pcb-analysis', 'hardware', 'PCB 原理图与网表分析'],
   ['hardware-visa-debug', 'visa-debug', 'hardware', 'VISA/SCPI 仪器通信调试']
 ];
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
+  ['workflow-requirements-challenge', 'workflow', '需求约束后的目的与可行性质疑：生成两个可比较方案、说明优缺点并等待用户选择'],
   ['workflow-review-gate', 'workflow', '代码前审查与门禁：反猜测审查、四张清单、BRD/PRD/SRSys 与放行/阻塞判定'],
   ['workflow-integration-plan', 'workflow', '放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发'],
   ['workflow-final-review', 'workflow', '最终代码/变更集的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告'],

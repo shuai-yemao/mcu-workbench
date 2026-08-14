@@ -304,6 +304,7 @@ function validateCommentLanguage(files, errors, { rulePrefix = 'LAYER', skipRole
     const englishOnly = [...file.content.matchAll(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g)].some((match) => {
       const text = match[0].replace(/\/\*|\*\/|\/\//g, ' ').replace(/\s+/g, ' ').trim();
       if (/^(?:Includes|Public|Private|Functions|Types|Defines|State|Composition|Composition Root|Functions|Defines)\b/.test(text)) return false;
+      if (/^[A-Z0-9_]+_H$/.test(text)) return false;
       return /[A-Za-z]{2,}/.test(text) && !/[\u4e00-\u9fff]/.test(text);
     });
     if (englishOnly) {
@@ -318,7 +319,7 @@ function validateSections(files, errors) {
     if (!file.content.includes('@file')) addError(errors, 'LAYER_FILE_DOC', file.relative, 'Generated file must have an @file documentation header.');
     if (file.relative.endsWith('.c')) {
       for (const section of ['Includes', 'Public Functions']) {
-        if (!file.content.includes(`/* ${section} */`)) {
+        if (!new RegExp(`/\\* ${section}(?: -+)? \\*/`).test(file.content)) {
           addError(errors, 'LAYER_SOURCE_SECTION', file.relative, `Generated source must contain ${section} section.`);
         }
       }

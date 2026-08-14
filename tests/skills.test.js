@@ -6,13 +6,13 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps active entries and exposes 43 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(45);
-    expect(CANONICAL_SKILLS).toHaveLength(43);
+  test('catalog keeps active entries and exposes 44 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(46);
+    expect(CANONICAL_SKILLS).toHaveLength(44);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
-      'workflow-requirements-router', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
+      'workflow-requirements-router', 'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
       'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware', 'impl_os', 'impl_board',
       'impl_bsp', 'impl_middleware', 'vendor_stm32', 'vendor_lvgl',
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
@@ -71,8 +71,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(43);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(43);
+    expect(listAvailableSkills()).toHaveLength(44);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(44);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -81,12 +81,14 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('rtos-freertos')).toContain('name: impl_os');
     expect(getSkillContent('bsp-adapter')).toContain('name: impl_board');
     expect(getSkillContent('driver-vendor')).toContain('name: vendor_stm32');
+    expect(getSkillContent('workflow-requirements-challenge')).toContain('name: workflow-requirements-challenge');
   });
 
   test('workflow router emits a bounded, canonical routing contract', () => {
     const router = getSkillContent('workflow-requirements-router');
     expect(router).toContain('## 路由单（固定输出）');
     expect(router).toContain('必经下游：workflow-review-gate');
+    expect(router).toContain('workflow-requirements-challenge');
     expect(router).toContain('实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>');
     expect(router).toContain('只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限');
     expect(router).not.toContain('参考 Skill');
@@ -111,7 +113,8 @@ describe('Skills catalog and loader', () => {
     expect(integration).toContain('## 实现方案审查与代码前门禁');
     expect(integration).toContain('需求约束包（RCP）');
     expect(integration).toContain('唯一接收方');
-    expect(integration).toContain('Router 固定交付需求约束包（RCP）');
+    expect(integration).toContain('带用户选择记录的需求约束包（RCP）');
+    expect(integration).toContain('workflow-requirements-challenge');
     expect(integration).toContain('既有需求实现方案');
     expect(integration).toContain('embedded-lead');
     expect(integration).toContain('system-architect');
@@ -150,6 +153,21 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('文档落盘前置条件');
     expect(reviewPackage).toContain('不得写入插件仓库内部');
     expect(reviewPackage).toContain('不生成插件内占位文件');
+  });
+
+  test('requirements challenge produces two options and blocks before selection', () => {
+    const challenge = getSkillContent('workflow-requirements-challenge');
+    expect(challenge).toContain('目的质疑');
+    expect(challenge).toContain('可行性质疑');
+    expect(challenge).toContain('方案 A');
+    expect(challenge).toContain('方案 B');
+    expect(challenge).toContain('优点');
+    expect(challenge).toContain('缺点');
+    expect(challenge).toContain('待用户选择');
+    expect(challenge).toContain('不得交给 `workflow-review-gate`');
+    expect(challenge).toContain('selected_option');
+    expect(challenge).toContain('workflow-review-gate');
+    expect(challenge).toContain('不生成代码');
   });
 
   test('integration plan dispatches a single implementation skill after gate clearance', () => {

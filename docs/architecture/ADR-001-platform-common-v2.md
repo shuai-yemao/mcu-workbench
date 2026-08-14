@@ -41,4 +41,4 @@ Accepted（2026-08-09，用户确认：manager 为内置能力；仅文档施工
 
 **阻塞项**：工程代码改造（P2/P3/P5 实现）转后续课程；本 ADR 仅覆盖契约文档层。
 
-**参考**：审查包 `docs/requirements/platform-common-v2-review-package.md`（四张清单）。
+**参考**：目标项目审查包 `<project_root>/00_Docs/04_需求文档/platform-common-v2-review-package.md`（四张清单）。

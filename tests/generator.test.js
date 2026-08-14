@@ -102,7 +102,7 @@ describe('Generator Module', () => {
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
       .toContain('osal_mutex_create');
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
-      .toMatch(/if \(platform_display_wrapper_register\(&wrapper_ops\) != 0\)\s+goto cleanup_mutex;/);
+      .toMatch(/if \(platform_display_wrapper_register\(&wrapper_ops\) != 0\)\s+\{\s+goto cleanup_mutex;/);
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
       .not.toMatch(/\(\s*int32_t\s*\(\s*\*/);
     expect(byPath['04_Impl/impl_bsp/display/SSD1306/Inc/impl_ssd1306_config.h'])
@@ -136,6 +136,7 @@ describe('Generator Module', () => {
       expect(lines.some((line) => /typedef\s+(?:struct|enum)\s*\{/.test(line))).toBe(false);
       expect(lines.some((line) => /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/.test(line))).toBe(false);
       expect(lines.some((line) => /\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78)).toBe(false);
+      expect(lines.filter((line) => /\/\*.*-{5,}.*\*\//.test(line)).every((line) => line.length === 80)).toBe(true);
     }
   });
 
@@ -145,11 +146,27 @@ describe('Generator Module', () => {
     });
     const port = files.find((file) => file.path.endsWith('impl_externflash_port.c')).content;
     const driver = files.find((file) => file.path.endsWith('impl_w25q64_driver.c')).content;
+    const driverHeader = files.find((file) => file.path.endsWith('impl_w25q64_driver.h')).content;
 
     expect(driver).toContain('@note 缩进使用 4 个空格，禁止使用 TAB。');
     expect(driver).toContain('@brief 读取设备标识。');
     expect(driver).toContain('校验依赖后调用已注入的底层操作。');
     expect(driver).not.toContain('入口检查与核心处理');
+    expect(driver).not.toContain('成员或枚举值说明');
+    expect(driverHeader).toContain('#endif /* IMPL_W25Q64_DRIVER_H */');
     expect(port).not.toMatch(/\{\s*\/\*\*[^]*?\*\/\s*return\s+[A-Za-z_]\w*\(/);
+  });
+
+  test('uses semantic member comments and padded section banners', async () => {
+    const files = await generateCorePeripheral('spi', 'stm32f4');
+    const header = files.find((file) => file.path.endsWith('platform_spi.h')).content;
+    const source = files.find((file) => file.path.endsWith('platform_spi.c')).content;
+
+    expect(header).toContain('/* Includes ');
+    expect(header).toContain('event_id; /**< 待处理的事件标识。');
+    expect(header).not.toContain('成员或枚举值说明');
+    expect(source).toContain('/* IRQ 功能开关或事件标识 ');
+    expect(header).toContain('#endif /* PLATFORM_SPI_H */');
+    expect(source).toContain('if (instance == NULL || instance->pf_init == NULL) {');
   });
 });
