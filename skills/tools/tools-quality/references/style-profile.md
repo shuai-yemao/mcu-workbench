@@ -21,6 +21,7 @@ version: "1.0.0"
 | 6 | 每个函数有 doxygen 注释 | `/** @brief ... */` | 无注释 |
 | 7 | 函数内关键步骤有段注释（左对齐-填充-右对齐） | `/* 步骤说明 --- */` | 无逻辑注释 |
 | 8 | 注释语言默认为中文（Doxygen 与段/行尾注释均适用） | `/**< 操作成功 */` | `/**< Operation OK */` |
+| 9 | 同组声明、赋值和初始化符号对齐 | `uint32_t value = 0U;` | 同组列未对齐 |
 
 ## 命名速查
 
@@ -264,7 +265,53 @@ typedef struct
 | 11 | 判断时常数放左边 | `NULL == p`, `0 != (mask & val)` |
 | 12 | 函数间空一行 | 两个函数定义之间一个空行 |
 | 13 | 逻辑块间空一行 | 步骤注释前保留一个空行 |
-| 14 | 同类型声明对齐 | `uint8_t           reg;\n    uint16_t          value;` |
+| 14 | 同组声明的类型、变量名和 `=` 分列对齐 | `uint32_t value = 0U;` | 声明列不对齐 |
+| 15 | 同组赋值语句的 `=` 对齐 | `p_data->value = x;` | 赋值列不对齐 |
+
+### 声明、赋值和初始化对齐
+
+对齐只作用于同一连续代码组，不跨越空行、注释、函数步骤分区、逻辑分区或不同声明组。
+当对齐会导致行宽超过 80 列时，以 80 列限制优先；应拆分声明或保持该组不扩展，不得为了对齐生成超长行。
+
+```c
+/* 变量声明组 ------------------------- */
+uint32_t timeout_ms  = 0U;
+uint32_t retry_count = 0U;
+bool     is_ready    = false;
+
+/* 赋值语句组 -------------------------- */
+p_data->temperature = sensor_convert_temperature(p_data->raw_temperature);
+p_data->humidity    = sensor_convert_humidity(p_data->raw_humidity);
+
+/* 枚举值组 ---------------------------- */
+typedef enum
+{
+    SENSOR_STATE_IDLE    = 0,
+    SENSOR_STATE_RUNNING = 1,
+    SENSOR_STATE_ERROR   = 2,
+} sensor_state_t;
+
+/* 指定初始化组 ------------------------ */
+sensor_config_t config =
+{
+    .timeout_ms  = SENSOR_TIMEOUT_MS,
+    .retry_count = SENSOR_RETRY_COUNT,
+    .is_enabled  = true,
+};
+```
+
+结构体成员没有初始化符号时，只对齐类型和成员名：
+
+```c
+typedef struct
+{
+    uint8_t  raw_value;
+    uint16_t sample_count;
+    bool     is_valid;
+} sensor_data_t;
+```
+
+对齐规则不要求不同代码块之间使用相同列位置；每个代码块独立计算对齐列。
 
 ## 九大核心原则
 

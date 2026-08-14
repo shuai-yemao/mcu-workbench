@@ -86,6 +86,34 @@ describe('generated layer contract validator', () => {
     ]));
   });
 
+  test('rejects a generated source whose assignment columns are not aligned', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => (
+      content.replace('event->status   = PLATFORM_ERR_OK;', 'event->status = PLATFORM_ERR_OK;')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT',
+        file: '03_Platform/platform_mcu/Src/platform_spi.c'
+      })
+    ]));
+  });
+
+  test('rejects a generated header whose declaration columns are not aligned', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
+      content.replace('uint32_t       event_id;', 'uint32_t event_id;')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_FORMAT_DECLARATION_ALIGNMENT',
+        file: '03_Platform/platform_mcu/Inc/platform_spi.h'
+      })
+    ]));
+  });
+
   test('rejects a generated source that keeps the generic step placeholder', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => content
@@ -258,8 +286,8 @@ describe('generated layer contract validator', () => {
   test('reports a synchronous ISR callback and a missing deferred state release', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => content
-      .replace('handle->event_pending = true;', 'handle->event_callback(handle->event_context, event_id, status);')
-      .replace('handle->event_pending = false;', 'handle->event_pending = true;'));
+      .replace(/handle->event_pending\s*=\s*true;/, 'handle->event_callback(handle->event_context, event_id, status);')
+      .replace(/handle->event_pending\s*=\s*false;/, 'handle->event_pending = true;'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_HANDLE_ISR_DEFERRAL' }),
       expect.objectContaining({ ruleId: 'LAYER_HANDLE_TASK_CALLBACK' })

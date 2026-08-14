@@ -120,18 +120,44 @@ function findFunctionComments(content, start) {
 
 function findFunctionContracts(content) {
   const code = maskCommentsAndStrings(content);
-  const expression = /(^|\n)[ \t]*(?:(?:static|extern)\s+)?(?:const\s+)?[A-Za-z_]\w*(?:[ \t]+|\s*\*)+([A-Za-z_]\w*)\s*\(([\s\S]*?)\)\s*(;|\{)/g;
+  const lines = code.split('\n');
+  const offsets = [];
+  let offset = 0;
+  for (const line of lines) {
+    offsets.push(offset);
+    offset += line.length + 1;
+  }
   const contracts = [];
-  for (const match of code.matchAll(expression)) {
-    const name = match[2];
+  for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+    const line = lines[lineIndex];
+    const openParen = line.indexOf('(');
+    if (openParen < 0) continue;
+    const prefix = line.slice(0, openParen);
+    if (/^[ \t]*typedef\b/.test(line) || /\(\s*\*/.test(line)) continue;
+    const nameMatch = prefix.match(/([A-Za-z_]\w*)[ \t]*$/);
+    if (!nameMatch) continue;
+    const name = nameMatch[1];
+    const returnType = prefix.slice(0, nameMatch.index).trim();
+    if (/^\s*#/.test(line)
+      || !returnType || /\breturn\b|->|\.|[|&!+\-/=%<>]/.test(returnType)) continue;
+    let signature = line;
+    let endLine = lineIndex;
+    while (endLine + 1 < lines.length && endLine - lineIndex < 20
+      && !/\)\s*[;{]\s*$/.test(signature)) {
+      endLine += 1;
+      signature += `\n${lines[endLine]}`;
+    }
+    const terminatorMatch = signature.match(/\)\s*([;{])\s*$/);
+    if (!terminatorMatch) continue;
     if (['if', 'for', 'while', 'switch', 'return', 'void'].includes(name)
-      || /\breturn\s+[A-Za-z_]\w*\s*\(/.test(match[0])
-      || /^\s*(?:if|for|while|switch)\b/.test(match[0])
-      || /\(\s*\*\s*\w+\s*\)/.test(match[0])) continue;
-    const lineStart = (match.index || 0) + (match[1] === '\n' ? 1 : 0);
-    const nameStart = lineStart + match[0].slice(lineStart - (match.index || 0)).indexOf(name);
-    const terminator = match[4];
-    const openBrace = terminator === '{' ? (match.index || 0) + match[0].lastIndexOf('{') : -1;
+      || /\breturn\s+[A-Za-z_]\w*\s*\(/.test(line)
+      || /\(\s*\*\s*\w+\s*\)/.test(line)) continue;
+    const lineStart = offsets[lineIndex] + line.search(/\S/);
+    const nameStart = offsets[lineIndex] + prefix.lastIndexOf(name);
+    const terminator = terminatorMatch[1];
+    const openBrace = terminator === '{'
+      ? offsets[endLine] + lines[endLine].lastIndexOf('{')
+      : -1;
     let body = '';
     if (openBrace >= 0) {
       let depth = 0;
@@ -145,15 +171,17 @@ function findFunctionContracts(content) {
       }
       body = content.slice(openBrace + 1, cursor);
     }
+    const closeParen = signature.lastIndexOf(')');
     contracts.push({
       name,
       start: lineStart,
       returnType: code.slice(lineStart, nameStart).trim(),
-      parameters: match[3],
+      parameters: signature.slice(openParen + 1, closeParen),
       body,
       comment: findFunctionComments(content, lineStart),
       isDefinition: terminator === '{'
     });
+    lineIndex = endLine;
   }
   return contracts;
 }
@@ -346,6 +374,74 @@ function validateSections(files, errors) {
   }
 }
 
+const ALIGNMENT_KEYWORDS = new Set([
+  'case', 'do', 'else', 'for', 'goto', 'if', 'return', 'switch', 'while'
+]);
+
+function parseDeclarationAlignment(line) {
+  const code = line.replace(/\s*\/\*.*\*\/\s*$/, '');
+  const trimmed = code.trim();
+  if (!trimmed.endsWith(';') || /[(),{}]/.test(trimmed)) return null;
+  const firstToken = trimmed.match(/^([A-Za-z_]\w*)/)?.[1];
+  if (!firstToken || ALIGNMENT_KEYWORDS.has(firstToken)) return null;
+  const match = code.match(/([A-Za-z_]\w*)\s*(?:\[[^\]]*\])?\s*(=|);\s*$/);
+  if (!match || !/\s|\*/.test(code.slice(0, match.index))
+    || /->|\./.test(code.slice(0, match.index))) return null;
+  const assignment = match[2] === '=' ? code.indexOf('=', match.index) : -1;
+  return {
+    nameColumn: match.index,
+    operatorColumn: assignment >= 0 ? assignment : null
+  };
+}
+
+function parseAssignmentAlignment(line) {
+  if (/^\s*(?:#|(?:if|for|while|switch)\s*\()/.test(line)) return null;
+  const match = line.match(
+    /^(\s*)([^;{}()]+?)(\+=|-=|\*=|\/=|%=|<<=|>>=|&=|\^=|\|=|=(?!=))\s*[^;]*;\s*(?:\/\*.*\*\/)?$/
+  );
+  if (!match) return null;
+  return { operatorColumn: line.indexOf(match[3]) };
+}
+
+function parseEnumAlignment(line) {
+  const match = line.match(
+    /^\s*[A-Z][A-Z0-9_]*\s*=\s*[^,]+,?\s*(?:\/\*\*<.*\*\/)?\s*$/
+  );
+  return match ? { operatorColumn: line.indexOf('=') } : null;
+}
+
+function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, description) {
+  let group = [];
+
+  const flush = () => {
+    if (group.length < 2) {
+      group = [];
+      return;
+    }
+    const columns = new Set(group.map((item) => item[field]));
+    const target = Math.max(...group.map((item) => item[field]));
+    if (group.some((item) => target + lines[item.index].length - item[field] > 80)) {
+      group = [];
+      return;
+    }
+    if (columns.size > 1) {
+      addError(errors, ruleId, file.relative,
+        `${description} must align within one consecutive code group (line ${group[0].index + 1}).`);
+    }
+    group = [];
+  };
+
+  lines.forEach((line, index) => {
+    const parsed = parser(line);
+    if (!parsed || parsed[field] === null) {
+      flush();
+      return;
+    }
+    group.push({ ...parsed, index });
+  });
+  flush();
+}
+
 function validateGeneratedStyle(files, errors) {
   const datePattern = new RegExp(`@version\\s+V1\\.0\\s+${new Date().toISOString().slice(0, 10)}`);
   const functionDefinition = /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/;
@@ -383,6 +479,22 @@ function validateGeneratedStyle(files, errors) {
     const lines = file.content.split(/\r?\n/);
     const isGeneratedFile = file.content.includes('@version');
     if (!isGeneratedFile) continue;
+    validateAlignmentGroups(
+      lines, file, errors, parseDeclarationAlignment,
+      'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseDeclarationAlignment,
+      'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseAssignmentAlignment,
+      'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseEnumAlignment,
+      'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
+    );
     if (file.content.includes('@version') && !datePattern.test(file.content)) {
       addError(errors, 'LAYER_FILE_DATE', file.relative,
         'Generated file header must contain the current date in @version.');

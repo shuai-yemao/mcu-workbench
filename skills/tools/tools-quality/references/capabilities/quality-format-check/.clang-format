@@ -49,6 +49,13 @@ SeparateDefinitionBlocks: Leave  # 函数间空一行
 
 # Misc
 AlignConsecutiveMacros: false
-AlignConsecutiveAssignments: false
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
 SortIncludes: false               # 不自动排序 include
 ReflowComments: false             # 不自动回绕注释

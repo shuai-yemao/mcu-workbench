@@ -178,8 +178,12 @@ describe('Generator Module', () => {
     expect(header).toContain('/* 包含文件 ');
     expect(header).not.toContain('/* Includes');
     expect(header).toContain('event_id; /**< 待处理的事件标识。');
+    expect(header).toContain('uint32_t       event_id;');
+    expect(header).toContain('platform_err_t status;');
+    expect(header).toMatch(/PLATFORM_ERR_OK\s+= 0,.*\n\s+PLATFORM_ERR_PARAM\s+= 3,/);
     expect(header).not.toContain('成员或枚举值说明');
     expect(source).toContain('/* IRQ 功能开关或事件标识 ');
+    expect(source).toMatch(/event->event_id = PLATFORM_SPI_EVENT_IRQ;\n    event->status   = PLATFORM_ERR_OK;\n    event->sequence \+= 1U;/);
     expect(header).toContain('#endif /* PLATFORM_SPI_H */');
     expect(source).toContain('if (instance == NULL || instance->pf_init == NULL) {');
   });
