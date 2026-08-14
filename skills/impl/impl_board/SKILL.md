@@ -19,6 +19,22 @@ description: Impl 落地：板级组合根——构造实例、注入 Ops、资�
 - 生产组合根与 Fake 组合根必须注册同形函数表。生产实现绑定具体芯片/平台/OSAL，Fake 实现绑定 Fake Bus/时基/OSAL，接口不因测试而分叉。
 - GPIO 输出实现必须以 platform_mcu 公开头和板级 pin/极性证据构造上下文；裸 `extern` 回调或无说明的 `NULL` context 只能是带 `UNRESOLVED_GPIO_BINDING` 的预览。按阶段装配，任一步失败必须恢复先前注册状态。
 
+## Middleware 组合根（板级唯一注册点）
+
+当工程接入日志、文件系统、网络或其他第三方中间件时，所有中间件的注册/注销集中在
+`impl_board_<board>_middleware.c`（必要时配套同名公共头）中。该文件是板级组合根的唯一
+Middleware 入口，负责：
+
+- 按依赖顺序调用各中间件公开的 `*_register()`；
+- 任一步失败时按已成功步骤的逆序注销并恢复状态；
+- 在 Service 使用前完成绑定，在 Service 停止并完成 backend deinit 后再注销；
+- 只装配 Ops/context 和板级资源，不复制 Vendor 状态、业务策略或 Service 缓存。
+
+`impl_board_<board>_mcu.c` 只负责 MCU/HAL、时钟、Tick 和板级硬件资源，不得 include
+`platform_log.h`、Elog、SEGGER RTT 等中间件头，也不得注册或注销中间件。顶层启动代码只
+调用 Board middleware 的公开入口，禁止手写跨文件 `extern`。缺少公共头或注册顺序证据时，
+应标记为 `UNRESOLVED_BOARD_MIDDLEWARE_API`，不能宣称已完成接入。
+
 ## 与 platform_bsp 的关系
 
 platform_bsp 只包含标准类型头和自身公共声明，不能包含本层、HAL、RTOS 或具体 Driver/Handler。它静态持有抽象函数表、提供注册入口和稳定转发 API；不持有平台句柄或具体实例。

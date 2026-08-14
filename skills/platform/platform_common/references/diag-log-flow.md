@@ -11,12 +11,15 @@
 
 ```text
 调用向下：App/Service/Impl ──日志宏──► platform_log（契约内核）
-注入由 Impl：impl_middleware port 符号实现 platform_log_* ──► Vendor 底座
-输出到底：platform_log 组帧 ──► Impl 通道 ──► elog / SEGGER RTT / HAL UART
+注入由 Impl：Impl 契约适配/受审查 registry ──► Vendor Port ──► Vendor 底座
+输出到底：platform_log 转发 ──► Impl 通道 ──► elog / SEGGER RTT / HAL UART
 ```
 
 - **调用向下**：日志产生方在各层，统一汇聚到 `platform_log` 契约（无逐层接力）。
-- **注入由 Impl**：注入是**符号实现**（链接期），非运行期 ops 表——Impl port 文件直接实现 `platform_log_*` 函数体（如 `impl_log_elog.c`），Vendor 句柄经 `void *`/backend_context 隔离，不泄漏进抽象。简单、零 RAM、无初始化顺序问题；多通道切换属过度设计，禁止引入运行期注册。
+- **注入由 Impl**：默认可由 Impl port 直接实现 `platform_log_*`；若工程经 RCP 放行 registry，则
+  `platform_log.c` 只保存借用的 Ops/context、做状态校验和转发，`impl_elog_log.c` 注入 Ops，
+  `impl_elog_port.c` 负责 Elog→RTT 的 Vendor 回调。Vendor 句柄经 `void *`/backend_context
+  隔离，不泄漏进抽象；注册仅限启动/完全停机阶段，不提供运行期通道切换。
 - **输出到底**：`platform_log_output` 组帧（级别前缀/时间戳由 Impl 决定）后写 Vendor 底座（elog/RTT/HAL UART）。
 
 ## 调用面访问规则（谁用什么）
@@ -63,7 +66,7 @@
 
 | Platform 抽象 | Impl port | Vendor 底座 |
 |---|---|---|
-| `platform_log` | `impl_middleware/impl_log_elog.c` | easylogger |
+| `platform_log` | `platform_log.c` + `impl_middleware/elog/impl_elog_log.c` | easylogger |
 | `platform_assert_output` | `impl_middleware/impl_assert_output.c` | SEGGER RTT |
 | elog 底层移植 | `impl_middleware/impl_elog_port.c`（Vendor 面向） | easylogger |
 | `platform_reset_reason` / `platform_hardfault` | Impl 芯片 Port（当前未设独立 MCU 子域，留待后续） | CMSIS/寄存器 |

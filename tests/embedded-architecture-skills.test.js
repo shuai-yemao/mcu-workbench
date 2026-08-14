@@ -106,6 +106,8 @@ describe('embedded architecture skill contracts', () => {
   test('keeps Middleware Platform-to-Impl exception scoped to implementation boundaries', () => {
     const platform = read('skills/platform/platform_middleware/SKILL.md');
     const impl = read('skills/impl/impl_middleware/SKILL.md');
+    const board = read('skills/impl/impl_board/SKILL.md');
+    const service = read('skills/service/service_log/SKILL.md');
     const contract = read('skills/workflow/workflow-review-gate/references/software-layer-contract.md');
 
     expect(platform).toContain('Platform→Impl 受限例外');
@@ -113,11 +115,19 @@ describe('embedded architecture skill contracts', () => {
     expect(platform).toContain('当前日志基线');
     expect(platform).toContain('一个公共头');
     expect(platform).toContain('platform_log.h');
-    expect(impl).toContain('单一 Port 文件职责');
-    expect(impl).toContain('impl_log_port.c/.h');
+    expect(impl).toContain('默认单一 Port');
+    expect(impl).toContain('impl_elog_log.c/.h');
+    expect(impl).toContain('impl_elog_port.c');
+    expect(impl).toContain('受控拆分');
     expect(impl).toContain('不复制、不格式化、不直接修改');
     expect(impl).toContain('时间戳必须绑定到 Impl Port');
-    expect(impl).toContain('不引入 OS/FreeRTOS');
+    expect(impl).toContain('FreeRTOS/HAL');
+    expect(impl).toContain('Impl/Board 边界');
+    expect(board).toContain('impl_board_<board>_middleware.c');
+    expect(board).toContain('MCU/HAL');
+    expect(service).toContain('platform_service_t');
+    expect(service).toContain('PLATFORM_SERVICE_CLASS_SYSTEM');
+    expect(service).toContain('静默截断');
     expect(contract).toContain('Middleware 受限例外');
     expect(contract).toContain('不适用于 OS、BSP、MCU 或其他 Platform 子域');
   });

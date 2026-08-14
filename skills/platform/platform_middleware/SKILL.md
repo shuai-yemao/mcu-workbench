@@ -1,6 +1,6 @@
 ---
 name: platform_middleware
-description: Platform 中间件能力契约：每个中间件默认只提供一个 Vendor-neutral 公共头（例如 platform_log.h），统一类型与错误语义；具体逻辑由 Impl 的 impl_xxx_port.c/.h 接入，零实现不绑芯片/RTOS。
+description: Platform 中间件能力契约：每个中间件默认只提供一个 Vendor-neutral 公共头（例如 platform_log.h），统一类型与错误语义；具体逻辑由 Impl 接入，必要时允许经审查的窄职责 Platform registry .c，仍不绑定芯片/RTOS。
 ---
 
 # Platform Middleware（中间件能力契约）
@@ -22,7 +22,8 @@ description: Platform 中间件能力契约：每个中间件默认只提供一�
 ```
 
 例如日志使用 `platform_log.h`。不要为同一能力再拆出 `platform_<domain>_config.h`、
-`platform_<vendor>.h` 或 Platform `.c`，除非独立需求明确要求并经过门禁审查。公开配置
+`platform_<vendor>.h` 或第二个公共契约头。Platform `.c` 默认不生成；若工程确实需要稳定的
+注册槽、状态校验或转发，可在 RCP/Review Gate 明确放行一个窄职责 `.c`。公开配置
 语义可以并入唯一公共头；Vendor、板级、工具链和后端私有配置必须下沉到 Impl/工程配置。
 
 标准调用链为：
@@ -71,16 +72,19 @@ Platform 不承载第三方库初始化、格式化、缓存、输出、锁、�
 2. Impl 只提供稳定的契约实现/转发入口，不能把 Vendor 头、私有句柄或业务策略泄漏到 Platform；
 3. Platform 仍只描述能力，不承载第三方库逻辑；
 4. 该例外只适用于已确认的 Middleware 接入，不得放宽 OS、BSP、MCU 或其他 Platform 子域规则；
-5. 若 Middleware 不需要 Platform 实现文件，则直接由 Impl 定义 Platform 契约符号，Platform 目录保持零 `.c`。
+5. Platform `.c` 默认不生成；若使用窄职责 registry/dispatch `.c`，它只能保存借用的
+   `Ops/context`、执行状态校验和稳定转发，不得含 Vendor/HAL/RTOS、格式化、缓存、锁、重试或业务策略。
+   注册/注销仅限启动期或完全停机后，重复注册、未初始化和忙状态必须有明确错误语义。
 
-当前日志基线采用第 5 种方式：`platform_log.h` 是 Platform Middleware 唯一公共头，
-Platform 目录不保留日志 `.c` 实现；Platform 契约符号由
-`04_Impl/impl_middleware/log/impl_log_port.c` 定义，Port 头只作为 Impl 内部边界。
+当前日志基线采用受审查的窄职责 registry：`platform_log.h/.c` 是 Platform Middleware
+契约与注册/转发槽；`04_Impl/impl_middleware/elog/impl_elog_log.c/.h` 提供 Ops/context
+适配，`impl_elog_port.c` 负责 EasyLogger→SEGGER RTT 的 Vendor Port。Platform `.c` 不包含
+任何 Elog、RTT、HAL 或 FreeRTOS 依赖。
 
 ## 生成和对象契约
 
-`03_Platform/platform_middleware/` 默认只生成每个能力域的一个公共头，保持零 `.c`。
-接口可使用 `platform_*_t`、`platform_*_ops_t` 和 `void *context`；不要在公共头中暴露
+`03_Platform/platform_middleware/` 默认只生成每个能力域的一个公共头；只有经 RCP 放行的
+registry/dispatch 才增加窄职责 `.c`。接口可使用 `platform_*_t`、`platform_*_ops_t` 和 `void *context`；不要在公共头中暴露
 Vendor、HAL、RTOS 或 Impl Port 的类型。
 
 若接口定义了承载平台身份和生命周期的对象，必须按 `base + cfg + ctx + data + ops` 四元组组织；若只是纯行为函数表且不承载对象身份，必须在头注释中明确“纯转发、不承载对象身份”。
@@ -96,6 +100,7 @@ Vendor、HAL、RTOS 或 Impl Port 的类型。
 
 - [ ] 公共头只包含 Platform Common 和必要标准类型；
 - [ ] 每个中间件能力默认只有一个 Platform 公共头，配置语义没有形成第二个历史入口；
+- [ ] 若存在 Platform `.c`，其职责仅为 registry/状态/转发，且有 RCP/Review Gate 例外记录；
 - [ ] 没有 Vendor、HAL、RTOS、Impl 私有类型或 `stdio.h` 泄漏；
 - [ ] 错误全部使用 `platform_err_t`/`PLATFORM_ERR_*`；
 - [ ] 生命周期、输入输出所有权、阻塞/ISR/线程安全约束已写明；

@@ -22,6 +22,23 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 
 按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序审计，核对调用链与公开契约；分层证据图（软件层契约与知识图谱）见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 的 `references/`。迁移设计覆盖：跨层架构调整、目录映射、依赖方向修正和分阶段集成计划。每个结论写入来源（`relative/path:line`、配置键或可复现命令）与可信等级，不把推测写成已确认事实。
 
+### Middleware 专项施工顺序
+
+涉及 Elog/RTT、文件系统或其他第三方中间件时，文件级计划至少按以下顺序展开：
+
+```text
+Vendor 登记/编译单元
+  → Platform contract（可选经审查的窄 registry/dispatch .c）
+  → Impl contract adapter + Vendor Port
+  → impl_board_<board>_middleware.c 集中注册与逆序回滚
+  → Service object/lifecycle
+  → App/Manager 启动接线
+  → workflow-final-review
+```
+
+Middleware Vendor Port 是独立的第三方移植边界，不等同于 BSP Adapter；它可以在 Impl 边界
+使用经审查的 OS/HAL 资源，但不得把原生类型或后端状态泄漏到 Platform/Service。
+
 ## 交付计划最低产物
 
 每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表（区别于审查包的四张清单——后者由 `workflow-review-gate` 必选重组为 BRD/PRD/SRSys 产品文档）；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与分发，不代替下游实现。
@@ -44,7 +61,7 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 - 本 skill 不审查既有实现方案的可行性：门禁判定收敛在 `workflow-review-gate`，本 Skill 只消费放行结果。
 - 本 skill 不生成实现代码、不承担最终代码审查（`workflow-final-review`）与代码生成阶段。
 - 审查包门禁状态非放行时不得分发实现层 Skill；发现新事实必须回传 `workflow-review-gate` 更新审查包。
-- Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成；唯一规范调用链是 `App → Service → Platform ← Impl → Vendor`。Service 调用 Platform 公共契约，Wrapper/Port 只在 OS/BSP 内部承担适配职责。
+- OS/BSP Adapter 仍由各自 Wrapper/Port 组成；Middleware Vendor Port 是另一类 Impl 适配边界，不能被归并为 BSP Adapter。唯一规范调用链是 `App → Service → Platform ← Impl → Vendor`。Service 调用 Platform 公共契约，Board 组合根在启动期集中注册中间件，业务调用不绕过 Service。
 
 ## 参考
 

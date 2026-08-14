@@ -24,7 +24,7 @@ description: Platform 公共对象模型、生命周期驱动与诊断可观测�
 | `manager/` | `platform_device_manager.h/.c` | 设备管理器特化（类型安全薄包装） |
 | `manager/` | `platform_service_manager.h/.c` | 服务管理器特化（类型安全薄包装） |
 | `manager/` | `platform_board_manager.h/.c` | 整板编排：device/service 生命周期推进（机制，顺序策略归 Service） |
-| `diag/` | `platform_log.h` | 日志抽象契约：级别宏常量/编译裁剪/统一输出宏；输出由 Impl 符号实现桥接 elog/RTT（流转见 [`diag-log-flow.md`](references/diag-log-flow.md)） |
+| `diag/` | `platform_log.h/.c` | 日志抽象契约：级别宏常量/编译裁剪/统一输出宏；`.c` 仅在经审查时提供 Ops/context registry 与转发，具体输出由 Impl 桥接 elog/RTT（流转见 [`diag-log-flow.md`](references/diag-log-flow.md)） |
 | `diag/` | `platform_version.h/.c` | 版本/构建信息 + 启动 banner |
 | `diag/` | `platform_assert.h/.c` | 断言统一出口 + hook 注册（`platform_assert_set_hook`）+ 独立输出原语 `platform_assert_output`（P2，故障路径不依赖日志） |
 | `diag/` | `platform_reset_reason.h/.c` | 复位原因枚举 + 字符串映射（读取由 Impl 提供） |
@@ -226,7 +226,7 @@ Platform 各层创建**具体设备对象 / 服务对象**时，统一按四元�
 diag 是**横切可观测原语**：机制在 Platform（本子域），策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。流转三方向（详见 [`diag-log-flow.md`](references/diag-log-flow.md)）：
 
 - **调用向下**：App 经 `service_log` 门面（`SERVICE_LOG_*`，禁 include `platform_log.h`，D8）；Service 其他层与 Impl 直调 `PLATFORM_LOG_*`；Vendor 永不反向。
-- **注入由 Impl**：注入为**符号实现**（链接期）——Impl port 文件直接实现 `platform_log_*` 函数体（如 `impl_log_elog.c`），**非运行期 ops 注册**（简单、零 RAM、无初始化顺序问题，禁止引入运行期注册）。
+- **注入由 Impl**：默认可采用链接期符号实现；若工程已通过 RCP 放行 registry，则由 Platform `.c` 保存借用 Ops/context，Impl 在启动期注册并由 Platform 稳定转发。registry 不含 Vendor/HAL/RTOS、格式化、缓存、锁、重试或业务策略，运行期切换仍禁止。
 - **输出到底**：`platform_log_output` 组帧后写 Vendor 底座（elog / SEGGER RTT / HAL UART）；日志须在任何平台对象使用前初始化（boot 第一步）。
 
 **断言旁路（P2）**：`PLATFORM_ASSERT` 失败 → `platform_assert_fail`：有 hook 则回调并返回（host 冒烟）；无 hook 则经 `platform_assert_output`（独立于日志系统的原始输出，Impl 桥接 RTT）输出后死循环——故障路径自足，不依赖日志。
@@ -234,7 +234,7 @@ diag 是**横切可观测原语**：机制在 Platform（本子域），策略�
 ## 禁止与准入
 
 - **准入规则（P1）**：新能力须被 ≥2 个子域/层共享且零芯片/RTOS/厂商依赖方可进入 platform_common；单域使用的公共能力归属对应层。diag 是平台内建可观测原语，**只声明接口、实现永远在 Impl**。
-- **日志契约（P2）**：断言（故障路径）**不依赖日志系统**，须有独立输出通道或注入式输出；日志实现由 Impl 提供，且须在任何平台对象使用前初始化（boot 阶段第一步）。
+- **日志契约（P2）**：断言（故障路径）**不依赖日志系统**，须有独立输出通道或注入式输出；日志实现由 Impl 提供，且须在任何平台对象使用前初始化（boot 阶段第一步）。若采用 registry，必须由 Board 组合根在 Service 使用前完成注册。
 - **架构范围（P4）**：`platform_hardfault_frame_t` 为 **ARM Cortex-M 架构契约**，跨架构（如 RISC-V）由 Impl 提供等价契约；禁止在平台层做寄存器级通用抽象。
 - 禁止在此放芯片专有能力、Vendor 类型、RTOS 句柄或业务状态。
 - 不把具体设备操作强行塞进统一 `read/write/control`；typed ops 属后续课程。
