@@ -98,7 +98,7 @@ struct imu_device
 typedef imu_cfg_t mpu6050_cfg_t;
 typedef imu_data_t mpu6050_data_t;
 
-/* ---- 模型初始化（声明；实现放 platform_imu_model.c 或 Impl port） ---- */
+/* ---- 模型初始化（声明；实现放 platform_imu_model.c） ---- */
 platform_err_t platform_imu_init(imu_device_t *p_dev, const char *p_name,
                                  const imu_cfg_t *p_cfg,
                                  const platform_lifecycle_ops_t *p_lifecycle);

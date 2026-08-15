@@ -51,7 +51,7 @@ Platform ← Impl → Vendor
 ```text
 App → Service → Platform ← Impl → Vendor
 Vendor 不得 include 上层任何符号；App 不得 include Vendor/Impl/HAL；
-Platform 技能目录只有头文件（零 .c；platform_common 对象模型实现除外）；机制在 Impl/Handler，策略在 Service。
+Platform 技能目录允许无芯片/RTOS/Vendor 依赖的公共 `.c`（包括 Platform Model、registry 或稳定转发）；机制在 Impl/Handler，策略在 Service。`platform_mcu` 的设备 Model 源文件与公共头同名，硬件生命周期仍在 Impl。
 ```
 
 **目标工程目录范本（用户权威参照）**：
@@ -176,7 +176,7 @@ MIGRATION_MAP 扩充（旧连字符 → 新下划线）：
 |---|---|---|---|
 | 0 | ✅ 定稿 | 本方案审查通过（已完成） | 用户确认 |
 | 1 | Vendor 归位 | vendor_stm32 + 7 个 vendor_* 迁移；vendor_mapping.md 模板 + patch/；catalog vendor 层 | catalog 解析、validate:plugin、validate:links |
-| 2 | Platform 契约化 | platform_mcu/os/bsp 三技能 + 头文件规范；Platform 零 `.c` 门禁 | 头文件可编译、旧引用兼容 |
+| 2 | Platform 契约化 | platform_mcu/os/bsp 三技能 + 头文件及无底层依赖公共实现规范 | 头文件和允许的公共 `.c` 可检查、旧引用兼容 |
 | 3 | Impl 落地 | impl_os/board/bsp 三技能（含 Handler 机制） | 示例芯片跑通 Platform→Impl→Vendor |
 | 4 | Service 组合 | software-system→service_system + 新增 10 个 service_* | Service 不 include Vendor 检查、跨芯片复用 |
 | 5 | App 收敛 | app-architecture 只调 Service；App 禁 Vendor/Impl 门禁 | App 依赖检查、换芯片零改动演示 |

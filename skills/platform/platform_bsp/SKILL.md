@@ -9,6 +9,12 @@ description: Platform 纯定义：板级器件能力接口（board/display/touch
 
 Platform BSP 定义平台无关的板级器件能力接口与设备模型协议：设备模型保存对象身份、`cfg/ctx/data/ops` 和 typed Ops；具体绑定由 Impl/组合根完成。不得包含 HAL、RTOS、Core 或具体 Driver 实现对象，也不定义独立的 BSP Wrapper 注册/转发层。
 
+### 当前工程的 BSP Driver 依赖判定
+
+在当前证据工程中，`impl_bsp` Driver 可以包含 `platform_*.h` 公共能力契约，例如 `platform_gpio.h`、`platform_spi.h` 和 `platform_tick.h`；这些头文件不等于 HAL、RTOS 或具体后端实现。架构扫描不得使用全局 `platform_` 关键字拒绝该类公共契约，必须单独拒绝 STM32 HAL、FreeRTOS、CMSIS-OS、OSAL、Wrapper 和具体后端依赖。
+
+此规则只放宽 Platform 公共契约头，不放宽 Platform 具体实现、Vendor 头或板级绑定。若工程采用不同目录，必须以实际公共头/实现路径和回归 fixture 证明边界，不能通过目录总排除消除误报。
+
 默认只允许系统启动阶段完成对象装配和管理器注册；运行期对象替换、并发切换和资源回收由 Impl/组合根定义，不由 Platform BSP 增加公共 Wrapper 注册槽。GPIO 输出能力验证边界见 `gpio-output-peripheral-checklist.md`。
 
 平台对象绑定、后端选择和 OSAL 资源注入由 Impl 层负责（阶段 3 落地：`impl_board` / `impl_bsp`）；器件协议与业务运行时状态同样归 Impl。
@@ -69,6 +75,8 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 - GPIO 绑定未定前保留 `UNRESOLVED_GPIO_BINDING` 标记；不能通过新增 Wrapper 文件掩盖绑定缺口。
 
 Model 源只负责公共对象身份和模型契约所需的初始化，不承担设备协议、Handler、重试、缓存、任务或资源绑定。
+
+本 Skill 的 BSP Model 当前沿用 `platform_<type>_model.c` 命名；这不覆盖 `platform_mcu` 的独立命名规则。MCU 能力 Model 源文件必须与对应公共头同名，具体规则以 [`platform_mcu`](../platform_mcu/SKILL.md) 为准。
 
 ## 生成自检门禁（输出前 MUST）
 

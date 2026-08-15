@@ -5,9 +5,11 @@
 > 前置：platform_common 四子域已就绪；既有方案 v1.1（platform-mcu-interfaces-and-dependency-gate-plan.md）方案 B 升级为执行计划；依赖门禁已落地（baseline 7 断言）
 > 流程：四张清单（工程现状 / 差距 / 生成约束 / 文件施工）+ 验收测试 + 不做清单
 
+> 历史审查包说明：本文记录的是“只生成接口头文件”的早期阶段，文中的“零 `.c`”仅约束该阶段的施工范围，不再是当前 `platform_mcu` 总规则。当前规则允许与公共头同名、且不依赖芯片/RTOS/Vendor 的 Platform Model `.c`；最新迁移需求以目标工程 `00_Docs/04_需求文档/REQ-PLATFORM-MCU-MODEL-INIT-20260815-*` 为准。
+
 ## 0. 背景与目标
 
-platform_common（core/object/manager/diag）搭建完毕，平台层下一子域：**platform_mcu 外设能力接口**——纯契约、零芯片依赖、零 .c，实现后端留 impl_mcu（下一课）。
+platform_common（core/object/manager/diag）搭建完毕，平台层下一子域：**platform_mcu 外设能力接口**——公共契约和无底层依赖的 Model 实现；具体硬件后端留 impl_mcu。
 
 目标：按 SKILL 生成契约补齐 6 个接口头（gpio/i2c/spi/uart/timer/power），为换芯片零改动立桩。
 
@@ -23,7 +25,7 @@ platform_common（core/object/manager/diag）搭建完毕，平台层下一子�
 | 已打通 | GPIO 输出/输入/翻转、UART 最小发送（USART1 8N1）、Tick 1ms 时基、IRQ token 式开关 | 上层可脱离 HAL 直调 |
 | 未做（后续） | i2c/spi/timer/power 接口头、lesson10 课程文档、多 UART（USART2/6）映射、rx 接收链、Impl 后端补全 | 见 §6 |
 
-验收结果：双分支 gcc -fsyntax-only 零警告；平台层零芯片符号（含注释）/零 .c/guard 规范；实仓提交 `e04f545` 之后分支继续，详见提交记录。
+验收结果：双分支 gcc -fsyntax-only 零警告；平台层零芯片符号（含注释）/接口 guard 规范；该历史阶段未生成 Model `.c`，实仓提交 `e04f545` 之后分支继续，详见提交记录。
 
 ## 1. 工程现状清单（盘点结论）
 
@@ -31,7 +33,7 @@ platform_common（core/object/manager/diag）搭建完毕，平台层下一子�
 |---|---|---|---|
 | S-01 | platform_common core | ✅ 就绪 | `platform_type.h`（int8_t..uint64_t/float_t/double_t/char_t/uchar_t/bool_t）、`platform_error.h`（`platform_err_t` + `PLATFORM_IS_ERR/IS_OK`）、`platform_def.h`（`PLATFORM_TRUE/FALSE/ALIGN/DELAY_MS/US`） |
 | S-02 | platform_common 其余 | ✅ 就绪 | object/manager/diag 四子域齐全（断言 P2、日志 P2、生命周期、管理器） |
-| S-03 | platform_mcu | ❌ **空目录** | 6 个外设接口头全缺，无 Inc/Src 结构 |
+| S-03 | platform_mcu | ❌ **空目录** | 6 个外设接口头全缺，无独立 Inc/Src 结构 |
 | S-04 | 依赖门禁 | ✅ baseline 7 断言 | Platform 零反向 + Impl 仅接口头 + 接口头白名单已守护 |
 | S-05 | 插件 SKILL 契约 | ✅ 完整 | platform_mcu/SKILL.md：生成契约、四元组判定、自检门禁、I2C 后端边界 |
 | S-06 | 快照同步 | ⚠️ 手动复制 | 实仓改动需回写 tests/fixtures/embedded-framework |
@@ -57,7 +59,7 @@ platform_common（core/object/manager/diag）搭建完毕，平台层下一子�
 4. **零芯片符号**：stm32/HAL/CMSIS/厂商类型禁出现在头（含注释）。
 5. **四元组判定**：纯行为函数表（pf_* + context，无身份/生命周期字段）→ 豁免，头注释显式声明「纯转发、不承载对象身份」。
 6. **Guard**：`PLATFORM_<NAME>_H`，禁用双下划线头尾（MISRA 21.1）。
-7. **文件形态**：`03_Platform/platform_mcu/Inc/platform_<name>.h` 纯契约，**零 .c**（Src 实现留 impl_mcu 后端课；本阶段不生成 Src）。
+7. **文件形态（本历史阶段）**：`03_Platform/platform_mcu/Inc/platform_<name>.h` 纯契约，本阶段不生成 Src。当前若实现对象构造，必须由 `platform_<name>.h` 配套同名 `platform_<name>.c`，且不得包含 HAL/RTOS/Vendor。
 8. **注释**：统一遵循 `style-profile.md`，文件头、公开 API、必要约束和源文件分区按同一规则输出。
 9. **iic→i2c**：文件/API/文档一律 `i2c`，不产生 iic.h。
 
@@ -82,7 +84,7 @@ platform_common（core/object/manager/diag）搭建完毕，平台层下一子�
 |---|---|---|---|---|
 | V-B1 | 静态 | 6 个接口头存在 | `ls 03_Platform/platform_mcu/Inc/` | 6 个 .h |
 | V-B2 | 静态 | 零芯片符号 | `grep -rn "stm32\|HAL_\|CMSIS\|_TypeDef" 03_Platform/platform_mcu/` | 无命中 |
-| V-B3 | 静态 | 纯契约零 .c | `find 03_Platform/platform_mcu -name "*.c"` | 无 |
+| V-B3 | 静态 | 历史阶段未生成 `.c`；当前公共 Model `.c` 依赖门禁 | `find 03_Platform/platform_mcu -name "*.c"` 并扫描芯片/RTOS/Vendor 依赖 | 历史阶段无；当前仅允许无底层依赖实现 |
 | V-B4 | 静态 | Guard 规范 | `grep -rn "__" 03_Platform/platform_mcu/` | 无双下划线 |
 | V-B5 | 主机 | 语法编译 | `gcc -fsyntax-only -std=c11 -I00_Config -I03_Platform/platform_common/core -I03_Platform/platform_mcu/Inc <引例>` | 通过 |
 | V-B6 | 一致性 | 快照同步后全绿 | 回写快照 + `npx jest tests/embedded-framework-baseline.test.js` | 7/7 全绿 |

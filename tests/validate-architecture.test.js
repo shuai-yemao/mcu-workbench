@@ -134,6 +134,46 @@ describe('validateArchitectureContract', () => {
     ]));
   }));
 
+  test('allows Platform public contracts in BSP Drivers and recognizes Impl OS backend headers', () => withFixture({
+    '04_Impl/impl_bsp/display/Inc/impl_display_driver.h': [
+      '#include "platform_gpio.h"',
+      '#include "platform_spi.h"',
+      '#include "platform_tick.h"'
+    ].join('\n'),
+    '04_Impl/impl_bsp/display/Src/impl_display_driver.c': '#include "impl_display_driver.h"',
+    '04_Impl/impl_bsp/display/Src/impl_bad_driver.c': [
+      '#include "FreeRTOS.h"',
+      '#include "stm32f4xx_hal.h"'
+    ].join('\n'),
+    '04_Impl/impl_os/inc/impl_os_freertos.h': [
+      '#include "FreeRTOS.h"',
+      '#include "task.h"'
+    ].join('\n')
+  }, (root) => {
+    const result = validateArchitectureContract({ root });
+
+    expect(result.errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        file: '04_Impl/impl_bsp/display/Src/impl_bad_driver.c',
+        ruleId: 'BSP_NATIVE_RTOS'
+      }),
+      expect.objectContaining({
+        file: '04_Impl/impl_bsp/display/Src/impl_bad_driver.c',
+        ruleId: 'BSP_HAL_DRIVER_CONCRETE_DEPENDENCY'
+      })
+    ]));
+    expect(result.findings).not.toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        file: '04_Impl/impl_bsp/display/Inc/impl_display_driver.h',
+        ruleId: 'BSP_HAL_DRIVER_CONCRETE_DEPENDENCY'
+      }),
+      expect.objectContaining({
+        file: '04_Impl/impl_os/inc/impl_os_freertos.h',
+        ruleId: 'OS_WRAPPER_NATIVE_RTOS'
+      })
+    ]));
+  }));
+
   test('requires OS Wrapper public calls to forward to their matching internal implementation', () => withFixture({
     'OS/Wrapper/osal_task.c': 'int osal_task_create(void) { return unrelated_call(); }',
     'OS/Wrapper/osal_queue.c': 'int osal_queue_create(void) { return os_queue_create_impl(); }',

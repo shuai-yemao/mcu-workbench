@@ -1,7 +1,7 @@
 # MCU-Workbench 统一命名规范（Naming Convention）
 
 > 版本：v1.2 · 对齐架构 v2.0 五层契约分层（App / Service / Platform / Impl / Vendor）
-> v1.1 变更：Platform 层允许 `.c` 实现、允许依赖 Impl 基础类型头（工程需要为准，见 §1.1 / 设计原则 5）
+> v1.1 变更：Platform 层允许无底层依赖的 `.c` 实现，不允许反向依赖 Impl 基础类型头（见 §1.1 / 设计原则 5）
 > v1.2 变更：统一命名重构落地——`lib/generator.js` / `templates/` / 分层校验器 / 测试锁步对齐本规范（§8 差距清单已清零）；新增 §9 宿主边界与 JSON 序列化规则；§1.1 目录对齐 `mcu-new` 生成树（00_Config…99_Utils）
 > 适用范围：插件生成的嵌入式工程目录、源文件、类型、函数、变量与宏，以及插件自身 JS/CLI 边界（见 §9）。
 > 依据：范本目录（01_App…99_Utils）、`docs/architecture-overall-plan.md`（D4/D11）、`platform_mcu` 头文件规范、`skills/service/*` 交付约定。
@@ -14,7 +14,7 @@
 2. **命名即契约**：符号前缀承载层归属（`app_` / `service_` / `platform_` / `impl_` / `vendor_` / `utils_`），从名字即可读出层、模块、对象、动作。
 3. **公开带前缀、私有带 `s_`**：对外符号必带层前缀；文件内 `static` 符号统一 `s_` 前缀。
 4. **厂商型号只出现在 Impl 层**：`stm32f411_*`、`freertos_*` 等厂商/底座名仅在 `04_Impl` 出现，禁止上浮到 Platform/Service/App。
-5. **Platform 层允许实现**：`03_Platform` 以接口定义为主，但可含 `.c`（如 `platform_common` 的对象模型实现），可依赖 Impl 层基础类型头（工程需要为准）——"零 .c"门禁仅适用于插件 `skills/platform` 技能目录，不约束生成工程。
+5. **Platform 层允许无底层依赖实现**：`03_Platform` 以接口定义为主，但可含不依赖芯片、HAL、RTOS、Vendor 或 Impl 的公共 `.c`（如 `platform_common` 对象模型、`platform_mcu` Model）；不得以“基础类型”名义反向依赖 Impl。`platform_mcu` Model 源文件与公共头同名，硬件绑定和生命周期归 Impl。
 
 ---
 

@@ -9,7 +9,7 @@ description: 面向嵌入式工程设计和审查 platform_mcu 能力接口；�
 
 本 Skill 面向目标工程 `03_Platform/platform_mcu` 的公开能力接口，以及供下层实现注入的后端契约。开始设计或修改前，必须读取目标工程真实头文件、`platform_common` 公共对象模型和可复现构建证据；没有硬件证据时只更新平台契约，不猜写后端。
 
-当前目标工程以 `platform_` 统一命名 MCU 能力接口，共 13 个公开头文件；当前目录只有公共接口头文件，没有由此推导出的对应 `.c` 实现：
+当前目标工程以 `platform_` 统一命名 MCU 能力接口，共 13 个公开头文件。设备型能力允许在 Platform 层提供公共 Model `.c` 实现；该源文件必须与公共头文件同名（例如 `platform_gpio.h` 对应 `platform_gpio.c`），且不得引入芯片、HAL、RTOS 或 Vendor 依赖。非设备化/架构契约头不因存在声明就强制生成 `.c`：
 
 | 能力分组 | 公开文件 | 对象/职责 |
 | --- | --- | --- |
@@ -28,14 +28,14 @@ description: 面向嵌入式工程设计和审查 platform_mcu 能力接口；�
 App → Service → Platform 接口 ← Impl / BSP → Vendor / HAL / RTOS
 ```
 
-Platform MCU 只定义能力、状态、生命周期入口和抽象 Ops：
+Platform MCU 定义能力、状态、生命周期入口、抽象 Ops，并可实现只完成公共对象构造的 Model `.c`：
 
 - 不包含 STM32 HAL/LL、CMSIS Device、寄存器、ESP-IDF、FreeRTOS 或其他厂商类型；
-- 不实现硬件初始化、IRQ 处理、DMA 完成等待或软件 I2C 位时序；
+- Platform Model `.c` 不实现硬件初始化、IRQ 处理、DMA 完成等待或软件 I2C 位时序；这些行为属于 Impl 后端生命周期和 Ops；
 - 不保存设备协议状态机、业务缓存、任务、锁或消息队列；
 - 不实现外部器件协议；外部 Flash、传感器等器件属于 `platform_bsp`/`impl_bsp` 的独立需求，不因使用 SPI 自动进入 `platform_mcu`；
 - 不将原始 HAL/SDK 状态码向上泄漏，后端必须映射为 `platform_err_t`；
-- 不为缺少芯片、引脚、外设实例和厂商源码证据的目标猜写后端。
+- 不为缺少芯片、引脚、外设实例和厂商源码证据的目标猜写后端；公共 Model 构造不等于后端已完成。
 
 芯片绑定交给 Impl，板级片选、引脚和器件装配交给 BSP/组合根；厂商 API 的版本、路径和差异交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)。
 
@@ -71,6 +71,17 @@ struct platform_xxx_device
 - 生命周期使用 `platform_lifecycle_ops_t` 的 `supported_actions + invoke(p_self, action)` 分发契约，由公共管理器驱动动作；不要按旧的 7 个直接回调字段生成接口；
 - 异步能力通过 `platform_event_t` 与 `platform_event_callback_cfg_t` 传递完成、错误和中止等事件；回调上下文、执行上下文和缓冲区借用期限必须在具体能力头中明确；
 - 输出代码前检查 `offsetof(concrete_type, base) == 0`，并确认没有隐式全局状态、动态分配或跨对象保存临时缓冲区。
+
+### Platform MCU Model 源文件
+
+对于已有设备对象和 `platform_*_init()` 声明的能力：
+
+- 在当前目标工程中，Model 源文件与头文件一起放在 `03_Platform/platform_mcu/platform_<capability>.c`，basename 必须与 `platform_<capability>.h` 一致；不得使用 `_model.c` 后缀；若其他工程采用独立源目录，只保留同名规则并以目标工程构建清单为准；
+- Model 源文件只实现参数校验、`platform_device_init()`、名称/配置/Ops/生命周期绑定和默认状态设置；迁移前后保持签名、错误码、对象布局、所有权和默认状态一致；
+- Model 源文件可以被工程编译和链接，但只能依赖 Platform 公共头、`platform_common` 和 C 标准库；禁止包含 HAL、CMSIS、CubeMX、FreeRTOS、Vendor、Board 或 Impl 头；
+- `impl_mcu_*` 保留具体硬件 Ops、`backend_context` 解释、生命周期回调、HAL/CMSIS 调用和资源绑定；不得把这些实现复制到 Model `.c`；
+- Impl/Board 通过公共头调用构造函数并链接 Model，不得 `#include` Platform `.c`；每个构造函数必须只有一个定义；
+- 没有 `platform_*_init()` 或不是设备对象的头文件，不因本规则强行增加空的 `.c` 文件。
 
 ## 能力契约
 
@@ -145,13 +156,16 @@ SPI/I2C/UART/ADC 的带 `timeout_ms` 同步接口：调用者等待完整事务�
 交付前逐项检查：
 
 - [ ] 文件是否存在于真实工程的 `03_Platform/platform_mcu`，命名是否与 13 个 `platform_*` 头文件契约一致；
+- [ ] 对已有设备型 `platform_*_init()`，是否存在与公共头同名的 `platform_<capability>.c`，且未生成 `_model.c` 后缀或无意义空源文件；
+- [ ] Platform Model `.c` 是否只包含 Platform/`platform_common`/标准库依赖，未包含 HAL、CMSIS、CubeMX、FreeRTOS、Vendor、Board 或 Impl；
+- [ ] `impl_mcu_*` 是否保留后端 Ops、HAL/CMSIS 和生命周期回调，是否没有重复定义构造函数或 include Platform `.c`；
 - [ ] 对象是否 `base` 首字段并补齐 `cfg/ctx/data/ops`，生命周期是否委托 `platform_common`；
 - [ ] 返回值是否全部为 `platform_err_t`，基础类型是否来自 `platform_type.h`；
 - [ ] 公共头是否零芯片/HAL/RTOS/Vendor 类型，后端句柄是否被 `void *backend_context` 隔离；
 - [ ] 是否明确所有权、借用缓冲区、阻塞属性、超时单位、ISR 限制、并发和失败后状态；
 - [ ] SPI Bus 是否没有固定外部器件协议/片选，I2C Bus 是否没有固定设备地址，异步接口是否明确事件和缓冲区边界；
 - [ ] 是否区分静态、主机、交叉编译、烧录和实机观测证据；
-- [ ] 运行 `git diff --check`、头文件主机语法检查、对象首字段静态断言及项目已有 Skill/插件测试；
+- [ ] 运行 `git diff --check`、Platform `.c` 依赖扫描、重复符号检查、头文件/源文件主机语法检查、对象首字段静态断言及项目已有 Skill/插件测试；
 - [ ] 未确认的芯片、板卡、引脚、器件和构建条件是否明确标为 `unverified`，没有被写成完成事实。
 
 ## 交接

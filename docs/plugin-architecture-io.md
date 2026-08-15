@@ -54,14 +54,14 @@
 |---|---|---|---|
 | **App** | skills/app/ | `app-architecture` | 产品业务流程（main/Manager/Task/Logic/UI/Profile）。**只调 Service，不碰 HAL/Impl/Vendor**（D8 门禁，validator 强制） |
 | **Service** | skills/service/ | 11 个 `service_*`（system/battery/backlight/calendar/diagnosis/log/ota/power/sensor/storage/watchdog） | App 常见业务抽象，带 `_model/_state/_fault_code` 三件套（D10） |
-| **Platform** | skills/platform/ | `platform_common` / `platform_mcu` / `platform_os` / `platform_bsp` / `platform_middleware` | 能力接口与公共定义：统一接口/错误码/类型/对象/ops 函数指针/ctx。错误码基线在 `platform_common/platform_error.h`（D4）。**零 .c 门禁仅约束技能目录**；`platform_common` 含对象模型实现（允许 `.c`） |
+| **Platform** | skills/platform/ | `platform_common` / `platform_mcu` / `platform_os` / `platform_bsp` / `platform_middleware` | 能力接口与公共定义：统一接口/错误码/类型/对象/ops 函数指针/ctx。错误码基线在 `platform_common/platform_error.h`（D4）。Platform 可有无底层依赖的公共 Model/registry `.c`；`platform_mcu` Model 源文件与公共头同名，硬件绑定仍归 Impl |
 | **Impl** | skills/impl/ | `impl_os` / `impl_board` / `impl_bsp`（含 Handler 机制子层）/ `impl_middleware` | Platform→Vendor 适配落地。handler 是**机制层**（多实例/生命周期/缓存/重试，D5），策略归 Service |
 | **Vendor** | skills/vendor/ | `vendor_stm32` + 7 中间件（lvgl/stack/fatfs/fal/flashdb/letter_shell/dsp） | 厂家/第三方底座（STM32 HAL、CMSIS、FreeRTOS、LVGL…）。**只登记不复制**（D7，vendor_mapping.md 管理，patch/ 存补丁） |
 
 **三层联动范式**：App 发业务请求 → Service 编排能力 → Platform 定义接口 → Impl 落地适配 → Vendor 提供底座。
 
 **已生效的门禁**（`scripts/validators/skill-catalog.js`）：
-- Platform 层目录 `.c/.cpp` 禁止芯片/RTOS/厂商依赖（允许无芯片依赖的公共实现）；
+- Platform 层目录 `.c/.cpp` 禁止芯片/RTOS/厂商依赖；允许无底层依赖的公共 Model、registry 或稳定转发实现。`platform_mcu` Model 源文件与公共头同名，Impl 不得 include Platform `.c`；
 - App 层文档剥离反引号/链接/禁止类描述后，禁出现 `HAL_*` / `xTask*` / `impl_*` / `vendor_*` 符号。
 
 ---
@@ -197,7 +197,7 @@ lib/agent-domains.js（DOMAINS → domainSkills() → agent 技能集）
 |---|---|---|
 | 0 定稿 | — | v4.0 方案批准 + ADR-0001~0012 |
 | 1 Vendor 归位 | `eb3f3c3` | mcu-platform→vendor_stm32，7 中间件→vendor_*，vendor_mapping.md（只登记不复制） |
-| 2 Platform 契约化 | `0fe08b7` | core-mcu/os-adapter/bsp-wrapper→platform_*，零 .c 门禁 |
+| 2 Platform 契约化 | `0fe08b7` | core-mcu/os-adapter/bsp-wrapper→platform_*，头文件及无底层依赖公共实现规范 |
 | 3 Impl 落地 | `234fd1d` | os-runtime/bsp-port/bsp-hal-driver/bsp-handler→impl_*（handler 独立技能） |
 | 4 Service 组合 | `8583600` | software-system→service_system + 新增 10 个 service_* |
 | 5 App 收敛 | `501e544` | app-architecture 只调 Service + App 依赖门禁（D8） |
@@ -210,5 +210,5 @@ lib/agent-domains.js（DOMAINS → domainSkills() → agent 技能集）
 - 技能目录事实源：`skills/catalog.js` + `skills/catalog-metadata.js`
 - Agent 名册与派生：`lib/agent-domains.js`（AGENT_ROSTER / DOMAINS / domainSkills / rankAgentsForRequest）
 - OpenCode 工具暴露：`opencode.mjs`；Claude Code：`index.js`
-- 门禁校验：`scripts/validators/skill-catalog.js`（Platform 零 .c、App 依赖）
+- 门禁校验：`scripts/validators/skill-catalog.js`（Platform 无底层依赖公共实现、App 依赖）
 - 流程细则：`docs/plugin-execution-flow.md`；方案：`docs/architecture-overall-plan.md`；决策：`docs/adr/0001-0012`

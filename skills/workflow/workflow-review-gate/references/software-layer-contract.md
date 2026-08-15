@@ -17,7 +17,7 @@ App → Service → Platform ← Impl → Vendor
 |---|---|---|---|
 | **App** | 产品业务流程、编排、状态机（app_init 组合根） | Service 接口 + 错误码类型出口（`platform_error.h`） | HAL、RTOS、Platform 能力接口、Impl、Vendor 符号 |
 | **Service** | 业务抽象（带策略）：日志/系统/电池/OTA… | Platform 接口 + 其他 Service | Vendor 头、寄存器/HAL、Impl 细节、Platform 实现 |
-| **Platform** | 统一接口/错误码/数据结构/ops 函数指针/ctx（只定义能力，不绑芯片） | 自身头 + 标准库 | 芯片头、HAL 调用、Impl 符号（反向）、厂商类型 |
+| **Platform** | 统一接口/错误码/数据结构/ops 函数指针/ctx，以及无底层依赖的公共 Model/registry 实现 | 自身头 + `platform_common` + 标准库 | 芯片头、HAL 调用、Impl 符号（反向）、厂商类型 |
 | **Impl** | Platform→Vendor 适配落地：port 文件注入具体实例 | Platform **接口头** + Vendor 底座 | 反向定义接口、被 App 直调、含业务策略、include Platform 实现 |
 | **Vendor** | 第三方底座（源码登记 + patch，D7） | 无（底座） | 被上层直调；源码不复制进工程 |
 
@@ -42,12 +42,15 @@ Platform registry 保存借用的 Ops/context，再由 `impl_<vendor>_<domain>.c
 
 **backend_context 约定**：Platform 抽象只用 `void *` 持有上下文；HAL/RTOS 句柄（`I2C_HandleTypeDef`/`TaskHandle_t`）只出现在 Impl，不泄漏进抽象。
 
+**Platform Model 与生命周期边界**：Platform Model `.c` 可以实现公共对象构造、注册或稳定转发，但必须保持芯片/RTOS/Vendor 无关。对于 `platform_mcu`，公共头与 Model 源文件按同名规则配对（如 `platform_gpio.h` → `platform_gpio.c`）；Model 只完成对象身份、配置/Ops/生命周期绑定和默认状态设置。硬件初始化、HAL/CMSIS 调用、后端 Ops、资源申请和生命周期动作仍由 Impl/Board Port 提供。对象构造完成不表示硬件已可用。
+
 ## 依赖纪律（门禁守护）
 
 - ✅ **Impl → Platform 接口头**：合法且必要（注入的前提，实现契约必须见签名）。
 - ❌ **Platform → Impl**：默认反向依赖禁止（已验证器 + baseline 测试双重守护）。
 - ⚠️ **Middleware 受限例外**：仅允许中间件实现级的稳定符号、注册或转发边界；不得出现在 Platform 公共头的 include、类型或宏中，不得把 Vendor 调用、格式化、缓存、锁、重试或业务策略放回 Platform。该例外不适用于 OS、BSP、MCU 或其他 Platform 子域。
 - ❌ **Impl → Platform 实现**（include 平台 `.c`）：越权，禁止。
+- ✅ **Impl → Platform Model 符号**：通过真实存在的 Platform 公共头调用构造函数并链接 Model；不得复制构造逻辑、重复定义符号或包含 `.c` 文件。
 - ⚠️ **基础类型例外**：`platform_type.h` ← `impl_board/board_types.h`（类型出口，基础类型从板级引出）。除上述 Middleware 实现级例外和该基础类型出口外，其余 Platform→Impl 一律禁止。
 - Impl include 的 `platform_*` 头必须真实存在于 03_Platform（防幽灵依赖/漂移）。
 - Board 组合根必须通过唯一的 `impl_board_<board>_middleware.c` 集中注册/注销中间件；MCU 文件不得持有中间件注册职责，失败按逆序回滚。

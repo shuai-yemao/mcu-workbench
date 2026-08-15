@@ -270,7 +270,7 @@ typedef struct platform_battery_ops {
 |---|---|---|---|---|
 | **阶段 0** | 方案定稿 | 本文档审查通过，决策点全部拍板 | 用户确认 | — |
 | **阶段 1** | Vendor 归位 | `mcu-platform` → vendor-stm32（改名+迁移）；新建 Vendor 规范：`vendor_mapping.md` 模板 + patch 目录；中间件源码登记（LVGL/FatFS/FreeRTOS/EasyLogger/FlashDB…） | catalog 解析、validate:plugin、链接检查 | 高（纯目录迁移 + MIGRATION_MAP） |
-| **阶段 2** | Platform 契约化 | 新建 `03_Platform` 范本五个子域头文件（platform_common/mcu/os/bsp/middleware）；osal_*/BSP 函数表/Core 事务 API 归一；补静态门禁（Platform 目录零 `.c`） | Platform 头文件可编译；旧技能引用兼容 | 中（新增为主） |
+| **阶段 2** | Platform 契约化 | 新建 `03_Platform` 范本五个子域头文件（platform_common/mcu/os/bsp/middleware）；osal_*/BSP 函数表/Core 事务 API 归一；补静态门禁（Platform `.c` 不得依赖芯片/RTOS/Vendor） | Platform 头文件及无底层依赖公共实现可检查；旧技能引用兼容 | 中（新增为主） |
 | **阶段 3** | Impl 落地 | `os-runtime`/`bsp-port`/`bsp-hal-driver`/`bsp-handler` → impl 子域（board/mcu/os/bsp/middleware）；中间件移植（lvgl_port/fatfs_port/easylogger_port…）→ impl_middleware | 一个示例芯片完整跑通 Platform→Impl→Vendor | 中 |
 | **阶段 4** | Service 组合 | 新增 `service-*` 技能族（battery/backlight/log/ota/power/sensor/storage/watchdog/diagnosis/calendar/system）；`software-system` 能力归入；示例服务跨芯片复用 | Service 不 include Vendor 静态检查；跨芯片复用演示 | 中 |
 | **阶段 5** | App 收敛 | `app-architecture` 依赖规则改为"只调 Service"；按业务域分模块；补门禁（App 目录禁 include Platform 实现/Vendor） | App 依赖检查门禁 + 换芯片零改动演示 | 高（规则收紧） |

@@ -9,6 +9,12 @@ description: Platform OS：定义不泄漏 RTOS 原生类型的 OS 能力契约�
 
 Platform 定义稳定的 `platform_os_*` 公共接口；规范上错误码应归一到 `platform_common` 的 `platform_err_t`/`PLATFORM_ERR_*`，但审查现有工程时必须以真实公共头的返回类型和别名为准。Impl 以 `impl_os_*()` 实现并绑定 FreeRTOS、RT-Thread 或裸机。`platform_os_internal_*.h` 只是 Platform/Impl 的内部边界，不构成第三层。Impl 可使用公开 `platform_os_*` 创建并注入 Handler 所需资源，但任务入口、任务循环、缓存和设备生命周期逻辑仍归 Handler。
 
+### 当前工程的 Impl OS 后端边界
+
+当前工程没有 `04_Impl/impl_os/freertos` 子目录。`04_Impl/impl_os/inc/impl_os_freertos.h` 是 FreeRTOS 后端宏和原生头文件入口，`04_Impl/impl_os/src/impl_os_*.c` 负责把 Platform OS 能力映射到 FreeRTOS API。因此，规则识别必须优先按 `impl_os_<backend>.h` 文件名和 `impl_os/src` 的实际映射职责判断，不能仅因文件位于 `inc` 就将其归类为公共 OS Wrapper。
+
+这只描述 Impl OS 的具体后端边界；`03_Platform/platform_os/inc` 公共头仍不得暴露 FreeRTOS、RT-Thread、CMSIS-OS 或芯片类型。
+
 ## 公共定义来源
 
 新接口应使用 [`platform_common`](../platform_common/SKILL.md) 的 `platform_err_t`/`PLATFORM_ERR_*`，不定义项目私有错误码。分析既有工程时，必须同时记录实际返回类型、宏别名和 Impl 的失败映射；不能用规范目标覆盖源码事实。数据类型统一使用 `platform_type.h` 出口类型；常用宏统一取自 `platform_def.h`。

@@ -2,7 +2,7 @@
 
 ## 事实来源
 
-本参考以 `D:\zhuomian\embedded_framework` 当前工作树为事实来源，目标路径为 `03_Platform/platform_mcu/*.h`。目标工程当前有 13 个公共头文件，目录内没有由此推导出的 `platform_mcu` `.c` 实现；设备型能力的初始化入口和 Ops 由头文件声明，具体绑定由 Impl 提供。
+本参考以 `D:\zhuomian\embedded_framework` 当前工作树为事实来源，目标路径为 `03_Platform/platform_mcu/*.h` 及其同名 Model 源文件。目标工程当前有 13 个公共头文件；设备型能力的初始化入口由 Platform Model `.c` 实现，具体硬件绑定和生命周期由 Impl 提供。Model 源文件采用 `platform_<capability>.h` → `platform_<capability>.c` 的同名规则，不使用 `_model.c` 后缀。
 
 这是 Platform 接口映射，不是 STM32 HAL 后端说明。目标工程没有在本契约中提供足够的 `.ioc`、HAL 版本、外设实例、引脚或板级连接证据，因此这些内容保持 `unverified`。
 
@@ -23,6 +23,7 @@ const xxx_ops_t *ops;
 - `ctx` 和 `data` 是对象自己的内联运行状态；
 - 后端不透明上下文必须通过 `void *` 字段隔离，公共头不得暴露 HAL、寄存器或 RTOS 句柄；
 - `platform_*_init()` 只绑定公共身份、名称、配置、Ops 和生命周期表，不执行具体硬件动作；
+- `platform_*_init()` 的公共实现位于对应 Platform Model `.c`，只建立对象契约；Impl 不得重复定义或包含该 `.c`；
 - 所有初始化和 Ops 返回值使用 `platform_err_t`，错误通过 `PLATFORM_ERR_*` 表达。
 
 ## 13 个头文件映射

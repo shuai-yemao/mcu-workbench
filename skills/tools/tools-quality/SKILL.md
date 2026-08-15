@@ -81,4 +81,10 @@ flowchart LR
 
 当架构扫描包含已登记基线问题时，退出码非零必须同时报告基线数量、当前数量和新增差异；只有“零新增”才能称为本阶段通过，不能把非零退出码直接改写成全量通过。
 
+### 当前工程架构扫描规则边界
+
+在当前工程中，BSP Driver 对 `platform_*.h` 的引用是 Platform 公共契约依赖，不应被 `BSP_HAL_DRIVER_CONCRETE_DEPENDENCY` 按关键字整体拒绝；规则必须继续拒绝 HAL、RTOS、CMSIS-OS、OSAL 和具体后端依赖。`impl_os/inc/impl_os_freertos.h` 与 `impl_os/src/impl_os_*.c` 属于具体 FreeRTOS 后端边界，不能仅按 `inc` 目录套用 OS Wrapper 规则。
+
+规则修正时必须保留 `ISR_CRITICAL_TOKEN_IGNORED` 等真实并发/安全告警，也不得通过忽略整个 Vendor 目录消除 timeout warning。验收要报告误报类别消失、真实告警保留和基线新增差异三项结果。
+
 对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不审计用户工程的其他自定义代码；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界，以及 `style-profile.md` 要求的文件头、公开 API、必要约束和注释语言。
