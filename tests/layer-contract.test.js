@@ -197,22 +197,23 @@ describe('generated layer contract validator', () => {
     expect(result).toMatchObject({ valid: true, errors: [] });
   });
 
-  test('generates the Port as the Core, MCU, OS Wrapper, Driver, Handler, and Wrapper composition root', async () => {
+  test('generates the Port as the resource, Driver, Handle, and Platform Model composition root', async () => {
     const root = await createSlice();
     const port = await fs.readFile(
       path.join(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c'),
       'utf8'
     );
 
-    expect(port).toContain('impl_w25q64_driver_register_core_ops');
-    expect(port).toContain('impl_w25q64_driver_register_mcu_ops');
-    expect(port).toContain('impl_externflash_handle_register_osal_ops');
-    expect(port).toContain('impl_externflash_handle_register_driver');
-    expect(port).toContain('platform_externflash_wrapper_register');
+    expect(port).toContain('externflash_resource_get_ops');
+    expect(port).toContain('impl_w25q64_driver_construct');
+    expect(port).toContain('impl_externflash_handle_construct');
+    expect(port).toContain('.read_id = impl_externflash_handle_read_id');
+    expect(port).toContain('platform_externflash_register_default');
+    expect(port).not.toContain('platform_externflash_wrapper');
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
-  test('checks the generated Handler path and requires effective injected Ops calls', async () => {
+  test('checks the generated Handle path and requires effective injected Ops calls', async () => {
     const root = await createSlice();
     const driver = await fs.readFile(
       path.join(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c'), 'utf8'
@@ -221,11 +222,11 @@ describe('generated layer contract validator', () => {
       path.join(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c'), 'utf8'
     );
 
-    expect(driver).toContain('driver->core_ops.pf_transaction(driver->core_ops.context)');
-    const driverMcuCalls = (driver.match(/driver->mcu_ops\.pf_chip_feature\(driver->mcu_ops\.context\)/g) || []).length;
+    expect(driver).toContain('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)');
+    const driverMcuCalls = (driver.match(/p_driver->ctx\.pf_chip_feature\(p_driver->ctx\.p_mcu_context\)/g) || []).length;
     expect(driverMcuCalls).toBeGreaterThanOrEqual(1);
-    expect(handler).toContain('handle->osal_ops.pf_notify_from_isr(handle->osal_ops.context)');
-    expect(handler).toContain('handle->driver_ops.pf_read_id(handle->driver_ops.context, device_id)');
+    expect(handler).toContain('p_handle->cfg->p_drivers[driver_index]');
+    expect(handler).toContain('p_ref->read_id(p_ref->p_context, p_device_id)');
 
     await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => (
       `#include <platform_i2c.h>\n${content}`
@@ -241,89 +242,84 @@ describe('generated layer contract validator', () => {
   test('rejects generated sources that retain injected Ops but never call them', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c', (content) => content
-      .replace('driver->core_ops.pf_transaction(driver->core_ops.context)', 'driver_core_ops_not_used'));
+      .replace('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)', 'driver_core_ops_not_used'));
     await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => content
-      .replace('handle->osal_ops.pf_notify_from_isr(handle->osal_ops.context)', 'handler_osal_ops_not_used'));
+      .replace('p_ref->read_id(p_ref->p_context, p_device_id)', 'handler_driver_ops_not_used'));
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c', (content) => content
-      .replace('driver->mcu_ops.pf_chip_feature(driver->mcu_ops.context)', 'driver_mcu_ops_not_used'));
+      .replace('p_driver->ctx.pf_chip_feature(p_driver->ctx.p_mcu_context)', 'driver_mcu_ops_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS' }),
       expect.objectContaining({ ruleId: 'LAYER_HAL_DRIVER_EFFECTIVE_MCU_OPS' }),
-      expect.objectContaining({ ruleId: 'LAYER_HANDLER_EFFECTIVE_OS_WRAPPER_OPS' })
+      expect.objectContaining({ ruleId: 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET' })
     ]));
   });
 
-  test('rejects a Port that injects a no-op callback instead of a platform binding', async () => {
+  test('rejects a Port that omits the resource operation binding', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
-      .replace('return externflash_platform_core_transaction(context);', 'return 0;'));
+      .replace('externflash_resource_get_ops()', 'externflash_resource_get_ops_not_used()'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_PORT_STUB_OPS' })
+      expect.objectContaining({ ruleId: 'LAYER_PORT_RESOURCE_INJECTION' })
     ]));
   });
 
-  test('allows a Core call when a static Port callback binds it into Core Ops', async () => {
+  test('does not require a legacy Port callback bridge', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
-      .replace('return externflash_platform_core_transaction(context);', 'return platform_spi_transaction(context);'));
-
-    expect(validate(root).errors).not.toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_PORT_RUNTIME_BYPASS' })
-    ]));
+    const port = await fs.readFile(path.join(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c'), 'utf8');
+    expect(port).not.toMatch(/static\s+platform_err_t\s+externflash_port_/);
+    expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
-  test('rejects a static Port runtime helper that bypasses Handle with a Core call', async () => {
+  test('rejects a Port that omits direct Handle binding', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
-      .replace('return impl_externflash_handle_read_id(s_externflash_handle, device_id);', 'return platform_spi_transaction(device_id);'));
+      .replace('.read_id = impl_externflash_handle_read_id,', '.read_id = NULL,'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_PORT_RUNTIME_BYPASS' })
+      expect.objectContaining({ ruleId: 'LAYER_PORT_HANDLE_BINDING' })
     ]));
   });
 
-  test('rejects equivalent unsigned no-op success callbacks in a Port', async () => {
+  test('rejects a Port that omits Platform Model registration', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
-      .replace('return externflash_platform_mcu_feature(context);', 'return (int32_t)0U;'));
+      .replace('platform_externflash_register_default', 'platform_externflash_register_default_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_PORT_STUB_OPS' })
+      expect.objectContaining({ ruleId: 'LAYER_PORT_MODEL_REGISTRATION' })
     ]));
   });
 
-  test('rejects a Port that omits a required injected operation table', async () => {
+  test('rejects a Port that omits Driver construction', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
-      .replace(/\s*impl_w25q64_driver_register_mcu_ops\([^;]+;\n/, '\n'));
+      .replace('impl_w25q64_driver_construct', 'impl_w25q64_driver_build_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_PORT_MCU_OPS_INJECTION' })
+      expect.objectContaining({ ruleId: 'LAYER_PORT_DRIVER_CONSTRUCTION' })
     ]));
   });
 
-  test('reports a Core vendor leak, extra Port export, and forbidden Wrapper include', async () => {
+  test('reports a Core vendor leak, extra Port export, and forbidden Model include', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => `${content}\n#include "stm32f4xx_hal.h"\n`);
     await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
-    await mutate(root, '03_Platform/platform_bsp/externflash/Src/platform_externflash_wrapper.c', (content) => content.replace('#include "platform_externflash_wrapper.h"', '#include "impl_w25q64_driver.h"'));
+    await mutate(root, '03_Platform/platform_bsp/externflash/Src/platform_externflash_model.c', (content) => content.replace('#include "platform_externflash_model.h"', '#include "impl_w25q64_driver.h"'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_CORE_PUBLIC_LEAK' }),
       expect.objectContaining({ ruleId: 'LAYER_PORT_PUBLIC_API' }),
-      expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DEPENDENCY' })
+      expect.objectContaining({ ruleId: 'LAYER_MODEL_DEPENDENCY' })
     ]));
   });
 
-  test('reports a synchronous ISR callback and a missing deferred state release', async () => {
+  test('reports a Handle that no longer selects from its Driver set', async () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => content
-      .replace(/handle->event_pending\s*=\s*true;/, 'handle->event_callback(handle->event_context, event_id, status);')
-      .replace(/handle->event_pending\s*=\s*false;/, 'handle->event_pending = true;'));
+      .replace('p_ref->read_id(p_ref->p_context, p_device_id)', 'handle_driver_not_used'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({ ruleId: 'LAYER_HANDLE_ISR_DEFERRAL' }),
-      expect.objectContaining({ ruleId: 'LAYER_HANDLE_TASK_CALLBACK' })
+      expect.objectContaining({ ruleId: 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET' })
     ]));
   });
 

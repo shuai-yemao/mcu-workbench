@@ -11,6 +11,7 @@ const require = createRequire(import.meta.url);
 const { CANONICAL_SKILLS, resolveSkillId } = require("./skills/catalog.js");
 const { getSkillContent } = require("./skills/loader.js");
 const { domainSkills, rankAgentsForRequest } = require("./lib/agent-domains.js");
+const { createCodeQualityHooks } = require("./lib/opencode-quality-hook.js");
 const { version: PLUGIN_VERSION } = require("./package.json");
 const yaml = require("js-yaml");
 
@@ -166,6 +167,9 @@ async function discoverProjectEvidence(projectRoot) {
 export default async (_ctx) => {
   const tools = {};
   const agents = await loadAgents();
+  const qualityHooks = createCodeQualityHooks({
+    root: _ctx.directory || _ctx.worktree || process.cwd(),
+  });
 
   // ---- 首阶段需求约束路由（旧 route 名称保留兼容） ----
   const requirementsRouterTool = tool({
@@ -312,5 +316,9 @@ export default async (_ctx) => {
     });
   }
 
-  return { tool: tools };
+  return {
+    tool: tools,
+    event: qualityHooks.event,
+    "tool.execute.before": qualityHooks["tool.execute.before"],
+  };
 };

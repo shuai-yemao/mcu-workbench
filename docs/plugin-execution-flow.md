@@ -27,10 +27,13 @@ flowchart TD
     Tool --> V[构建/烧录/调试/观测/质量验证]
     V --> O[输出报告、修改建议或代码变更]
 
-    N0 --> Cmd[commands/*]
-    Cmd --> Lib[lib/*]
-    Lib --> T[templates/*]
-    Lib --> P[生成项目、命令计划或执行外部工具]
+    N0 --> LayerAPI[design/bootstrap/scan/sync/validate]
+    LayerAPI --> Lib[lib/claude-layer.js]
+    Lib --> CStart{规则已确认?}
+    CStart -->|否| Block[阻塞写入]
+    CStart -->|是| Claude[创建通用 Claude.md/.claude/rules/config]
+    Claude --> Skeleton[生成项目骨架]
+    Skeleton --> Sync[sync 更新 README/报告/状态]
 ```
 
 ## 2. Skills 运行链
@@ -131,16 +134,16 @@ Router 将已确认事实、证据、未决项、Agent 分析和下游提示词�
 Node CLI(`bin/`、`commands/`、`lib/cli.js`)已于 2026-08-08 移除——交互统一走 Skill + lib Programmatic API。保留的确定性入口：
 
 ```text
-scripts/claude-layer-api.js(分层扫描/同步/校验)
+scripts/claude-layer-api.js(规则设计/创建引导/分层扫描/同步/校验)
   → lib/claude-layer.js
-  → runClaudeLayer({ action, root, write, strict })
+  → runClaudeLayer({ action, root, write, strict, rulesConfirmed })
 
 lib/ 共享引擎保留(builder / flasher / generator / platform),可经 Skill/API 接入
 ```
 
 ### 当前真实行为
 
-- `mcu-new` 会写入项目骨架和 CMakeLists；
+- 新工程 Claude 文件的确定性顺序为 `design` → 用户确认 → `bootstrap --rules-confirmed --write` → 项目骨架 → `sync --write`；当前仓库没有可直接修改的 `mcu-new` 命令，因此项目创建器应把 bootstrap 作为其第一阶段调用；
 - `core` 返回一类 MCU Core 外设的固定 `.c/.h` 生成内容；
 - `driver` 返回固定 Driver/Handle/Port/Wrapper 切片，不接触既有 `System/**`；
 - `build` 和 `flash` 默认生成计划，传入 `--execute` 才运行外部命令；

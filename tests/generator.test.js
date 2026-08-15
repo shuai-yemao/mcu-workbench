@@ -1,7 +1,8 @@
 const {
   generateBspDriver,
   generateCorePeripheral,
-  normalizeCoreList
+  normalizeCoreList,
+  formatExistingCode
 } = require('../lib/generator');
 
 describe('Generator Module', () => {
@@ -66,7 +67,7 @@ describe('Generator Module', () => {
       '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h',
       '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c',
       '04_Impl/impl_board/externflash/Src/impl_externflash_port.c',
-      '03_Platform/platform_bsp/externflash/Src/platform_externflash_wrapper.c'
+      '03_Platform/platform_bsp/externflash/Src/platform_externflash_model.c'
     ]));
     expect(files.every((file) => file.path.match(/^(?:0[0-9]|99)_/))).toBe(true);
     expect(files.some((file) => file.path.startsWith('System/'))).toBe(false);
@@ -94,19 +95,18 @@ describe('Generator Module', () => {
     expect(files.manifest).toMatchObject({
       device: 'SSD1306',
       deviceType: 'display',
-      osalResources: ['mutex'],
+      osalResources: [],
       styleProfile: 'style-profile'
     });
     expect(byPath['04_Impl/impl_bsp_handler/display/Inc/impl_display_handle.h'])
-      .not.toContain('impl_ssd1306_');
+      .toContain('driver_count');
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
-      .toContain('osal_mutex_create');
+      .toContain('platform_display_register_default');
     expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
-      .toMatch(/if \(platform_display_wrapper_register\(&wrapper_ops\) != 0\)\s+\{\s+goto cleanup_mutex;/);
-    expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
-      .not.toMatch(/\(\s*int32_t\s*\(\s*\*/);
-    expect(byPath['04_Impl/impl_bsp/display/SSD1306/Inc/impl_ssd1306_config.h'])
-      .toContain('IMPL_SSD1306_COLUMN_OFFSET');
+      .toContain('impl_display_handle_read_id');
+    expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_model.h'])
+      .toContain('platform_display_device_t');
+    expect(byPath['03_Platform/platform_bsp/display/Src/platform_display_wrapper.c']).toBeUndefined();
     for (const file of files) {
       expect(file.content).toContain('@file');
       expect(file.content).toContain('@par 依赖关系');
@@ -114,8 +114,8 @@ describe('Generator Module', () => {
       expect(file.content).toContain('Copyright (C) 2024 ProjectName, Inc.(Gmbh) or its affiliates.');
       expect(file.content).toContain('All Rights Reserved.');
     }
-    expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_wrapper.h'])
-      .toContain('void *p_context');
+    expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_model.h'])
+      .toContain('backend_context');
   });
 
   test('formats every generated file with the current header date and 80-column layout', async () => {
@@ -161,6 +161,25 @@ describe('Generator Module', () => {
       if (previous === undefined) delete process.env.MCUWB_CLANG_FORMAT;
       else process.env.MCUWB_CLANG_FORMAT = previous;
     }
+  });
+
+  test('preserves existing Doxygen meaning while completing missing API tags', () => {
+    const source = [
+      '/**',
+      ' * @brief 业务层已有的读取说明。',
+      ' * @note 该说明不能被质量管线删除。',
+      ' */',
+      'int demo_read(int value) { return value; }',
+      ''
+    ].join('\n');
+
+    const formatted = formatExistingCode(source, 'demo.c');
+
+    expect(formatted).toContain('@brief 业务层已有的读取说明。');
+    expect(formatted).toContain('@note 该说明不能被质量管线删除。');
+    expect(formatted).toContain('@file demo.c');
+    expect(formatted).toMatch(/@param\s+\[in\]\s+value/);
+    expect(formatted).toContain('int demo_read(int value)');
   });
 
   test('generates complete semantic comments without documenting calls as functions', async () => {

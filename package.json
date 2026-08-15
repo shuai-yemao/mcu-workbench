@@ -25,6 +25,8 @@
     "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",
     "claude:init": "node scripts/claude-layer-api.js init",
+    "claude:design": "node scripts/claude-layer-api.js design",
+    "claude:bootstrap": "node scripts/claude-layer-api.js bootstrap",
     "claude:scan": "node scripts/claude-layer-api.js scan",
     "claude:sync": "node scripts/claude-layer-api.js sync",
     "claude:validate": "node scripts/claude-layer-api.js validate",

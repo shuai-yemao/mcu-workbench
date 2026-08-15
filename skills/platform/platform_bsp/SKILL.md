@@ -17,7 +17,7 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 
 默认只允许系统启动阶段完成对象装配和管理器注册；运行期对象替换、并发切换和资源回收由 Impl/组合根定义，不由 Platform BSP 增加公共 Wrapper 注册槽。GPIO 输出能力验证边界见 `gpio-output-peripheral-checklist.md`。
 
-平台对象绑定、后端选择和 OSAL 资源注入由 Impl 层负责（阶段 3 落地：`impl_board` / `impl_bsp`）；器件协议与业务运行时状态同样归 Impl。
+平台对象绑定、后端选择和 OSAL 资源注入由 Impl 层负责（阶段 3 落地：`impl_board` / `impl_bsp`）；器件协议与业务运行时状态同样归 Impl。新 BSP 中，`impl_<type>_handle_*()` 是 Handle 的 Platform-facing 函数声明，Port 将其绑定到本层的 `platform_<type>_ops_t`；这些函数不是第二个 Wrapper，也不要求 Platform 了解 Driver/Handle 类型。
 
 ## 必须读取（生成前 MUST，缺失任一即不得开始输出）
 
@@ -64,7 +64,7 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 ### 生成流程（两步）
 
 ```text
-① Model 头（类型契约）→ ② Model 源（对象初始化）→ Impl/组合根直接绑定并装配
+① Model 头（类型契约）→ ② Model 源（对象初始化）→ ③ Driver/Handle 由 Impl 组合根装配并绑定 typed Ops
 ```
 
 文件结构要求（Model）：
@@ -88,7 +88,7 @@ Model 源只负责公共对象身份和模型契约所需的初始化，不承�
 - [ ] 注释：按 `style-profile.md` 检查文件头、公开 API、必要约束和源文件分区
 - [ ] GPIO 输出设备：逻辑态/物理电平极性映射、Core GPIO 上下文所有权、失败初始化状态、Impl/组合根回滚边界、deinit 规则
 - [ ] 代码质量：按 `review-gates.md` 自查风格/功能/安全三类问题
-- [ ] 门禁：不得调用或恢复旧的 `--slice wrapper` 规则；当前插件验证器仍以历史 Wrapper/Driver/Handle/Port 切片为中心，Model 产物的专用门禁为 `unverified`，须在验证器完成 Model 适配后补验
+- [ ] 门禁：不得调用或恢复旧的 `--slice wrapper` 规则；验证器必须同时检查 Model 产物、Handle 的同类 Driver 约束、Port 的 typed Ops 绑定和历史 Wrapper 禁止默认生成
 
 ## 交接
 

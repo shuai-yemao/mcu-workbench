@@ -14,7 +14,7 @@ const {
 
 const STANDARD_HEADERS = new Set(['stdbool.h', 'stddef.h', 'stdint.h', 'inttypes.h', 'limits.h']);
 
-// Platform Common 是共享基础层：其类型/错误码/宏出口是 wrapper 按 skill 规范
+// Platform Common 是共享基础层：其类型/错误码/宏出口是 Model 按 skill 规范
 // （platform_common/SKILL.md 输出契约）必须 include 的依赖，不属于越层泄漏。
 // 仍禁止 wrapper include platform_mcu/platform_bsp/impl_*/vendor/HAL/RTOS 头。
 const PLATFORM_COMMON_HEADERS = new Set(['platform_type.h', 'platform_error.h', 'platform_def.h']);
@@ -346,8 +346,10 @@ function expectedPaths({ core, deviceType, device }) {
   const driverRoot = `04_Impl/impl_bsp/${type}/${normalizedDevice.directory}`;
   const handleRoot = `04_Impl/impl_bsp_handler/${type}`;
   const portRoot = `04_Impl/impl_board/${type}`;
-  const wrapperRoot = `03_Platform/platform_bsp/${type}`;
+  const modelRoot = `03_Platform/platform_bsp/${type}`;
   return {
+    modelHeader: `${modelRoot}/Inc/platform_${type}_model.h`,
+    modelSource: `${modelRoot}/Src/platform_${type}_model.c`,
     coreHeader: `03_Platform/platform_mcu/Inc/platform_${core}.h`,
     coreSource: `03_Platform/platform_mcu/Src/platform_${core}.c`,
     driverConfig: `${driverRoot}/Inc/impl_${normalizedDevice.stem}_config.h`,
@@ -357,12 +359,13 @@ function expectedPaths({ core, deviceType, device }) {
     handleSource: `${handleRoot}/Src/impl_${type}_handle.c`,
     portHeader: `${portRoot}/Inc/impl_${type}_port.h`,
     portSource: `${portRoot}/Src/impl_${type}_port.c`,
-    wrapperHeader: `${wrapperRoot}/Inc/platform_${type}_wrapper.h`,
-    wrapperSource: `${wrapperRoot}/Src/platform_${type}_wrapper.c`
+    wrapperHeader: `${modelRoot}/Inc/platform_${type}_wrapper.h`,
+    wrapperSource: `${modelRoot}/Src/platform_${type}_wrapper.c`
   };
 }
 
 const SLICE_ROLES = {
+  model: ['modelHeader', 'modelSource'],
   wrapper: ['wrapperHeader', 'wrapperSource'],
   driver: ['driverConfig', 'driverHeader', 'driverSource'],
   handle: ['handleHeader', 'handleSource'],
@@ -371,9 +374,11 @@ const SLICE_ROLES = {
 };
 
 function filterSlice(paths, slice) {
-  if (!slice || slice === 'all') return paths;
+  if (!slice || slice === 'all') {
+    return Object.fromEntries(Object.entries(paths).filter(([role]) => !role.startsWith('wrapper')));
+  }
   const roles = SLICE_ROLES[slice];
-  if (!roles) throw createLayerError(`Unknown slice: ${slice}. Expected wrapper, driver, handle, port, or all.`);
+  if (!roles) throw createLayerError(`Unknown slice: ${slice}. Expected model, driver, handle, port, or all.`);
   return Object.fromEntries(Object.entries(paths).filter(([role]) => roles.includes(role)));
 }
 
@@ -653,7 +658,7 @@ function validateCore(files, errors) {
   }
 }
 
-function validateWrapper(files, errors) {
+function validateLegacyWrapper(files, errors) {
   for (const role of ['wrapperHeader', 'wrapperSource']) {
     const file = files[role];
     if (!file) continue;
@@ -667,12 +672,42 @@ function validateWrapper(files, errors) {
   }
 }
 
+function validateModel(files, errors) {
+  for (const role of ['modelHeader', 'modelSource']) {
+    const file = files[role];
+    if (!file) continue;
+    for (const include of directIncludes(file.content)) {
+      const includeName = path.basename(include);
+      const ownHeader = role === 'modelSource' && includeName === path.basename(files.modelHeader.relative);
+      if (!ownHeader && !STANDARD_HEADERS.has(includeName)
+        && !PLATFORM_COMMON_HEADERS.has(includeName)
+        && !/^platform_(?:device|lifecycle|type)\.h$/.test(includeName)) {
+        addError(errors, 'LAYER_MODEL_DEPENDENCY', file.relative, `Platform Model include is not allowed: ${include}.`);
+      }
+    }
+  }
+}
+
 function validateFourTuple(files, errors) {
+  const model = files.modelHeader;
+  if (!model) return;
+  const code = maskCommentsAndStrings(model.content);
+  const definesDeviceObject = /\bplatform_device_t\b|\bplatform_service_t\b/.test(code);
+  if (definesDeviceObject) {
+    for (const slot of ['cfg', 'ctx', 'data', 'ops']) {
+      if (!new RegExp(`\\b${slot}\\s*;`).test(code)) {
+        addError(errors, 'LAYER_MODEL_FOUR_TUPLE', model.relative,
+          `Device object struct must declare the ${slot} slot (four-tuple: base + cfg/ctx/data/ops).`);
+      }
+    }
+  }
+}
+
+function validateLegacyWrapperFourTuple(files, errors) {
   const wrapper = files.wrapperHeader;
   if (!wrapper) return;
   const code = maskCommentsAndStrings(wrapper.content);
-  const definesDeviceObject = /\bplatform_device_t\b|\bplatform_service_t\b/.test(code);
-  if (definesDeviceObject) {
+  if (/\bplatform_device_t\b|\bplatform_service_t\b/.test(code)) {
     for (const slot of ['cfg', 'ctx', 'data', 'ops']) {
       if (!new RegExp(`\\b${slot}\\s*;`).test(code)) {
         addError(errors, 'LAYER_WRAPPER_FOUR_TUPLE', wrapper.relative,
@@ -691,16 +726,19 @@ function validateHalDriver(files, errors) {
       addError(errors, 'LAYER_HAL_DRIVER_CONCRETE_DEPENDENCY', file.relative, 'HAL Driver must use injected Core and MCU Ops rather than HAL or RTOS dependencies.');
     }
   }
-  if (files.driverHeader && !/(?:^|_)register_core_ops\s*\(/m.test(files.driverHeader.content)) {
-    addError(errors, 'LAYER_HAL_DRIVER_CORE_OPS', files.driverHeader.relative, 'HAL Driver must expose Core Ops injection.');
+  if (files.driverHeader && !/(?:^|_)construct\s*\(/m.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_CONSTRUCTOR', files.driverHeader.relative, 'Driver must expose only a constructor for caller-owned instances.');
   }
-  if (files.driverHeader && !/(?:^|_)register_mcu_ops\s*\(/m.test(files.driverHeader.content)) {
-    addError(errors, 'LAYER_HAL_DRIVER_MCU_OPS', files.driverHeader.relative, 'HAL Driver must expose MCU Ops injection.');
+  if (files.driverHeader && !/pf_transaction/.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_CORE_OPS', files.driverHeader.relative, 'Driver must declare injected Core transaction Ops.');
   }
-  if (files.driverSource && !/driver->core_ops\.pf_transaction\s*\(\s*driver->core_ops\.context\s*\)/.test(files.driverSource.content)) {
+  if (files.driverHeader && !/pf_chip_feature/.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_MCU_OPS', files.driverHeader.relative, 'Driver must declare injected MCU feature Ops.');
+  }
+  if (files.driverSource && !/p_driver->ctx\.pf_transaction\s*\(\s*p_driver->ctx\.p_context\s*\)/.test(files.driverSource.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS', files.driverSource.relative, 'HAL Driver must invoke injected Core Ops in its protocol path.');
   }
-  if (files.driverSource && !/driver->mcu_ops\.pf_chip_feature\s*\(\s*driver->mcu_ops\.context\s*\)/.test(files.driverSource.content)) {
+  if (files.driverSource && !/p_driver->ctx\.pf_chip_feature\s*\(\s*p_driver->ctx\.p_mcu_context\s*\)/.test(files.driverSource.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_MCU_OPS', files.driverSource.relative, 'HAL Driver must invoke injected MCU Ops in its chip-specific protocol path.');
   }
 }
@@ -714,14 +752,14 @@ function validateHandler(files, errors) {
       addError(errors, 'LAYER_HANDLER_CONCRETE_DEPENDENCY', file.relative, 'Handler must use injected OS Wrapper and HAL Driver Ops only.');
     }
   }
-  if (files.handleHeader && !/(?:^|_)register_osal_ops\s*\(/m.test(files.handleHeader.content)) {
-    addError(errors, 'LAYER_HANDLER_OS_WRAPPER_OPS', files.handleHeader.relative, 'Handler must expose OS Wrapper Ops injection.');
+  if (files.handleHeader && !/driver_count/.test(files.handleHeader.content)) {
+    addError(errors, 'LAYER_HANDLE_DRIVER_SET', files.handleHeader.relative, 'Handle must declare a same-class Driver collection and its count.');
   }
-  if (files.handleSource && !/handle->osal_ops\.pf_notify_from_isr\s*\(\s*handle->osal_ops\.context\s*\)/.test(files.handleSource.content)) {
-    addError(errors, 'LAYER_HANDLER_EFFECTIVE_OS_WRAPPER_OPS', files.handleSource.relative, 'Handler must invoke injected OS Wrapper Ops in its public processing path.');
+  if (files.handleHeader && !/const\s+impl_[a-z0-9_]+_handle_ops_t\s*\*ops/.test(files.handleHeader.content)) {
+    addError(errors, 'LAYER_HANDLE_INTERNAL_OPS', files.handleHeader.relative, 'Handle must keep its ops in the Impl object and out of Platform Model.');
   }
-  if (files.handleSource && !/handle->driver_ops\.pf_read_id\s*\(\s*handle->driver_ops\.context\s*,\s*device_id\s*\)/.test(files.handleSource.content)) {
-    addError(errors, 'LAYER_HANDLER_EFFECTIVE_HAL_DRIVER_OPS', files.handleSource.relative, 'Handler must invoke injected HAL Driver Ops in its public processing path.');
+  if (files.handleSource && !/p_ref->read_id\s*\(\s*p_ref->p_context\s*,\s*p_device_id\s*\)/.test(files.handleSource.content)) {
+    addError(errors, 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET', files.handleSource.relative, 'Handle must invoke the selected same-class Driver reference.');
   }
 }
 
@@ -733,13 +771,10 @@ function validatePort(files, type, errors) {
   if (publicDefinitions.length !== 1 || publicDefinitions[0].name !== expected) {
     addError(errors, 'LAYER_PORT_PUBLIC_API', files.portSource.relative, `Port must define exactly one non-static function: ${expected}.`);
   }
-  const coreOpsBindings = new Set(
-    [...files.portSource.content.matchAll(/\bcore_ops\.[A-Za-z_]\w*\s*=\s*([A-Za-z_]\w*)\s*;/g)].map((match) => match[1])
-  );
   for (const definition of definitions.filter((entry) => entry.isStatic)) {
     const callsDriverDirectly = /\bimpl_[a-z0-9_]+_driver\b/i.test(definition.body);
     const callsCoreDirectly = /\bplatform_[a-z0-9_]+\b/i.test(definition.body);
-    if (callsDriverDirectly || (callsCoreDirectly && !coreOpsBindings.has(definition.name))) {
+    if (callsDriverDirectly || callsCoreDirectly) {
       addError(errors, 'LAYER_PORT_RUNTIME_BYPASS', files.portSource.relative, `Port runtime function ${definition.name} must call Handle APIs only.`);
     }
     if (/port_(?:core|mcu|osal)/i.test(definition.name)
@@ -751,11 +786,12 @@ function validatePort(files, type, errors) {
     addError(errors, 'LAYER_PORT_HAL', files.portSource.relative, 'Generated Port must not directly call HAL APIs.');
   }
   const requiredInjections = [
-    ['LAYER_PORT_CORE_OPS_INJECTION', /driver_register_core_ops\s*\(/, 'Port must inject Core Ops into the HAL Driver.'],
-    ['LAYER_PORT_MCU_OPS_INJECTION', /driver_register_mcu_ops\s*\(/, 'Port must inject MCU Ops into the HAL Driver.'],
-    ['LAYER_PORT_OS_WRAPPER_OPS_INJECTION', /handle_register_osal_ops\s*\(/, 'Port must inject OS Wrapper Ops into the Handler.'],
-    ['LAYER_PORT_HAL_DRIVER_OPS_INJECTION', /handle_register_driver\s*\(/, 'Port must inject HAL Driver Ops into the Handler.'],
-    ['LAYER_PORT_WRAPPER_REGISTRATION', /platform_[a-z0-9_]+_wrapper_register\s*\(/i, 'Port must register BSP public Ops with the Wrapper.']
+    ['LAYER_PORT_RESOURCE_INJECTION', /=\s*[A-Za-z_][A-Za-z0-9_]*_resource_get_ops\s*\(/, 'Port must obtain MCU/Core context from resource.'],
+    ['LAYER_PORT_DRIVER_CONSTRUCTION', /_driver_construct\s*\(/, 'Port must construct the concrete Driver.'],
+    ['LAYER_PORT_HANDLE_CONSTRUCTION', /_handle_construct\s*\(/, 'Port must construct the same-class Handle.'],
+    ['LAYER_PORT_HANDLE_BINDING', /\.read_id\s*=\s*impl_[a-z0-9_]+_handle_read_id\s*,/i, 'Port must bind Handle Platform-facing functions directly.'],
+    ['LAYER_PORT_MODEL_INIT', /platform_[a-z0-9_]+_init\s*\(/i, 'Port must initialize the Platform Device Model.'],
+    ['LAYER_PORT_MODEL_REGISTRATION', /platform_[a-z0-9_]+_register_default\s*\(/i, 'Port must register the Platform Device Model.']
   ];
   for (const [ruleId, pattern, message] of requiredInjections) {
     if (!pattern.test(files.portSource.content)) addError(errors, ruleId, files.portSource.relative, message);
@@ -766,13 +802,10 @@ function validateHandle(files, type, errors) {
   if (!files.handleSource) return;
   const prefix = `impl_${type}_handle`;
   const definitions = findFunctionDefinitions(files.handleSource.content);
-  const notify = definitions.find((definition) => definition.name === `${prefix}_notify_from_isr`);
-  const process = definitions.find((definition) => definition.name === `${prefix}_process`);
-  if (!notify || /event_callback|\bcallback\s*\(/.test(notify.body) || !/from_isr|event_pending/i.test(notify.body)) {
-    addError(errors, 'LAYER_HANDLE_ISR_DEFERRAL', files.handleSource.relative, 'Handle ISR notification must defer work and must not call the user callback.');
-  }
-  if (!process || !/callback\s*\(/.test(process.body) || !/event_pending\s*=\s*false/.test(process.body)) {
-    addError(errors, 'LAYER_HANDLE_TASK_CALLBACK', files.handleSource.relative, 'Handle process function must release deferred state before task-context callback.');
+  const process = definitions.find((definition) => definition.name === `${type}_handle_process_impl`)
+    || definitions.find((definition) => definition.name === `${prefix}_process`);
+  if (!process || !/is_inited/.test(process.body) || !/NOT_INITIALIZED/.test(files.handleSource.content)) {
+    addError(errors, 'LAYER_HANDLE_PROCESS_STATE', files.handleSource.relative, 'Handle process API must guard its initialized state.');
   }
 }
 
@@ -824,19 +857,30 @@ function validateLayerContract({
   validateCommentCompleteness(files, errors, { strictGeneratedStyle });
   validateCommentLanguage(files, errors);
   validateCore(files, errors);
-  validateWrapper(files, errors);
-  validateFourTuple(files, errors);
   if (slice === 'wrapper') {
+    validateLegacyWrapper(files, errors);
+    validateLegacyWrapperFourTuple(files, errors);
     validateCommentLanguage(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
     return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
   }
-  if (normalizedDevice.stem === 'ssd1306') {
-    validateSsd1306Display(files, errors);
-  } else {
-    validateHalDriver(files, errors);
-    validateHandler(files, errors);
-    validatePort(files, type, errors);
-    validateHandle(files, type, errors);
+  validateModel(files, errors);
+  validateFourTuple(files, errors);
+  if (slice === 'model') {
+    validateCommentLanguage(files, errors, { rulePrefix: 'LAYER_MODEL' });
+    return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
+  }
+  validateHalDriver(files, errors);
+  validateHandler(files, errors);
+  validatePort(files, type, errors);
+  validateHandle(files, type, errors);
+  const legacyWrapperRoot = path.join(resolvedRoot, `03_Platform/platform_bsp/${type}`);
+  const legacyWrapperFiles = [
+    path.join(legacyWrapperRoot, `platform_${type}_wrapper.h`),
+    path.join(legacyWrapperRoot, `platform_${type}_wrapper.c`)
+  ];
+  if (legacyWrapperFiles.some((file) => fs.existsSync(file))) {
+    addError(errors, 'LAYER_LEGACY_WRAPPER_DEFAULT', `03_Platform/platform_bsp/${type}`,
+      'New BSP output must not contain platform_*_wrapper.c/.h; migrate the legacy Wrapper before validation.');
   }
   return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
 }
@@ -862,7 +906,7 @@ function parseArgs(argv, cwd = process.cwd()) {
     throw createLayerError('--root, --core, --device-type, and --device are required.');
   }
   if (options.slice !== 'all' && !SLICE_ROLES[options.slice]) {
-    throw createLayerError(`Unknown --slice value: ${options.slice}. Expected wrapper, driver, handle, port, or all.`);
+    throw createLayerError(`Unknown --slice value: ${options.slice}. Expected model, driver, handle, port, or all.`);
   }
   return options;
 }

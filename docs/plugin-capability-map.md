@@ -31,7 +31,7 @@
 | `workflow-review-gate` | 代码前审查与门禁、BRD/PRD/SRSys | 审查包、放行/阻塞判定 |
 | `workflow-integration-plan` | 分层设计、工程审计、集成路线 | 架构图、工程改造计划、分发 |
 | `workflow-final-review` | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | 按严重级别分组的审查报告与阻塞项 |
-| `workflow-claude-layering` | 目标工程 Claude 分层规则的扫描、同步与校验 | 受管 CLAUDE.md 区块、路径规则、漂移报告 |
+| `workflow-claude-layering` | 创建前规则设计、创建起始 bootstrap，以及通用 Claude 分层规则与项目/架构目录 README 的扫描、同步与校验 | 规则 profile/创建顺序、通用 Claude.md/README 区块、项目事实报告、路径规则、缺失与漂移报告 |
 ### 2.2 APP 软件架构
 
 | Skill | 功能 | 典型输出 |

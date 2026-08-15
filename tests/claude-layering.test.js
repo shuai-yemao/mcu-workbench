@@ -6,7 +6,9 @@ const {
   createDefaultConfig,
   normalizeLayoutKeys,
   runClaudeLayer,
-  scanProject
+  scanProject,
+  RULES_RELATIVE_DIRECTORY,
+  REPORT_RELATIVE_PATH
 } = require('../lib/claude-layer');
 
 function withFixture(callback) {
@@ -25,7 +27,7 @@ function withFixture(callback) {
     fs.writeFileSync(path.join(root, 'Core', 'bus.c'), 'int bus_read(void) { return 0; }\n', 'utf8');
     fs.writeFileSync(path.join(root, 'Misc', 'legacy.c'), 'int legacy(void) { return 0; }\n', 'utf8');
     fs.writeFileSync(path.join(root, 'AGENTS.md'), '# Shared instructions\n', 'utf8');
-    fs.writeFileSync(path.join(root, 'CLAUDE.md'), '# Manual heading\n\nKeep this text.\n', 'utf8');
+    fs.writeFileSync(path.join(root, 'Claude.md'), '# Manual heading\n\nKeep this text.\n', 'utf8');
     fs.writeFileSync(path.join(root, '.claude', 'rules', 'team.md'), '# Team rule\n', 'utf8');
     return callback(root);
   } finally {
@@ -71,18 +73,175 @@ describe('Claude layering', () => {
 
     const result = runClaudeLayer({ action: 'init', root, write: true });
     expect(result.changed).toBe(true);
-    const rootClaude = fs.readFileSync(path.join(root, 'CLAUDE.md'), 'utf8');
+    const rootClaude = fs.readFileSync(path.join(root, 'Claude.md'), 'utf8');
     expect(rootClaude).toContain('# Manual heading');
     expect(rootClaude).toContain('Keep this text.');
     expect(rootClaude).toContain('@AGENTS.md');
     expect(rootClaude).toContain('mcu-workbench:managed:start');
     expect(rootClaude).toContain('App → Service → Platform ← Impl → Vendor');
-    expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '10-app.md'))).toBe(true);
-    expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '20-service.md'))).toBe(false);
-    expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '40-vendor.md'))).toBe(false);
+    expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '10-app.md'))).toBe(true);
+    expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '20-service.md'))).toBe(true);
+    expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '50-vendor.md'))).toBe(true);
     expect(fs.readFileSync(path.join(root, '.claude', 'rules', 'team.md'), 'utf8')).toBe('# Team rule\n');
     expect(fs.existsSync(path.join(root, '.mcu-workbench', 'claude-layer.state.json'))).toBe(true);
   }));
+
+  test('migrates legacy root CLAUDE.md content into the requested Claude.md name', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-legacy-root-'));
+    try {
+      fs.mkdirSync(path.join(root, 'App'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'CMakeLists.txt'), 'project(legacy_root_fixture)\n', 'utf8');
+      fs.writeFileSync(path.join(root, 'CLAUDE.md'), '# Legacy manual heading\n', 'utf8');
+
+      const result = runClaudeLayer({ action: 'init', root, write: true });
+
+      expect(result.exitCode).toBe(0);
+      expect(fs.readFileSync(path.join(root, 'Claude.md'), 'utf8')).toContain('# Legacy manual heading');
+      expect(fs.existsSync(path.join(root, 'CLAUDE.md'))).toBe(true);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  test('design is read-only and bootstrap requires confirmed rules before project creation writes', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-bootstrap-'));
+    try {
+      const design = runClaudeLayer({ action: 'design', root });
+      expect(design.exitCode).toBe(0);
+      expect(design.design).toMatchObject({
+        profile: 'mcu-workbench-five-layer-v1',
+        status: 'awaiting-confirmation',
+        ruleMode: 'generic',
+        creationOrder: [
+          'design-rules',
+          'confirm-rules',
+          'bootstrap-claude-files',
+          'generate-project-skeleton',
+          'sync-and-validate'
+        ]
+      });
+      expect(fs.readdirSync(root)).toHaveLength(0);
+
+      const blocked = runClaudeLayer({ action: 'bootstrap', root, write: true });
+      expect(blocked.exitCode).toBe(2);
+      expect(blocked.errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: 'RULES_NOT_CONFIRMED' })
+      ]));
+      expect(fs.readdirSync(root)).toHaveLength(0);
+
+      const bootstrapped = runClaudeLayer({ action: 'bootstrap', root, write: true, rulesConfirmed: true });
+      expect(bootstrapped.exitCode).toBe(0);
+      expect(bootstrapped.creationOrder).toEqual([
+        'design-rules',
+        'confirm-rules',
+        'bootstrap-claude-files',
+        'generate-project-skeleton',
+        'sync-and-validate'
+      ]);
+      expect(fs.existsSync(path.join(root, 'Claude.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, 'README.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '00-project.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '10-app.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '20-service.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '30-platform.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '40-impl.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '50-vendor.md'))).toBe(true);
+      const config = JSON.parse(fs.readFileSync(path.join(root, '.mcu-workbench', 'claude-layer.json'), 'utf8'));
+      expect(config.architecture).toEqual({ profile: 'mcu-workbench-five-layer-v1', rulesConfirmed: true });
+      const rootContent = fs.readFileSync(path.join(root, 'Claude.md'), 'utf8');
+      const appRule = fs.readFileSync(path.join(root, RULES_RELATIVE_DIRECTORY, '10-app.md'), 'utf8');
+      expect(rootContent).not.toContain('工程事实');
+      expect(appRule).toContain('通用规则');
+      expect(appRule).not.toContain('App/main.c');
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  test('manages project and two-level architecture READMEs while preserving manual content and exclusions', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-readme-'));
+    try {
+      for (const directory of [
+        '00_文档/04_需求文档',
+        '00_Docs/04_需求文档',
+        '03_Platform/platform_mcu/inc/deep',
+        '05_Vendor/lvgl/src/core',
+        'build/generated'
+      ]) fs.mkdirSync(path.join(root, directory), { recursive: true });
+      fs.writeFileSync(path.join(root, '03_Platform', 'README.md'), '# 手写 Platform 说明\n', 'utf8');
+      fs.writeFileSync(path.join(root, '03_Platform', 'platform_mcu', 'inc', 'platform_demo.h'), [
+        '/** @brief Platform demo capability contract. */',
+        '#pragma once',
+        '#include "platform_type.h"',
+        'int platform_demo_read(void);',
+        '#define PLATFORM_DEMO_READY 1',
+        ''
+      ].join('\n'), 'utf8');
+
+      const config = createDefaultConfig(root);
+      const scan = scanProject({ root, config });
+      const readmePaths = scan.readme.entries.map((entry) => entry.path);
+      expect(readmePaths).toEqual(expect.arrayContaining([
+        '',
+        '00_Docs',
+        '00_Docs/04_需求文档',
+        '03_Platform',
+        '03_Platform/platform_mcu',
+        '03_Platform/platform_mcu/inc',
+        '05_Vendor',
+        '05_Vendor/lvgl',
+        '05_Vendor/lvgl/src'
+      ]));
+      expect(readmePaths).not.toEqual(expect.arrayContaining([
+        '00_文档',
+        '00_文档/04_需求文档',
+        'build',
+        '05_Vendor/lvgl/src/core',
+        '03_Platform/platform_mcu/inc/deep'
+      ]));
+
+      const result = runClaudeLayer({ action: 'init', root, write: true });
+      expect(result.exitCode).toBe(0);
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('# 手写 Platform 说明');
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('mcu-workbench:readme-managed:start');
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('### 这是什么');
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('```mermaid');
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('当前目录：03_Platform');
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('禁止依赖');
+      expect(fs.existsSync(path.join(root, '00_Docs', '04_需求文档', 'README.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, '05_Vendor', 'lvgl', 'src', 'README.md'))).toBe(true);
+      expect(fs.readFileSync(path.join(root, '03_Platform', 'platform_mcu', 'inc', 'README.md'), 'utf8'))
+        .toContain('公共头文件目录');
+      const detailedReadme = fs.readFileSync(path.join(root, '03_Platform', 'platform_mcu', 'inc', 'README.md'), 'utf8');
+      expect(detailedReadme).toContain('#### 文件/模块说明');
+      expect(detailedReadme).toContain('platform_demo.h');
+      expect(detailedReadme).toContain('Platform demo capability contract.');
+      expect(detailedReadme).toContain('platform_demo_read()');
+      expect(detailedReadme).toContain('platform_type.h');
+      expect(detailedReadme).toContain('源码注释');
+      expect(fs.readFileSync(path.join(root, '05_Vendor', 'lvgl', 'src', 'README.md'), 'utf8'))
+        .toContain('实现源码目录');
+      expect(fs.existsSync(path.join(root, '05_Vendor', 'lvgl', 'src', 'core', 'README.md'))).toBe(false);
+      expect(fs.existsSync(path.join(root, '00_文档', '04_需求文档', 'README.md'))).toBe(false);
+      expect(fs.existsSync(path.join(root, 'build', 'generated', 'README.md'))).toBe(false);
+
+      fs.appendFileSync(path.join(root, '03_Platform', 'README.md'), '\n## 手写补充\n', 'utf8');
+      expect(runClaudeLayer({ action: 'validate', root }).exitCode).toBe(0);
+      const readmePath = path.join(root, '03_Platform', 'README.md');
+      const readmeContent = fs.readFileSync(readmePath, 'utf8');
+      fs.writeFileSync(readmePath, readmeContent.replace(
+        '<!-- mcu-workbench:readme-managed:end -->',
+        'manual edit inside managed block\n<!-- mcu-workbench:readme-managed:end -->'
+      ), 'utf8');
+      const drift = runClaudeLayer({ action: 'validate', root });
+      expect(drift.exitCode).toBe(1);
+      expect(drift.errors).toEqual(expect.arrayContaining([
+        expect.objectContaining({ code: 'MANAGED_ARTIFACT_DRIFT', file: '03_Platform/README.md' })
+      ]));
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
 
   test('sync previews drift and validate distinguishes warnings, strict failures, and managed-file drift', () => withFixture((root) => {
     runClaudeLayer({ action: 'init', root, write: true });
@@ -101,7 +260,7 @@ describe('Claude layering', () => {
     const synced = runClaudeLayer({ action: 'sync', root, write: true });
     expect(synced.writes.length).toBeGreaterThan(0);
 
-    fs.appendFileSync(path.join(root, '.claude', 'rules', 'mcu-workbench', '10-app.md'), '\nmanual edit\n', 'utf8');
+    fs.appendFileSync(path.join(root, RULES_RELATIVE_DIRECTORY, '10-app.md'), '\nmanual edit\n', 'utf8');
     const drift = runClaudeLayer({ action: 'validate', root });
     expect(drift.exitCode).toBe(1);
     expect(drift.errors.some((item) => item.code === 'MANAGED_ARTIFACT_DRIFT')).toBe(true);
@@ -232,9 +391,28 @@ describe('Claude layering', () => {
     expect(scan.layers.vendor.files.map((item) => item.path)).toContain('ThirdParty/lib.c');
   }));
 
+  test('migrates legacy split management directories into .mcu-workbench', () => withFixture((root) => {
+    const legacyRules = path.join(root, '.claude', 'rules', 'mcu-workbench');
+    const legacyReport = path.join(root, 'docs', 'architecture');
+    fs.mkdirSync(legacyRules, { recursive: true });
+    fs.mkdirSync(legacyReport, { recursive: true });
+    fs.writeFileSync(path.join(legacyRules, '10-app.md'), '# legacy managed rule\n', 'utf8');
+    fs.writeFileSync(path.join(legacyReport, 'claude-layer-map.md'), '# legacy scan report\n', 'utf8');
+
+    const result = runClaudeLayer({ action: 'init', root, write: true });
+
+    expect(result.exitCode).toBe(0);
+    expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '10-app.md'))).toBe(true);
+    expect(fs.existsSync(path.join(root, REPORT_RELATIVE_PATH))).toBe(true);
+    expect(JSON.parse(fs.readFileSync(path.join(root, '.mcu-workbench', 'claude-layer.json'), 'utf8')).managed)
+      .toMatchObject({ rulesDirectory: RULES_RELATIVE_DIRECTORY, report: REPORT_RELATIVE_PATH });
+    expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench'))).toBe(false);
+    expect(fs.existsSync(path.join(root, 'docs', 'architecture', 'claude-layer-map.md'))).toBe(false);
+  }));
+
   test('removes stale managed rule files on sync and keeps user files', () => withFixture((root) => {
     runClaudeLayer({ action: 'init', root, write: true });
-    const rulesDir = path.join(root, '.claude', 'rules', 'mcu-workbench');
+    const rulesDir = path.join(root, RULES_RELATIVE_DIRECTORY);
     fs.writeFileSync(path.join(rulesDir, '20-middleware.md'), '# stale\n', 'utf8');
     fs.writeFileSync(path.join(rulesDir, '60-driver.md'), '# stale\n', 'utf8');
     fs.writeFileSync(path.join(rulesDir, 'user-note.md'), '# keep\n', 'utf8');
