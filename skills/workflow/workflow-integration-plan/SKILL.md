@@ -22,15 +22,23 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 
 按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序审计，核对调用链与公开契约；分层证据图（软件层契约与知识图谱）见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 的 `references/`。迁移设计覆盖：跨层架构调整、目录映射、依赖方向修正和分阶段集成计划。每个结论写入来源（`relative/path:line`、配置键或可复现命令）与可信等级，不把推测写成已确认事实。
 
+### Platform MCU Model 迁移专项
+
+当需求是把 MCU 公共构造函数从 Impl 归位到 Platform 时，文件级计划必须明确区分两类初始化：
+
+1. Platform Model：按 `platform_<capability>.h` 配套同名 `platform_<capability>.c`，只保留参数校验、公共对象初始化、配置/Ops/生命周期绑定和默认状态；
+2. Impl 生命周期：保留 `impl_mcu_*_init(void *)`、HAL/CMSIS、后端 Ops、资源申请、IRQ/DMA/总线动作和硬件错误恢复。
+
+施工顺序固定为：先记录原构造函数与生命周期调用链 → 新增 Platform 同名 `.c` → 删除 Impl 中重复构造定义 → 更新所有构建入口源文件清单 → 扫描依赖和重复符号 → 交叉编译/链接 → 交接最终审查。Impl 只能包含 Platform 公共头，不能包含 Platform `.c`；每个构造函数必须只有一个定义。若构造函数、生命周期或构建入口范围发生变化，必须回到 Review Gate 更新审查包。
+
 ### Middleware 专项施工顺序
 
 涉及 Elog/RTT、文件系统或其他第三方中间件时，文件级计划至少按以下顺序展开：
 
 ```text
 Vendor 登记/编译单元
-  → Platform contract（可选经审查的窄 registry/dispatch .c）
-  → Impl contract adapter + Vendor Port
-  → impl_board_<board>_middleware.c 集中注册与逆序回滚
+  → Platform Middleware API
+  → Impl direct Adapter + Vendor Port
   → Service object/lifecycle
   → App/Manager 启动接线
   → workflow-final-review
@@ -61,7 +69,10 @@ Middleware Vendor Port 是独立的第三方移植边界，不等同于 BSP Adap
 - 本 skill 不审查既有实现方案的可行性：门禁判定收敛在 `workflow-review-gate`，本 Skill 只消费放行结果。
 - 本 skill 不生成实现代码、不承担最终代码审查（`workflow-final-review`）与代码生成阶段。
 - 审查包门禁状态非放行时不得分发实现层 Skill；发现新事实必须回传 `workflow-review-gate` 更新审查包。
-- OS/BSP Adapter 仍由各自 Wrapper/Port 组成；Middleware Vendor Port 是另一类 Impl 适配边界，不能被归并为 BSP Adapter。唯一规范调用链是 `App → Service → Platform ← Impl → Vendor`。Service 调用 Platform 公共契约，Board 组合根在启动期集中注册中间件，业务调用不绕过 Service。
+- OS/BSP Adapter 仍由各自 Wrapper/Port 组成；Middleware Vendor Port 是另一类 Impl 适配边界，不能被归并为 BSP Adapter。
+  通用层调用链仍是 `App → Service → Platform ← Impl → Vendor`；固定后端 Middleware 允许经需求与 Review Gate 明确的
+  专用例外：`App → Service → Platform Middleware API → Impl Adapter → Vendor`。Service 调用 Platform 公共 API，Board
+  只负责 BSP/Device 和板级资源，不集中注册 Middleware。
 
 ## 参考
 

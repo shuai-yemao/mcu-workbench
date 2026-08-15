@@ -94,7 +94,10 @@ Router 和 `workflow-requirements-challenge` 固定交付带用户选择记录�
 
 - Adapter 只属于 OS 和 BSP，且每个 Adapter 由 Wrapper 与 Port 组成。
 - Core、Middleware、Driver 不创建 Adapter；它们分别提供 MCU 能力、通用能力和厂商底层实现。
-- 唯一规范调用链是 `App → Service → Platform ← Impl → Vendor`；Service 调用 Platform 公共契约，Wrapper/Port 只在 OS/BSP 内部承担适配职责，Middleware 不直接越过 Service/Platform 调用具体实现。
+- 通用规范调用链是 `App → Service → Platform ← Impl → Vendor`；固定后端 Middleware 经 RCP/Review Gate 明确放行后，
+  可采用专用调用链 `App → Service → Platform Middleware API → Impl Adapter → Vendor`。Service 仍只能调用 Platform
+  公共 API；Platform Middleware `.c` 不得 include Vendor/HAL/RTOS；Wrapper/Port 只在 OS/BSP 内部承担适配职责，
+  Middleware Vendor Port 仍属于 Impl 边界。
 - 本 skill 只输出工程事实、反猜测审查结论、必选的 BRD/PRD/SRSys 产品文档和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 - 分层审计、迁移路线、文件级改造顺序与实现层分发交给 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
