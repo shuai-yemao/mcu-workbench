@@ -3,6 +3,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const { spawnSync } = require('child_process');
 const {
   generateBspDriver,
   generateCorePeripheral,
@@ -17,6 +18,17 @@ const STANDARD_HEADERS = new Set(['stdbool.h', 'stddef.h', 'stdint.h', 'inttypes
 // （platform_common/SKILL.md 输出契约）必须 include 的依赖，不属于越层泄漏。
 // 仍禁止 wrapper include platform_mcu/platform_bsp/impl_*/vendor/HAL/RTOS 头。
 const PLATFORM_COMMON_HEADERS = new Set(['platform_type.h', 'platform_error.h', 'platform_def.h']);
+const FORMAT_CONFIG = path.join(
+  __dirname,
+  '..',
+  'skills',
+  'tools',
+  'tools-quality',
+  'references',
+  'capabilities',
+  'quality-format-check',
+  '.clang-format'
+);
 
 function maskCommentsAndStrings(content) {
   let result = '';
@@ -115,7 +127,8 @@ function findFunctionComments(content, start) {
   const afterComment = prefix.slice(commentEnd + 2);
   if (/[^\s]/.test(afterComment)) return '';
   const commentStart = prefix.lastIndexOf('/**', commentEnd);
-  return commentStart >= 0 ? prefix.slice(commentStart, commentEnd + 2) : '';
+  if (commentStart < 0 || prefix.lastIndexOf('/*', commentEnd) !== commentStart) return '';
+  return prefix.slice(commentStart, commentEnd + 2);
 }
 
 function findFunctionContracts(content) {
@@ -186,9 +199,50 @@ function findFunctionContracts(content) {
   return contracts;
 }
 
-function validateCommentCompleteness(files, errors) {
+const FUNCTION_STEP_LABELS = ['清理', '事件', '回调', '转发', '校验', '状态', '结果', '处理'];
+
+function requiredFunctionSteps(contract) {
+  const source = maskCommentsAndStrings(contract.body);
+  const required = [];
+  const add = (label) => {
+    if (!required.includes(label)) required.push(label);
+  };
+
+  if (/cleanup_|goto\s+cleanup_/.test(source)) add('清理');
+  if (/callback\s*\(|event_callback/.test(source)) add('回调');
+  if (/^\s*(?:if|switch|for|while)\b|(?:==|!=|<=|>=)\s*(?:NULL|0|false|true)|!\s*[A-Za-z_][\w.\->]*/m.test(source)) {
+    add('校验');
+  }
+  if (/(?:pf_[A-Za-z_]\w*|[A-Za-z_]\w*_ops\s*(?:\.|->)\s*[A-Za-z_]\w*)\s*\(/.test(source)) {
+    add('转发');
+  }
+  if (/(?:event_pending|pending_event_id|pending_status|event_id)\s*(?:\+?=|-=)/.test(source)) {
+    add('事件');
+  }
+  if (/(?:is_inited|is_ready|s_[A-Za-z_]\w*|status)\s*(?:\+?=|-=)/.test(source)) {
+    add('状态');
+  }
+  const sourceWithoutGuardReturns = source
+    .replace(/\bif\s*\([^;{}]*\)\s*\{[^{}]*\}/g, '')
+    .replace(/\bif\s*\([^;{}]*\)\s*return\b[^;]*;/g, '');
+  const returnExpressions = [...sourceWithoutGuardReturns.matchAll(/\breturn\b([\s\S]*?);/g)]
+    .map((match) => match[1]);
+  if (returnExpressions.some((expression) => !/(?:pf_[A-Za-z_]\w*|[A-Za-z_]\w*_ops\s*(?:\.|->)\s*[A-Za-z_]\w*)\s*\(/.test(expression))) {
+    add('结果');
+  }
+  if (required.length === 0) {
+    add('处理');
+  }
+  return required;
+}
+
+function hasFunctionStepComment(body, label) {
+  return new RegExp(`\\/\\*\\s*${label}\\s*-+\\s*\\*\\/`).test(body);
+}
+
+function validateCommentCompleteness(files, errors, { strictGeneratedStyle = true } = {}) {
   for (const file of Object.values(files)) {
-    if (!file.content.includes('@version')) continue;
+    if (!strictGeneratedStyle && !file.content.includes('@version')) continue;
     for (const tag of ['Copyright', 'All Rights Reserved.', '@file', '@brief', '@author', '@version']) {
       if (!file.content.includes(tag)) {
         addError(errors, 'LAYER_FILE_DOC', file.relative,
@@ -236,6 +290,14 @@ function validateCommentCompleteness(files, errors) {
       if (/dma/i.test(source) && !/@warning\b/.test(contract.comment)) {
         addError(errors, 'LAYER_FUNCTION_WARNING_DOC', file.relative,
           `Function ${contract.name} must document DMA prerequisites with @warning.`);
+      }
+      if (contract.isDefinition) {
+        for (const step of requiredFunctionSteps(contract)) {
+          if (!hasFunctionStepComment(contract.body, step)) {
+            addError(errors, 'LAYER_FUNCTION_STEP_DOC', file.relative,
+              `Function ${contract.name} must document the ${step} logic stage inside its body.`);
+          }
+        }
       }
     }
     if (file.relative.endsWith('.c') && !/\/\*[\s\S]*-{3,}/.test(file.content)) {
@@ -356,21 +418,52 @@ function validateCommentLanguage(files, errors, { rulePrefix = 'LAYER', skipRole
   }
 }
 
-function validateSections(files, errors) {
+function validateSections(files, errors, { strictGeneratedStyle = true } = {}) {
+  const sectionPattern = (label) => new RegExp(`\\/\\* ${label} -+ \\*\\/`);
+  const hasAnySection = (content, labels) => labels.some((label) => sectionPattern(label).test(content));
+  const requireSection = (file, labels, description) => {
+    if (!hasAnySection(file.content, labels)) {
+      addError(errors, 'LAYER_SOURCE_SECTION', file.relative,
+        `Generated file must contain ${description} section.`);
+    }
+  };
+
   for (const file of Object.values(files)) {
-    if (!file.content.includes('@file')) addError(errors, 'LAYER_FILE_DOC', file.relative, 'Generated file must have an @file documentation header.');
-    if (file.relative.endsWith('.c')) {
-      for (const section of [
-        ['Includes', '包含文件'],
-        ['Public Functions', '公开函数']
-      ]) {
-        const sectionPattern = new RegExp(`/\\* (?:${section[0]}|${section[1]})(?: -+)? \\*/`);
-        if (!sectionPattern.test(file.content)) {
-          addError(errors, 'LAYER_SOURCE_SECTION', file.relative,
-            `Generated source must contain ${section[1]} section.`);
+    if (!strictGeneratedStyle) {
+      if (!file.content.includes('@file')) {
+        addError(errors, 'LAYER_FILE_DOC', file.relative, 'Generated file must have an @file documentation header.');
+      }
+      if (file.relative.endsWith('.c')) {
+        for (const [english, chinese] of [['Includes', '包含文件'], ['Public Functions', '公开函数']]) {
+          const legacyPattern = new RegExp(`/\\* (?:${english}|${chinese})(?: -+)? \\*/`);
+          if (!legacyPattern.test(file.content)) {
+            addError(errors, 'LAYER_SOURCE_SECTION', file.relative,
+              `Generated source must contain ${chinese} section.`);
+          }
         }
       }
+      continue;
     }
+    const code = maskCommentsAndStrings(file.content);
+    const contracts = findFunctionContracts(file.content);
+    const definitions = findFunctionDefinitions(file.content);
+    const hasTypes = /\btypedef\s+(?:enum|struct)\s*\{/.test(code);
+    const hasMacros = code.split(/\r?\n/).some((line) => {
+      const match = line.match(/^\s*#define\s+([A-Z][A-Z0-9_]*)\b/);
+      return Boolean(match && !/_H\b/.test(match[1]));
+    });
+    const hasPublicFunctions = contracts.some((contract) => !contract.isDefinition)
+      || definitions.some((definition) => !definition.isStatic);
+    const hasPrivateFunctions = contracts.some((contract) => contract.isDefinition)
+      && definitions.some((definition) => definition.isStatic);
+    const hasPrivateState = /^\s*static\s+(?![^\n]*\([^\n]*\))[^;{}]+;\s*$/m.test(code);
+
+    if (directIncludes(file.content).length > 0) requireSection(file, ['包含文件'], '包含文件');
+    if (hasTypes) requireSection(file, ['公开类型', '私有类型'], '类型');
+    if (hasMacros) requireSection(file, ['公开宏定义', '私有宏定义'], '宏定义');
+    if (hasPublicFunctions) requireSection(file, ['公开函数'], '公开函数');
+    if (hasPrivateFunctions) requireSection(file, ['私有函数'], '私有函数');
+    if (hasPrivateState) requireSection(file, ['私有状态', '私有组合对象'], '私有状态或组合对象');
   }
 }
 
@@ -442,7 +535,34 @@ function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, des
   flush();
 }
 
-function validateGeneratedStyle(files, errors) {
+function clangFormatCandidates() {
+  return process.env.MCUWB_CLANG_FORMAT
+    ? [process.env.MCUWB_CLANG_FORMAT]
+    : process.platform === 'win32'
+      ? ['C:\\Program Files\\LLVM\\bin\\clang-format.exe', 'clang-format']
+      : ['clang-format'];
+}
+
+function validateClangFormat(file, errors) {
+  const failures = [];
+  for (const executable of clangFormatCandidates()) {
+    const result = spawnSync(executable, [
+      '--dry-run',
+      '--Werror',
+      `-style=file:${FORMAT_CONFIG}`,
+      `-assume-filename=${file.relative}`
+    ], { input: file.content, encoding: 'utf8' });
+    if (result.status === 0) return true;
+    const diagnostic = String(result.stderr || '').split(/\r?\n/)
+      .find((line) => line.includes('error:'))?.trim() || '';
+    failures.push(`${executable}${diagnostic ? `: ${diagnostic}` : ''}`);
+  }
+  addError(errors, 'LAYER_FORMAT_CLANG', file.relative,
+    `Generated file must pass clang-format (${FORMAT_CONFIG}). ${failures.join('; ')}`);
+  return false;
+}
+
+function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } = {}) {
   const datePattern = new RegExp(`@version\\s+V1\\.0\\s+${new Date().toISOString().slice(0, 10)}`);
   const functionDefinition = /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/;
   const primaryLabels = Object.values({
@@ -457,7 +577,7 @@ function validateGeneratedStyle(files, errors) {
     privateFunctions: '私有函数'
   });
   const secondaryLabels = ['返回值', '超时值', '事件', '配置', '默认值', '初始化', '读写', '回调', '辅助', '接口'];
-  const tertiaryLabels = ['清理', '事件', '回调', '转发', '校验', '状态', '处理'];
+  const tertiaryLabels = ['清理', '事件', '回调', '转发', '校验', '状态', '结果', '处理'];
   const validatePartitionWidth = (line, labels, width, ruleId, currentFile) => {
     const start = line.indexOf('/*');
     if (start < 0) return;
@@ -477,25 +597,27 @@ function validateGeneratedStyle(files, errors) {
   };
   for (const file of Object.values(files)) {
     const lines = file.content.split(/\r?\n/);
-    const isGeneratedFile = file.content.includes('@version');
-    if (!isGeneratedFile) continue;
-    validateAlignmentGroups(
-      lines, file, errors, parseDeclarationAlignment,
-      'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
-    );
-    validateAlignmentGroups(
-      lines, file, errors, parseDeclarationAlignment,
-      'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
-    );
-    validateAlignmentGroups(
-      lines, file, errors, parseAssignmentAlignment,
-      'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
-    );
-    validateAlignmentGroups(
-      lines, file, errors, parseEnumAlignment,
-      'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
-    );
-    if (file.content.includes('@version') && !datePattern.test(file.content)) {
+    if (!strictGeneratedStyle && !file.content.includes('@version')) continue;
+    const clangFormatValid = validateClangFormat(file, errors);
+    if (!clangFormatValid) {
+      validateAlignmentGroups(
+        lines, file, errors, parseDeclarationAlignment,
+        'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
+      );
+      validateAlignmentGroups(
+        lines, file, errors, parseDeclarationAlignment,
+        'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
+      );
+      validateAlignmentGroups(
+        lines, file, errors, parseAssignmentAlignment,
+        'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
+      );
+      validateAlignmentGroups(
+        lines, file, errors, parseEnumAlignment,
+        'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
+      );
+    }
+    if (!datePattern.test(file.content)) {
       addError(errors, 'LAYER_FILE_DATE', file.relative,
         'Generated file header must contain the current date in @version.');
     }
@@ -515,10 +637,6 @@ function validateGeneratedStyle(files, errors) {
       if (functionDefinition.test(line)) {
         addError(errors, 'LAYER_FORMAT_FUNCTION_BRACE', file.relative,
           `Function brace must be on its own line (line ${index + 1}).`);
-      }
-      if (/\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78) {
-        addError(errors, 'LAYER_FORMAT_TAIL_COMMENT', file.relative,
-          `Trailing comment terminator must be aligned to column 80 (line ${index + 1}).`);
       }
       validatePartitionWidth(line, primaryLabels, 80, 'LAYER_FORMAT_PRIMARY_PARTITION', file);
       validatePartitionWidth(line, secondaryLabels, 40, 'LAYER_FORMAT_SECONDARY_PARTITION', file);
@@ -689,7 +807,9 @@ function validateSsd1306Display(files, errors) {
   }
 }
 
-function validateLayerContract({ root, core, deviceType, device, slice = 'all' } = {}) {
+function validateLayerContract({
+  root, core, deviceType, device, slice = 'all', strictGeneratedStyle = true
+} = {}) {
   if (!root || !core || !deviceType || !device) throw createLayerError('--root, --core, --device-type, and --device are required.');
   const normalizedCore = normalizeCorePeripheral(core);
   const type = normalizeDeviceType(deviceType);
@@ -699,9 +819,9 @@ function validateLayerContract({ root, core, deviceType, device, slice = 'all' }
   const errors = [];
   const resolvedRoot = path.resolve(root);
   const files = readSlice(resolvedRoot, paths, errors);
-  validateSections(files, errors);
-  validateGeneratedStyle(files, errors);
-  validateCommentCompleteness(files, errors);
+  validateSections(files, errors, { strictGeneratedStyle });
+  validateGeneratedStyle(files, errors, { strictGeneratedStyle });
+  validateCommentCompleteness(files, errors, { strictGeneratedStyle });
   validateCommentLanguage(files, errors);
   validateCore(files, errors);
   validateWrapper(files, errors);

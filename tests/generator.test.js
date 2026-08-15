@@ -137,7 +137,6 @@ describe('Generator Module', () => {
       expect(lines.some((line) => line.includes('\t'))).toBe(false);
       expect(lines.some((line) => /typedef\s+(?:struct|enum)\s*\{/.test(line))).toBe(false);
       expect(lines.some((line) => /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/.test(line))).toBe(false);
-      expect(lines.some((line) => /\/\*\*<.*\*\//.test(line) && line.lastIndexOf('*/') !== 78)).toBe(false);
       const paddedComments = lines.filter((line) => /\/\*.*-{5,}.*\*\//.test(line));
       expect(paddedComments
         .filter((line) => /\/\* (?:包含文件|公开|私有)/.test(line))
@@ -153,6 +152,17 @@ describe('Generator Module', () => {
     }
   });
 
+  test('fails closed when clang-format cannot format a generated file', async () => {
+    const previous = process.env.MCUWB_CLANG_FORMAT;
+    process.env.MCUWB_CLANG_FORMAT = 'missing-clang-format-for-regression-test';
+    try {
+      await expect(generateCorePeripheral('spi', 'stm32f4')).rejects.toMatchObject({ code: 'FORMAT' });
+    } finally {
+      if (previous === undefined) delete process.env.MCUWB_CLANG_FORMAT;
+      else process.env.MCUWB_CLANG_FORMAT = previous;
+    }
+  });
+
   test('generates complete semantic comments without documenting calls as functions', async () => {
     const files = await generateBspDriver({
       deviceType: 'externflash', device: 'W25Q64', cores: ['spi'], platform: 'stm32f4'
@@ -164,6 +174,7 @@ describe('Generator Module', () => {
     expect(driver).toContain('@note 缩进使用 4 个空格，禁止使用 TAB。');
     expect(driver).toContain('@brief 读取设备标识。');
     expect(driver).toMatch(/\/\* 转发 -+ \*\//);
+    expect(driver).toContain('调用注入的底层操作并传播结果。');
     expect(driver).not.toContain('入口检查与核心处理');
     expect(driver).not.toContain('成员或枚举值说明');
     expect(driverHeader).toContain('#endif /* IMPL_W25Q64_DRIVER_H */');
@@ -177,13 +188,20 @@ describe('Generator Module', () => {
 
     expect(header).toContain('/* 包含文件 ');
     expect(header).not.toContain('/* Includes');
+    expect(header).toContain('/* 初始化 ');
+    expect(header).toContain('/* 读写 ');
+    expect(header).toContain('/* 回调 ');
     expect(header).toContain('event_id; /**< 待处理的事件标识。');
-    expect(header).toContain('uint32_t       event_id;');
-    expect(header).toContain('platform_err_t status;');
+    expect(header).toContain('status; /**< 事件处理状态。');
     expect(header).toMatch(/PLATFORM_ERR_OK\s+= 0,.*\n\s+PLATFORM_ERR_PARAM\s+= 3,/);
     expect(header).not.toContain('成员或枚举值说明');
     expect(source).toContain('/* IRQ 功能开关或事件标识 ');
-    expect(source).toMatch(/event->event_id = PLATFORM_SPI_EVENT_IRQ;\n    event->status   = PLATFORM_ERR_OK;\n    event->sequence \+= 1U;/);
+    expect(source).toContain('event->event_id = PLATFORM_SPI_EVENT_IRQ;');
+    expect(source).toContain('event->status = PLATFORM_ERR_OK;');
+    expect(source).toContain('event->sequence += 1U;');
+    expect(source).toMatch(/\/\* 事件 -+ \*\/[\s\S]*event->event_id = PLATFORM_SPI_EVENT_IRQ;/);
+    expect(source).toMatch(/\/\* 状态 -+ \*\/[\s\S]*event->status = PLATFORM_ERR_OK;/);
+    expect(source).toContain('检查输入参数、依赖和前置状态。');
     expect(header).toContain('#endif /* PLATFORM_SPI_H */');
     expect(source).toContain('if (instance == NULL || instance->pf_init == NULL) {');
   });

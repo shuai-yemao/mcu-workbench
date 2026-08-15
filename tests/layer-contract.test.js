@@ -45,10 +45,43 @@ describe('generated layer contract validator', () => {
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
+  test('rejects a generated file whose version tag is removed instead of skipping validation', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
+      content.replace(/ \* @version[^\n]*\n/, '')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_FILE_DOC',
+        file: '03_Platform/platform_mcu/Inc/platform_spi.h'
+      }),
+      expect.objectContaining({
+        ruleId: 'LAYER_FILE_DATE',
+        file: '03_Platform/platform_mcu/Inc/platform_spi.h'
+      })
+    ]));
+  });
+
+  test('rejects a generated header whose actual type section is removed', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
+      content.replace(/\/\* 公开类型[^\n]*\*\/\n/, '')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_SOURCE_SECTION',
+        file: '03_Platform/platform_mcu/Inc/platform_spi.h',
+        message: expect.stringContaining('类型')
+      })
+    ]));
+  });
+
   test('rejects a generated function when its Doxygen block is removed', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => content
-      .replace(/\/\*\*\n \* @brief 以毫秒超时执行同步事务。[\s\S]*?\*\//, ''));
+      .replace(/\/\*\*\n \* @brief 执行带超时约束的同步数据传输。[\s\S]*?\*\//, ''));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
@@ -89,12 +122,12 @@ describe('generated layer contract validator', () => {
   test('rejects a generated source whose assignment columns are not aligned', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => (
-      content.replace('event->status   = PLATFORM_ERR_OK;', 'event->status = PLATFORM_ERR_OK;')
+      content.replace('event->status = PLATFORM_ERR_OK;', 'event->status    = PLATFORM_ERR_OK;')
     ));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        ruleId: 'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT',
+        ruleId: 'LAYER_FORMAT_CLANG',
         file: '03_Platform/platform_mcu/Src/platform_spi.c'
       })
     ]));
@@ -103,12 +136,12 @@ describe('generated layer contract validator', () => {
   test('rejects a generated header whose declaration columns are not aligned', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
-      content.replace('uint32_t       event_id;', 'uint32_t event_id;')
+      content.replace('event_id; /**< 待处理的事件标识。', 'event_id     ; /**< 待处理的事件标识。')
     ));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        ruleId: 'LAYER_FORMAT_DECLARATION_ALIGNMENT',
+        ruleId: 'LAYER_FORMAT_CLANG',
         file: '03_Platform/platform_mcu/Inc/platform_spi.h'
       })
     ]));
@@ -384,7 +417,8 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
   test('accepts a pure-forward wrapper slice with --slice wrapper and style profile documentation', async () => {
     const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
-      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+      strictGeneratedStyle: false
     });
     expect(result).toMatchObject({ valid: true, errors: [] });
   });
@@ -392,7 +426,8 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
   test('rejects a device-object wrapper that omits a four-tuple slot', async () => {
     const root = await createWrapperSlice(fourTupleBrokenWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
-      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+      strictGeneratedStyle: false
     });
     expect(result.errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_FOUR_TUPLE' })
@@ -402,7 +437,8 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
   test('accepts a wrapper with minimal style profile documentation in wrapper slice', async () => {
     const root = await createWrapperSlice(noProfileWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
-      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+      strictGeneratedStyle: false
     });
     expect(result).toMatchObject({ valid: true, errors: [] });
   });
@@ -410,7 +446,8 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
   test('does not require sibling slice files when --slice wrapper is used', async () => {
     const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
-      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+      strictGeneratedStyle: false
     });
     expect(result.errors).not.toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_REQUIRED_FILE' })
@@ -483,7 +520,8 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
   test('accepts a compliant wrapper that includes Platform Common type headers', async () => {
     const root = await createWrapperSlice(compliantWrapperHeader, compliantWrapperSource);
     const result = validateLayerContract({
-      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+      strictGeneratedStyle: false
     });
     expect(result.errors).not.toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_DEPENDENCY' }),
@@ -544,7 +582,8 @@ int32_t platform_externflash_wrapper_register(const platform_externflash_wrapper
 #endif`;
     const root = await createWrapperSlice(englishWrapperHeader, wrapperSourceFullProfile);
     const result = validateLayerContract({
-      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper'
+      root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+      strictGeneratedStyle: false
     });
     expect(result.errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_WRAPPER_COMMENT_LANGUAGE' })
