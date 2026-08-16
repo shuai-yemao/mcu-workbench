@@ -5,6 +5,10 @@ description: 外部 Flash Handler 模式：事件队列异步擦写、4KB 缓冲
 
 # W25Qxx Handler 模式
 
+> 本文是 W25Qxx/外部 Flash 的业务策略示例，不是通用 Handle 生成模板。4 KB 缓冲、OTA/日志双区、
+> PVD 刷写和具体擦除时长必须由目标设备、分区和 Service 需求重新确认；其他 Driver/Handle 不得
+> 因引用本文而继承这些常量或业务策略。
+
 ## 设计目标
 
 - 将最长 3 秒的 Flash 擦除操作异步化，不阻塞高优先级任务

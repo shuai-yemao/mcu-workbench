@@ -115,6 +115,21 @@ platform_i2c_device_t  ← 设备地址作为每次事务参数传入
 
 SPI Bus 不持有外部器件协议或固定片选；具体片选和器件协议由 BSP/Impl 绑定，并单独声明所有权和生命周期。
 
+### 共享 SPI Bus 与异步事件基线
+
+一个 `platform_spi_device_t` 表示一个可访问的 SPI Bus 实例；多个外部设备可以共享同一 Bus，
+但每个设备必须由 Port 注入独立的 CS Ops/context。Bus 仲裁属于 Platform MCU 后端，设备协议、
+片选极性和 CS 生命周期属于 BSP Port/Driver。
+
+同步事务的边界为：获取 Bus → 选择 CS → 完成事务 → 释放 CS → 释放 Bus。异步 DMA 事务的边界为：
+获取 Bus → 选择 CS → 启动 DMA → 由 IRQ/DMA 生成完成、错误或中止事件 → 释放 CS/Bus → 通知回调。
+后端可以返回 `PLATFORM_ERR_BUSY`，但不得覆盖正在进行的事务；请求排队、重试和公平调度属于 Impl
+Handle 或明确的 Bus Scheduler，不属于外部器件 Platform Model。
+
+ISR 只确认硬件事件、保存有限事件值或投递 ISR-safe 通知，不执行器件协议、阻塞等待、动态分配或
+上层业务回调。Driver 负责把 MCU 事件转换为设备事件，Handle/Worker 在非 ISR 上下文推进状态机。
+DMA 缓冲区在完成或中止事件前必须保持有效，并明确 CPU/DMA 所有权和 Cache/对齐约束。
+
 ## 同步调用、超时和错误码
 
 SPI/I2C/UART/ADC 的带 `timeout_ms` 同步接口：调用者等待完整事务成功、失败或超时后返回。异步接口不以 `timeout_ms` 返回完整结果，而以事件回调报告完成、错误或中止。`timeout_ms` 单位为毫秒，表示一次完整同步事务的最大允许耗时；`0` 表示不等待未立即完成的事务。

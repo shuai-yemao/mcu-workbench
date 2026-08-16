@@ -76,6 +76,27 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 
 Model 源只负责公共对象身份和模型契约所需的初始化，不承担设备协议、Handler、重试、缓存、任务或资源绑定。
 
+## Platform/Impl 扩展基线
+
+扩展一个新的 BSP 能力时，先判断能力是否属于 Platform 公共契约，再决定是否增加
+`platform_<type>_model.h/.c`。以下内容必须留在 Impl：具体型号命令、寄存器序列、页/块策略、
+设备协议状态机、队列、线程、重试、回调和 DMA 缓冲区所有权。
+
+```text
+Platform Model
+  = 身份 + 通用配置 + 状态快照 + typed Ops
+
+Impl Port
+  = Resource + Driver + Handle + OS/并发资源 + 注册
+```
+
+以外部 Flash 为例，容量、块大小和 `read/write/erase` 能力可以进入 Platform 契约；页编程、
+擦除轮询、4 KB 缓冲、OTA/日志分区和掉电刷写策略只能作为 Driver、Handle 或 Service 的设备/业务特例。
+Model 不得因为某个设备使用 SPI 就保存具体 Flash、CS、DMA 或 HAL 句柄。
+
+Platform Ops 需要明确输入输出所有权、阻塞属性、超时单位、ISR 可用性、线程安全、回调上下文
+和失败后的对象状态。异步接口还必须说明缓冲区借用期限以及完成、错误、中止事件的语义。
+
 本 Skill 的 BSP Model 当前沿用 `platform_<type>_model.c` 命名；这不覆盖 `platform_mcu` 的独立命名规则。MCU 能力 Model 源文件必须与对应公共头同名，具体规则以 [`platform_mcu`](../platform_mcu/SKILL.md) 为准。
 
 ## 生成自检门禁（输出前 MUST）

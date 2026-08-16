@@ -15,22 +15,34 @@ function getPublicDefinitions(content) {
     .map((match) => match[1]);
 }
 
+function validateFourTuple(header, label, errors) {
+  for (const slot of ['cfg', 'ctx', 'data', 'ops']) {
+    if (!new RegExp(`\\b${slot}\\b`).test(header)) {
+      errors.push(`${label} header must declare the ${slot} four-tuple slot.`);
+    }
+  }
+}
+
 function validateHandler(options, errors) {
   const header = readFile(options.handlerHeader);
   const source = readFile(options.handlerSource);
   if (!/\b[a-zA-Z0-9_]+_(?:handler|handle)_driver_ops_t\b/.test(header)) {
     errors.push('Handle header must declare a handler_driver_ops_t or handle_driver_ops_t interface.');
   }
-  if (!/\bis_inited\b/.test(header)) errors.push('Handler header must declare is_inited.');
-  if (/^\s*#\s*include\s*[<"][^>"]*driver\.h[>"]/im.test(source)) {
-    errors.push('Handler must not include a concrete Driver header.');
+  if (!/\bis_inited\b/.test(header)) errors.push('Handle header must declare is_inited.');
+  if (!/\bdriver_count\b/.test(header) || !/\bp_drivers\b/.test(header)) {
+    errors.push('Handle header must declare driver_count and p_drivers for same-class Driver composition.');
+  }
+  validateFourTuple(header, 'Handle', errors);
+  if (/^\s*#\s*include\s*[<"][^>"]*(?:driver|impl_[^>"]*_driver)[^>"]*[>"]/im.test(source)) {
+    errors.push('Handle must not include a concrete Driver header.');
   }
   const notify = source.match(/\b[a-zA-Z0-9_]+_notify_from_isr\s*\([^)]*\)\s*\{([\s\S]*?)\n\}/);
   if (notify && (/event_callback|\bcallback\s*\(/.test(notify[1]) || !/event_pending|from_isr/i.test(notify[1]))) {
     errors.push('Handle ISR notification must defer work without invoking the callback.');
   }
   if (/_ISR\b/.test(source) && !/FromISR/.test(source)) {
-    errors.push('Handler ISR entry points must use a FromISR deferral interface.');
+    errors.push('Handle ISR entry points must use a FromISR deferral interface.');
   }
 }
 
@@ -39,8 +51,8 @@ function validateAdapter(options, errors) {
   const wrapper = readFile(options.wrapperSource);
   if (port) {
     const publicDefinitions = [...port.matchAll(/^(?!\s*static\b)\s*[A-Za-z_]\w*[\w\s*]*\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{/gm)].map((match) => match[1]);
-    if (publicDefinitions.length !== 1 || !/^(?:drv_adapter_port_[a-z0-9_]+_register|impl_[a-z0-9_]+_port_register)$/.test(publicDefinitions[0] || '')) {
-      errors.push('Port must export exactly one drv_adapter_port_<type>_register or impl_<type>_port_register function.');
+    if (publicDefinitions.length !== 1 || !/^(?:drv_adapter_port_[a-z0-9_]+_register|impl_[a-z0-9_]+_(?:handle_)?port_register)$/.test(publicDefinitions[0] || '')) {
+      errors.push('Port must export exactly one drv_adapter_port_<type>_register, impl_<type>_port_register, or impl_<type>_handle_port_register function.');
     }
     const staticFunctions = [...port.matchAll(/static[\s\S]*?\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{([\s\S]*?)\n\}/g)];
     if (staticFunctions.some((match) => /\b(?:bsp_[a-z0-9_]+_driver|impl_[a-z0-9_]+_driver|core_[a-z0-9_]+|platform_[a-z0-9_]+)\b/i.test(match[2]))) {
@@ -60,11 +72,12 @@ function validateBspContract(options = {}) {
     const headerFunctions = getExportedBspFunctions(header);
     const sourceFunctions = getPublicDefinitions(source);
     const invalid = [...headerFunctions, ...sourceFunctions]
-      .filter((name) => !/_driver_inst$/.test(name));
+      .filter((name) => !/_driver_(?:inst|construct)$/.test(name));
     if (invalid.length) errors.push(`instance_only Driver exports forbidden functions: ${[...new Set(invalid)].join(', ')}`);
     if (FORBIDDEN_DRIVER_INCLUDE.test(header) || FORBIDDEN_DRIVER_INCLUDE.test(source)) {
       errors.push('Driver must not include HAL, FreeRTOS, CMSIS-OS, or STM32 headers.');
     }
+    validateFourTuple(header, 'Driver', errors);
     if (!/\bis_inited\b/.test(header)) errors.push('Driver header must declare is_inited.');
     if (!/\bpf_[a-zA-Z0-9_]+\b/.test(header)) errors.push('Driver header must declare pf_* instance operations.');
   }

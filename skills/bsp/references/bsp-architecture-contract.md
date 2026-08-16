@@ -70,3 +70,16 @@ LED、继电器和使能脚等同步 GPIO 输出设备可省略队列、线程�
 ## 验收
 
 静态检查应阻止新产物依赖历史 Wrapper、Port 漏注入、Handle 混入异类 Driver 和 HAL Driver 的 HAL/RTOS 依赖。它不替代交叉编译、烧录、运行日志或板上验证。
+
+## 扩展与示例边界
+
+新增 Platform/Impl 能力必须先提交设备 profile，至少说明：公共能力、设备类别、Driver 数量、
+Resource 来源、Platform Ops 映射、OS/并发资源、阻塞/ISR/DMA 限制、内存所有权、错误恢复和未验证项。
+只有跨设备、跨板卡且可稳定观察的能力才能上升到 Platform；具体型号协议和业务策略留在 Impl/Service。
+
+W25Qxx 的页编程、状态轮询、4 KB 缓冲、OTA/日志分区和掉电策略属于示例特例，不是通用 Handle 或
+Platform Storage 规则。验证器必须同时覆盖 Model-first 正例、同类多实例 Handle 正例、异类 Driver
+负例、Port 协议泄漏负例和历史 Wrapper 兼容输入。
+
+SPI Bus 的共享锁、CS 边界和 DMA/IRQ 事件属于 Platform MCU/Impl MCU；单设备请求串行化、重试、
+取消和回调属于 Handle。三者不得在 Port 中重复实现。

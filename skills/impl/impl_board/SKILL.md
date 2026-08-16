@@ -21,6 +21,9 @@ Driver/Handle 实例、调用 Platform Model 构造函数、绑定 Platform 接�
 - Handle 的业务缓存只能保留在 Handle 实例；组合根不得维护重复的 `latest`/`cache` 数据副本。
 - 先从目标工程公开 `platform_os.h` 确认 profile 声明的 mutex、queue、task 或时基 API；组合根创建资源、注入 Handle、在装配失败时回收。缺少该证据时只能输出带 `UNRESOLVED_PLATFORM_OS_API` 的预览，不能虚构可编译 Platform OS 名称。
 - 对 context-first Ops，直接复制 `pf_*` 与 `p_context` 到下一层函数表；禁止函数指针强转和仅为签名转换而存在的桥接函数。
+- 若真实 Platform/OS API 的参数顺序或返回类型无法直接匹配，允许在 Port 保留最薄的签名适配函数；
+  适配函数只能转换参数、上下文和错误码，不能执行协议、重试、缓存、线程循环或业务回调，且必须在
+  manifest 中记录原因。禁止通过函数指针强转绕过类型检查。
 - 生产组合根与 Fake 组合根必须注册同形函数表。生产实现绑定具体芯片/平台/OSAL，Fake 实现绑定 Fake Bus/时基/OSAL，接口不因测试而分叉。
 - GPIO 输出实现必须以 platform_mcu 公开头和板级 pin/极性证据构造上下文；裸 `extern` 回调或无说明的 `NULL` context 只能是带 `UNRESOLVED_GPIO_BINDING` 的预览。按阶段装配，任一步失败必须恢复先前注册状态。
 

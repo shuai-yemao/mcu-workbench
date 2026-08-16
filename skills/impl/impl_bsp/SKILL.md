@@ -33,11 +33,33 @@ Handle 只组合**同一设备类别**的多个 Driver，管理设备生命周�
 - ISR 仅调用 `FromISR` 注入接口投递事件；协议读写、解码和回调在任务上下文完成，回调位于锁/临界区外。
 - 停止顺序固定为：停止投递 → 唤醒线程 → 自然退出 → 回收线程/队列/锁。默认禁止强制删除线程。
 
+### 异步 DMA/IRQ 调用链
+
+```text
+platform_mcu IRQ/DMA
+        → Driver event snapshot
+        → Handle/Worker wakeup
+        → Driver process_async()
+        → next transaction or completion callback
+```
+
+Driver 只能保存事件快照并推进自己的器件状态；Handle 负责把事件与请求、队列、超时、取消和
+回调关联起来。用户回调默认位于 Worker/调用者上下文，不能在 ISR、锁或临界区内执行。
+
+### 资源与内存默认策略
+
+Handle 默认使用 Port 注入的静态对象、固定容量 Driver 集合、有界队列和固定 DMA 缓冲区。动态内存
+不是绝对禁止，但必须在设备 profile 中给出分配点、失败回滚、峰值、释放者和异步生命周期，并经过
+单独审查。任何异步接口不得保存调用者临时栈变量或在 DMA 完成前回收借用缓冲区。
+
+Port 可以提供签名适配函数，但适配函数只能完成参数/上下文转换，不能包含协议、重试、缓存或业务
+逻辑；优先直接传递 context-first Ops，禁止函数指针强转。
+
 生成 Handle 使用 `impl_<type>_handle.c/.h`；例如 `impl_storage_handle_read_id`。每个 Handle 实例只允许一个回调与上下文，第二次注册必须返回已注册状态而不是静默覆盖。没有缓存、队列、异步、IRQ 延后或多实例需求的器件可省略工作线程，但仍保留同步 Handle API。模块级只导出 Handle 构造和 Platform-facing 独立函数；Handle 内部 Driver 集合由 Port 一次性注入，不提供按运行期类型替换的注册槽。
 
 ## 生成目录与 DMA/IRQ
 
-按设备类别创建 `04_Impl/impl_bsp/<type>/<DEVICE>/Inc|Src`，Driver 使用 `impl_<device>_driver.c/.h` 与独立的 `impl_<device>_config.h`；同一类别的 Handle 位于 `04_Impl/impl_bsp/impl_bsp_handle/<type>/Inc|Src`，Board Port 位于扁平目录 `04_Impl/impl_bsp/impl_bsp_port/Inc|Src`。Port 文件名采用 Handle 文件名追加 `_port`，例如 `impl_storage_handle_port.c/.h`。Driver 必须把 platform_mcu 的 DMA/IRQ 完成事件转换为设备事件，不直接配置 HAL/NVIC，也不创建任务。Handle 只接收同类 Driver 集合并聚合事件，不直接处理中断寄存器。生成代码统一采用 [`项目风格 profile`](../../tools/tools-quality/references/style-profile.md) 的文件/API 注释和源文件分区。
+按设备实例创建 `04_Impl/impl_bsp/impl_bsp_hal_driver/<DEVICE>/Inc|Src`，Driver 使用 `impl_<device>_driver.c/.h` 与独立的 `impl_<device>_config.h`；同一类别的 Handle 位于 `04_Impl/impl_bsp/impl_bsp_handle/<type>/Inc|Src`，Board Port 位于扁平目录 `04_Impl/impl_bsp/impl_bsp_port/Inc|Src`。Port 文件名采用 Handle 文件名追加 `_port`，例如 `impl_storage_handle_port.c/.h`。Driver 必须把 platform_mcu 的 DMA/IRQ 完成事件转换为设备事件，不直接配置 HAL/NVIC，也不创建任务。Handle 只接收同类 Driver 集合并聚合事件，不直接处理中断寄存器。生成代码统一采用 [`项目风格 profile`](../../tools/tools-quality/references/style-profile.md) 的文件/API 注释和源文件分区。
 
 Port 可长期持有具体 Driver 和 Handle，并把 Handle 的独立公开函数绑定到 Platform Device Ops；这种所有权不允许 Port 复制设备协议、命令常量或状态机。
 

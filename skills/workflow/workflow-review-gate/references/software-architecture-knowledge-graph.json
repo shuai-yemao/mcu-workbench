@@ -25,7 +25,7 @@
     ,{"id":"mbedtls","repository":"https://github.com/Mbed-TLS/mbedtls","branch":"development","commit":"3bb373867917b674265067cbd38b9d252c43d014","role":"portable TLS and PSA Cryptography implementation","paths":["include/mbedtls/","library/","tf-psa-crypto/"]}
   ],
   "versions": [
-    {"id":"architecture-v3","range":"current-plugin-contract","source_id":"plugin-repository","project_fit":"App → Service → Platform ← Impl → Vendor; OS/BSP Wrapper and Port remain internal adaptation roles; BSP continues through Handle → Driver → Core Bus"},
+    {"id":"architecture-v3","range":"current-plugin-contract","source_id":"plugin-repository","project_fit":"App → Service → Platform ← Impl → Vendor; OS Wrapper/Port remain internal adaptation roles; BSP uses Platform Device Model → Port → same-class Handle → Driver → Platform MCU Bus/Event"},
     {"id":"gr5526-lvgl-8.3","range":"8.3.x","source_id":"gr5526-fixture","project_fit":"GR5526 LVGL demo acceptance fixture"},
     {"id":"upstream-heads-2026-07-23","range":"pinned HEAD commits","source_id":"freertos-kernel","project_fit":"source references must be reviewed when pins change"}
   ],
@@ -81,7 +81,7 @@
     {"id":"os-port","kind":"contract","label":"Impl OS Port","path":"impl_os_*()","source_id":"plugin-repository","layer":"impl"},
     {"id":"bsp-wrapper","kind":"contract","label":"Platform BSP Wrapper","path":"drv_adapter_*","source_id":"plugin-repository","layer":"platform"},
     {"id":"bsp-port","kind":"contract","label":"BSP Port","path":"construct/register/inject","source_id":"plugin-repository","layer":"impl"},
-    {"id":"bsp-handler-contract","kind":"contract","label":"BSP Handle/Handler","path":"lifecycle/queue/cache/retry","source_id":"plugin-repository","layer":"impl"},
+    {"id":"bsp-handler-contract","kind":"contract","label":"BSP Handle (legacy Handler alias)","path":"same-class Driver set, lifecycle/queue/cache/retry","source_id":"plugin-repository","layer":"impl"},
     {"id":"bsp-driver-contract","kind":"contract","label":"BSP Driver","path":"device protocol and transaction Bus Ops","source_id":"plugin-repository","layer":"impl"},
     {"id":"core-bus","kind":"contract","label":"Platform MCU Core Bus","path":"transaction-level bus API","source_id":"plugin-repository","layer":"platform"},
     {"id":"core-hardware-backend","kind":"contract","label":"MCU Implementation Backend","path":"private HAL/LL/CMSIS binding","source_id":"plugin-repository","layer":"impl"},
@@ -128,9 +128,10 @@
     {"id":"middleware-to-platform-bsp","from":"skill-middleware-communication","to":"platform-bsp-contract","relation":"uses-when-needed","evidence":"middleware-communication/SKILL.md"},
     {"id":"os-wrapper-to-port","from":"os-wrapper","to":"os-port","relation":"calls-internal-impl","evidence":"platform-os-contract.md"},
     {"id":"os-port-to-freertos","from":"os-port","to":"freertos-source","relation":"binds-native-api","evidence":"platform-os-freertos-case.md"},
-    {"id":"bsp-wrapper-to-port","from":"bsp-wrapper","to":"bsp-port","relation":"calls-public-port","evidence":"bsp-architecture-contract.md"},
-    {"id":"bsp-port-to-handler","from":"bsp-port","to":"bsp-handler-contract","relation":"constructs-registers-injects","evidence":"bsp-architecture-contract.md"},
-    {"id":"bsp-handler-to-driver","from":"bsp-handler-contract","to":"bsp-driver-contract","relation":"calls-driver-ops","evidence":"bsp-architecture-contract.md"},
+    {"id":"platform-bsp-to-port","from":"platform-bsp-contract","to":"bsp-port","relation":"binds-and-registers","evidence":"bsp-architecture-contract.md"},
+    {"id":"bsp-port-to-handler","from":"bsp-port","to":"bsp-handler-contract","relation":"constructs-and-injects-same-class-set","evidence":"bsp-architecture-contract.md"},
+    {"id":"bsp-handler-to-driver","from":"bsp-handler-contract","to":"bsp-driver-contract","relation":"calls-internal-driver-ops","evidence":"bsp-architecture-contract.md"},
+    {"id":"bsp-handle-to-platform-device","from":"bsp-handler-contract","to":"platform-bsp-contract","relation":"provides-platform-facing-functions","evidence":"bsp-architecture-contract.md"},
     {"id":"bsp-driver-to-core-bus","from":"bsp-driver-contract","to":"core-bus","relation":"calls-transaction-api","evidence":"bsp-architecture-contract.md"},
     {"id":"bsp-port-injects-driver","from":"skill-bsp-port","to":"skill-bsp-hal-driver","relation":"constructs-and-injects","evidence":"bsp-architecture-contract.md"},
     {"id":"bsp-port-injects-handler","from":"skill-bsp-port","to":"skill-bsp-handler","relation":"constructs-and-registers","evidence":"bsp-architecture-contract.md"},

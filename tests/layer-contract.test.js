@@ -176,7 +176,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a generated macro when its preceding comment is removed', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => {
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h', (content) => {
       const lines = content.split(/\r?\n/);
       const index = lines.findIndex((line) => line.includes('#define IMPL_W25Q64_DEFAULT_TIMEOUT_MS'));
       lines.splice(index - 1, 1);
@@ -186,7 +186,7 @@ describe('generated layer contract validator', () => {
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
         ruleId: 'LAYER_MACRO_DOC',
-        file: '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h'
+        file: '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h'
       })
     ]));
   });
@@ -214,7 +214,7 @@ describe('generated layer contract validator', () => {
   test('generates the Port as the resource, Driver, Handle, and Platform Model composition root', async () => {
     const root = await createSlice();
     const port = await fs.readFile(
-      path.join(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c'),
+      path.join(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c'),
       'utf8'
     );
 
@@ -230,7 +230,7 @@ describe('generated layer contract validator', () => {
   test('checks the generated Handle path and requires effective injected Ops calls', async () => {
     const root = await createSlice();
     const driver = await fs.readFile(
-      path.join(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c'), 'utf8'
+      path.join(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Src/impl_w25q64_driver.c'), 'utf8'
     );
     const handler = await fs.readFile(
       path.join(root, '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c'), 'utf8'
@@ -255,11 +255,11 @@ describe('generated layer contract validator', () => {
 
   test('rejects generated sources that retain injected Ops but never call them', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Src/impl_w25q64_driver.c', (content) => content
       .replace('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)', 'driver_core_ops_not_used'));
     await mutate(root, '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c', (content) => content
       .replace('p_ref->read_id(p_ref->p_context, p_device_id)', 'handler_driver_ops_not_used'));
-    await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Src/impl_w25q64_driver.c', (content) => content
       .replace('p_driver->ctx.pf_chip_feature(p_driver->ctx.p_mcu_context)', 'driver_mcu_ops_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -271,7 +271,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a Port that omits the resource operation binding', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
       .replace('externflash_resource_get_ops()', 'externflash_resource_get_ops_not_used()'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -281,15 +281,15 @@ describe('generated layer contract validator', () => {
 
   test('does not require a legacy Port callback bridge', async () => {
     const root = await createSlice();
-    const port = await fs.readFile(path.join(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c'), 'utf8');
+    const port = await fs.readFile(path.join(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c'), 'utf8');
     expect(port).not.toMatch(/static\s+platform_err_t\s+externflash_port_/);
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
   test('rejects a Port that omits direct Handle binding', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
-      .replace('.read_id = impl_externflash_handle_read_id,', '.read_id = NULL,'));
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      .replace(/=\s*impl_externflash_handle_[a-z0-9_]+/g, '= NULL'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_PORT_HANDLE_BINDING' })
@@ -298,7 +298,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a Port that omits Platform Model registration', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
       .replace('platform_externflash_register_default', 'platform_externflash_register_default_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -308,7 +308,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a Port that omits Driver construction', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
       .replace('impl_w25q64_driver_construct', 'impl_w25q64_driver_build_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -319,7 +319,7 @@ describe('generated layer contract validator', () => {
   test('reports a Core vendor leak, extra Port export, and forbidden Model include', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => `${content}\n#include "stm32f4xx_hal.h"\n`);
-    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
     await mutate(root, '03_Platform/platform_bsp/externflash/Src/platform_externflash_model.c', (content) => content.replace('#include "platform_externflash_model.h"', '#include "impl_w25q64_driver.h"'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_CORE_PUBLIC_LEAK' }),
@@ -555,7 +555,7 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
 
   test('rejects a generated file whose comments are written in English', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h', (content) => content
       .replace('生成的 Platform、Impl 或公共接口', 'generated Platform, Impl, or public interfaces')
       .replace('生成的切片参与已声明的分层契约。', 'Generated slice participates in the declared layered contract.')
       .replace('W25Q64 器件配置。', 'W25Q64 device configuration.')
@@ -567,7 +567,7 @@ platform_err_t platform_externflash_wrapper_register(const platform_externflash_
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
         ruleId: 'LAYER_COMMENT_LANGUAGE',
-        file: '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h'
+        file: '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h'
       })
     ]));
   });

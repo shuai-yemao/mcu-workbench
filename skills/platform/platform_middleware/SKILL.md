@@ -88,7 +88,8 @@ Platform → impl_<vendor>_<domain>_*()
 Impl     → Vendor
 ```
 
-这是 Middleware 专用的固定后端例外，不扩展到 Platform MCU、BSP、Device 或 Service。Platform `.c` 只能承担参数
+这是 Middleware 专用的 **Platform→Impl 受限例外**，不扩展到 Platform MCU、BSP、Device 或 Service。该例外只存在于
+Platform `.c` 到固定 Impl Adapter 的已审查边界，**不出现在 Platform 公共头的 include、类型或宏中**。Platform `.c` 只能承担参数
 检查、状态管理和稳定转发；不得包含 Vendor/HAL/RTOS、格式化、缓存、锁、重试或业务策略。运行时不提供 Backend
 注册、注销或切换接口。
 

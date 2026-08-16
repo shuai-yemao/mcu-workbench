@@ -27,7 +27,7 @@ Vendor 目录。Impl 可以直接 include Vendor 头并调用 Vendor API，但�
 
 ## 默认文件与受控拆分
 
-一个中间件接入默认使用一组 Adapter 文件：
+一个中间件接入默认使用一组 Adapter 文件和**默认单一 Port**边界：
 
 ```text
 04_Impl/impl_middleware/<domain>/impl_<domain>.c
@@ -45,6 +45,9 @@ impl_<vendor>_port.c/.h       Vendor 回调、IO、时间、锁和具体资源�
 ```
 
 拆分后仍只能有一组 Platform API 适配入口，不得因拆分产生第二套 `platform_<domain>_*` 符号或重复初始化路径。
+
+Vendor Port 的边界摘要：不复制、不格式化、不直接修改 Vendor 源码；时间戳必须绑定到 Impl Port，不能由 Platform
+公共头或 Service 伪造。`FreeRTOS/HAL` 资源只允许停留在 Impl/Board 边界以内，不能泄漏到 Platform 或 Service。
 
 当前 Elog + SEGGER RTT 基线：
 

@@ -64,9 +64,9 @@ describe('Generator Module', () => {
 
     expect(files).toHaveLength(9);
     expect(files.map((file) => file.path)).toEqual(expect.arrayContaining([
-      '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h',
+      '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h',
       '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c',
-      '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c',
+      '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c',
       '03_Platform/platform_bsp/externflash/Src/platform_externflash_model.c'
     ]));
     expect(files.every((file) => file.path.match(/^(?:0[0-9]|99)_/))).toBe(true);
@@ -100,9 +100,9 @@ describe('Generator Module', () => {
     });
     expect(byPath['04_Impl/impl_bsp/impl_bsp_handle/display/Inc/impl_display_handle.h'])
       .toContain('driver_count');
-    expect(byPath['04_Impl/impl_bsp/impl_bsp_port/display/Src/impl_display_handle_port.c'])
+    expect(byPath['04_Impl/impl_bsp/impl_bsp_port/Src/impl_display_handle_port.c'])
       .toContain('platform_display_register_default');
-    expect(byPath['04_Impl/impl_bsp/impl_bsp_port/display/Src/impl_display_handle_port.c'])
+    expect(byPath['04_Impl/impl_bsp/impl_bsp_port/Src/impl_display_handle_port.c'])
       .toContain('impl_display_handle_read_id');
     expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_model.h'])
       .toContain('platform_display_device_t');

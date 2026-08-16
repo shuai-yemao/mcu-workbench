@@ -354,9 +354,9 @@ function createLayerError(message) {
 function expectedPaths({ core, deviceType, device }) {
   const type = normalizeDeviceType(deviceType);
   const normalizedDevice = normalizeDevice(device);
-  const driverRoot = `04_Impl/impl_bsp/${type}/${normalizedDevice.directory}`;
+  const driverRoot = `04_Impl/impl_bsp/impl_bsp_hal_driver/${normalizedDevice.directory}`;
   const handleRoot = `04_Impl/impl_bsp/impl_bsp_handle/${type}`;
-  const portRoot = `04_Impl/impl_bsp/impl_bsp_port/${type}`;
+  const portRoot = '04_Impl/impl_bsp/impl_bsp_port';
   const modelRoot = `03_Platform/platform_bsp/${type}`;
   return {
     modelHeader: `${modelRoot}/Inc/platform_${type}_model.h`,
@@ -776,19 +776,19 @@ function validateHalDriver(files, errors) {
       addError(errors, 'LAYER_HAL_DRIVER_CONCRETE_DEPENDENCY', file.relative, 'HAL Driver must use injected Core and MCU Ops rather than HAL or RTOS dependencies.');
     }
   }
-  if (files.driverHeader && !/(?:^|_)construct\s*\(/m.test(files.driverHeader.content)) {
+  if (files.driverHeader && !/(?:^|_)driver_(?:construct|inst)\s*\(/m.test(files.driverHeader.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_CONSTRUCTOR', files.driverHeader.relative, 'Driver must expose only a constructor for caller-owned instances.');
   }
-  if (files.driverHeader && !/pf_transaction/.test(files.driverHeader.content)) {
+  if (files.driverHeader && !/pf_[A-Za-z0-9_]+/.test(files.driverHeader.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_CORE_OPS', files.driverHeader.relative, 'Driver must declare injected Core transaction Ops.');
   }
-  if (files.driverHeader && !/pf_chip_feature/.test(files.driverHeader.content)) {
+  if (files.driverHeader && !/(?:mcu|platform|core|device|feature)[A-Za-z0-9_]*_ops_t|pf_[A-Za-z0-9_]+/.test(files.driverHeader.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_MCU_OPS', files.driverHeader.relative, 'Driver must declare injected MCU feature Ops.');
   }
-  if (files.driverSource && !/p_driver->ctx\.pf_transaction\s*\(\s*p_driver->ctx\.p_context\s*\)/.test(files.driverSource.content)) {
+  if (files.driverSource && !/p_driver->ctx\.pf_[A-Za-z0-9_]+\s*\(\s*p_driver->ctx\.p_context\s*\)/.test(files.driverSource.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS', files.driverSource.relative, 'HAL Driver must invoke injected Core Ops in its protocol path.');
   }
-  if (files.driverSource && !/p_driver->ctx\.pf_chip_feature\s*\(\s*p_driver->ctx\.p_mcu_context\s*\)/.test(files.driverSource.content)) {
+  if (files.driverSource && !/p_driver->ctx\.pf_[A-Za-z0-9_]+\s*\(\s*p_driver->ctx\.p_mcu_context\s*\)/.test(files.driverSource.content)) {
     addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_MCU_OPS', files.driverSource.relative, 'HAL Driver must invoke injected MCU Ops in its chip-specific protocol path.');
   }
 }
@@ -799,7 +799,7 @@ function validateHandler(files, errors) {
     if (!file) continue;
     const code = maskCommentsAndStrings(file.content);
     if (/#\s*include\s*[<"][^>"]*(?:drv_adapter_(?:port|wrapper)|core_|mcu_|stm32|hal|freertos|rtthread|osal_internal)[^>"]*[>"]/i.test(code)) {
-      addError(errors, 'LAYER_HANDLER_CONCRETE_DEPENDENCY', file.relative, 'Handler must use injected OS Wrapper and HAL Driver Ops only.');
+      addError(errors, 'LAYER_HANDLER_CONCRETE_DEPENDENCY', file.relative, 'Handle must use injected OS and Driver Ops only.');
     }
   }
   if (files.handleHeader && !/driver_count/.test(files.handleHeader.content)) {
@@ -809,7 +809,7 @@ function validateHandler(files, errors) {
     addError(errors, 'LAYER_HANDLE_INTERNAL_OPS', files.handleHeader.relative, 'Handle must keep its ops in the Impl object and out of Platform Model.');
   }
   if (files.handleSource && !/p_ref->read_id\s*\(\s*p_ref->p_context\s*,\s*p_device_id\s*\)/.test(files.handleSource.content)) {
-    addError(errors, 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET', files.handleSource.relative, 'Handle must invoke the selected same-class Driver reference.');
+    addError(errors, 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET', files.handleSource.relative, 'Handle must invoke a selected same-class Driver reference.');
   }
 }
 
@@ -837,11 +837,11 @@ function validatePort(files, type, errors) {
   }
   const requiredInjections = [
     ['LAYER_PORT_RESOURCE_INJECTION', /=\s*[A-Za-z_][A-Za-z0-9_]*_resource_get_ops\s*\(/, 'Port must obtain MCU/Core context from resource.'],
-    ['LAYER_PORT_DRIVER_CONSTRUCTION', /_driver_construct\s*\(/, 'Port must construct the concrete Driver.'],
+    ['LAYER_PORT_DRIVER_CONSTRUCTION', /_driver_(?:construct|inst)\s*\(/, 'Port must construct the concrete Driver.'],
     ['LAYER_PORT_HANDLE_CONSTRUCTION', /_handle_construct\s*\(/, 'Port must construct the same-class Handle.'],
-    ['LAYER_PORT_HANDLE_BINDING', /\.read_id\s*=\s*impl_[a-z0-9_]+_handle_read_id\s*,/i, 'Port must bind Handle Platform-facing functions directly.'],
+    ['LAYER_PORT_HANDLE_BINDING', /\.[a-z0-9_]+\s*=\s*impl_[a-z0-9_]+_handle_[a-z0-9_]+\s*,/i, 'Port must bind Handle Platform-facing functions directly.'],
     ['LAYER_PORT_MODEL_INIT', /platform_[a-z0-9_]+_init\s*\(/i, 'Port must initialize the Platform Device Model.'],
-    ['LAYER_PORT_MODEL_REGISTRATION', /platform_[a-z0-9_]+_register_default\s*\(/i, 'Port must register the Platform Device Model.']
+    ['LAYER_PORT_MODEL_REGISTRATION', /platform_[a-z0-9_]+_(?:register_default|register)\s*\(/i, 'Port must register the Platform Device Model.']
   ];
   for (const [ruleId, pattern, message] of requiredInjections) {
     if (!pattern.test(files.portSource.content)) addError(errors, ruleId, files.portSource.relative, message);

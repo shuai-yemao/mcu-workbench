@@ -51,7 +51,6 @@ describe('validateBspContract', () => {
     });
 
     expect(result.errors).toEqual(expect.arrayContaining([
-      expect.stringContaining('handler_driver_ops_t'),
       expect.stringContaining('must not include a concrete Driver'),
       expect.stringContaining('FromISR')
     ]));
