@@ -14,6 +14,26 @@ version: "1.0.0"
 - 已安装 `clang-format`（LLVM 工具链）
 - 项目根目录存在 `.clang-format` 配置文件
 - 目标文件为 `.c` / `.h`
+- `05_Vendor` 下的项目自维护源码必须在 `.mcu-workbench/quality-scope.json`
+  中显式登记；未登记的第三方 Vendor 源码默认保持原样。
+
+### Vendor 质量范围
+
+质量 Hook 默认排除整个 `05_Vendor`，以避免误改 FreeRTOS、LVGL、HAL 或其他
+第三方源码。项目自维护的 Vendor 算法库可以通过以下配置显式纳入同一套格式和
+注释管线：
+
+```json
+{
+  "schemaVersion": 1,
+  "managedVendorRoots": [
+    "05_Vendor/circle_buffer"
+  ]
+}
+```
+
+路径必须是项目根目录下的相对路径，并且以 `05_Vendor/` 开头。该配置只控制
+质量 Hook 的 `.c/.h` 处理范围，不改变构建系统、依赖关系或 Vendor 版本登记。
 
 ## 命令
 

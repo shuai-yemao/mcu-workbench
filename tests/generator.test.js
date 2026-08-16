@@ -213,6 +213,24 @@ describe('Generator Module', () => {
       memberComments[0].indexOf('/**<')
     ]);
     expect(secondary).toBeUndefined();
+    expect(formatExistingCode(formatted, 'demo.c')).toBe(formatted);
+  });
+
+  test('does not duplicate phase comments for existing or consecutive logic steps', () => {
+    const source = [
+      'int demo_write(int value) {',
+      '    /* 处理 ------------------------------- */',
+      '    value += 1;',
+      '    value += 2;',
+      '    return value;',
+      '}',
+      ''
+    ].join('\n');
+
+    const formatted = formatExistingCode(source, 'demo.c');
+
+    expect((formatted.match(/\/\* 处理 -+ \*\//g) || []).length).toBe(1);
+    expect(formatExistingCode(formatted, 'demo.c')).toBe(formatted);
   });
 
   test('generates complete semantic comments without documenting calls as functions', async () => {

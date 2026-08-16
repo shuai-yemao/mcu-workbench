@@ -45,4 +45,27 @@ describe('OpenCode existing-code quality hook', () => {
       fs.rmSync(root, { recursive: true, force: true });
     }
   });
+
+  test('only formats explicitly managed project-owned Vendor roots', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'opencode-quality-vendor-'));
+    try {
+      fs.mkdirSync(path.join(root, '.mcu-workbench'), { recursive: true });
+      fs.writeFileSync(path.join(root, '.mcu-workbench', 'quality-scope.json'), JSON.stringify({
+        schemaVersion: 1,
+        managedVendorRoots: ['05_Vendor/circle_buffer']
+      }), 'utf8');
+
+      const hooks = createCodeQualityHooks({ root });
+
+      expect(hooks._private.resolveProjectFile(
+        '05_Vendor/circle_buffer/src/circle_buffer.c'
+      )).not.toBeNull();
+      expect(hooks._private.resolveProjectFile(
+        '05_Vendor/lvgl/src/lvgl.c'
+      )).toBeNull();
+      expect(hooks._private.resolveProjectFile('03_Platform/demo.c')).not.toBeNull();
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
 });

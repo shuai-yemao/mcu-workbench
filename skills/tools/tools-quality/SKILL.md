@@ -45,6 +45,11 @@ Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/
 声明、赋值、初始化和行尾注释必须对齐。已有注释保留语义内容，但旧格式、缺失标签
 和缺失阶段注释必须重新生成；不满足这些规则时不得放行。
 
+第三方 Vendor 源码默认不进入自动重生成范围。项目自维护的 Vendor 算法或公共库
+必须在项目根目录 `.mcu-workbench/quality-scope.json` 的 `managedVendorRoots`
+中显式登记，登记后才与其他层使用同一套格式、分区和注释管线；这不等同于允许
+修改未登记的第三方库。
+
 ### 领域附加门禁
 
 BSP/Impl 代码仍需额外核对器件协议、Driver/Handle/Port 所有权、OSAL/IRQ/DMA、GPIO
