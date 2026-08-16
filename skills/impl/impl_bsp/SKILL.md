@@ -5,7 +5,8 @@ description: Impl 落地：器件 Driver 协议子层 + 同类 Driver Handle 机
 
 # Impl BSP（平台适配 · 器件 Driver + 同类 Driver Handle）
 
-先读取共享 [`BSP 架构专用契约`](../../bsp/references/bsp-architecture-contract.md)，再从数据手册和原理图提取器件协议证据。
+先遵循全项目 [`软件层契约`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，
+再读取 [`BSP 专项实现契约`](../../bsp/references/bsp-architecture-contract.md)，并从数据手册和原理图提取器件协议证据。
 
 ## 固定流程
 
@@ -36,7 +37,7 @@ Handle 只组合**同一设备类别**的多个 Driver，管理设备生命周�
 
 ## 生成目录与 DMA/IRQ
 
-按设备类别创建 `04_Impl/impl_bsp/<type>/<DEVICE>/Inc|Src`，Driver 使用 `impl_<device>_driver.c/.h` 与独立的 `impl_<device>_config.h`；同一类别的 Handle 位于 `04_Impl/impl_bsp_handler/<type>/Inc|Src`（工程目录保持独立子层，D5）。Driver 必须把 platform_mcu 的 DMA/IRQ 完成事件转换为设备事件，不直接配置 HAL/NVIC，也不创建任务。Handle 只接收同类 Driver 集合并聚合事件，不直接处理中断寄存器。生成代码统一采用 [`项目风格 profile`](../../tools/tools-quality/references/style-profile.md) 的文件/API 注释和源文件分区。
+按设备类别创建 `04_Impl/impl_bsp/<type>/<DEVICE>/Inc|Src`，Driver 使用 `impl_<device>_driver.c/.h` 与独立的 `impl_<device>_config.h`；同一类别的 Handle 位于 `04_Impl/impl_bsp/impl_bsp_handle/<type>/Inc|Src`，Board Port 位于扁平目录 `04_Impl/impl_bsp/impl_bsp_port/Inc|Src`。Port 文件名采用 Handle 文件名追加 `_port`，例如 `impl_storage_handle_port.c/.h`。Driver 必须把 platform_mcu 的 DMA/IRQ 完成事件转换为设备事件，不直接配置 HAL/NVIC，也不创建任务。Handle 只接收同类 Driver 集合并聚合事件，不直接处理中断寄存器。生成代码统一采用 [`项目风格 profile`](../../tools/tools-quality/references/style-profile.md) 的文件/API 注释和源文件分区。
 
 Port 可长期持有具体 Driver 和 Handle，并把 Handle 的独立公开函数绑定到 Platform Device Ops；这种所有权不允许 Port 复制设备协议、命令常量或状态机。
 

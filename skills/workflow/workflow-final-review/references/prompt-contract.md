@@ -37,4 +37,4 @@
 - 同条件复检与 `git diff --check` 未全部通过，或工具不可用、检查不可复现时，最终结论必须为 `阻塞`。
 - 风格优先级为用户明确要求、目标工程已确认的格式配置、相邻源码，最后才是插件 `tools-quality/style-profile` 基线；任何偏差都必须记录。
 - 不把静态检查或主机测试表述为板级验证。
-- 对 MCU Workbench 生成的 BSP、Core、Driver、Handler、Port 与 Wrapper，以及用户工程手写代码，统一按 `tools-quality` 的 `style-profile` 编码规范核对（分层命名、`g_/s_/p_/pf_` 变量前缀、公开函数 Doxygen、中文注释、80 列硬限制和对齐规则），用户或项目明确采用其他约定时以该约定优先。
+- 对 MCU Workbench 生成器产物、AI 生成代码、人工新增/修改代码和已有工程代码，统一按 `tools-quality` 的 `style-profile` 编码规范核对（覆盖 App、Service、Platform、Impl、Vendor 及其内部角色；分层命名、`g_/s_/p_/pf_` 变量前缀、公开函数 Doxygen、中文注释、80 列硬限制和对齐规则），用户或项目明确采用其他约定时以该约定优先。

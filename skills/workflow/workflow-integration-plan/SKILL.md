@@ -20,7 +20,7 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 
 ## 分层审计与迁移设计
 
-按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序审计，核对调用链与公开契约；分层证据图（软件层契约与知识图谱）见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 的 `references/`。迁移设计覆盖：跨层架构调整、目录映射、依赖方向修正和分阶段集成计划。每个结论写入来源（`relative/path:line`、配置键或可复现命令）与可信等级，不把推测写成已确认事实。
+按 App → Service → Platform → Impl → Vendor 审计，核对调用链与公开契约；必要时把 OS/BSP/MCU/Driver/Handler/Port 作为 Impl 内部角色检查，不把它们提升为新的顶层架构。分层证据图（软件层契约与知识图谱）见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 的 `references/`。迁移设计覆盖：跨层架构调整、目录映射、依赖方向修正和分阶段集成计划。每个结论写入来源（`relative/path:line`、配置键或可复现命令）与可信等级，不把推测写成已确认事实。
 
 ### Platform MCU Model 迁移专项
 

@@ -29,6 +29,17 @@ const FORMAT_CONFIG = path.join(
   'quality-format-check',
   '.clang-format'
 );
+const FORMAT_VALIDATION_CONFIG = path.join(
+  __dirname,
+  '..',
+  'skills',
+  'tools',
+  'tools-quality',
+  'references',
+  'capabilities',
+  'quality-format-check',
+  '.clang-format-validation'
+);
 
 function maskCommentsAndStrings(content) {
   let result = '';
@@ -344,8 +355,8 @@ function expectedPaths({ core, deviceType, device }) {
   const type = normalizeDeviceType(deviceType);
   const normalizedDevice = normalizeDevice(device);
   const driverRoot = `04_Impl/impl_bsp/${type}/${normalizedDevice.directory}`;
-  const handleRoot = `04_Impl/impl_bsp_handler/${type}`;
-  const portRoot = `04_Impl/impl_board/${type}`;
+  const handleRoot = `04_Impl/impl_bsp/impl_bsp_handle/${type}`;
+  const portRoot = `04_Impl/impl_bsp/impl_bsp_port/${type}`;
   const modelRoot = `03_Platform/platform_bsp/${type}`;
   return {
     modelHeader: `${modelRoot}/Inc/platform_${type}_model.h`,
@@ -357,8 +368,8 @@ function expectedPaths({ core, deviceType, device }) {
     driverSource: `${driverRoot}/Src/impl_${normalizedDevice.stem}_driver.c`,
     handleHeader: `${handleRoot}/Inc/impl_${type}_handle.h`,
     handleSource: `${handleRoot}/Src/impl_${type}_handle.c`,
-    portHeader: `${portRoot}/Inc/impl_${type}_port.h`,
-    portSource: `${portRoot}/Src/impl_${type}_port.c`,
+    portHeader: `${portRoot}/Inc/impl_${type}_handle_port.h`,
+    portSource: `${portRoot}/Src/impl_${type}_handle_port.c`,
     wrapperHeader: `${modelRoot}/Inc/platform_${type}_wrapper.h`,
     wrapperSource: `${modelRoot}/Src/platform_${type}_wrapper.c`
   };
@@ -508,6 +519,43 @@ function parseEnumAlignment(line) {
   return match ? { operatorColumn: line.indexOf('=') } : null;
 }
 
+function parseTrailingCommentAlignment(line) {
+  const match = line.match(/^(\s*.*?\S)\s+(\/\*\*?<[^]*?\*\/|\/\*[^]*?\*\/|\/\/.*)\s*$/);
+  if (!match || /^\s*\/\//.test(match[1]) || /^\s*\/\*/.test(match[1])) return null;
+  return { commentColumn: line.indexOf(match[2]) };
+}
+
+function stripPluginAlignment(content) {
+  let wrappedPointerDeclaration = false;
+  return content.split(/\r?\n/).map((line) => {
+    const match = line.match(/^(\s*.*?\S)\s+(\/\*\*?<[^]*?\*\/|\/\*[^]*?\*\/|\/\/.*)\s*$/);
+    let normalized = !match || /^\s*\/\//.test(match[1]) || /^\s*\/\*/.test(match[1])
+      ? line
+      : `${match[1]} ${match[2]}`;
+    const normalizedCode = normalized.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '');
+    if (wrappedPointerDeclaration && /^\s*[A-Za-z_]\w*\s*;\s*$/.test(normalizedCode)) {
+      normalized = normalized.replace(/^\s+/, '        ');
+    }
+    const commentStart = normalized.search(/\/\*|\/\//);
+    const codePart = commentStart >= 0 ? normalized.slice(0, commentStart) : normalized;
+    const commentPart = commentStart >= 0 ? normalized.slice(commentStart) : '';
+    const leading = codePart.match(/^\s*/)?.[0] || '';
+    let codeBody = codePart.slice(leading.length);
+    codeBody = codeBody.replace(/\s{2,}/g, ' ');
+    codeBody = codeBody.replace(
+      /\s+(<<=|>>=|\+=|-=|\*=|\/=|%=|&=|\^=|\|=|=(?!=))\s*/g,
+      ' $1 '
+    );
+    if (/;\s*$/.test(codeBody) && !/[(),{}]/.test(codeBody)) {
+      codeBody = codeBody.replace(/\s*\*\s*/g, ' *');
+    }
+    normalized = leading + codeBody + commentPart;
+    const code = normalized.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '').trimEnd();
+    wrappedPointerDeclaration = /^\s*[A-Za-z_][\w\s*]*\*\s*$/.test(code);
+    return normalized;
+  }).join('\n');
+}
+
 function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, description) {
   let group = [];
 
@@ -552,11 +600,9 @@ function validateClangFormat(file, errors) {
   const failures = [];
   for (const executable of clangFormatCandidates()) {
     const result = spawnSync(executable, [
-      '--dry-run',
-      '--Werror',
-      `-style=file:${FORMAT_CONFIG}`,
+      `-style=file:${FORMAT_VALIDATION_CONFIG}`,
       `-assume-filename=${file.relative}`
-    ], { input: file.content, encoding: 'utf8' });
+    ], { input: stripPluginAlignment(file.content), encoding: 'utf8' });
     if (result.status === 0) return true;
     const diagnostic = String(result.stderr || '').split(/\r?\n/)
       .find((line) => line.includes('error:'))?.trim() || '';
@@ -583,18 +629,15 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
   });
   const secondaryLabels = ['返回值', '超时值', '事件', '配置', '默认值', '初始化', '读写', '回调', '辅助', '接口'];
   const tertiaryLabels = ['清理', '事件', '回调', '转发', '校验', '状态', '结果', '处理'];
-  const validatePartitionWidth = (line, labels, width, ruleId, currentFile) => {
+  const validatePartitionWidth = (line, labels, width, ruleId, currentFile, inCodeBlock) => {
     const start = line.indexOf('/*');
     if (start < 0) return;
     const comment = line.slice(start);
     for (const label of labels) {
       const isMatch = new RegExp(`^/\\* ${label} -+ \\*/$`).test(comment);
-      const isShortOverlappingLabel = ['事件', '回调'].includes(label)
-        && width === 40 && comment.length <= 25;
-      const isLongOverlappingLabel = ['事件', '回调'].includes(label)
-        && width === 20 && comment.length >= 30;
-      if (isMatch && !isShortOverlappingLabel && !isLongOverlappingLabel
-        && comment.length !== width) {
+      const isOverlappingLabel = ['事件', '回调'].includes(label);
+      const expectedWidth = isOverlappingLabel ? (inCodeBlock ? 40 : 60) : width;
+      if (isMatch && expectedWidth === width && comment.length !== width) {
         addError(errors, ruleId, currentFile.relative,
           `${label} partition must be ${width} columns from /*.`);
       }
@@ -603,29 +646,32 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
   for (const file of Object.values(files)) {
     const lines = file.content.split(/\r?\n/);
     if (!strictGeneratedStyle && !file.content.includes('@version')) continue;
-    const clangFormatValid = validateClangFormat(file, errors);
-    if (!clangFormatValid) {
-      validateAlignmentGroups(
-        lines, file, errors, parseDeclarationAlignment,
-        'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
-      );
-      validateAlignmentGroups(
-        lines, file, errors, parseDeclarationAlignment,
-        'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
-      );
-      validateAlignmentGroups(
-        lines, file, errors, parseAssignmentAlignment,
-        'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
-      );
-      validateAlignmentGroups(
-        lines, file, errors, parseEnumAlignment,
-        'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
-      );
-    }
+    validateClangFormat(file, errors);
+    validateAlignmentGroups(
+      lines, file, errors, parseDeclarationAlignment,
+      'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseDeclarationAlignment,
+      'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseAssignmentAlignment,
+      'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseEnumAlignment,
+      'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
+    );
+    validateAlignmentGroups(
+      lines, file, errors, parseTrailingCommentAlignment,
+      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentColumn', 'Trailing comments'
+    );
     if (!datePattern.test(file.content)) {
       addError(errors, 'LAYER_FILE_DATE', file.relative,
         'Generated file header must contain the current date in @version.');
     }
+    let braceDepth = 0;
     lines.forEach((line, index) => {
       if (line.includes('\t')) {
         addError(errors, 'LAYER_FORMAT_TAB', file.relative,
@@ -643,9 +689,13 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
         addError(errors, 'LAYER_FORMAT_FUNCTION_BRACE', file.relative,
           `Function brace must be on its own line (line ${index + 1}).`);
       }
-      validatePartitionWidth(line, primaryLabels, 80, 'LAYER_FORMAT_PRIMARY_PARTITION', file);
-      validatePartitionWidth(line, secondaryLabels, 40, 'LAYER_FORMAT_SECONDARY_PARTITION', file);
-      validatePartitionWidth(line, tertiaryLabels, 20, 'LAYER_FORMAT_TERTIARY_PARTITION', file);
+      validatePartitionWidth(line, primaryLabels, 80, 'LAYER_FORMAT_PRIMARY_PARTITION', file, braceDepth > 0);
+      validatePartitionWidth(line, secondaryLabels, 60, 'LAYER_FORMAT_SECONDARY_PARTITION', file, braceDepth > 0);
+      validatePartitionWidth(line, tertiaryLabels, 40, 'LAYER_FORMAT_TERTIARY_PARTITION', file, braceDepth > 0);
+      const code = line.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '');
+      braceDepth += (code.match(/{/g) || []).length;
+      braceDepth -= (code.match(/}/g) || []).length;
+      braceDepth = Math.max(0, braceDepth);
     });
   }
 }
@@ -765,7 +815,7 @@ function validateHandler(files, errors) {
 
 function validatePort(files, type, errors) {
   if (!files.portSource) return;
-  const expected = `impl_${type}_port_register`;
+  const expected = `impl_${type}_handle_port_register`;
   const definitions = findFunctionDefinitions(files.portSource.content);
   const publicDefinitions = definitions.filter((definition) => !definition.isStatic);
   if (publicDefinitions.length !== 1 || publicDefinitions[0].name !== expected) {

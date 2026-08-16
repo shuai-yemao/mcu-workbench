@@ -21,7 +21,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 | 需求信号 | 分析 Agent | 需要回答的问题 |
 |---|---|---|
-| 分层、接口、模块依赖、迁移影响 | `system-architect` | APP → Middleware → OS → BSP → Core → Driver 的边界和调用关系是什么？ |
+| 分层、接口、模块依赖、迁移影响 | `system-architect` | App → Service → Platform ← Impl → Vendor 的边界和调用关系是什么？必要时再核对 Impl 内的 OS/BSP/MCU/Driver/Handler/Port 角色。 |
 | 芯片、板卡、引脚、供电、外设连接 | `hardware-integration` | MCU/板级资源、引脚复用、电气和测量条件是否满足？ |
 | C/固件、Driver、Handler、任务实现 | `firmware-engineer` | 现有代码入口、数据流、并发访问和可修改范围是什么？ |
 | 编译器、构建、烧录、调试、观测 | `toolchain-engineer` | 构建命令、工具链、目标配置和可复现验证入口是什么？ |

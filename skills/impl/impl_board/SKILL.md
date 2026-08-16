@@ -5,7 +5,12 @@ description: Impl 落地：板级组合根——构造实例、注入 Ops、资�
 
 # Impl Board（平台适配 · 组合根）
 
-先读取共享 [`BSP 架构专用契约`](../../bsp/references/bsp-architecture-contract.md)。本层是**组合根**：为具体板卡构造 Driver/Handle 实例、调用 Platform Model 构造函数、绑定 Platform 接口、注册设备对象。固定运行时调用链为 `APP → Service → Platform Device → Handle 函数 → Driver → Platform MCU Bus`；启动时由本层把 Handle 的公开函数绑定到 `platform_<type>_ops_t` 并注册到 Platform BSP。Platform Model 构造只建立公共对象契约，实际硬件生命周期仍由 Impl 后端驱动。
+先遵循全项目 [`软件层契约`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，
+再读取 [`BSP 专项实现契约`](../../bsp/references/bsp-architecture-contract.md)。本层是**组合根**：为具体板卡构造
+Driver/Handle 实例、调用 Platform Model 构造函数、绑定 Platform 接口、注册设备对象。软件依赖仍遵循
+`App → Service → Platform 接口 ← Impl → Vendor`；BSP 运行时装配链为
+`Platform Device → Handle 函数 → Driver → Platform MCU Bus`。启动时由本层把 Handle 的公开函数绑定到
+`platform_<type>_ops_t` 并注册到 Platform BSP。Platform Model 构造只建立公共对象契约，实际硬件生命周期仍由 Impl 后端驱动。
 
 ## 组合根职责
 
@@ -43,7 +48,7 @@ platform_bsp 只包含标准类型头和自身公共声明，不能包含本层�
 
 ## 生成契约
 
-目录和名称固定为 `04_Impl/impl_board/<type>/Inc|Src/impl_<type>_port.c/.h` 与 `03_Platform/platform_bsp/<type>/Inc|Src/platform_<type>_model.c/.h`。组合根只导出一个 `impl_<type>_port_register()`；私有装配区可以调用 Platform Model 构造函数并绑定 Driver、Handle，运行时转发只能调用 Handle 的公开函数。新生成代码不得创建 Wrapper 文件。生成实现不直接调用 HAL，硬件生命周期和平台 Ops 应通过 resource 与 platform_mcu Impl 后端注入。生成前先输出 manifest，列明设备 profile、同类 Driver 数量、Ops 映射、OSAL 资源、阻塞/ISR 限制、`style-profile.md` 适用范围与未验证项。
+目录和名称固定为 `04_Impl/impl_bsp/impl_bsp_port/Inc|Src/impl_<type>_handle_port.c/.h` 与 `03_Platform/platform_bsp/<type>/Inc|Src/platform_<type>_model.c/.h`。板级组合根保留在 `04_Impl/impl_board`，只负责调用 Port 注册入口；Port 只导出一个与文件基名对应的注册函数。私有装配区可以调用 Platform Model 构造函数并绑定 Driver、Handle，运行时转发只能调用 Handle 的公开函数。新生成代码不得创建 Wrapper 文件。生成实现不直接调用 HAL，硬件生命周期和平台 Ops 应通过 resource 与 platform_mcu Impl 后端注入。生成前先输出 manifest，列明设备 profile、同类 Driver 数量、Ops 映射、OSAL 资源、阻塞/ISR 限制、`style-profile.md` 适用范围与未验证项。
 
 器件协议交给 [`impl_bsp`](../impl_bsp/SKILL.md)，资源/并发交给 [`impl_bsp`](../impl_bsp/SKILL.md)（Handle 机制子层）。实现证据见 [`bsp-layer-evidence.md`](references/bsp-layer-evidence.md)，器件适配和 Fake 样例见 [`capability-index.md`](references/capability-index.md)。
 共享温湿度案例见 [`bsp-aht21-case.md`](../../bsp/references/bsp-aht21-case.md)。

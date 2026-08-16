@@ -5,6 +5,8 @@ description: 为传感器、显示器、存储器等外部器件选择、评估�
 
 # BSP 外部器件适配
 
+> 本指南只提供器件适配的领域补充。生成、修改和重审的格式、中文注释、80/60/40 列分区、代码块对齐、已有文件重生成以及审查分类，统一遵循 [`tools-quality`](../../../../../tools/tools-quality/SKILL.md) 与 [`style-profile.md`](../../../../../tools/tools-quality/references/style-profile.md)，不得在 BSP 内另建一套代码质量规则。顶层架构遵循 `App → Service → Platform ← Impl → Vendor`；BSP 是 Impl 内的具体角色。
+
 ## 负责什么
 
 本 skill 负责“找到或评估外部器件驱动，并让它符合目标工程的 BSP 边界”。输出是可审查的适配方案、许可证结论、变更清单和集成步骤。

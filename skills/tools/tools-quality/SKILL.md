@@ -1,13 +1,13 @@
 ---
 name: tools-quality
-description: 负责嵌入式代码审查、AI 生成代码约束、Map 分析、静态分析、MISRA 和 Unity 测试；当用户要求质量门禁、统一代码格式、审查 AI 输出、内存占用分析或单元测试时使用。
+description: 负责嵌入式项目代码生成与修改约束、代码审查、Map 分析、静态分析、MISRA 和 Unity 测试；当用户要求质量门禁、统一代码格式、代码审查、内存占用分析或单元测试时使用。
 ---
 
 # 质量与验证工具
 
 ## 职责
 
-统一处理 AI 生成代码审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
+统一处理项目代码生成/修改审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
 
 ## 路由边界
 
@@ -18,25 +18,40 @@ description: 负责嵌入式代码审查、AI 生成代码约束、Map 分析、
 代码审查、Map 分析、静态分析、格式检查和 Unity 的原始资料分别保留在 `references/quality-*` 或 `references/capabilities/*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。
 
 Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
-AI 生成代码审查、项目风格 profile 与 clang-format 基线由本 Skill 统一承接。
+项目代码审查、项目风格 profile 与 clang-format 基线由本 Skill 统一承接。
 其余质量工具的完整资料见 [`capability-index.md`](references/capability-index.md)。
 
-## AI 代码约束与审查
+## 全项目代码生成、修改与审查基线
 
-先按 [项目风格 profile](references/style-profile.md) 建立可追溯约束，再按 [生成代码审查门禁](references/review-gates.md) 分开检查风格、功能和安全风险。
+本节适用于 AI 生成代码、代码生成器产物、人工新增代码、人工修改代码和已有代码重审，
+覆盖 App、Service、Platform、Impl、Vendor 以及工具脚本中的嵌入式 C/C++ 代码。它是
+全项目唯一的代码质量入口；不再为 BSP 生成代码建立一套平行的总规则。
+
+先按 [项目风格 profile](references/style-profile.md) 建立可追溯约束，再按 [项目代码审查门禁](references/review-gates.md)
+分开检查风格、功能和安全风险。领域 Skill 只能增加领域约束，不能重新定义全项目格式、注释、审查分类或顶层架构。
 
 1. 风格优先级为：用户明确要求 → `.editorconfig`、`.clang-format`、IDE 或构建配置 → 相邻源码 → 保守 C 默认。
-2. 在生成或重构前说明 profile 的来源和适用目录；审查报告必须把 profile 偏差与功能/安全问题分开分级。
+2. 在生成、修改或重审前说明 profile 的来源和适用目录；审查报告必须把 profile 偏差与功能/安全问题分开分级。
 3. 除非项目或用户明确采用其他约定，否则按 [项目风格 profile](references/style-profile.md) 的硬性约束执行：按 App/Service/Platform/Impl/Vendor 分层命名，使用 `g_/s_/p_/pf_` 变量前缀、公开函数 Doxygen 注释、**注释语言默认中文**、左对齐-填充-右对齐注释，并将 80 列作为硬限制。
 4. 先检查编译、接口、错误路径和资源所有权；再检查 ISR/DMA/并发、数组边界及硬件约束；最后报告风格偏差。
 
-### BSP 生成代码
+### 统一注释与对齐管线
 
-MCU Workbench 生成的 BSP、Core、Driver、Handler、Port 与 Wrapper 代码统一采用
-[`项目风格 profile`](references/style-profile.md)。该文件同时定义格式、分层命名和注释，
-不再使用单独的生成代码注释 Profile。
+所有层的新文件和已有文件统一采用 [`项目风格 profile`](references/style-profile.md)。
+生成器、重构工具和人工修改后的代码不得绕过这套管线，也不再使用单独的 BSP 生成代码注释 Profile。
 
-审查 GPIO 输出类生成切片时，额外按 [`GPIO 输出外设检查表`](../../bsp/references/gpio-output-peripheral-checklist.md) 核对极性与上下文、失败后 ready 状态、错误码保留、Port 回滚、并发注册及 Fake GPIO 覆盖；不可用复杂设备的 OSAL/IRQ 模板代替这些证据。
+新生成文件与已有 C/H 文件都必须经过同一套注释重生成和代码块对齐管线：
+一级分区 80 列、二级分区 60 列、三级分区 40 列；同一数据类型定义或代码块内的
+声明、赋值、初始化和行尾注释必须对齐。已有注释保留语义内容，但旧格式、缺失标签
+和缺失阶段注释必须重新生成；不满足这些规则时不得放行。
+
+### 领域附加门禁
+
+BSP/Impl 代码仍需额外核对器件协议、Driver/Handle/Port 所有权、OSAL/IRQ/DMA、GPIO
+极性和 Fake 覆盖等领域证据；这些是全项目质量基线之上的补充，不得复制全局格式和审查规则。
+GPIO 输出类生成切片额外按 [`GPIO 输出外设检查表`](../../bsp/references/gpio-output-peripheral-checklist.md)
+核对极性与上下文、失败后 ready 状态、错误码保留、Port 回滚、并发注册及 Fake GPIO 覆盖。
+不可用复杂设备的 OSAL/IRQ 模板代替这些证据。
 
 ## 三级验证闭环
 
@@ -87,4 +102,4 @@ flowchart LR
 
 规则修正时必须保留 `ISR_CRITICAL_TOKEN_IGNORED` 等真实并发/安全告警，也不得通过忽略整个 Vendor 目录消除 timeout warning。验收要报告误报类别消失、真实告警保留和基线新增差异三项结果。
 
-对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不审计用户工程的其他自定义代码；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界，以及 `style-profile.md` 要求的文件头、公开 API、必要约束和注释语言。
+对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、全项目格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不替代全项目质量审查；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界，以及 `style-profile.md` 要求的文件头、公开 API、必要约束和注释语言。

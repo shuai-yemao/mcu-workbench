@@ -1,25 +1,49 @@
-# BSP 架构专用契约
+# BSP 专项实现契约（全项目架构的补充）
 
-`platform_*_model.c/.h` 是 Platform Device Model；`impl_*_port.c/.h` 是 BSP Port（legacy 名 `drv_adapter_port_*`）；`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。`platform_*_wrapper.c/.h` 仅作为历史迁移输入，不是新 BSP 的默认产物。
+> 本文件不再定义项目顶层架构，也不作为 App、Service、Platform、Impl、Vendor 的总规则。
+> 项目顶层唯一架构来源是 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，
+> 代码格式、注释和通用审查唯一来源是 [`style-profile.md`](../../tools/tools-quality/references/style-profile.md)
+> 与 [`review-gates.md`](../../tools/tools-quality/references/review-gates.md)。本文件只补充 BSP/Impl 内部的器件装配和运行机制约束。
+
+## 当前边界
+
+全项目依赖方向固定为：
+
+```text
+App → Service → Platform 接口 ← Impl → Vendor
+```
+
+在该顶层契约内部，BSP 的当前实现关系为：
+
+```text
+Platform BSP Model ← impl_bsp/impl_bsp_port（组合与注入）
+                                  ├─→ impl_bsp Driver（器件协议）
+                                  └─→ impl_bsp Handle（同类实例机制）
+                                         └─→ Platform Device Ops
+```
+
+`platform_*_model.c/.h` 是 Platform Device Model；`impl_*_handle_port.c/.h` 是 BSP Port；
+`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。
+`platform_*_wrapper.c/.h` 仅作为历史迁移输入，不是当前 BSP 的默认产物。
 
 ```text
 Service → Platform Device Model → typed Platform Ops
                                   ↑ bind/register
-impl_board Port ── inject MCU/Core Ops ──→ BSP Driver
-    └──────────── inject same-class Drivers ──→ BSP Handle
+impl_bsp/impl_bsp_port Port ── inject MCU/Core Ops ──→ Driver
+    └──────────────────── inject same-class Drivers ──→ Handle
                                       └──────→ Platform Device Ops
 ```
 
-## 四个独立层
+## BSP 内部角色
 
-| 层 | 只能负责 | 只能依赖 |
+| 角色 | 只能负责 | 只能依赖 |
 |---|---|---|
 | Platform Device Model | 设备身份、`cfg/ctx/data/ops` 契约和 typed Ops | Platform 公共类型 |
 | Port | 唯一组合根；创建实例、注入 Ops、把 Handle 函数绑定到 Platform Device Ops | 资源、构造接口、Platform Model |
 | Handle | 同一设备类别 Driver 集合的生命周期、选择/遍历、缓存、重试、回调和请求串行化 | 同类 Driver 与后续 OS 同步接口 |
 | Driver | 器件协议和事务级错误映射 | 注入的 Core Ops 与 MCU Ops |
 
-非 Port BSP 层不得包含或依赖其他层的具体实现。Platform Model 不保存 Driver/Handle；Handle 只通过 Driver 的公开实例 API 或内部 Driver Ops 使用 Driver，不复制协议状态；HAL Driver 不直接包含 HAL、RTOS、OS Wrapper、Port 或 Handle。Core/MCU 的具体对象只由资源系统提供、由 Port 选择并通过 Ops/context 注入。
+非 Port BSP 角色不得包含或依赖其他角色的具体实现。Platform Model 不保存 Driver/Handle；Handle 只通过 Driver 的公开实例 API 或内部 Driver Ops 使用 Driver，不复制协议状态；HAL Driver 不直接包含 HAL、RTOS、OS Wrapper、Port 或 Handle。Core/MCU 的具体对象只由资源系统提供、由 Port 选择并通过 Ops/context 注入。
 
 ## 设备类别、实例和 context-first Ops
 

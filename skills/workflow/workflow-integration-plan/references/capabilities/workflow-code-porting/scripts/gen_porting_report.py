@@ -253,7 +253,7 @@ def archive_to_obsidian(report_path: str, project: str, source_chip: str, target
         f'--symptom "见移植报告：{report_path}" '
         f'--root-cause "逐层修改见报告" '
         f'--solution "逐层验证见报告" '
-        f'--verification "全部 7 层验证"'
+        f'--verification "全部迁移域验证"'
     )
 
     print(f"[...] 归档到 Obsidian...")

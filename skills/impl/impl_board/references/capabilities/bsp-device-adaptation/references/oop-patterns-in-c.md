@@ -1,5 +1,7 @@
 # OOP 设计模式在嵌入式 C 中的实现
 
+> 本文只讨论 Impl 内对象/Handle 封装模式，不定义项目顶层架构或代码质量规则。当前顶层依赖为 `App → Service → Platform ← Impl → Vendor`；代码生成、注释、对齐和审查统一遵循 `skills/tools/tools-quality/`。
+
 > 基于《设计模式之美》(王争) + 嵌入式 C 语言实践提炼。
 > 解决的核心问题：C 语言没有 class/interface/abstract 语法，如何用 struct + 指针模拟 OOP？
 
@@ -323,8 +325,8 @@ uint8_t LED_GetState(LED_Handle led);  // getter 可以保留（只读查询）
         └─ 否 → 面向过程 (函数+宏)
 
 该功能可能换 MCU?
-├─ 是 → Core 层桥接 (BSP→Core→Driver)
-└─ 否 → 直接调 HAL (简单场景)
+├─ 是 → Impl 后端注入 Platform Ops（硬件绑定留在 Impl）
+└─ 否 → 仍按项目边界决定是否允许直接绑定 Vendor/HAL
 
 该功能跨项目复用?
 ├─ 是 → OOP (不透明句柄+接口)

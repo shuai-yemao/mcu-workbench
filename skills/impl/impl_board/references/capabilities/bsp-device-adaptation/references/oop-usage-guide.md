@@ -1,5 +1,7 @@
 # BSP 面向对象驱动 — 使用与维护指南
 
+> **当前规则**：本文只说明 Impl 内 Handle/对象封装的领域模式，不定义顶层架构，也不定义代码生成、注释、对齐或审查规则。统一遵循 `App → Service → Platform ← Impl → Vendor`、[`tools-quality`](../../../../../../tools/tools-quality/SKILL.md) 和 [`style-profile.md`](../../../../../../tools/tools-quality/references/style-profile.md)。本文中旧 Core/BSP/Driver 术语仅用于解释历史示例。
+
 > **目标读者**: 接手 OOP 风格 BSP 驱动代码的嵌入式工程师。
 > **核心问题**: OOP in C 用不透明句柄隐藏了实现细节，新接手的人看不到"内部是什么"。
 > **解决思路**: 本文档记录所有 OOP BSP 驱动的通用设计模式，各驱动特有的内容写在对应 .h 文件头部。
@@ -31,7 +33,7 @@ LED_On(hled);
 | 需求 | 面向过程的问题 | OOP 的解决 |
 |------|---------------|-----------|
 | 多个 LED | 定义 N 组宏 + 复制 N 份函数 | 一个注册表, 任意实例 |
-| 换 MCU | 所有 HAL_GPIO_WritePin 要改 | Core 层桥接, BSP 不变 |
+| 换 MCU | 具体 HAL_GPIO_WritePin 绑定要改 | Impl 的 MCU/Vendor 适配调整，Platform/Service 不变 |
 | 低/高电平亮 | 有的板子要改逻辑 | active_level 参数配置 |
 | 极端资源受限 | 宏更省 | 8 实例静态数组 = 固定 RAM |
 
@@ -41,7 +43,7 @@ LED_On(hled);
 
 ```
 该设备需要多个实例?                       → OOP (注册表模式)
-该设备未来可能换 MCU 系列?                → OOP (Core 层桥接)
+该设备未来可能换 MCU 系列?                → OOP (Impl 后端注入)
 这个驱动可能被其他项目复用?                → OOP (封装)
 只是简单控制一个引脚(如板载 LED)?          → 宏定义 + 过程式更直接
 ```
@@ -219,10 +221,10 @@ A: 不会。`LED_On()` 最终就是 1 次寄存器写入。OOP 带来的额外�
 总共不到 10 条 CPU 指令, 约 0.14μs @ 72MHz。
 
 ### Q: 为什么要在 .c 里写 `GPIO_Core_WritePin` 而不是直接调 HAL？
-A: 这是分层架构铁律 — BSP 层不能直接调 Driver/HAL 层。这样做:
-- 换 MCU 时 BSP 不用改 (只需改 Core 层)
-- 代码审查时可以快速定位: "BSP 里唯一的 HAL 调用在这里"
-- 符合 workflow-architecture 的 7 层架构 (BSP → Core → Driver)
+A: 这是当前分层边界 — Impl 内设备逻辑通过 Platform/注入 Ops 使用硬件，不把 HAL 传播到上层。这样做:
+- 换 MCU 时优先只改 Impl 的 MCU/Vendor 适配
+- 代码审查时可以快速定位硬件绑定点与资源边界
+- 符合当前 `App → Service → Platform ← Impl → Vendor` 架构；BSP/Driver/Handle 只表示 Impl 内部角色
 
 ---
 
@@ -281,5 +283,5 @@ if (h == NULL) {
 
 - `06_LED_V1/BPS/LED/bsp_led.c` — OOP LED 驱动参考实现
 - `bsp_adapter.py --oop` — OOP 骨架自动生成
-- `workflow-architecture/references/layered-architecture-model.md` — 7 层分层架构定义
-- `quality-code-review/SKILL.md` — OOP 合规审查 7 项检查
+- `skills/workflow/workflow-review-gate/references/software-layer-contract.md` — 当前顶层架构契约
+- `skills/tools/tools-quality/SKILL.md` — 全项目代码生成、修改与审查入口

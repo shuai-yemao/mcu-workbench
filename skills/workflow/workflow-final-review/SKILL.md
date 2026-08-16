@@ -31,7 +31,7 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 1. **范围与证据**：确认被审版本/diff、审查基线、构建与测试入口，声明 `tool_root`、`firmware_root` 与命令绝对 `cwd`。
 2. **格式与注释初检**：由 `verification-engineer` 必须检查格式和注释完整性。按“用户明确要求 → 目标工程已确认的 `.clang-format`/`.editorconfig` 或等效配置 → 相邻源码 → `tools-quality` 的 [style-profile 编码规范](../../tools/tools-quality/references/style-profile.md)”确定规则；若前三层没有覆盖规则，采用 profile 的 80 列基线。检查行宽、缩进/排版、文件或模块说明、公开 API Doxygen、`@param`、`@retval`、必要的 `@note`/`@warning`，以及所有权、阻塞/ISR/DMA/并发、硬件约束、错误恢复和非显然步骤所需的注释。记录命令、绝对 `cwd`、工具版本、退出码、检查范围和 `relative/path:line`。
 3. **受限整改与同条件复检**：初检失败时，只允许格式化和补充/更正必要注释；不得修改函数签名、控制流、常量/宏取值、数据结构、资源/错误路径、包含依赖或分层关系。整改前后审阅 `git diff`；若发现超出范围的差异，停止整改并以阻塞项交回对应实现 Skill。对相同文件范围用初检所用工具和注释清单复检，并执行 `git diff --check`。工具不可用、检查不可复现或复检仍失败时不得放行。
-4. **风格与门禁分类**：由 `verification-engineer` 按 [生成代码审查门禁](../../tools/tools-quality/references/review-gates.md) 将格式/注释、功能和安全问题分开报告；功能或安全问题不得由格式/注释整改掩盖。
+4. **风格与门禁分类**：由 `verification-engineer` 按 [项目代码审查门禁](../../tools/tools-quality/references/review-gates.md) 将格式/注释、功能和安全问题分开报告；功能或安全问题不得由格式/注释整改掩盖。
 5. **功能与接口/资源所有权**：由 `system-architect` 与 `verification-engineer` 核对接口契约、调用链、错误路径与资源生命周期。
 6. **ISR/DMA/并发与安全**：由 `verification-engineer`（并发）与 `hardware-integration`（板级证据）核对 ISR 阻塞、DMA 缓冲、数组边界与硬件约束。
 7. **分层边界**：核对是否遵守 Adapter 只属于 OS 和 BSP、Core/Middleware/Driver 不创建 Adapter 等契约。
@@ -72,4 +72,4 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 - [Review 输入/输出契约](references/prompt-contract.md)
 - [迁移比对资料](references/capability-index.md)
 - [项目风格 profile](../../tools/tools-quality/references/style-profile.md)
-- [生成代码审查门禁](../../tools/tools-quality/references/review-gates.md)
+- [项目代码审查门禁](../../tools/tools-quality/references/review-gates.md)

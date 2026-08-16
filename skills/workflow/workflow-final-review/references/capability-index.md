@@ -5,5 +5,5 @@
 | 能力主题 | 详细资料 |
 | --- | --- |
 | 项目风格编码规范 | [style-profile 编码规范](../../../tools/tools-quality/references/style-profile.md) |
-| 生成代码审查门禁 | [review-gates](../../../tools/tools-quality/references/review-gates.md) |
+| 项目代码审查门禁 | [review-gates](../../../tools/tools-quality/references/review-gates.md) |
 | 九层代码审查清单 | [quality-code-review](../../../tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md) |

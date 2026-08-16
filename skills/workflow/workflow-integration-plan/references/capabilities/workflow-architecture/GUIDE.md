@@ -5,6 +5,8 @@ description: "嵌入式分层架构设计"
 
 # 嵌入式系统架构师 · 思维操作系统
 
+> **当前架构说明（强制）**：本文早期内容包含旧的七层 `APP/OS/BSP/Core/Driver/Middlewares/System` 模型，仅保留作历史迁移参考，不得作为新项目架构、代码生成、代码修改、代码审查或需求路由依据。当前顶层架构唯一依据是 `skills/workflow/workflow-review-gate/references/software-layer-contract.md`：`App → Service → Platform ← Impl → Vendor`。OS、BSP、MCU、Driver、Handler、Port 等属于 Impl/Platform 内的具体角色；代码格式、注释、对齐和审查统一由 `skills/tools/tools-quality/` 负责。
+
 > 「寄存器是死的，系统是活的。选对 MCU 省三个月，选错多焊三块板。」
 
 ## 角色说明
@@ -59,37 +61,31 @@ description: "嵌入式分层架构设计"
 **局限**：各系列外设总线挂载不同（APB1/APB2），时钟使能位不同
 
 ### 模型 4: 分层解耦 (Layered Decoupling)
-**一句话**：应用逻辑 <-> 硬件抽象 <-> HAL/LL <-> 寄存器 — 每层只通过接口通信。
+**一句话**：上层业务依赖稳定能力接口，具体实现向下绑定设备、OS、MCU 和 Vendor；每层只通过公开契约通信。
 
-分层架构定义见 `references/layered-architecture-model.md`，这是所有架构决策的基石：
+当前分层架构定义见 `skills/workflow/workflow-review-gate/references/software-layer-contract.md`，这是新设计和迁移决策的唯一基线：
 
 ```mermaid
 flowchart LR
-    APP[APP 业务逻辑] --> OS[OS RTOS内核]
-    OS --> BSP[BSP 板级外设]
-    BSP --> CORE[Core MCU外设封装]
-    CORE --> DRV[Driver 硬件抽象]
-    MID[Middlewares 中间件] -.-> OS
-    SYS[System 全局配置] -..->|被所有层引用| APP
+    APP[App 业务] --> SERVICE[Service 业务服务]
+    SERVICE --> PLATFORM[Platform 能力接口]
+    PLATFORM -.-> IMPL[Impl 具体实现]
+    IMPL --> VENDOR[Vendor HAL/SDK/第三方]
 ```
 
 **分层铁律**：
-- **单向依赖**：Driver→Core→BSP→[OS→]APP（OS 仅在 RTOS 模式下存在）
-- **BSP 禁止调 Driver**：BSP 只调 Core 层 API，不直接调 HAL/寄存器
-- **APP 禁止调 Core/Driver**：不论 RTOS 还是裸机，这两层始终不能直接调
-- **APP↔BSP 取决于模式**：
-  - RTOS 模式：APP **禁止**直接调 BSP（必须经过 OS 调度）
-  - 裸机模式：APP **允许**直接调 BSP（无 OS 层，这是正确路径）
-- 具体规则和例外见 `references/layered-architecture-model.md` 的[裸机 vs RTOS 依赖规则]章节
+- **依赖方向**：App → Service → Platform 接口 ← Impl → Vendor；实现依赖接口，接口不依赖实现
+- **跨层限制**：App 不得直接依赖 Impl、Vendor、HAL、RTOS 或芯片寄存器；Service 不得绕过 Platform
+- **内部角色**：BSP Wrapper/Port/Driver/Handle、OS Adapter、MCU 适配属于 Impl 内部实现角色，具体组合按项目证据确定
+- **RTOS/裸机差异**：只影响 Impl 内资源绑定、阻塞和执行上下文，不改变顶层依赖方向
 
 **换芯片影响范围**：
-- 同系列（如 F1→F1）：只需改 Driver 层 + Core 层实现
-- 跨系列（如 F1→F4）：Driver 全换，Core 层接口不变但实现重写
-- 换板子（同一芯片不同板）：只改 BSP 层
+- 同系列或跨系列迁移：优先替换 Impl 的 MCU/Vendor 适配，保持 Platform 契约稳定
+- 换板子：调整 Impl 的板级组合、BSP Port/资源绑定，不把板级细节上移到 App/Service
 
 **证据**：
-- F1→F4 移植时，Core 层的 UART_Init() 接口不变，但内部 HAL 调用从 RCC_APB2PeriphClockCmd 换成 __HAL_RCC_USART1_CLK_ENABLE
-- MPU6050 驱动（BSP 层）在 F1 和 F4 上代码完全一致，因为只调 Core 层的 I2C_Read/Write
+- F1→F4 移植时，Platform 的 UART 能力契约可保持稳定，Impl 的 MCU/Vendor 绑定从 RCC_APB2PeriphClockCmd 调整为目标 HAL 接口
+- MPU6050 等设备协议可保持在 Impl 的 Driver/Handle 中，前提是它们只依赖注入的 Platform/总线 Ops，而不携带具体 MCU 绑定
 
 ### 模型 5: 最坏路径分析 (Worst-Case Path)
 **一句话**：系统设计时不仅想正常路径，要想中断抢占→DMA完成→任务切换同时发生的场景。
@@ -222,7 +218,7 @@ Why:   为什么选这个不选别的？← 核心问题
 ```
 
 **Why 的典型答案分类**：
-- **可维护性**：换芯片时只改 Core 层，BSP 不动
+- **可维护性**：换芯片时优先只改 Impl 的 MCU/Vendor 适配，保持 Platform 契约稳定
 - **可扩展性**：预留接口，未来增加传感器类型不用改主逻辑
 - **性能约束**：Cortex-M0 上函数指针间接跳转不可接受，用宏更合适
 - **资源约束**：只剩 2KB RAM，OOP 注册表太奢侈
@@ -260,12 +256,12 @@ Why:   为什么选这个不选别的？← 核心问题
 - [ ] 错误处理链完整：检测→记录→恢复/复位
 
 ### 分层合规检查
-- [ ] **单向依赖**：逐层检查每个文件的 #include，确认无跨层引用
-- [ ] **BSP 层**：不直接 include Driver 层头文件（如 stm32f4xx_hal.h）
-- [ ] **APP 层**：不直接 include Core 或 BSP 层头文件
-- [ ] **Core 层**：接口标准化（同一外设在所有系列上接口签名一致）
-- [ ] **Driver 层**：没有业务逻辑（寄存器操作不能包含 if-then-else 业务判断）
-- [ ] **跨层操作**：所有跨层代码（如 ISR 中调 HAL）已标记并特别审查
+- [ ] **顶层依赖**：按 App → Service → Platform ← Impl → Vendor 检查公开接口和 include 方向
+- [ ] **App 边界**：不直接 include Service 之外的具体实现、Vendor、HAL、RTOS 或芯片头文件
+- [ ] **Platform 边界**：只暴露稳定能力、统一类型、错误码、对象协议和抽象 Ops，不绑定具体 HAL/RTOS
+- [ ] **Impl 边界**：在 Impl 内明确 BSP/OS/MCU/Driver/Handler/Port 的职责、资源所有权和调用方向
+- [ ] **Vendor 边界**：Vendor 只提供底座映射或受控适配，不把厂商实现复制到上层
+- [ ] **跨层操作**：所有跨层代码（如 ISR、DMA、HAL 或 RTOS 边界）已标记并特别审查
 
 ### 设计评审（可生产性）
 - [ ] 串口日志有统一格式（elog 或类似）
@@ -295,7 +291,7 @@ Why:   为什么选这个不选别的？← 核心问题
 
 ## 附录：知识体系来源
 
-- `references/layered-architecture-model.md` — 嵌入式 7 层软件架构参考模型（Driver→Core→BSP→OS→Middlewares→System→APP）
+- `references/layered-architecture-model.md` — 历史七层模型，仅用于旧项目迁移对照，不是当前架构规范
 - `embedded-skills-map` — 嵌入式技能完整分类（含技能→分层架构映射表）
 - `platform-stm32-hal` — STM32 HAL 开发指南
 - `rtos-freertos` — FreeRTOS 开发指南
@@ -305,4 +301,4 @@ Why:   为什么选这个不选别的？← 核心问题
 
 > 本 Skill 由 Chip 基于 Nuwa 方法论 + 50+ 嵌入式技能体系蒸馏生成
 >
-> 核心架构参考：`references/layered-architecture-model.md`（7 层嵌入式软件架构定义）
+> 当前架构参考：`skills/workflow/workflow-review-gate/references/software-layer-contract.md`（App → Service → Platform ← Impl → Vendor）

@@ -1,6 +1,8 @@
-# 嵌入式软件分层架构参考模型
+# 历史嵌入式软件七层架构参考模型
 
-> 本文件定义嵌入式软件的标准 7 层架构，作为所有相关 skill（driver开发/代码审查/架构评审/移植）的共享参考依据。
+> **历史兼容文档，不是当前规范。** 本文件只用于识别和迁移旧项目中的 `APP/OS/BSP/Core/Driver/Middlewares/System` 目录与依赖，禁止作为新项目设计、代码生成、代码修改、代码审查或需求路由依据。当前顶层架构唯一依据是 `skills/workflow/workflow-review-gate/references/software-layer-contract.md`：`App → Service → Platform ← Impl → Vendor`。
+
+> 本文件记录旧工程曾使用的 7 层架构，作为相关 skill 识别历史目录和迁移风险的兼容参考，不再作为共享规范。
 > 所有代码生成、审查、移植工作必须遵循此分层规则，**禁止跨层操作**。
 >
 > **关键区分**：裸机（无 RTOS）和 RTOS 两种模式下，层间连接方式不同——详见"裸机 vs RTOS 依赖规则"章节。

@@ -5,6 +5,8 @@ description: "跨 MCU、SDK 或工具链的代码移植"
 
 # 嵌入式代码移植——跨 MCU / HAL / IDE / RTOS 全场景移植框架
 
+> **当前架构基线**：本指南中的旧 `APP/OS/BSP/Core/Driver` 术语只用于识别历史工程目录。新设计、生成、修改和审查必须以 `App → Service → Platform ← Impl → Vendor` 为顶层架构，详见 `skills/workflow/workflow-review-gate/references/software-layer-contract.md`。OS、BSP、MCU、Driver、Handler、Port 仅在 Platform/Impl 内按项目证据细分。
+
 ## 适用场景
 
 - 需要将工程从一款 MCU 移植到另一款（F1->F4、F4->H7、STM32->GD32 等）
@@ -59,47 +61,34 @@ flowchart TD
 
 ## 分层架构视角下的移植影响范围
 
-移植的本质是理解**换什么层、不动什么层**。以下是基于分层架构（参考 `workflow-architecture/references/layered-architecture-model.md`）的移植影响矩阵：
+移植的本质是识别 Platform 契约与 Impl 后端的变化边界。顶层依赖遵循 `App → Service → Platform 接口 ← Impl → Vendor`；旧项目中的 OS/BSP/Core/Driver 目录必须先映射到当前分层，再制定文件级迁移计划。
 
 ```mermaid
 flowchart TD
-    subgraph 换芯片
-        DRV1[Driver 层: 全换] --> CORE1[Core 层: 实现重写<br/>接口不变]
-        CORE1 --> BSP1[BSP 层: 不用动]
-        BSP1 --> OS1[OS 层: 不用动]
-        OS1 --> APP1[APP 层: 不用动]
-    end
-
-    subgraph 换平台/工具链
-        DRV2[Driver 层: 寄存器→HAL<br/>可能重新生成]
-        CORE2[Core 层: 全换]
-        BSP2[BSP 层: Core API 接口不变<br/>实现可能微调]
-        OS2[OS 层: 取决于 RTOS 是否移植]
-    end
-
-    subgraph 换板子（同芯片）
-        BSP3[BSP 层: 全换]
-        CORE3[Core 层: 引脚分配重配]
-        DRV3[Driver 层: 不用动]
-    end
+    PLATFORM[Platform 稳定能力接口]
+    IMPL[Impl MCU/BSP/OS/设备实现]
+    VENDOR[Vendor HAL/SDK/第三方底座]
+    PLATFORM -.契约保持稳定.-> IMPL
+    IMPL --> VENDOR
+    CHIP[换 MCU/SDK/工具链] --> IMPL
+    BOARD[换板卡/引脚/资源] --> IMPL
+    RTOS[换 RTOS/执行上下文] --> IMPL
 ```
 
 ### 各场景的修改范围
 
-| 移植场景 | Driver 层 | Core 层 | BSP 层 | OS 层 | APP 层 |
-|---------|-----------|---------|--------|-------|--------|
-| 同系列换大封装 | 不变 | 引脚微调 | 引脚微调 | 不变 | 不变 |
-| 跨系列（如 F1→F4） | **全换** | **实现重写** | **接口不变** | 不考虑 | 不变 |
-| 国产替代（F1→GD32） | **寄存器偏移映射** | 可能微调 | 不变 | 不变 | 不变 |
-| 换工具链（Keil→GCC） | 链接脚本+启动文件换 | 编译器属性宏适配 | 不变 | 可能需适配 | 不变 |
-| 裸机→RTOS | 不变 | 不变 | 不变 | **加入OS层** | **重构为 task** |
-| 换板子（同芯片） | 不变 | 引脚重配 | **全换** | 不变 | 不变 |
-| Arduino 库移植 | — | **用 Core 层 API 重写** | 变成新 BSP 驱动 | 可选 | 不考虑 |
+| 移植场景 | 首要检查范围 | 顶层契约要求 |
+|---------|--------------|--------------|
+| 换 MCU/SDK | Impl 的 MCU/Vendor 适配、启动文件、链接脚本、HAL/寄存器绑定 | Platform 接口尽量保持稳定 |
+| 换板子/引脚/资源 | Impl 的板级组合、BSP Port、资源表和设备绑定 | App/Service 不携带板级细节 |
+| 换 RTOS/执行上下文 | Impl 的 OS 适配、任务/同步/阻塞和 ISR 约束 | Platform 不泄漏 RTOS 类型 |
+| 换工具链 | 构建、启动文件、链接脚本和编译器属性 | 不借工具链迁移修改业务契约 |
+| 第三方库移植 | Vendor 登记与 Impl 适配边界 | 通过 Platform/Service 暴露稳定能力 |
 
 **核心结论**：
-- BSP 层代码在换芯片时**不用改**（前提是 Core 层接口不变）
-- Core 层接口设计决定了移植成本——接口标准化越彻底，BSP 和 APP 层的移植工作量越小
-- Driver + Core 是 MCU 换型时修改量最大的两层，占全部修改的 70%以上
+- Platform 契约稳定性决定上层迁移成本；不要把旧 Core/BSP/Driver 的目录名称直接当成当前层级
+- MCU、板级资源、OS 和设备协议的变化通常落在 Impl，但具体范围必须用真实调用链和构建证据确认
+- 每次移植都要分别验证静态依赖、主机测试、交叉编译、目标运行和硬件观测，不能用“逐层完成”替代证据
 
 ## 第三方项目/模块代码移植
 
@@ -288,7 +277,7 @@ flowchart LR
 
 ## 执行步骤
 
-### 逐层移植策略（7层模型）
+### 分阶段移植策略（按迁移域，不代表顶层架构层数）
 
 每层完成编译零警告后，再进入下一层。**严禁跨层跳跃调试**。
 
@@ -618,7 +607,7 @@ python record_issue.py new \
   --symptom "见附件：移植报告链接" \
   --root-cause "见逐层修改记录" \
   --solution "见移植报告" \
-  --verification "全部 7 层验证通过"
+  --verification "全部迁移域验证通过"
 ```
 
 这样下次搜索同类型问题时，Obsidian 会命中历史移植记录。`record_issue.py` 的更多用法（append/summary/search）参考 `kb-record` skill。
@@ -685,7 +674,7 @@ python import_to_kb.py batch \
 - **禁止**忽略编译警告就进行下一层移植
 
 ### 不该碰
-- **不触碰** BSP 层以上代码：Driver + Core 以下层移植完成后 BSP/APP 层不应修改
+- **优先不触碰** App/Service/Platform 公共契约：Impl 的 MCU/Vendor/板级适配完成后，再用调用链和测试证据确认上层是否需要调整
 - **不触碰**第三方库源码（只适配接口层，不改核心算法）
 - **不触碰**生产环境数据（仅在开发板上验证）
 

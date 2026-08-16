@@ -81,7 +81,7 @@ describe('generated layer contract validator', () => {
   test('rejects a generated function when its Doxygen block is removed', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => content
-      .replace(/\/\*\*\n \* @brief 执行带超时约束的同步数据传输。[\s\S]*?\*\//, ''));
+      .replace(/\/\*\*\n \* @brief (?:执行带超时约束的同步数据传输。|以毫秒超时执行同步事务。)[\s\S]*?\*\//, ''));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
@@ -122,12 +122,12 @@ describe('generated layer contract validator', () => {
   test('rejects a generated source whose assignment columns are not aligned', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => (
-      content.replace('event->status = PLATFORM_ERR_OK;', 'event->status    = PLATFORM_ERR_OK;')
+      content.replace('event->status   = PLATFORM_ERR_OK;', 'event->status    = PLATFORM_ERR_OK;')
     ));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        ruleId: 'LAYER_FORMAT_CLANG',
+        ruleId: 'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT',
         file: '03_Platform/platform_mcu/Src/platform_spi.c'
       })
     ]));
@@ -136,12 +136,26 @@ describe('generated layer contract validator', () => {
   test('rejects a generated header whose declaration columns are not aligned', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
-      content.replace('event_id; /**< 待处理的事件标识。', 'event_id     ; /**< 待处理的事件标识。')
+      content.replace('uint32_t       event_id;', 'uint32_t  event_id;')
     ));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        ruleId: 'LAYER_FORMAT_CLANG',
+        ruleId: 'LAYER_FORMAT_DECLARATION_ALIGNMENT',
+        file: '03_Platform/platform_mcu/Inc/platform_spi.h'
+      })
+    ]));
+  });
+
+  test('rejects a generated type whose trailing comments are not aligned', async () => {
+    const root = await createSlice();
+    await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
+      content.replace('event_id;  /**< 待处理的事件标识。', 'event_id;   /**< 待处理的事件标识。')
+    ));
+
+    expect(validate(root).errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        ruleId: 'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT',
         file: '03_Platform/platform_mcu/Inc/platform_spi.h'
       })
     ]));
@@ -200,7 +214,7 @@ describe('generated layer contract validator', () => {
   test('generates the Port as the resource, Driver, Handle, and Platform Model composition root', async () => {
     const root = await createSlice();
     const port = await fs.readFile(
-      path.join(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c'),
+      path.join(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c'),
       'utf8'
     );
 
@@ -219,7 +233,7 @@ describe('generated layer contract validator', () => {
       path.join(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c'), 'utf8'
     );
     const handler = await fs.readFile(
-      path.join(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c'), 'utf8'
+      path.join(root, '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c'), 'utf8'
     );
 
     expect(driver).toContain('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)');
@@ -228,12 +242,12 @@ describe('generated layer contract validator', () => {
     expect(handler).toContain('p_handle->cfg->p_drivers[driver_index]');
     expect(handler).toContain('p_ref->read_id(p_ref->p_context, p_device_id)');
 
-    await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => (
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c', (content) => (
       `#include <platform_i2c.h>\n${content}`
     ));
     expect(validateArchitectureContract({ root }).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
-        file: '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c',
+        file: '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c',
         ruleId: 'BSP_HANDLER_INJECTION_DEPENDENCY'
       })
     ]));
@@ -243,7 +257,7 @@ describe('generated layer contract validator', () => {
     const root = await createSlice();
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c', (content) => content
       .replace('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)', 'driver_core_ops_not_used'));
-    await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c', (content) => content
       .replace('p_ref->read_id(p_ref->p_context, p_device_id)', 'handler_driver_ops_not_used'));
     await mutate(root, '04_Impl/impl_bsp/externflash/W25Q64/Src/impl_w25q64_driver.c', (content) => content
       .replace('p_driver->ctx.pf_chip_feature(p_driver->ctx.p_mcu_context)', 'driver_mcu_ops_not_used'));
@@ -257,7 +271,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a Port that omits the resource operation binding', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
       .replace('externflash_resource_get_ops()', 'externflash_resource_get_ops_not_used()'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -267,14 +281,14 @@ describe('generated layer contract validator', () => {
 
   test('does not require a legacy Port callback bridge', async () => {
     const root = await createSlice();
-    const port = await fs.readFile(path.join(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c'), 'utf8');
+    const port = await fs.readFile(path.join(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c'), 'utf8');
     expect(port).not.toMatch(/static\s+platform_err_t\s+externflash_port_/);
     expect(validate(root)).toMatchObject({ valid: true, errors: [] });
   });
 
   test('rejects a Port that omits direct Handle binding', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
       .replace('.read_id = impl_externflash_handle_read_id,', '.read_id = NULL,'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -284,7 +298,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a Port that omits Platform Model registration', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
       .replace('platform_externflash_register_default', 'platform_externflash_register_default_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -294,7 +308,7 @@ describe('generated layer contract validator', () => {
 
   test('rejects a Port that omits Driver construction', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => content
       .replace('impl_w25q64_driver_construct', 'impl_w25q64_driver_build_not_used'));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -305,7 +319,7 @@ describe('generated layer contract validator', () => {
   test('reports a Core vendor leak, extra Port export, and forbidden Model include', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => `${content}\n#include "stm32f4xx_hal.h"\n`);
-    await mutate(root, '04_Impl/impl_board/externflash/Src/impl_externflash_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
     await mutate(root, '03_Platform/platform_bsp/externflash/Src/platform_externflash_model.c', (content) => content.replace('#include "platform_externflash_model.h"', '#include "impl_w25q64_driver.h"'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_CORE_PUBLIC_LEAK' }),
@@ -316,7 +330,7 @@ describe('generated layer contract validator', () => {
 
   test('reports a Handle that no longer selects from its Driver set', async () => {
     const root = await createSlice();
-    await mutate(root, '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c', (content) => content
+    await mutate(root, '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c', (content) => content
       .replace('p_ref->read_id(p_ref->p_context, p_device_id)', 'handle_driver_not_used'));
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({ ruleId: 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET' })

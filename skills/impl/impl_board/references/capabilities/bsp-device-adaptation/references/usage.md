@@ -1,6 +1,6 @@
 # 外设驱动适配工具用法
 
-这个 skill 自带了一个可执行脚本 [scripts/bsp_adapter.py](../scripts/bsp_adapter.py)，适合在需要分析开源驱动代码、适配到 BSP 规范、或生成 BSP 骨架文件时直接调用。
+这个 skill 自带了一个可执行脚本 [scripts/bsp_adapter.py](../scripts/bsp_adapter.py)，用于扫描开源驱动、生成迁移草案或兼容旧工程骨架。它不是独立的代码质量入口；任何输出在进入项目或继续修改前，都必须按 [`tools-quality`](../../../../../../tools/tools-quality/SKILL.md) 和 [`style-profile.md`](../../../../../../tools/tools-quality/references/style-profile.md) 重新生成/格式化/审查，正式项目的顶层架构仍遵循 `App → Service → Platform ← Impl → Vendor`。
 
 ## 能力概览
 

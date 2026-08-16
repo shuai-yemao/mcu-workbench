@@ -58,4 +58,4 @@ AlignConsecutiveDeclarations:
   AcrossEmptyLines: false
   AcrossComments: false
 SortIncludes: false               # 不自动排序 include
-ReflowComments: false             # 不自动回绕注释
+ReflowComments: false             # 不自动回绕注释；行尾列由插件质量管线对齐

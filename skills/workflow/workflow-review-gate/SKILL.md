@@ -88,7 +88,7 @@ Router 和 `workflow-requirements-challenge` 固定交付带用户选择记录�
 
 ## 分层证据图
 
-先读取 [`software-architecture-knowledge-graph.md`](references/software-architecture-knowledge-graph.md) 和对应 JSON，再按 APP → Middleware → OS → BSP → Core → Driver → Tools 的顺序核对分层证据。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。分层审计、迁移设计与文件级改造顺序由 `workflow-integration-plan` 承担。
+先读取 [`software-layer-contract.md`](references/software-layer-contract.md) 作为当前顶层架构唯一依据，再读取 [`software-architecture-knowledge-graph.md`](references/software-architecture-knowledge-graph.md) 和对应 JSON 作为项目证据，按 App → Service → Platform → Impl → Vendor 核对分层边界。必要时再检查 Impl 内的 OS/BSP/MCU/Driver/Handler/Port 角色；Tools 是横切质量与验证能力，不是第六个软件层。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。分层审计、迁移设计与文件级改造顺序由 `workflow-integration-plan` 承担。
 
 ## 硬边界
 

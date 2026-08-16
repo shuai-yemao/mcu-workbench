@@ -65,8 +65,8 @@ describe('Generator Module', () => {
     expect(files).toHaveLength(9);
     expect(files.map((file) => file.path)).toEqual(expect.arrayContaining([
       '04_Impl/impl_bsp/externflash/W25Q64/Inc/impl_w25q64_config.h',
-      '04_Impl/impl_bsp_handler/externflash/Src/impl_externflash_handle.c',
-      '04_Impl/impl_board/externflash/Src/impl_externflash_port.c',
+      '04_Impl/impl_bsp/impl_bsp_handle/externflash/Src/impl_externflash_handle.c',
+      '04_Impl/impl_bsp/impl_bsp_port/externflash/Src/impl_externflash_handle_port.c',
       '03_Platform/platform_bsp/externflash/Src/platform_externflash_model.c'
     ]));
     expect(files.every((file) => file.path.match(/^(?:0[0-9]|99)_/))).toBe(true);
@@ -98,11 +98,11 @@ describe('Generator Module', () => {
       osalResources: [],
       styleProfile: 'style-profile'
     });
-    expect(byPath['04_Impl/impl_bsp_handler/display/Inc/impl_display_handle.h'])
+    expect(byPath['04_Impl/impl_bsp/impl_bsp_handle/display/Inc/impl_display_handle.h'])
       .toContain('driver_count');
-    expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
+    expect(byPath['04_Impl/impl_bsp/impl_bsp_port/display/Src/impl_display_handle_port.c'])
       .toContain('platform_display_register_default');
-    expect(byPath['04_Impl/impl_board/display/Src/impl_display_port.c'])
+    expect(byPath['04_Impl/impl_bsp/impl_bsp_port/display/Src/impl_display_handle_port.c'])
       .toContain('impl_display_handle_read_id');
     expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_model.h'])
       .toContain('platform_display_device_t');
@@ -143,12 +143,14 @@ describe('Generator Module', () => {
         .every((line) => line.length === 80)).toBe(true);
       expect(paddedComments
         .filter((line) => /\/\* (?:返回值|超时值|事件|配置|默认值|初始化|读写|回调|辅助|接口)/.test(line))
+        .filter((line) => /^\/\*/.test(line))
         .filter((line) => line.slice(line.indexOf('/*')).length > 30)
-        .every((line) => line.slice(line.indexOf('/*')).length === 40)).toBe(true);
+        .every((line) => line.slice(line.indexOf('/*')).length === 60)).toBe(true);
       expect(lines
         .filter((line) => /\/\* (?:清理|事件|回调|转发|校验|状态|处理) -+ \*\//.test(line))
-        .filter((line) => line.slice(line.indexOf('/*')).length < 30)
-        .every((line) => line.slice(line.indexOf('/*')).length === 20)).toBe(true);
+        .filter((line) => /^\s+\/\*/.test(line))
+        .filter((line) => line.slice(line.indexOf('/*')).length > 30)
+        .every((line) => line.slice(line.indexOf('/*')).length === 40)).toBe(true);
     }
   });
 
@@ -182,11 +184,42 @@ describe('Generator Module', () => {
     expect(formatted).toContain('int demo_read(int value)');
   });
 
+  test('regenerates existing comment widths and aligns type-member comments', () => {
+    const source = [
+      '/* 公开类型 --------------------------------------------------------------------- */',
+      '/** @brief 已有类型说明。 */',
+      'typedef struct {',
+      '    uint8_t short_name; /**< 短字段 */',
+      '    uint32_t longer_name; /**< 长字段 */',
+      '} demo_config_t;',
+      '',
+      'int demo_read(void) {',
+      '    /* 校验 ---------------- */',
+      '    return 0;',
+      '}',
+      ''
+    ].join('\n');
+
+    const formatted = formatExistingCode(source, 'demo.c');
+    const lines = formatted.split(/\r?\n/);
+    const secondary = lines.find((line) => line.includes('/* 初始化 '));
+    const tertiary = lines.find((line) => line.includes('/* 校验 '));
+    const memberComments = lines.filter((line) => line.includes('/**<'));
+
+    expect(lines.some((line) => line.includes('/* 公开类型 '))).toBe(true);
+    expect(tertiary.slice(tertiary.indexOf('/*')).length).toBe(40);
+    expect(memberComments.map((line) => line.indexOf('/**<'))).toEqual([
+      memberComments[0].indexOf('/**<'),
+      memberComments[0].indexOf('/**<')
+    ]);
+    expect(secondary).toBeUndefined();
+  });
+
   test('generates complete semantic comments without documenting calls as functions', async () => {
     const files = await generateBspDriver({
       deviceType: 'externflash', device: 'W25Q64', cores: ['spi'], platform: 'stm32f4'
     });
-    const port = files.find((file) => file.path.endsWith('impl_externflash_port.c')).content;
+    const port = files.find((file) => file.path.endsWith('impl_externflash_handle_port.c')).content;
     const driver = files.find((file) => file.path.endsWith('impl_w25q64_driver.c')).content;
     const driverHeader = files.find((file) => file.path.endsWith('impl_w25q64_driver.h')).content;
 
@@ -210,16 +243,16 @@ describe('Generator Module', () => {
     expect(header).toContain('/* 初始化 ');
     expect(header).toContain('/* 读写 ');
     expect(header).toContain('/* 回调 ');
-    expect(header).toContain('event_id; /**< 待处理的事件标识。');
-    expect(header).toContain('status; /**< 事件处理状态。');
+    expect(header).toMatch(/event_id;\s+\/\*\*< 待处理的事件标识。/);
+    expect(header).toMatch(/status;\s+\/\*\*< 事件处理状态。/);
     expect(header).toMatch(/PLATFORM_ERR_OK\s+= 0,.*\n\s+PLATFORM_ERR_PARAM\s+= 3,/);
     expect(header).not.toContain('成员或枚举值说明');
     expect(source).toContain('/* IRQ 功能开关或事件标识 ');
     expect(source).toContain('event->event_id = PLATFORM_SPI_EVENT_IRQ;');
-    expect(source).toContain('event->status = PLATFORM_ERR_OK;');
+    expect(source).toContain('event->status   = PLATFORM_ERR_OK;');
     expect(source).toContain('event->sequence += 1U;');
     expect(source).toMatch(/\/\* 事件 -+ \*\/[\s\S]*event->event_id = PLATFORM_SPI_EVENT_IRQ;/);
-    expect(source).toMatch(/\/\* 状态 -+ \*\/[\s\S]*event->status = PLATFORM_ERR_OK;/);
+    expect(source).toMatch(/\/\* 状态 -+ \*\/[\s\S]*event->status\s+= PLATFORM_ERR_OK;/);
     expect(source).toContain('检查输入参数、依赖和前置状态。');
     expect(header).toContain('#endif /* PLATFORM_SPI_H */');
     expect(source).toContain('if (instance == NULL || instance->pf_init == NULL) {');
