@@ -5,9 +5,11 @@ description: Vendor 底座登记：FlashDB 嵌入式 KV/TS 数据库源码与知
 
 # FlashDB 嵌入式数据库
 
+目标工程物理落位：`05_Vendor/vendor_middleware/flashdb/`。只保留项目实际使用的 FlashDB 源码、移植配置和许可证，统一由目标工程 Git 管理；本插件只提供接入知识。
+
 ## 边界
 
-FlashDB 跑在 FAL 分区之上，提供 KVDB（键值数据库）与 TSDB（时序数据库）两种存储语义，负责掉电安全、CRC 校验与 GC 回收。它不直接操作 Flash 芯片——读写擦全部经 FAL 分区转发。
+FlashDB 跑在 FAL 分区之上，提供 KVDB（键值数据库）与 TSDB（时序数据库）两种存储语义，负责掉电安全、CRC 校验与 GC 回收。它不直接操作 Flash 芯片——读写擦全部经 FAL 分区转发。Service、App 和 Platform 公共头不得直接 include FlashDB，接入链路固定为 `platform_middleware` → `impl_middleware` → `05_Vendor/vendor_middleware/flashdb/`。
 
 存储介质规划、分区划分与相对偏移属于 FAL；KV/TS 之上的文件系统属于 [`vendor_fatfs`](../vendor_fatfs/SKILL.md)；器件协议属于 [`bsp-hal-driver`](../../impl/impl_bsp/SKILL.md)。
 

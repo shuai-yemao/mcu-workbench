@@ -5,9 +5,11 @@ description: Vendor 底座登记：FAL（Flash Abstraction Layer）源码与知�
 
 # FAL Flash 抽象层
 
+目标工程物理落位：`05_Vendor/vendor_middleware/fal/`。只保留项目实际使用的 FAL 源码、移植配置和许可证；由目标工程 Git 管理，不在插件仓库复制 Vendor 实现。
+
 ## 边界
 
-向上为 FlashDB、FatFs、OTA 等提供"分区名 + 分区内相对偏移"的存储视图；向下把具体 Flash 芯片（经 SFUD 等驱动）封装成 `ops` 函数指针，屏蔽芯片型号与物理地址。
+向上为 FlashDB、FatFs、OTA 等提供"分区名 + 分区内相对偏移"的存储视图；向下把具体 Flash 芯片（经 SFUD 等驱动）封装成 `ops` 函数指针，屏蔽芯片型号与物理地址。Service、App 和 Platform 公共头不得直接 include FAL 头，接入链路固定为 `platform_middleware` → `impl_middleware` → `05_Vendor/vendor_middleware/fal/`。
 
 分区表的物理位置、容量与归属是"单一事实来源"：上层只认分区名与相对偏移，不持有绝对物理地址。FAL 只负责"名字 → 偏移/长度"映射与相对地址换算，不实现 KV 语义、文件格式或器件协议。
 

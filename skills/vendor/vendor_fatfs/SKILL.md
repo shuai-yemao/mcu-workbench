@@ -5,9 +5,11 @@ description: Vendor 底座登记：FatFs、SFUD、Flash 存储、磨损处理和
 
 # 存储中间件
 
+目标工程物理落位：`05_Vendor/vendor_middleware/fatfs/`。FatFs、SFUD 及本项目实际使用的存储支持内容统一放在 `vendor_middleware`，只保留选定版本和必要编译单元；目标工程 Git 管理源码、许可证和元数据，本插件不携带实际源码。
+
 ## 边界
 
-提供块设备、文件、日志和配置数据的公共 API，处理一致性、缓存、磨损、掉电恢复和错误映射。通过 BSP Wrapper 使用 Flash，不直接访问 hal_driver 或厂商库。
+提供块设备、文件、日志和配置数据的公共 API，处理一致性、缓存、磨损、掉电恢复和错误映射。上层通过 `platform_middleware` → `impl_middleware` 接入；通过 BSP 适配角色使用 Flash，不直接访问 hal_driver 或厂商库。
 
 传感器历史持久化只消费公共服务提供的稳定快照，不在设备回调或 Driver 内直接写 Flash。外部 Flash 器件协议属于 BSP，分区、配置和持久化策略属于本层或系统层。
 

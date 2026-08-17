@@ -5,9 +5,11 @@ description: Vendor 底座登记：MQTT、BLE、CAN、Modbus、WiFi、蜂窝、L
 
 # 通信中间件
 
+目标工程物理落位：`05_Vendor/vendor_middleware/communication/`。MQTT、BLE、CAN、Modbus、WiFi、蜂窝、LoRa、GPS、USB 等只保留本工程选定的协议栈和必要移植内容，版本、许可证与编译单元由目标工程 Git 管理；本插件不携带实际协议栈源码。
+
 ## 边界
 
-处理协议状态机、连接、重试、编解码和公共消息 API。Vendor 底座不参与 App/Service 的调用链；具体并发、设备收发和底层移植由 `impl_middleware` 通过 `platform_os`/`platform_bsp` 契约接入。Vendor 不直接调用 RTOS、Core、Driver 或厂商 Adapter。
+处理协议状态机、连接、重试、编解码和公共消息 API。上层调用固定经过 `platform_middleware` → `impl_middleware`；具体并发、设备收发和底层移植由 Impl 通过 `platform_os`/`platform_bsp` 契约接入。Vendor 不直接调用 RTOS、Core、Driver 或厂商 Adapter。
 
 设备数据应由 APP/Service 以公共事件或快照提供；通信层不得绕过它访问具体 Driver、BSP Port 或 HAL。
 

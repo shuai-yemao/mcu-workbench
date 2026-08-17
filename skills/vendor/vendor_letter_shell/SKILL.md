@@ -5,11 +5,13 @@ description: Vendor 底座登记：letter_shell 嵌入式串口命令行 shell �
 
 # letter_shell 串口命令行
 
+目标工程物理落位：`05_Vendor/vendor_middleware/letter_shell/`。只保留项目实际使用的 letter_shell 核心、配置、移植文件和许可证，由目标工程 Git 管理；本插件不复制实际源码。
+
 ## 边界
 
-letter_shell 把 C 函数注册成串口命令，在任务上下文中运行，通过 UART 提供命令行交互。它不直接依赖 RTOS——只调用 `read/write/lock/unlock` 四个回调，底层由 OSAL 包装 FreeRTOS 等，核心不接触任何 RTOS 原语。
+letter_shell 把 C 函数注册成串口命令，在任务上下文中运行，通过 UART 提供命令行交互。它不直接依赖 RTOS——只调用 `read/write/lock/unlock` 四个回调，底层由 OSAL 包装 FreeRTOS 等，核心不接触任何 RTOS 原语。调用链固定为 `platform_middleware` → `impl_middleware` → `05_Vendor/vendor_middleware/letter_shell/`。
 
-UART 通道与物理收发属于 [`core-mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)；日志输出建议用 RTT/ELOG（[`tools-observability`](../../tools/tools-observability/SKILL.md)），不要在 ISR 里直接调 `shellPrint`。
+UART 通道与物理收发属于 [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 的 Impl 后端；日志输出建议用 RTT/ELOG（[`tools-observability`](../../tools/tools-observability/SKILL.md)），不要在 ISR 里直接调 `shellPrint`。
 
 ## 工作流
 

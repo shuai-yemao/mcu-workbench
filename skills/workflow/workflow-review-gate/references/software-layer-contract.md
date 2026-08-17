@@ -19,7 +19,7 @@ App → Service → Platform ← Impl → Vendor
 | **Service** | 业务抽象（带策略）：日志/系统/电池/OTA… | Platform 接口 + 其他 Service | Vendor 头、寄存器/HAL、Impl 细节、Platform 实现 |
 | **Platform** | 统一接口/错误码/数据结构/ops 函数指针/ctx，以及无底层依赖的公共 Model/registry 实现 | 自身头 + `platform_common` + 标准库 | 芯片头、HAL 调用、Impl 符号（反向）、厂商类型 |
 | **Impl** | Platform→Vendor 适配落地：port 文件注入具体实例 | Platform **接口头** + Vendor 底座 | 反向定义接口、被 App 直调、含业务策略、include Platform 实现 |
-| **Vendor** | 第三方底座（源码登记 + patch，D7） | 无（底座） | 被上层直调；源码不复制进工程 |
+| **Vendor** | 目标工程 `05_Vendor/` 的能力底座：`vendor_mcu`/`vendor_rtos` 完整保留，`vendor_middleware`/`vendor_algorithm` 按需保留，`vendor_metadata` 记录来源与版本 | 无（底座） | 被上层直调；Service、App、Platform 公共头不得 include Vendor，实际源码由目标工程 Git 统一管理 |
 
 ## Port 注入模型（核心）
 
@@ -32,7 +32,7 @@ Vendor（elog/RTT/HAL/FreeRTOS）→ 调用 → Impl port 文件 → 实现/注�
 **机制注入（ops 表 / 符号实现）**：Impl 的 port 可直接实现 Platform 接口，也可通过经审查的
 Platform registry 保存借用的 Ops/context，再由 `impl_<vendor>_<domain>.c` 注入。Vendor 能力经
 `backend_context`/`void *` 隔离后注入抽象；实例化细节藏 Impl。两种方式都只能有一个契约入口，
-不得重复初始化或暴露 Vendor 类型。
+不得重复初始化或暴露 Vendor 类型。中间件和算法的物理路径分别固定为 `05_Vendor/vendor_middleware/<selected-library>` 与 `05_Vendor/vendor_algorithm/<selected-library>`；MCU/RTOS 底座分别固定为 `05_Vendor/vendor_mcu/<family>` 与 `05_Vendor/vendor_rtos/`。
 
 **策略注入（编排钩子）**：顺序/时序等产品策略由 Service 层注入（如 `board_manager_set_hooks` 的 on_device_ready/on_service_ready/on_loop_begin），Platform 管理器只提供驱动机制，不持有业务先后（ADR-001 P3）。
 
@@ -49,6 +49,8 @@ Platform registry 保存借用的 Ops/context，再由 `impl_<vendor>_<domain>.c
 - ✅ **Impl → Platform 接口头**：合法且必要（注入的前提，实现契约必须见签名）。
 - ❌ **Platform → Impl**：默认反向依赖禁止（已验证器 + baseline 测试双重守护）。
 - ⚠️ **Middleware 受限例外**：仅允许中间件实现级的稳定符号、注册或转发边界；不得出现在 Platform 公共头的 include、类型或宏中，不得把 Vendor 调用、格式化、缓存、锁、重试或业务策略放回 Platform。该例外不适用于 OS、BSP、MCU 或其他 Platform 子域。
+
+- **Vendor 内容策略**：MCU/RTOS 官方底座和生成工程完整保留；中间件/算法只保留实际使用内容；所有内容、许可证、生成器、补丁和依赖由目标工程 Git 管理，插件不携带目标工程 Vendor 实际源码。
 - ❌ **Impl → Platform 实现**（include 平台 `.c`）：越权，禁止。
 - ✅ **Impl → Platform Model 符号**：通过真实存在的 Platform 公共头调用构造函数并链接 Model；不得复制构造逻辑、重复定义符号或包含 `.c` 文件。
 - ⚠️ **基础类型例外**：`platform_type.h` ← `impl_board/board_types.h`（类型出口，基础类型从板级引出）。除上述 Middleware 实现级例外和该基础类型出口外，其余 Platform→Impl 一律禁止。

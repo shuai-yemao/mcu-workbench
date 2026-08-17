@@ -207,7 +207,7 @@ void power_quality_analysis(float32_t *samples)
 
 ## 边界定义
 
-- **不覆盖** FIR/IIR 数字滤波器设计 → 使用 `vendor_dsp`
+- **不覆盖** FIR/IIR 数字滤波器设计 → 使用 `vendor_algorithm`
 - **不覆盖** 音频编解码（MP3/AAC/Opus）
 - **不覆盖** 图像傅里叶变换（2D FFT 属于图像处理）
 - **不覆盖** 小波变换(Wavelet)
@@ -217,7 +217,7 @@ void power_quality_analysis(float32_t *samples)
 ## 交接关系
 
 - 上游：`peripheral-adc`（FFT 输入端：ADC 采样数据采集）
-- 互补：`vendor_dsp`（时域 FIR/IIR 滤波 + 频域 FFT 频谱分析互补）
+- 互补：`vendor_algorithm`（时域 FIR/IIR 滤波 + 频域 FFT 频谱分析互补）
 - 下游：`vendor_lvgl`（实时频谱显示 GUI 实现）
 - 下游：`peripheral-timer`（定时触发 ADC 采样，控制采样率）
 - 参考：`platform-mcu-architecture`（DSP/FPU 指令集支持选型）

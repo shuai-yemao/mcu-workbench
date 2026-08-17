@@ -5,9 +5,11 @@ description: Vendor 底座登记：按项目锁定的 LVGL 版本维护 GUI 源�
 
 # LVGL 中间件
 
+目标工程物理落位：`05_Vendor/vendor_middleware/lvgl/`。只保留项目锁定版本和实际使用的 LVGL 内容，版本、配置、许可证和编译单元由目标工程 Git 管理；本插件不携带 LVGL 实际源码。
+
 ## 职责边界
 
-负责 LVGL 公共 API、对象树、控件、样式、布局、事件、动画、显示刷新和输入分发。
+负责 LVGL 公共 API、对象树、控件、样式、布局、事件、动画、显示刷新和输入分发。上层调用必须经过 `platform_middleware` → `impl_middleware`，不得让 Service、App 或 Platform 公共头直接 include LVGL。
 显示、触摸、按键、背光、DMA 与缓存由 `impl_middleware`/`impl_board` 通过 `platform_bsp` 提供（其内部适配角色为 BSP Wrapper/Port）；Tick、任务、锁和等待由 `impl_os` 通过 `platform_os` 提供（其内部适配角色为 OS Wrapper/Port）。
 LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务规则仍由 `app-architecture` 负责。
 

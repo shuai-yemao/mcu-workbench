@@ -1,6 +1,6 @@
 # patch/ — Vendor 补丁目录
 
-> 依据 `vendor_mapping.md`（D7：源码只登记不复制，改动只进补丁）。
+> 依据 `vendor_mapping.md`（插件只登记映射；目标工程 `05_Vendor/` 由 Git 管理，改动只通过受控补丁记录）。
 
 ## 结构
 

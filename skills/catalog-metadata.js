@@ -46,16 +46,17 @@ const SERVICE_DEFINITIONS = [
   ['service_watchdog', 'service', 'Service 看门狗业务：喂狗策略、任务存活监控、复位诊断']
 ];
 
-// Vendor 层（D3/D9/D11）：厂家与第三方底座，源码只登记映射不复制（D7）。
+// Vendor 层：目标工程完整保留 MCU/RTOS，按需保留中间件/算法；插件仓库只保存知识、路由和接入规则。
 const VENDOR_DEFINITIONS = [
-  ['vendor_stm32', 'vendor', 'Vendor 底座登记：CMSIS、STM32 HAL/LL/SPL、ESP-IDF Driver、寄存器和厂商 SDK'],
+  ['vendor_mcu', 'vendor', 'Vendor MCU 能力底座：STM32、AT32、ESP32 官方 SDK、生成工程、Startup/System、HAL/LL/CMSIS 与工程配置'],
+  ['vendor_rtos', 'vendor', 'Vendor RTOS 能力底座：按项目锁定并完整保留 FreeRTOS、RT-Thread 等 RTOS 源码、移植层与配置'],
   ['vendor_lvgl', 'vendor', 'Vendor 底座登记：LVGL GUI 源码与集成知识（显示/输入接入、OS 协作、性能验证）'],
   ['vendor_stack', 'vendor', 'Vendor 底座登记：MQTT、BLE、CAN、Modbus、WiFi、蜂窝、LoRa、GPS、USB 通信协议栈'],
   ['vendor_fatfs', 'vendor', 'Vendor 底座登记：FatFs、SFUD、Flash 存储、磨损处理和文件系统源码'],
   ['vendor_fal', 'vendor', 'Vendor 底座登记：FAL Flash 抽象层源码（分区表、设备 ops、相对偏移寻址）'],
   ['vendor_flashdb', 'vendor', 'Vendor 底座登记：FlashDB KV/TS 嵌入式数据库源码（追加写、GC、掉电安全）'],
   ['vendor_letter_shell', 'vendor', 'Vendor 底座登记：letter_shell 串口命令行源码（命令导出、参数解析、补全）'],
-  ['vendor_dsp', 'vendor', 'Vendor 底座登记：DSP、FFT、电机控制及通用算法库源码（如 CMSIS-DSP）']
+  ['vendor_algorithm', 'vendor', 'Vendor 算法底座：按需保留 Ring Buffer、FFT、DSP 及其他确定性算法实现']
 ];
 
 const TOOL_CANONICAL_DEFINITIONS = [
@@ -110,17 +111,18 @@ const CANONICAL_ALIASES = {
   'platform_bsp': ['bsp-wrapper'],
   'impl_board': ['bsp-port', 'bsp-adapter', 'bsp-device-adaptation', 'bsp-platform-adapter', 'peripheral-driver', 'embedded-adapter'],
   'impl_bsp': ['bsp-hal-driver', 'bsp-device-driver', 'bsp-peripheral-driver', 'bsp-handler', 'bsp-device-service', 'bsp-peripheral-handler'],
-  'vendor_stm32': [
+  'vendor_mcu': [
     'mcu-platform', 'driver-vendor', 'platform-stm32-hal', 'platform-stm32-spl',
-    'stm32-hal-development', 'stm32-spl-development'
+    'stm32-hal-development', 'stm32-spl-development', 'vendor-stm32'
   ],
+  'vendor_rtos': ['vendor-rtos', 'freertos-kernel', 'rt-thread-kernel'],
   'vendor_lvgl': ['middleware-lvgl', 'lvgl-module'],
   'vendor_stack': ['middleware-communication', 'protocol-ble', 'protocol-can', 'protocol-cellular', 'protocol-gps', 'protocol-lora', 'protocol-modbus', 'protocol-mqtt', 'protocol-usb', 'protocol-wifi', 'protocol-ymodem'],
   'vendor_fatfs': ['middleware-storage', 'middleware-fatfs', 'middleware-sfud', 'fatfs-module', 'sfud-module'],
   'vendor_fal': ['middleware-fal'],
   'vendor_flashdb': ['middleware-flashdb'],
   'vendor_letter_shell': ['middleware-letter-shell'],
-  'vendor_dsp': ['middleware-algorithms', 'middleware-dsp', 'middleware-fft', 'dsp-module', 'fft-module']
+  'vendor_algorithm': ['middleware-algorithms', 'middleware-dsp', 'middleware-fft', 'dsp-module', 'fft-module', 'vendor-dsp']
 };
 
 module.exports = {
