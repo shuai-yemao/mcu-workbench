@@ -1,9 +1,9 @@
-# 设备模型头样例（platform_<type>_model.h）
+# 设备能力头样例（platform_<type>.h）
 
 > v1.1（2026-08-15）| 依据：当前工程 `03_Platform/platform_bsp` 的 Model 产出、四元组模板 v2、platform_bsp 输出契约
 > 来源：吸收 `watch_device.h`（EC-S100 手表设备模型）实例形态，按插件规范对齐。
 
-## 完整样例：platform_imu_model.h
+## 完整样例：platform_imu.h
 
 ```c
 /******************************************************************************
@@ -11,7 +11,7 @@
  *
  * All Rights Reserved.
  *
- * @file platform_imu_model.h
+ * @file platform_imu.h
  *
  * @par dependencies
  * - platform_type.h
@@ -20,10 +20,10 @@
  *
  * @author Jack | R&D Dept. | EternalChip
  *
- * @brief IMU 设备模型：cfg/ctx/data/ops 类型契约 + 设备对象 struct。
+ * @brief IMU 设备能力：cfg/ctx/data/ops 类型契约 + 设备对象 struct。
  *
- * 模型头只定义"设备长什么样"（类型契约，芯片无关，接口永不改）；
- * Model 源文件只完成公共对象初始化；硬件绑定、器件协议和注册装配由 Impl/组合根负责。
+ * 能力头只定义"设备长什么样"（类型契约，芯片无关，接口永不改）；
+ * Platform 源文件只完成公共对象初始化；硬件绑定、器件协议和注册装配由 Impl/组合根负责。
  *
  * 布局规则：cfg/ops = const 指针（共享），ctx/data = 内联值（独有）。
  *
@@ -33,8 +33,8 @@
  *
  *****************************************************************************/
 
-#ifndef PLATFORM_IMU_MODEL_H
-#define PLATFORM_IMU_MODEL_H
+#ifndef __PLATFORM_IMU_H__
+#define __PLATFORM_IMU_H__
 
 /* Includes ----------------------------------------------------------------- */
 
@@ -98,19 +98,19 @@ struct imu_device
 typedef imu_cfg_t mpu6050_cfg_t;
 typedef imu_data_t mpu6050_data_t;
 
-/* ---- 模型初始化（声明；实现放 platform_imu_model.c） ---- */
+/* ---- 能力初始化（声明；实现放 platform_imu.c） ---- */
 platform_err_t platform_imu_init(imu_device_t *p_dev, const char *p_name,
                                  const imu_cfg_t *p_cfg,
                                  const platform_lifecycle_ops_t *p_lifecycle);
 
-#endif /* PLATFORM_IMU_MODEL_H */
+#endif /* __PLATFORM_IMU_H__ */
 ```
 
 ## 与原始实例（watch_device.h）的差异处理
 
 | 原始实例 | 优化后 | 说明 |
 |---|---|---|
-| `__WATCH_DEVICE_H__` | `PLATFORM_IMU_MODEL_H` | guard 修正（双下划线保留给编译器） |
+| `__WATCH_DEVICE_H__` | `__PLATFORM_IMU_H__` | guard 统一使用前后双下划线 |
 | ctx/data 内联值 | 保留内联 | 布局规则确认（ADR-013） |
 | ops 首参具体类型 | 保留 | Model Ops 保持类型安全 |
 | ops 裸名 | 保留裸名 | 模型 Ops 首参为具体设备指针，保持类型安全 |
@@ -122,8 +122,8 @@ platform_err_t platform_imu_init(imu_device_t *p_dev, const char *p_name,
 ## 与 Impl/组合根的衔接
 
 ```text
-platform_imu_model.h（类型契约：四件套 + 设备 struct + init 声明）
-        ↓ platform_imu_model.c（公共对象初始化）
+platform_imu.h（类型契约：四件套 + 设备 struct + init 声明）
+        ↓ platform_imu.c（公共对象初始化）
 Impl/组合根绑定 typed Ops、板级资源和生命周期
         ↓
 manager 注册 → 生命周期驱动
@@ -134,7 +134,7 @@ manager 注册 → 生命周期驱动
 
 ## 生成自检要点（对齐本样例）
 
-- [ ] guard = `PLATFORM_<TYPE>_MODEL_H`（无双下划线）
+- [ ] guard = `__PLATFORM_<TYPE>_H__`（前后双下划线）
 - [ ] 四件套命名 `<type>_cfg_t/<ctx>/<data>/<ops>`
 - [ ] `cfg`/`ops` = const 指针；`ctx`/`data` = 内联值
 - [ ] `base` 首字段（偏移 0），设备 struct 名 `<type>_device_t`

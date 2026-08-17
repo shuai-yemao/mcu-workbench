@@ -29,9 +29,8 @@ App 只调用兼容门面（`SERVICE_LOG_*`/`service_log_*`），不接触 manag
 | 文件 | 内容 |
 |---|---|
 | `service_log.c/.h` | 服务实现与公开 API |
-| `service_log_model.h` | 仅在确实引入结构化日志/导出模型时生成 |
-| `service_log_state.h` | 仅在存在独立缓冲/导出状态机时生成 |
-| `service_log_fault_code.h` | 仅在产品定义日志故障码时生成 |
+| `service_log.h` | 公开 API、日志数据类型、状态和故障码（按需定义） |
+| `service_log_config.h` | 仅在存在独立、稳定的日志配置边界时生成 |
 
 ## 工作流
 

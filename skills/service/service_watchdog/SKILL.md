@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_watchdog.c/.h` | 服务实现与公开 API |
-| `service_watchdog_model.h` | 数据模型：wd_task_t / wd_heartbeat_t / reset_cause_t |
-| `service_watchdog_state.h` | 状态机：正常 / 任务失联 / 复位 |
-| `service_watchdog_fault_code.h` | 故障码：WD_ERR_TASK_STALL / WD_ERR_RESET_UNEXPECTED |
+| `service_watchdog.h` | 公开 API、数据类型、状态和故障码：wd_task_t / wd_heartbeat_t / WD_ERR_TASK_STALL 等 |
+| `service_watchdog_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

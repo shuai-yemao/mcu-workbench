@@ -22,9 +22,9 @@ Platform BSP Model ← impl_bsp/impl_bsp_port（组合与注入）
                                          └─→ Platform Device Ops
 ```
 
-`platform_*_model.c/.h` 是 Platform Device Model；`impl_*_handle_port.c/.h` 是 BSP Port；
+`platform_*.c/.h` 是 Platform Device Model；`impl_*_handle_port.c/.h` 是 BSP Port；
 `User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。
-`platform_*_wrapper.c/.h` 仅作为历史迁移输入，不是当前 BSP 的默认产物。
+历史 Wrapper 命名文件只作为迁移输入，不是当前 BSP 的默认产物。
 
 ```text
 Service → Platform Device Model → typed Platform Ops

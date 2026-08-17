@@ -143,6 +143,15 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 安装启用后可在 Codex Composer 中使用 `@mcu-workbench` 快捷触发插件。
 
+检查本地 Marketplace 源与 Codex 受管缓存是否一致：
+
+```powershell
+npm run plugin:check-refresh
+npm run plugin:check-refresh -- --json --strict
+```
+
+检查器只读比较插件版本和关键内容；发现差异时输出 `Marketplace → Refresh`，必要时重启 Codex，不直接删除或覆盖 `.codex/plugins/cache`。可以将该命令接入 Windows 任务计划程序，作为后台检测入口。
+
 ## 开发与发布检查
 
 ```powershell

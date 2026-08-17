@@ -19,6 +19,7 @@
     "check:versions": "node scripts/sync-plugin-versions.js --check",
     "codex:register": "node scripts/register-codex-marketplace.js",
     "sync:codex": "node scripts/sync-codex-skills.js",
+    "plugin:check-refresh": "node scripts/check-codex-plugin-refresh.js",
     "validate:architecture": "node scripts/validate-architecture.js",
     "validate:layer": "node scripts/validate-layer-contract.js --self-check",
     "validate:links": "node scripts/validate-skill-links.js",

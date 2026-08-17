@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_diagnosis.c/.h` | 服务实现与公开 API |
-| `service_diagnosis_model.h` | 数据模型：fault_code_t / diag_result_t / diag_report_t |
-| `service_diagnosis_state.h` | 状态机：正常 / 自检中 / 有故障 / 待清除 |
-| `service_diagnosis_fault_code.h` | 故障码：DIAG_ERR_SELF_TEST_FAIL / DIAG_ERR_CODE_OVERFLOW |
+| `service_diagnosis.h` | 公开 API、数据类型、状态和故障码：fault_code_t / diag_result_t / DIAG_ERR_SELF_TEST_FAIL 等 |
+| `service_diagnosis_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

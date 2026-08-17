@@ -18,9 +18,8 @@ UTC 本地时区转换、闹钟触发与重复规则、日程持久化。
 | 文件 | 内容 |
 |---|---|
 | `service_calendar.c/.h` | 服务实现与公开 API |
-| `service_calendar_model.h` | 数据模型：calendar_time_t / alarm_t / schedule_t |
-| `service_calendar_state.h` | 状态机：运行 / 闹钟待触发 / 闹钟响铃 / 静默 |
-| `service_calendar_fault_code.h` | 故障码：CAL_ERR_RTC_UNSYNC / CAL_ERR_ALARM_MISSED |
+| `service_calendar.h` | 公开 API、数据类型、状态和故障码：calendar_time_t / alarm_t / CAL_ERR_RTC_UNSYNC 等 |
+| `service_calendar_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

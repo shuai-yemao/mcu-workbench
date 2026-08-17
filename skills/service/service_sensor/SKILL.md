@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_sensor.c/.h` | 服务实现与公开 API |
-| `service_sensor_model.h` | 数据模型：sensor_sample_t / sensor_cal_t / sensor_report_t |
-| `service_sensor_state.h` | 状态机：采集 / 滤波 / 上报 / 异常 |
-| `service_sensor_fault_code.h` | 故障码：SENS_ERR_SAMPLE_FAIL / SENS_ERR_CAL_OUT_OF_RANGE / SENS_ERR_DRIFT |
+| `service_sensor.h` | 公开 API、数据类型、状态和故障码：sensor_sample_t / sensor_cal_t / SENS_ERR_SAMPLE_FAIL 等 |
+| `service_sensor_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

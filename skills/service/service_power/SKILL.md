@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_power.c/.h` | 服务实现与公开 API |
-| `service_power_model.h` | 数据模型：power_mode_t / wakeup_source_t / power_profile_t |
-| `service_power_state.h` | 状态机：运行 / 待机 / 休眠 / 深度睡眠 |
-| `service_power_fault_code.h` | 故障码：PWR_ERR_WAKEUP_STUCK / PWR_ERR_UNEXPECTED_RESET |
+| `service_power.h` | 公开 API、数据类型、状态和故障码：power_mode_t / wakeup_source_t / PWR_ERR_WAKEUP_STUCK 等 |
+| `service_power_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

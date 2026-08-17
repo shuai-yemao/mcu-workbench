@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_battery.c/.h` | 服务实现与公开 API |
-| `service_battery_model.h` | 数据模型：battery_level_t / battery_status_t / battery_voltage_mv |
-| `service_battery_state.h` | 状态机：充电中 / 满电 / 放电 / 低电量 / 临界关机 |
-| `service_battery_fault_code.h` | 故障码：BATT_ERR_UNDERVOLTAGE / BATT_ERR_CHARGE_FAULT / BATT_ERR_OVERTEMP |
+| `service_battery.h` | 公开 API、数据类型、状态和故障码：battery_level_t / battery_status_t / BATT_ERR_UNDERVOLTAGE 等 |
+| `service_battery_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

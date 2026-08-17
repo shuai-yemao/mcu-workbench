@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_storage.c/.h` | 服务实现与公开 API |
-| `service_storage_model.h` | 数据模型：param_key_t / param_value_t / storage_region_t |
-| `service_storage_state.h` | 状态机：就绪 / 写入 / 校验 / 恢复 |
-| `service_storage_fault_code.h` | 故障码：STOR_ERR_CRC_MISMATCH / STOR_ERR_WEAR_EXCEED / STOR_ERR_OVERFLOW |
+| `service_storage.h` | 公开 API、数据类型、状态和故障码：param_key_t / param_value_t / STOR_ERR_CRC_MISMATCH 等 |
+| `service_storage_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_backlight.c/.h` | 服务实现与公开 API |
-| `service_backlight_model.h` | 数据模型：backlight_level_t / backlight_mode_t / idle_timeout_ms |
-| `service_backlight_state.h` | 状态机：常亮 / 自动 / 超时熄灭 / 关闭 |
-| `service_backlight_fault_code.h` | 故障码：BL_ERR_PWM_FAULT / BL_ERR_SENSOR_UNAVAIL |
+| `service_backlight.h` | 公开 API、数据类型、状态和故障码：backlight_level_t / backlight_mode_t / BL_ERR_PWM_FAULT 等 |
+| `service_backlight_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

@@ -42,12 +42,12 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 
 ## 输出契约
 
-当前工程的每个器件类型 `<type>` 产出两个模型文件（Model 契约 + Model 初始化实现）：
+当前工程的每个器件类型 `<type>` 产出两个设备契约文件（类型契约 + 初始化实现）：
 
-- `03_Platform/platform_bsp/<type>/Inc/platform_<type>_model.h` —— **设备模型头**
-- `03_Platform/platform_bsp/<type>/Src/platform_<type>_model.c`
+- `03_Platform/platform_bsp/<type>/Inc/platform_<type>.h` —— **设备能力头**
+- `03_Platform/platform_bsp/<type>/Src/platform_<type>.c`
 
-### 设备模型头（platform_<type>_model.h，ADR-013）
+### 设备能力头（platform_<type>.h，ADR-013）
 
 模型头定义"设备长什么样"，**不写"怎么落地"**（契约，接口永不改；Service 可直接 include）：
 
@@ -56,30 +56,30 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 - 设备对象 struct：`<type>_device_t`，`base` 首字段 + 四槽（偏移 0）。
 - 模型 Ops 首参**具体设备指针**（`<type>_device_t *p_dev`），裸名（`read`/`sleep`）——Service 层类型安全调用。
 - 可选：厂商型号别名（`mpu6050_cfg_t = <type>_cfg_t`），换芯片只改别名。
-- guard 用 `PLATFORM_<TYPE>_MODEL_H`（禁 `__XXX_H__` 双下划线）。
-- `platform_<type>_init()` 声明（填身份证 + 绑四槽）；工程当前实现落 `model.c`，硬件绑定和协议实现仍交给 Impl，不在 Model 中下沉。
+- guard 用 `__PLATFORM_<TYPE>_H__`（前后双下划线）。
+- `platform_<type>_init()` 声明（填身份证 + 绑四槽）；工程当前实现落 `platform_<type>.c`，硬件绑定和协议实现仍交给 Impl，不在 Platform 契约中下沉。
 
 完整样例与生成自检要点见 [`device-model-example.md`](references/device-model-example.md)。
 
 ### 生成流程（两步）
 
 ```text
-① Model 头（类型契约）→ ② Model 源（对象初始化）→ ③ Driver/Handle 由 Impl 组合根装配并绑定 typed Ops
+① Platform 能力头（类型契约）→ ② Platform 源（对象初始化）→ ③ Driver/Handle 由 Impl 组合根装配并绑定 typed Ops
 ```
 
-文件结构要求（Model）：
+文件结构要求（Platform 设备契约）：
 
 - 统一注释规则：按 `style-profile.md` 生成文件头、公开 API Doxygen、必要的资源/并发/硬件约束说明和源文件分区。
 - 至少包含：设备模型四件套、typed `platform_<type>_ops_t`（首参为具体设备指针）、模型初始化入口、初始化失败后的对象状态语义。
 - 板级常量不硬编码在 Model 内；GPIO、总线、IRQ、供电和器件协议由 `board` profile 与 Impl/组合根提供。
 - GPIO 绑定未定前保留 `UNRESOLVED_GPIO_BINDING` 标记；不能通过新增 Wrapper 文件掩盖绑定缺口。
 
-Model 源只负责公共对象身份和模型契约所需的初始化，不承担设备协议、Handler、重试、缓存、任务或资源绑定。
+Platform 源只负责公共对象身份和契约所需的初始化，不承担设备协议、Handler、重试、缓存、任务或资源绑定。
 
 ## Platform/Impl 扩展基线
 
 扩展一个新的 BSP 能力时，先判断能力是否属于 Platform 公共契约，再决定是否增加
-`platform_<type>_model.h/.c`。以下内容必须留在 Impl：具体型号命令、寄存器序列、页/块策略、
+`platform_<type>.h/.c`。以下内容必须留在 Impl：具体型号命令、寄存器序列、页/块策略、
 设备协议状态机、队列、线程、重试、回调和 DMA 缓冲区所有权。
 
 ```text
@@ -97,7 +97,7 @@ Model 不得因为某个设备使用 SPI 就保存具体 Flash、CS、DMA 或 HA
 Platform Ops 需要明确输入输出所有权、阻塞属性、超时单位、ISR 可用性、线程安全、回调上下文
 和失败后的对象状态。异步接口还必须说明缓冲区借用期限以及完成、错误、中止事件的语义。
 
-本 Skill 的 BSP Model 当前沿用 `platform_<type>_model.c` 命名；这不覆盖 `platform_mcu` 的独立命名规则。MCU 能力 Model 源文件必须与对应公共头同名，具体规则以 [`platform_mcu`](../platform_mcu/SKILL.md) 为准。
+本 Skill 的 BSP 设备能力源文件统一与对应公共头同名，采用 `platform_<type>.c`，不使用 `_model` 后缀；这不覆盖 `platform_mcu` 的独立命名规则。MCU 能力源文件也必须与对应公共头同名，具体规则以 [`platform_mcu`](../platform_mcu/SKILL.md) 为准。
 
 ## 生成自检门禁（输出前 MUST）
 

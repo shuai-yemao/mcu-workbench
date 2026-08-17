@@ -18,9 +18,8 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 | 文件 | 内容 |
 |---|---|
 | `service_ota.c/.h` | 服务实现与公开 API |
-| `service_ota_model.h` | 数据模型：ota_state_t / ota_manifest_t / ota_progress_t |
-| `service_ota_state.h` | 状态机：空闲 / 下载中 / 校验中 / 待跳转 / 回滚 |
-| `service_ota_fault_code.h` | 故障码：OTA_ERR_DOWNLOAD / OTA_ERR_VERIFY / OTA_ERR_SIGNATURE / OTA_ERR_ROLLBACK |
+| `service_ota.h` | 公开 API、数据类型、状态和故障码：ota_state_t / ota_manifest_t / OTA_ERR_DOWNLOAD 等 |
+| `service_ota_config.h` | 仅在存在独立、稳定的配置边界时生成 |
 
 ## 工作流
 

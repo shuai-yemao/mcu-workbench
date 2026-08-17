@@ -144,6 +144,8 @@ typedef imu_data_t mpu6050_data_t;  /* 上层用 imu_* 通用名，换型号只�
 
 错误码统一使用 `platform_common/platform_error.h` 的 `platform_err_t` 枚举（`PLATFORM_ERR_*`），跨层判定用 `PLATFORM_IS_ERR` / `PLATFORM_IS_OK`；数据类型统一使用 `platform_common/platform_type.h` 出口类型；常用宏统一取自 `platform_common/platform_def.h`。禁止自造等价类型、错误码或宏。
 
+当前工程补充约束：`platform_device_t` 只包含 `object/dev_class/caps`，设备具体 Model 若需要四元组必须在 `base` 后自行声明；`platform_service_t` 已内置 `cfg/ctx/data/ops` 四个指针槽。生命周期使用 `platform_lifecycle_ops_t` 的 7 个直接回调，不要引用旧的 `supported_actions/invoke`。
+
 ## 反例（禁止）
 
 - 在具体对象字段里直接放 HAL 句柄、RTOS 句柄或厂商类型（如 `I2C_HandleTypeDef`、`GPIO_TypeDef`、`TaskHandle_t`）——须通过 `ctx` 持有 `void *` 隔离上下文。
@@ -151,7 +153,7 @@ typedef imu_data_t mpu6050_data_t;  /* 上层用 imu_* 通用名，换型号只�
 - `ops` 函数指针签名与对象/纯能力 Ops 约定不一致（对象 Ops 首参非具体对象指针，或纯能力 Ops 未说明 `void *context` 的所有权与生命周期）。
 - 把 `base` 放在非首字段——破坏偏移 0 与向上转型假设。
 - 服务对象重复声明 `cfg / ctx / data / ops` 四槽——`platform_service_t` 已内嵌，重复声明造成歧义。
-- 头文件 guard 用双下划线前缀（`__XXX_H__`）——双下划线保留给编译器，用 `XXX_H`（如 `PLATFORM_IMU_MODEL_H`）。
+- 头文件 guard 使用前后双下划线（`__XXX_H__`）；例如 `__PLATFORM_IMU_H__`。
 - ctx/data 误用指针（旧形态）——新代码一律内联（ADR-013）；存量指针形态代码可保留运行，迁移按需进行。
 
 ## 边界与判定标准（Platform 生成产物为 MUST）
@@ -173,4 +175,4 @@ typedef imu_data_t mpu6050_data_t;  /* 上层用 imu_* 通用名，换型号只�
 | 仅纯粹行为函数表（`pf_*` + `p_context`，无身份/生命周期字段） | 否（豁免） | 头注释显式声明「纯转发、不承载对象身份」 |
 | 非对象化的纯接口（如 `platform_i2c_t` ops 表 + `backend_context`） | 否（豁免） | 同上，须显式声明 |
 
-示例：设备模型头（`platform_<type>_model.h`）内定义的设备 struct → 必须套四元组；纯 `platform_<type>_ops_t` 能力表若不承载身份，可按纯能力 Ops 规则豁免，但必须显式声明“纯转发、不承载对象身份”。模型头只含类型契约与 init 声明，具体绑定和协议实现交给 Impl。
+示例：设备能力头（`platform_<type>.h`）内定义的设备 struct → 必须套四元组；纯 `platform_<type>_ops_t` 能力表若不承载身份，可按纯能力 Ops 规则豁免，但必须显式声明“纯转发、不承载对象身份”。能力头只含类型契约与 init 声明，具体绑定和协议实现交给 Impl。

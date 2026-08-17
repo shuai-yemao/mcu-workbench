@@ -13,7 +13,7 @@ Bootloader、OTA 回滚、系统恢复、任务看门狗和故障升级属于本
 
 ## 工作流
 
-先定义状态机、复位原因、持久化数据和失效安全路径，再映射到启动文件、OS 任务和平台电源接口。对每条路径给出可观测的验收证据。本服务按范本交付 `_model.h`（数据模型）/ `_state.h`（状态机）/ `_fault_code.h`（故障码）。
+先定义状态机、复位原因、持久化数据和失效安全路径，再映射到启动文件、OS 任务和平台电源接口。对每条路径给出可观测的验收证据。本服务将数据模型、状态机和故障码放入 `service_system.h`；只有存在独立、稳定的配置边界时才生成 `service_system_config.h`。
 
 AES、PSA Crypto 和硬件加速的源码边界见 [`crypto-source-baseline.md`](references/crypto-source-baseline.md)。
 Bootloader、低功耗、看门狗、CRC、AES、RSA 与固件签名的详细流程见 [`capability-index.md`](references/capability-index.md)。
