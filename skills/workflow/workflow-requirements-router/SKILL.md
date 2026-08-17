@@ -81,7 +81,7 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 ## 必经交接与分发
 
 1. 所有请求的 RCP 一律先交接给 `workflow-requirements-challenge`；RCP 完成补证和质疑结论后，再交给 `workflow-review-gate`（必经审查门禁）。Router 不直接交接实现层 Skill；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计。
-2. `workflow-integration-plan` 在审查放行后按下表只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
+2. `workflow-integration-plan` 在审查放行后生成阶段级 Agent/Skill 基线，`workflow-task-breakdown` 再生成任务级分配；`workflow-task-execution` 按当前任务复核一个主实现 Skill 和必要辅助 Skill。Router 不提前替下游决定任务级分配。
 3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
@@ -104,7 +104,7 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 | 构建、链接、烧录、调试或观测 | 对应 `tools-*` Skill |
 | 学习、源码讲解或经用户授权的笔记 | `tools-learning-tutor` |
 
-上表仅声明实现层 Skill 的分发依据。分发后，执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅对应 Skill，不预分配参考清单、不设数量上限；查阅知识不改变实现职责。
+上表仅声明实现层 Skill 的领域分发依据。阶段级和任务级 Agent/Skill 分配由 `workflow-integration-plan`、`workflow-task-breakdown` 和 `workflow-task-execution` 依据真实项目证据完成；辅助 Skill 不改变主实现职责，也不得并行修改同一任务代码。
 
 ## 路由单（固定输出）
 

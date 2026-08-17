@@ -112,7 +112,8 @@ describe('Skills catalog and loader', () => {
     expect(rcpTemplate).not.toContain('selected_option');
     expect(rcpTemplate).toContain('workflow-review-gate');
     expect(router).toContain('实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>');
-    expect(router).toContain('只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限');
+    expect(router).toContain('workflow-integration-plan` 在审查放行后生成阶段级 Agent/Skill 基线');
+    expect(router).toContain('workflow-task-execution` 按当前任务复核一个主实现 Skill 和必要辅助 Skill');
     expect(router).not.toContain('参考 Skill');
     expect(router).toContain('workflow-review-gate');
     expect(router).toContain('workflow-integration-plan');
