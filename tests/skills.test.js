@@ -162,24 +162,18 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('需修订');
     expect(reviewPackage).toContain('阻塞风险');
     expect(reviewPackage).toContain('代码阶段判定');
-    expect(integration).toContain('### 必选四份清单文件输出');
+    expect(integration).toContain('### 必选四份清单审计章节');
     expect(integration).toContain('00_Docs/04_需求文档/');
     expect(integration).toContain('项目文档输出边界');
     expect(integration).toContain('不得回退到插件内部保存');
     expect(integration).toContain('process.cwd()');
     expect(integration).toContain('项目路径缺失');
-    expect(integration).toContain('<request_id>-工程现状表.md');
-    expect(integration).toContain('<request_id>-文件施工清单.md');
-    expect(integration).toContain('<request_id>-代码生成约束清单.md');
-    expect(integration).toContain('<request_id>-验收测试清单.md');
+    expect(integration).toContain('不生成四个独立 Markdown 文件');
     expect(integration).toContain('### 下游 spec.md 输出');
     expect(integration).toContain('<project_root>/00_Docs/04_需求文档/spec.md');
     expect(integration).toContain('只能由四张清单整合生成');
-    expect(reviewPackage).toContain('## 5. 四份独立清单文件输出');
-    expect(reviewPackage).toContain('<request_id>-工程现状表.md');
-    expect(reviewPackage).toContain('<request_id>-文件施工清单.md');
-    expect(reviewPackage).toContain('<request_id>-代码生成约束清单.md');
-    expect(reviewPackage).toContain('<request_id>-验收测试清单.md');
+    expect(reviewPackage).toContain('## 5. 四份清单审计章节（不单独落盘）');
+    expect(reviewPackage).toContain('不得将它们分别输出为四个 Markdown 文件');
     expect(reviewPackage).toContain('## 6. 下游 `spec.md` 整合输出');
     expect(reviewPackage).toContain('<project_root>/00_Docs/04_需求文档/spec.md');
     expect(reviewPackage).toContain('只能由四张清单整合生成');
@@ -192,6 +186,14 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('文档落盘前置条件');
     expect(reviewPackage).toContain('不得写入插件仓库内部');
     expect(reviewPackage).toContain('不生成插件内占位文件');
+    expect(integration).not.toContain('<request_id>-工程现状表.md');
+    expect(integration).not.toContain('<request_id>-文件施工清单.md');
+    expect(integration).not.toContain('<request_id>-代码生成约束清单.md');
+    expect(integration).not.toContain('<request_id>-验收测试清单.md');
+    expect(reviewPackage).not.toContain('<request_id>-工程现状表.md');
+    expect(reviewPackage).not.toContain('<request_id>-文件施工清单.md');
+    expect(reviewPackage).not.toContain('<request_id>-代码生成约束清单.md');
+    expect(reviewPackage).not.toContain('<request_id>-验收测试清单.md');
   });
 
   test('requirements challenge clarifies RCP before review gate', () => {

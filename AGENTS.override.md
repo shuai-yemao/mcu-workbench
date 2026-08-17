@@ -38,7 +38,7 @@
 | 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
-| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四个独立 Markdown 审查清单和 Review-Package；审查放行后整合为下游唯一正式输入 `spec.md`，写入目标项目 `<project_root>/00_Docs/04_需求文档/`，不得写入插件内部，判定放行/阻塞 |
+| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必须在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程；审查放行后整合为下游唯一正式输入 `spec.md`，写入目标项目 `<project_root>/00_Docs/04_需求文档/`，不得写入插件内部，判定放行/阻塞 |
 | 放行后的集成规划与分发 | `workflow-integration-plan` | 读取 `spec.md` 和项目文件生成两个易懂方案，用户选择后审查并输出 `plan.md`，再分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
 | 计划任务拆解 | `workflow-task-breakdown` | 读取 `spec.md`、审查通过的 `plan.md` 和项目文件，拆分有顺序、可独立验证的任务并输出 `task.md`；未达到可交付前不得执行实现 |
 | 单项任务执行 | `workflow-task-execution` | 按 `task.md` 依赖顺序每次执行一个任务，先补测试，再实现/检查/状态回写；Spec 矛盾或缺关键决定则阻塞 |

@@ -61,7 +61,7 @@ claude plugin validate .
 
 插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。
 
-Workflow 层有八个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张独立 Markdown 审查清单、Review-Package，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责按依赖每次只执行一项任务，复核并记录 Agent/Skill 分配，先补测试再实现、检查并回写状态，之后才进入实现层，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
+Workflow 层有八个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责按依赖每次只执行一项任务，复核并记录 Agent/Skill 分配，先补测试再实现、检查并回写状态，之后才进入实现层，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
 
 ### 需求约束入口
 

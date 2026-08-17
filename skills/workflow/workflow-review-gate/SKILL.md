@@ -1,6 +1,6 @@
 ---
 name: workflow-review-gate
-description: 代码前审查与门禁：依据项目证据反猜测审查既有实现方案，必选产出四张独立 Markdown 审查清单、Review-Package 和下游 spec.md，判定放行/阻塞。
+description: 代码前审查与门禁：依据项目证据反猜测审查既有实现方案，将四张审查清单保留在 Review-Package 内部并整合生成下游 spec.md；四张清单不单独落盘到实际工程，判定放行/阻塞。
 ---
 
 # 代码前审查门禁
@@ -11,13 +11,13 @@ description: 代码前审查与门禁：依据项目证据反猜测审查既有�
 
 ## 项目文档输出边界
 
-所有本流程生成的交付文档（RCP、Review-Package、四张独立审查清单、spec.md，以及后续集成计划）必须落盘到用户目标项目的文档目录：
+本流程的正式项目交付文件只有下游 `spec.md`，落盘到用户目标项目的文档目录：
 
 ```text
 <project_root>/00_Docs/04_需求文档/
 ```
 
-其中 `<project_root>` 只能取自用户明确提供或 Router 已确认的目标项目绝对路径。插件仓库、Skill 目录、`process.cwd()`、当前会话工作目录都不是项目根目录，禁止作为文档输出根。
+其中 `<project_root>` 只能取自用户明确提供或 Router 已确认的目标项目绝对路径。四张清单只作为 `Review-Package` 内的审计章节，不生成四个独立 Markdown 文件；插件仓库、Skill 目录、`process.cwd()`、当前会话工作目录都不是项目根目录，禁止作为文档输出根。
 
 执行前必须完成以下检查：
 
@@ -33,7 +33,7 @@ Skill 内部的 `skills/**` 只能保存维护者编写的规则、模板和设�
 1. 固定输入为 Router/`workflow-requirements-challenge` 更新后的 RCP、目的与可行性质疑结论、既有需求实现方案（无既有方案时以 RCP 与项目证据为审查对象）与项目源码、配置、构建日志和现有运行记录。
 2. 整理工程事实：每个事实、施工建议和验收结论写入来源（`relative/path:line`、配置键或可复现命令）及可信等级（`confirmed` / `user-confirmed` / `inferred` / `unverified`）。
 3. 反猜测审查既有方案，逐项分类为"可采用 / 需修订 / 阻塞风险"。
-4. 必选产出四张审查清单，并分别写成 Markdown 文件；审查完成后将四张清单整合为 `spec.md`，按“项目文档输出边界”写入 `<project_root>/00_Docs/04_需求文档/` 交付用户审查和下游 Skill。
+4. 必须在 `Review-Package` 内形成四个审查章节；不得将它们分别写成项目 Markdown 文件。审查完成后将四个章节整合为 `spec.md`，按“项目文档输出边界”写入 `<project_root>/00_Docs/04_需求文档/` 交付用户审查和下游 Skill。
 5. 门禁判定：全部实施相关事实为 `confirmed` 或 `user-confirmed` 且四张表无未关闭阻塞项 → 放行并交接 `workflow-integration-plan`；否则保持阻塞、记录补证问题并回传 Router。
 
 ## 实现方案审查与代码前门禁
@@ -70,27 +70,28 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 
 ### 固定审查包与代码阶段门禁
 
-审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出。审查包**必选**包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接；四张清单还必须分别输出为独立 Markdown 文件，并在审查完成后整合为 `spec.md`。`Review-Package` 是审计记录，`spec.md` 是下游 Skill 的正式需求/约束输入；放行后的 `workflow-integration-plan` 另行生成经过用户选择和方案审查的 `plan.md` 作为实施计划输入。
+审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出。审查包**必选**包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单四个章节，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接；四个章节只在 `Review-Package` 内维护，不生成四个独立 Markdown 文件，审查完成后整合为 `spec.md`。`Review-Package` 是审计记录，`spec.md` 是下游 Skill 的正式需求/约束输入；放行后的 `workflow-integration-plan` 另行生成经过用户选择和方案审查的 `plan.md` 作为实施计划输入。
 
 只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，且四张表不存在未关闭阻塞项时，才能放行并生成可交接的 `spec.md`，再交接 `workflow-integration-plan` 规划与分发。代码产物就绪后，由 `workflow-integration-plan` 把最终代码/变更集、`spec.md` 与验收清单交接给 [`workflow-final-review`](../workflow-final-review/SKILL.md) 做最终代码审查；`workflow-final-review` 不承担代码生成阶段。下游只能在 `spec.md` 的施工边界、生成约束和验收测试范围内工作；发现新事实必须回传本 Skill 更新四张清单、Review-Package 和 `spec.md`。
 
-### 必选四份清单文件输出
+### 必选四份清单审计章节
 
-四张审查清单是每次审查的**必选产出**，与是否存在既有实现方案无关。它们必须同时：
+四张审查清单是每次审查的**必选审计内容**，与是否存在既有实现方案无关。它们必须同时：
 
 1. 保留在 `Review-Package` 中，作为审计记录和证据追溯源；
-2. 分别输出为独立 Markdown 文件，交付用户审查和后续追踪。
+2. 作为四个章节整合进 `spec.md`，交给用户审查和下游 Skill；
+3. 不生成、不更新、不删除对应的四个独立 Markdown 文件。
 
 命名规范固定为：
 
-| 清单 | 输出文件 |
+| 审计章节 | 章节名称 |
 |---|---|
-| 工程现状表 | `<request_id>-工程现状表.md` |
-| 文件施工清单 | `<request_id>-文件施工清单.md` |
-| 代码生成约束清单 | `<request_id>-代码生成约束清单.md` |
-| 验收测试清单 | `<request_id>-验收测试清单.md` |
+| 工程现状表 | `## 1. 工程现状表` |
+| 文件施工清单 | `## 2. 文件施工清单` |
+| 代码生成约束清单 | `## 3. 代码生成约束清单` |
+| 验收测试清单 | `## 4. 验收测试清单` |
 
-四个文件必须落盘到已确认目标项目的 `<project_root>/00_Docs/04_需求文档/`，每个文件保留 `request_id`、项目路径与提交、审查状态、可信等级、证据来源和当前阻塞项。发现新事实或事实等级变化时，必须同步更新四个文件和 `Review-Package`。若目标项目路径未确认，流程保持阻塞，不得在插件仓库内生成占位文件。
+四个章节必须保留 `request_id`、项目路径与提交、审查状态、可信等级、证据来源和当前阻塞项。发现新事实或事实等级变化时，只同步更新 `Review-Package` 对应章节和 `spec.md`；不得在目标工程或插件仓库生成四个独立文件。若目标项目路径未确认，流程保持阻塞，不生成 `spec.md` 占位文件。
 
 ### 下游 spec.md 输出
 
@@ -124,7 +125,7 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
   可采用专用调用链 `App → Service → Platform Middleware API → Impl Adapter → Vendor`。Service 仍只能调用 Platform
   公共 API；Platform Middleware `.c` 不得 include Vendor/HAL/RTOS；Wrapper/Port 只在 OS/BSP 内部承担适配职责，
   Middleware Vendor Port 仍属于 Impl 边界。
-- 本 skill 只输出工程事实、反猜测审查结论、四份独立 Markdown 清单、Review-Package、spec.md 和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
+- 本 skill 只输出工程事实、反猜测审查结论、含四个清单章节的 Review-Package、spec.md 和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；项目风格、静态质量门禁与审查规则来源是 [`tools-quality`](../../tools/tools-quality/SKILL.md)。
 - 分层审计、迁移路线、文件级改造顺序与实现层分发交给 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
 
