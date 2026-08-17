@@ -17,7 +17,8 @@ description: 负责 GDB/OpenOCD、Ozone、PlatformIO、RTOS、HardFault 和崩�
 |---|---|---|---|
 | 偶发异常、长稳失败、事件时序、丢包/溢出、崩溃前足迹 | 日志流 | `tools-observability` | ELOG/RTT/SystemView/面包屑/SWV |
 | 崩溃、HardFault、死锁、栈溢出、离线才复现、谁改了变量 | 调试流 | `tools-debug` | GDB/Ozone/CmBacktrace/离线断点/RTOS |
-| 编码期/构建期缺陷预防、资源占用、行为验证 | 静态分析流 | `tools-quality` | Unity/Cppcheck/Map/MISRA |
+| 编码期/构建期缺陷预防、注释、格式、代码审查和静态规则 | 质量检查流 | `tools-quality` | 注释/格式/Cppcheck/MISRA（`advisory` 或 `final-gate`） |
+| 资源占用、Map 分析和行为验证 | 项目验证流 | `tools-verification` | Map/RAM/ROM/栈、Unity/Fake 和项目验证 |
 | 任何问题的流程纪律、问题模板 | 方法论流 | `tools-debug` → `debug-diagnostic-framework` | 四阶段 + 11 项 checklist |
 
 **选流判断**：能复现且需要看现场 → 调试流；不能频繁复现或需长稳观察 → 日志流；**断点调试时问题消失** → 交接日志流/SystemView 非侵入手段（断点改变时序本身就是线索）。日志流捕获现象，调试流定位现场，静态分析防止复发，方法论流保证流程可重复。

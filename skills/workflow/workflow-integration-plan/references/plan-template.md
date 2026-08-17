@@ -1,6 +1,6 @@
 # 集成实施计划（plan.md）
 
-> 本模板由 `workflow-integration-plan` 在读取放行后的 `spec.md` 和真实项目文件、完成两个方案比较、用户选择及选定方案审查后生成。
+> 本模板由 `workflow-integration-plan` 按 `spec_rigor` 生成：`full` 模式完成两个方案比较、用户选择及选定方案审查；`lightweight` 模式只生成一个紧凑方案并记录其审查依据；`prototype` 不生成本文件。
 >
 > `spec.md` 是需求与约束依据；本文件是用户选择并审查通过后的实施路线。不得在本文件中新增 `spec.md` 之外的需求、硬件前提或验收标准。
 
@@ -16,7 +16,9 @@
 | 分支/提交 | `<branch or commit>` |
 | 输入 spec.md | `<absolute path>` |
 | 输入 Review-Package | `<absolute path or artifact id>` |
-| 选定方案 | `方案 A` / `方案 B` |
+| Spec 力度 | `lightweight` / `full` |
+| 风险叠加门禁 | `none` / `human_review` / `versioned` / `both` |
+| 选定方案 | `方案 A` / `方案 B` / `紧凑方案` |
 | 方案选择人 | `<user>` |
 | 方案审查结论 | `通过` / `需修订` / `阻塞` |
 

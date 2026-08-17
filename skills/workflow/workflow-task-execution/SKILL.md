@@ -40,6 +40,19 @@ description: 按 task.md 的依赖顺序逐项执行实施任务；每次只处�
 
 阻塞时必须指出冲突/缺口、证据位置、影响任务和需要谁作决定；不得自行选择解释、扩大范围或继续后续任务。
 
+## 需求变化硬门禁
+
+执行期间出现新需求，或用户/项目事实改变 `spec.md` 的范围、业务规则、状态/权限、接口、资源边界或验收标准时，立即将当前任务置为 `blocked` 并停止代码修改。先回传 `workflow-requirements-challenge`/`workflow-review-gate` 更新并重新放行 Spec；如果风险使 `spec_rigor` 或 `spec_overlays` 升级，再由 `workflow-integration-plan` 更新 `plan.md`、`workflow-task-breakdown` 更新 `task.md`，最后重新分配和执行任务。
+
+不得先改代码再补写 Spec，不得通过勾选任务、修改任务描述或增加临时验收项绕过门禁。已有未提交改动只能在重新读取最新 Spec 后重新评估，未经授权不得丢弃。若需求未变化而只是实现不满足 Spec，才执行本 Skill 已规定的“先补失败测试、再实现、再验证”流程。若施工中发现局部任务实际触及跨层、公共接口、敏感/不可逆操作或关键硬件资源，必须暂停并升级 Spec 力度，不得继续按 lightweight 施工。
+
+## SOLID 硬门禁
+
+每个任务都必须遵守 [SOLID 代码施工硬门禁](../workflow-review-gate/references/solid-code-gate.md)。开始实现前确认任务涉及的 SRP、OCP、LSP、ISP、DIP
+及其验收证据；执行后逐项回写 `solid_status`、证据位置和未验证项。若发现职责混杂、
+扩展点破坏、替换契约不成立、接口过胖或高层依赖具体实现，立即置为 `blocked`，不得
+用注释、任务状态或临时测试绕过。
+
 ## Agent 与 Skill 分配协议
 
 分配的目的是让当前任务拥有清晰的执行责任和所需知识边界；它不是把多个 Agent 或 Skill 并行派去修改同一份代码。
@@ -181,4 +194,5 @@ task.md 回写：<status and evidence location>
 - 不自行解决 Spec 矛盾或补写关键决定；
 - 不扩大范围、不修改用户选择、不替换 `plan.md`；
 - 不将静态/主机证据表述为目标板或实物验证；
+- 不得跳过 [SOLID 代码施工硬门禁](../workflow-review-gate/references/solid-code-gate.md)；
 - 不在插件仓库内生成目标项目的 `task.md` 更新。

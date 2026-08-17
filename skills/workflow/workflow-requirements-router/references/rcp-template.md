@@ -17,6 +17,17 @@
 | 分支/提交 | `<branch or commit>` |
 | 目标交付物 | `<代码/文档/审查/构建产物等>` |
 
+## 1.1 Spec 力度与风险
+
+| 字段 | 内容 |
+|---|---|
+| `spec_rigor` | `prototype` / `lightweight` / `full` |
+| `spec_overlays` | `[]` / `[human_review]` / `[versioned]` / `[human_review, versioned]` |
+| 风险原因 | `<影响范围、敏感性、不可逆性、协作复杂度、验证难度、嵌入式资源风险及证据>` |
+| 最低交付物 | `<提示词 / spec.md / spec.md + plan.md + task.md + 测试等>` |
+| 升级触发条件 | `<跨模块、公共接口、生产化、敏感数据、关键资源等>` |
+| 审批要求 | `none` / `review-gate` / `human-review` |
+
 ## 2. Agent 分析
 
 | Agent | 分析范围 | 结论 | 证据 | 阻塞项 |

@@ -1,27 +1,37 @@
 ---
 name: workflow-integration-plan
-description: 放行后的集成规划与分发：读取放行后的 spec.md 和真实项目文件，生成两个易懂的实施方案供用户选择，审查选定方案并生成 plan.md，再交给 workflow-task-breakdown 生成 task.md，由 workflow-task-execution 按依赖逐项执行后进入唯一实现层 Skill。
+description: 放行后的集成规划与分发：读取按风险放行的 spec.md 和真实项目文件；full 请求生成两个易懂方案供用户选择，lightweight 请求生成一个紧凑方案，审查后生成 plan.md，再交给 workflow-task-breakdown 生成 task.md，由 workflow-task-execution 按依赖逐项执行后进入唯一实现层 Skill。
 ---
 
 # 集成规划与分发
 
 ## 适用范围
 
-本 Skill 是 `workflow-review-gate` 审查放行后的规划者：消费放行后的 `spec.md`（需求与约束正式输入）、`Review-Package` 审计证据以及真实项目文件、配置、构建日志和现有运行记录。它先生成两个面向用户、易于比较的实施方案，等待用户选择；再对选定方案进行工程审查，审查通过后生成 `plan.md`（正式实施计划），交给 `workflow-task-breakdown` 拆解为 `task.md`，再交给 `workflow-task-execution` 按依赖顺序逐项执行，最终才进入一个实现层 Skill。代码产物就绪后，把 `spec.md`、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集与验收清单交接给 `workflow-final-review`。本 Skill 不生成实现代码；门禁状态非放行不得继续。
+本 Skill 是 `workflow-review-gate` 审查放行后的规划者：消费按风险放行的 `spec.md`（需求与约束正式输入）、`Review-Package` 审计证据以及真实项目文件、配置、构建日志和现有运行记录。它根据 `spec_rigor` 选择规划力度：`prototype` 不进入本 Skill；`lightweight` 生成一个紧凑、单局部目标的方案，不强制方案 A/B 选择；`full` 生成两个面向用户、易于比较的实施方案并等待选择。方案审查通过后生成 `plan.md`，交给 `workflow-task-breakdown` 拆解为 `task.md`，再交给 `workflow-task-execution` 按依赖顺序逐项执行，最终进入一个实现层 Skill。代码产物就绪后，把适用的 Spec、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集与验收清单交接给 `workflow-final-review`。本 Skill 不生成实现代码；门禁状态非放行不得继续。
 
 ## 工作流
 
-1. 确认 Review Gate 已放行，且 `spec.md` 存在、未过期；存在 `inferred`/`unverified` 关键事实或未关闭阻塞项时停止，回传 `workflow-review-gate`。
+1. 确认 Review Gate 已放行，且读取 `spec.md`（`lightweight`/`full`）及 RCP 中的 `spec_rigor`、`spec_overlays`、风险原因和最低交付物；`prototype` 在此停止，不分发代码施工。存在 `inferred`/`unverified` 关键事实或未关闭阻塞项时停止，回传 `workflow-review-gate`。
 2. 读取 `spec.md` 中的范围、约束、文件施工清单和验收清单，再读取真实项目文件、配置、构建日志、启动流程和现有笔记，记录可复现证据。
 3. 画出调用链，确认上层只依赖下层公开契约，识别 APP、Middleware、OS、BSP、Core、Driver 归属。
-4. 基于同一目标和同一 `spec.md` 约束生成两个真实可行、取舍明确的实施方案；用非专业化语言说明每个方案做什么、改哪里、为什么、优缺点、成本、风险和验证方式，然后暂停等待用户选择。
-5. 用户选择后，记录选择理由和放弃方案，对选定方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
+4. 按力度生成方案：`lightweight` 只生成一个紧凑方案，说明局部范围、文件、验收、风险和回滚；`full` 基于同一目标和同一 `spec.md` 约束生成两个真实可行、取舍明确的实施方案，然后暂停等待用户选择。任何模式都不能超出 Spec。
+5. `lightweight` 记录默认方案依据后直接审查；`full` 在用户选择后记录选择理由和放弃方案。随后对方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
 6. 审查通过后，按 [`plan-template.md`](references/plan-template.md) 生成 `<project_root>/00_Docs/04_需求文档/plan.md`，将 `spec.md` 作为需求约束来源，将 `plan.md` 作为实施顺序、阶段级 Agent/Skill 基线和交接依据。
 7. 将 `spec.md` 和已审查通过的 `plan.md` 交给 `workflow-task-breakdown` 生成有序、可独立验证的 `task.md`；`task.md` 未达到 `可交付` 前不得分发实现层 Skill。
 8. 将 `task.md` 交给 `workflow-task-execution`；它每次只选择一个已满足依赖的任务，先补充证明当前行为缺失的测试/检查，再调用原定的唯一实现层 Skill、运行相关检查并回写任务状态。不得在一次调用中直接处理下一项。
 9. 全部任务完成且代码产物就绪后，把 `spec.md`、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集、RCP、`workflow-review-gate` 放行结论、文件施工表、验收清单、格式 profile/命令和目标文件范围交接给 `workflow-final-review`；该门禁必须执行格式与必要注释整改闭环，复检通过前不得放行。
 
-在用户选择前，只输出两个方案的比较结果，不生成正式 `plan.md`，不分发实现层 Skill。若用户要求重新设计，保留原方案和原因，重新生成一轮方案；若连续无法形成两个真实可行方案，状态为 `阻塞` 并回传 `workflow-review-gate` 补证。
+## 需求变化门禁
+
+如果用户在方案或施工阶段改变需求，或项目新事实改变 `spec.md` 的范围、业务规则、权限/状态、接口、资源边界或验收标准，立即停止方案和代码推进，回传 `workflow-review-gate` 更新 RCP、Review-Package 和 `spec.md`。最新 Spec 未重新放行前，不得更新 `plan.md`、`task.md` 或分发实现 Skill。
+
+如果变化只涉及同一 Spec 内的实现细节，才可以在方案审查范围内修订 `plan.md`；如果变化影响用户目标、层归属、文件范围或验收标准，必须先更新并重新放行 Spec。
+
+方案必须显式映射 [SOLID 代码施工硬门禁](../workflow-review-gate/references/solid-code-gate.md)：说明每个
+方案如何满足 SRP、OCP、LSP、ISP、DIP，列出可验证证据和无法满足时的阻塞条件。若方案
+依赖违反某项原则才能成立，不得将其作为可选方案继续分发。
+
+`prototype` 不生成 `plan.md`；`lightweight` 在审查通过后可生成一个紧凑 `plan.md`，不生成方案 A/B，也不要求用户选择；`full` 在用户选择前只输出两个方案的比较结果，不生成正式 `plan.md`，不分发实现层 Skill。若用户要求重新设计，保留原方案和原因，重新生成一轮方案；`full` 连续无法形成两个真实可行方案时，状态为 `阻塞` 并回传 `workflow-review-gate` 补证。
 
 ### 方案输出要求
 
@@ -40,7 +50,7 @@ description: 放行后的集成规划与分发：读取放行后的 spec.md 和�
 
 随后输出一张对比表，至少包含：理解成本、改动范围、实现复杂度、运行时资源、架构风险、可验证性、回滚难度、后续扩展性和推荐适用场景。可以指出倾向，但不得替用户做选择。
 
-方案输出末尾只提出一个问题：请选择 `方案 A`、`方案 B`，或要求重新生成方案。状态保持 `待用户选择`，不得提前生成正式 `plan.md`。
+`full` 方案输出末尾只提出一个问题：请选择 `方案 A`、`方案 B`，或要求重新生成方案。`lightweight` 不提出方案选择问题，而是在审查结论中说明采用紧凑方案的依据。
 
 ## 固定输出
 

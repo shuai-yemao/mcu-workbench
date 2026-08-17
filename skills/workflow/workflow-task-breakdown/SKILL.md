@@ -7,7 +7,7 @@ description: 将已审查通过的 plan.md 结合真实项目文件拆分为有�
 
 ## 适用范围
 
-本 Skill 位于 `workflow-integration-plan` 与 `workflow-task-execution` 之间。它消费经过用户选择和方案审查通过的 `plan.md`、放行后的 `spec.md` 以及真实项目文件，把实施路线拆成有依赖顺序、单一责任、可独立验证的小任务，并生成 `task.md`。本 Skill 不重新选择方案、不重新设计架构、不生成代码，不得修改 `spec.md` 或 `plan.md`。
+本 Skill 位于 `workflow-integration-plan` 与 `workflow-task-execution` 之间。它消费经过方案审查通过的 `plan.md`、放行后的 `spec.md` 以及真实项目文件，把实施路线拆成有依赖顺序、单一责任、可独立验证的小任务，并生成 `task.md`。`lightweight` 默认只生成一个局部、可独立验证的任务；`full` 按完整计划拆解多个任务。`prototype` 不进入本 Skill。本 Skill 不重新选择方案、不重新设计架构、不生成代码，不得修改 `spec.md` 或 `plan.md`。
 
 固定输出路径：
 
@@ -33,11 +33,19 @@ description: 将已审查通过的 plan.md 结合真实项目文件拆分为有�
 
 如果新事实会改变 `spec.md` 的需求/约束或 `plan.md` 的实施路线，必须回传 `workflow-review-gate` 或 `workflow-integration-plan`，不得在任务拆解阶段静默修订。
 
+## 需求变化门禁
+
+用户提出需求变化时，先停止生成或更新 `task.md`。如果变化影响 `spec.md`，必须回传 `workflow-requirements-challenge`/`workflow-review-gate`，等待最新 Spec 放行，再由 `workflow-integration-plan` 更新并审查 `plan.md`；只有新的计划通过后才能重新拆解任务。不得先修改任务清单或代码来适应尚未放行的需求。
+
+任务拆解必须继承 [SOLID 代码施工硬门禁](../workflow-review-gate/references/solid-code-gate.md)，为每个涉及代码的任务
+标注适用原则、独立验证方式和证据位置。无法拆成可验证的 SOLID 检查点时，任务保持阻塞，
+不得以“实现时再判断”代替拆解。
+
 ## 工作流
 
 1. 读取 `spec.md` 和 `plan.md`，提取目标、非目标、阶段、文件施工顺序、依赖、阶段级主 Agent/协作 Agent、主实现 Skill/辅助 Skill、资源约束和验收条件。
 2. 读取每个任务涉及的真实项目文件和构建/测试入口，确认任务名称、文件路径、符号、前置条件和验证命令不是凭空推测。
-3. 将计划拆成任务图：为每个任务分配唯一 ID，标出前置任务、可并行任务和串行边界。
+3. 将计划拆成任务图：为每个任务分配唯一 ID，标出前置任务、可并行任务和串行边界；`lightweight` 必须证明单任务足以覆盖已放行范围，否则升级 `spec_rigor` 为 `full` 并回传 Review Gate。
 4. 检查任务粒度：每个任务只承担一个可描述的结果，修改范围连续且有限，完成后能够独立验证或明确验证前置条件。
 5. 为每个任务补齐执行步骤、输出物、验证方法、预期结果、失败处理、回滚方式，并从阶段级基线分配一个主 Agent、必要协作 Agent、一个主实现 Skill 和必要辅助 Skill；分配必须有证据和理由。
 6. 按依赖关系进行拓扑排序，形成从基础准备到集成回归的执行顺序；发现循环依赖时阻塞并回传。
@@ -84,6 +92,8 @@ description: 将已审查通过的 plan.md 结合真实项目文件拆分为有�
 
 ```text
 状态：分析中 | 待补证 | 可交付 | 阻塞
+Spec 力度：<prototype | lightweight | full>
+风险叠加门禁：<none | human_review | versioned | both>
 输入 spec.md：<absolute path>
 输入 plan.md：<absolute path>
 项目路径与提交：<absolute path @ branch/commit>

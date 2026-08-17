@@ -1,6 +1,6 @@
 # 实施任务清单（task.md）
 
-> 本文件由 `workflow-task-breakdown` 根据已审查通过的 `spec.md` 和 `plan.md` 生成。
+> 本文件由 `workflow-task-breakdown` 根据已审查通过的 `spec.md` 和 `plan.md` 生成。`lightweight` 只能生成一个局部、可独立验证的任务；`prototype` 不生成本文件。
 > `spec.md` 定义需求与约束，`plan.md` 定义选定并审查通过的实施路线，本文件只定义可执行任务，不新增范围。
 
 ## 1. 元数据
@@ -13,6 +13,8 @@
 | 项目路径与提交 | `<absolute path @ branch/commit>` |
 | 输入 spec.md | `<absolute path>` |
 | 输入 plan.md | `<absolute path>` |
+| Spec 力度 | `lightweight` / `full` |
+| 风险叠加门禁 | `none` / `human_review` / `versioned` / `both` |
 | 生成时间 | `<YYYY-MM-DDTHH:mm:ss+08:00>` |
 | 阶段级 Agent/Skill 基线 | `<plan.md 第 8A 节或对应证据>` |
 | 下游执行 Skill | `workflow-task-execution` |

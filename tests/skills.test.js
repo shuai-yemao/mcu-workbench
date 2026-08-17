@@ -225,6 +225,114 @@ describe('Skills catalog and loader', () => {
     expect(challenge).toContain('不生成代码');
   });
 
+  test('enforces Spec-first change control before code or task updates', () => {
+    const router = getSkillContent('workflow-requirements-router');
+    const challenge = getSkillContent('workflow-requirements-challenge');
+    const gate = getSkillContent('workflow-review-gate');
+    const plan = getSkillContent('workflow-integration-plan');
+    const breakdown = getSkillContent('workflow-task-breakdown');
+    const execution = getSkillContent('workflow-task-execution');
+    const finalReview = getSkillContent('workflow-final-review');
+    const hostRules = fs.readFileSync(path.join(__dirname, '..', 'codex', 'AGENTS.md'), 'utf8');
+
+    for (const content of [router, challenge, gate, plan, breakdown, execution, finalReview, hostRules]) {
+      expect(content).toContain('需求变化');
+      expect(content).toContain('Spec');
+    }
+    expect(router).toContain('不得先改代码再补写 Spec');
+    expect(challenge).toContain('Spec 未重新放行前不得修改代码');
+    expect(gate).toContain('需求变化优先于代码变化');
+    expect(plan).toContain('最新 Spec 未重新放行前');
+    expect(breakdown).toContain('先停止生成或更新 `task.md`');
+    expect(execution).toContain('立即将当前任务置为 `blocked`');
+    expect(finalReview).toContain('必须判定为 `阻塞`');
+    expect(hostRules).toContain('需求变化硬门禁');
+  });
+
+  test('enforces the SOLID code-construction hard gate', () => {
+    const solidGate = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-review-gate',
+      'references',
+      'solid-code-gate.md'
+    ), 'utf8');
+    const gate = getSkillContent('workflow-review-gate');
+    const plan = getSkillContent('workflow-integration-plan');
+    const breakdown = getSkillContent('workflow-task-breakdown');
+    const execution = getSkillContent('workflow-task-execution');
+    const finalReview = getSkillContent('workflow-final-review');
+    const quality = getSkillContent('tools-quality');
+    const hostRules = fs.readFileSync(path.join(__dirname, '..', 'codex', 'AGENTS.md'), 'utf8');
+
+    for (const principle of ['SRP', 'OCP', 'LSP', 'ISP', 'DIP']) {
+      expect(solidGate).toContain(principle);
+    }
+    expect(solidGate).toContain('代码施工硬门禁');
+    expect(solidGate).toContain('不得先改代码再补写 Spec');
+    expect(gate).toContain('SOLID 代码硬门禁');
+    expect(plan).toContain('SOLID 代码施工硬门禁');
+    expect(breakdown).toContain('SOLID 代码施工硬门禁');
+    expect(execution).toContain('SOLID 硬门禁');
+    expect(finalReview).toContain('SRP、OCP、LSP、ISP、DIP');
+    expect(quality).toContain('SOLID 五项原则逐项结果及证据');
+    expect(hostRules).toContain('SOLID 代码施工硬门禁');
+  });
+
+  test('selects Spec rigor from risk and escalates high-impact work', () => {
+    const router = getSkillContent('workflow-requirements-router');
+    const challenge = getSkillContent('workflow-requirements-challenge');
+    const gate = getSkillContent('workflow-review-gate');
+    const plan = getSkillContent('workflow-integration-plan');
+    const task = getSkillContent('workflow-task-breakdown');
+    const execution = getSkillContent('workflow-task-execution');
+    const finalReview = getSkillContent('workflow-final-review');
+    const rcpTemplate = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-requirements-router',
+      'references',
+      'rcp-template.md'
+    ), 'utf8');
+    const riskGuide = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-requirements-router',
+      'references',
+      'spec-rigor-by-risk.md'
+    ), 'utf8');
+
+    for (const rigor of ['prototype', 'lightweight', 'full']) {
+      expect(riskGuide).toContain(rigor);
+    }
+    for (const overlay of ['human_review', 'versioned']) {
+      expect(riskGuide).toContain(overlay);
+    }
+    expect(riskGuide).toContain('支付、权限、隐私');
+    expect(riskGuide).toContain('多人或多 Agent');
+    expect(riskGuide).toContain('ISR/DMA');
+    expect(rcpTemplate).toContain('spec_rigor');
+    expect(rcpTemplate).toContain('spec_overlays');
+    expect(router).toContain('按风险选择 Spec 力度');
+    expect(challenge).toContain('Spec 力度是否与风险匹配');
+    expect(gate).toContain('## Spec 力度门禁');
+    expect(gate).toContain('prototype');
+    expect(gate).toContain('lightweight');
+    expect(gate).toContain('风险未确认时按较高力度处理');
+    expect(plan).toContain('lightweight` 生成一个紧凑');
+    expect(plan).toContain('full` 生成两个');
+    expect(task).toContain('`lightweight` 默认只生成一个局部');
+    expect(execution).toContain('必须暂停并升级 Spec 力度');
+    expect(finalReview).toContain('human_review');
+    expect(finalReview).toContain('versioned');
+  });
+
   test('integration plan dispatches a single implementation skill after gate clearance', () => {
     const plan = getSkillContent('workflow-integration-plan');
     const planTemplate = fs.readFileSync(path.join(

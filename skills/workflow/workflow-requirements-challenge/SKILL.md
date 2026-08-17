@@ -33,7 +33,13 @@ description: 需求约束后的澄清、目的与可行性质疑：先读取仓�
 2. RCP 引用的项目文件、配置、日志或可复现命令；
 3. 已有设计或实现方案（如果用户已经提供）。
 
-RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/references/rcp-template.md) 为准。Router 交付的 RCP 状态为 `preliminary`；完成补证并形成目的/可行性质疑结论后，才形成可交给 `workflow-review-gate` 的正式 RCP。本 Skill 不包含方案选择或用户决策字段。
+RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/references/rcp-template.md) 为准。Router 交付的 RCP 状态为 `preliminary`；完成补证并形成目的/可行性质疑结论后，才形成可交给 `workflow-review-gate` 的正式 RCP。本 Skill 不包含方案选择或用户决策字段。必须同时读取 [`spec-rigor-by-risk.md`](../workflow-requirements-router/references/spec-rigor-by-risk.md)，复核 `spec_rigor`、`spec_overlays`、风险原因和升级触发条件；不得为了减少文档工作量而降低风险等级。
+
+## 需求变化门禁
+
+如果用户在代码施工过程中提出新需求，或改变范围、业务规则、状态/权限、接口约束、资源边界或验收标准，必须先停止实现层工作。先将变化记录为 RCP 变更，重新完成本 Skill 的补证和质疑，再交给 `workflow-review-gate` 更新 Review-Package 和 `spec.md`；Spec 未重新放行前不得修改代码、`plan.md` 或 `task.md` 的施工范围。
+
+如果只是发现已有代码不满足未变化的 Spec，则不属于需求变化，可以回到任务执行流程先补失败测试，再在原范围内修复。不能把新需求伪装成代码缺陷，也不能先改代码再补写 Spec。
 
 ## RCP 完善问答阶段
 
@@ -49,7 +55,8 @@ RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/refer
 4. 功能、非功能、资源、实时性、并发、ISR、DMA 和内存约束；
 5. App → Service → Platform ← Impl → Vendor 分层及允许/禁止依赖；
 6. 验收等级、可复现命令、目标运行条件和实物证据边界；
-7. 所有会改变方案、施工范围或验收结论的 `inferred`/`unverified` 项。
+7. 所有会改变方案、施工范围或验收结论的 `inferred`/`unverified` 项；
+8. Spec 力度是否与风险匹配：任务类型、跨模块/跨层影响、不可逆性、敏感数据、协作复杂度、验证难度及 ISR/DMA/内存/实时性等工程风险。
 
 能由项目文件、配置、日志或可复现命令确认的内容，先自行读取并回填 RCP；只有无法从项目确认且会影响决策的内容才询问用户。
 

@@ -15,8 +15,10 @@
 
 ## 2. 嵌入式工程工作方式
 
-- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），并固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计，`workflow-task-breakdown` 生成 `task.md`，`workflow-task-execution` 按依赖逐项控制实现，最后进入最终审查。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
-- RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准和阻塞项。`workflow-requirements-challenge` 应先读取仓库规则和项目证据，再按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清；每轮最多向用户提出四个真正影响实现的问题，并说明推荐。
+- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），按风险选择 `spec_rigor`，并固定交接给 `workflow-review-gate`（必经审查门禁）；`prototype` 在最小记录后结束，`lightweight` 走局部单项链路，`full` 审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计，`workflow-task-breakdown` 生成 `task.md`，`workflow-task-execution` 按依赖逐项控制实现，最后进入最终审查。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
+- 需求变化硬门禁：只要范围、业务规则、状态/权限、接口、资源边界或验收标准发生变化，必须先暂停代码，更新并重新放行 `spec.md`，再更新 `plan.md`/`task.md` 和恢复实现；不得先改代码后补写 Spec。
+- 代码施工同时受 [SOLID 代码施工硬门禁](../skills/workflow/workflow-review-gate/references/solid-code-gate.md) 约束：SRP、OCP、LSP、ISP、DIP 必须逐项判断并提供证据；任一适用原则不满足或不可验证，必须阻塞，不得自行放宽。
+- RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准、风险原因、`spec_rigor`、`spec_overlays` 和阻塞项。Spec 力度依据 [`spec-rigor-by-risk.md`](../skills/workflow/workflow-requirements-router/references/spec-rigor-by-risk.md) 选择，风险不明时按高力度处理。`workflow-requirements-challenge` 应先读取仓库规则和项目证据，再按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清；每轮最多向用户提出四个真正影响实现的问题，并说明推荐。
 - 先读取真实项目结构、构建配置、芯片型号、RTOS 和驱动证据，再给出结论。
 - 按 App → Service → Platform ← Impl → Vendor 分层分析依赖和职责。
 - 明确区分静态检查、主机测试、交叉编译、烧录运行、串口/RTT 和实机验证。
@@ -33,17 +35,17 @@
 
 ## 4. Skill 路由与协作
 
-`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 生成并审查 `plan.md`，记录阶段级 Agent/Skill 基线，再由 `workflow-task-breakdown` 生成带任务级分配的 `task.md`，交给 `workflow-task-execution` 按依赖逐项复核分配并执行；每项任务只有一个主实现 Skill，必要的协作 Agent/辅助 Skill 只能提供知识、审查或验证，不得并行改代码；不把归档 Skill 当作活动入口。
+`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查按 `spec_rigor` 放行：`prototype` 不进入代码链路，`lightweight` 允许单项局部链路，`full` 由 `workflow-integration-plan` 生成并审查 `plan.md`，记录阶段级 Agent/Skill 基线，再由 `workflow-task-breakdown` 生成带任务级分配的 `task.md`，交给 `workflow-task-execution` 按依赖逐项复核分配并执行；每项任务只有一个主实现 Skill，必要的协作 Agent/辅助 Skill 只能提供知识、审查或验证，不得并行改代码；不把归档 Skill 当作活动入口。
 
 | 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
-| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必须在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程；审查放行后整合为下游唯一正式输入 `spec.md`，写入目标项目 `<project_root>/00_Docs/04_需求文档/`，不得写入插件内部，判定放行/阻塞 |
-| 放行后的集成规划与分发 | `workflow-integration-plan` | 读取 `spec.md` 和项目文件生成两个易懂方案，用户选择后审查并输出 `plan.md`，再分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
+| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 按风险选择 Spec 力度；`lightweight/full` 在 Review-Package 内保留四个审查章节并按需整合 `spec.md`，`prototype` 只保留最小目标/临时边界；四张清单不单独输出到实际工程，判定放行/阻塞 |
+| 放行后的集成规划与分发 | `workflow-integration-plan` | `full` 生成两个易懂方案供用户选择，`lightweight` 生成一个紧凑方案；审查后输出 `plan.md` 并分发任务/实现 Skill；代码就绪后交接 `workflow-final-review` |
 | 计划任务拆解 | `workflow-task-breakdown` | 读取 `spec.md`、审查通过的 `plan.md` 和项目文件，拆分有顺序、可独立验证的任务并输出 `task.md`；未达到可交付前不得执行实现 |
 | 单项任务执行 | `workflow-task-execution` | 按 `task.md` 依赖顺序每次执行一个任务，先补测试，再实现/检查/状态回写；Spec 矛盾或缺关键决定则阻塞 |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 强制执行格式/注释初检；失败时仅作格式与必要注释整改并复检，复检通过才放行 |
-| 代码注释、格式、代码审查、Cppcheck/MISRA 质量门禁 | `tools-quality` | 统一执行注释、格式、代码审查、Cppcheck/MISRA 检查，记录规则、工具、范围、基线和复检 |
+| 代码注释、格式、代码审查、Cppcheck/MISRA 质量门禁 | `tools-quality` | 中间阶段使用 `advisory` 返回质量证据；最终审查使用 `final-gate` 作为代码质量最终出口 |
 | Map/RAM/ROM/栈分析、Unity 与项目验证 | `tools-verification` | 编排项目级内存、主机测试、构建和目标验证证据，区分证据等级 |
 | App、Service、Platform、Impl、Vendor | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
 | 烧录、调试、观测和发布 | `tools-flash`、`tools-debug`、`tools-observability`、`tools-release` | 先确认工具、产物、目标和观测通道 |
@@ -56,7 +58,7 @@
 Review 结论之外，必须执行以下宿主专项闭环。此规则仅覆盖格式和注释质量，
 不授权修改逻辑、接口、资源生命周期、错误处理或分层设计。
 
-1. **强制初检**：在最终放行前，调用 `tools-quality` 检查变更范围的格式和注释，并按需运行 Cppcheck/MISRA。
+1. **强制初检**：中间阶段可调用 `tools-quality(mode: advisory)` 检查变更范围的格式和注释；最终放行前必须调用 `tools-quality(mode: final-gate)`，并按需运行 Cppcheck/MISRA。
    风格优先级为用户明确要求、目标工程已确认的 `.clang-format`/`.editorconfig`
    或等效构建配置、相邻源码，最后才是 `style-profile.md` 基线。记录命令、绝对
    `cwd`、工具版本、退出码、检查范围与每个问题的 `relative/path:line`。

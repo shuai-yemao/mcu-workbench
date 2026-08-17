@@ -1,6 +1,6 @@
 ---
 name: tools-quality
-description: 负责嵌入式项目的代码质量门禁：必要注释、公开 API Doxygen、格式检查、代码审查、Cppcheck、MISRA 和静态质量报告。项目级验证、Map/RAM/ROM/栈分析与 Unity 测试交给 tools-verification。
+description: 负责嵌入式项目的代码质量检查与最终质量出口：必要注释、公开 API Doxygen、格式检查、代码审查、Cppcheck、MISRA 和静态质量报告。支持 advisory 阶段检查与 final-gate 最终门禁；项目级验证、Map/RAM/ROM/栈分析与 Unity 测试交给 tools-verification。
 ---
 
 # 代码质量工具
@@ -13,6 +13,7 @@ description: 负责嵌入式项目的代码质量门禁：必要注释、公开 
 - 项目格式规则、`.editorconfig`、`.clang-format`、80 列硬限制及相邻源码风格；
 - 编译器诊断、Cppcheck、MISRA 规则和项目静态分析配置；
 - 代码审查中的接口契约、错误路径、资源所有权、边界、ISR/DMA/并发和分层问题；
+- 代码审查中的 SOLID 五项原则：SRP、OCP、LSP、ISP、DIP；
 - 质量问题的严重级别、基线差异、定位、修复建议和复检证据。
 
 ## 路由边界
@@ -20,6 +21,22 @@ description: 负责嵌入式项目的代码质量门禁：必要注释、公开 
 本 Skill 是唯一的代码质量检查入口。它不承担链接 Map 文件解析、RAM/ROM/栈占用分析、Unity/Fake 测试编排、目标板运行观测或发布验证；这些交给 [`tools-verification`](../tools-verification/SKILL.md)、[`tools-observability`](../tools-observability/SKILL.md)、[`tools-build`](../tools-build/SKILL.md) 或 [`tools-release`](../tools-release/SKILL.md)。
 
 静态检查只能说明源码或配置满足检查规则，不能证明目标板运行、时序、DMA、IRQ 或硬件电平正确。需要运行时证据时，必须明确交接给验证、调试或观测流程。
+
+## 调用模式
+
+本 Skill 可被其他 Skill 复用，但必须显式声明 `mode`：
+
+### `advisory`：阶段检查模式
+
+由实现 Skill、`workflow-task-execution`、`tools-verification` 或其他中间流程调用。输入当前任务的代码范围、配置和 diff，输出 `Quality Evidence Package`，包括检查命令、问题、基线差异、整改建议和复检状态。该模式只能返回“阶段检查通过/失败/待补”，不得宣称整个需求或最终交付已经通过，也不得结束主流程。
+
+### `final-gate`：最终质量出口模式
+
+只能由 `workflow-final-review` 或用户直接要求最终代码质量审查时调用。除代码质量输入外，必须接收最终变更集、放行后的 `spec.md`、Spec 逐条追踪矩阵，以及测试、类型检查、构建和适用的 `tools-verification` 证据。它复核质量证据是否覆盖最终范围，并输出 `Final Quality Gate`：`通过` 或 `阻塞`、问题清单、未验证项和交接建议。
+
+`final-gate` 是代码质量的最终出口，但不替代 `workflow-final-review` 对 Spec 的逐条核对，也不替代 `tools-verification` 的 Map、Unity、目标运行或硬件证据。缺少任一必需证据时必须阻塞。
+
+两种模式的详细输入、输出和调用约束见 [`quality-mode-contract.md`](references/quality-mode-contract.md)。
 
 ## 输入与规则优先级
 
@@ -59,7 +76,7 @@ description: 负责嵌入式项目的代码质量门禁：必要注释、公开 
 
 ### 6. 代码审查与报告
 
-使用 [`capability-index.md`](references/capability-index.md) 选择详细检查表，分离报告：风格/注释、静态规则、功能风险、接口/资源所有权、ISR/DMA/并发、安全和分层问题。代码审查可提出问题，但不擅自扩大实现范围。
+使用 [`capability-index.md`](references/capability-index.md) 选择详细检查表，分离报告：风格/注释、静态规则、功能风险、接口/资源所有权、ISR/DMA/并发、安全、分层和 SOLID 问题。SOLID 检查必须遵守 [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)，逐项记录 SRP、OCP、LSP、ISP、DIP 的适用性、代码证据、测试/检查证据和阻塞原因。代码审查可提出问题，但不擅自扩大实现范围。
 
 ## 受限整改
 
@@ -69,11 +86,13 @@ description: 负责嵌入式项目的代码质量门禁：必要注释、公开 
 
 输出至少包含：
 
+- 调用模式：`advisory` 或 `final-gate`；
 - 检查范围、项目根目录、基线和规则来源；
 - 命令、绝对 `cwd`、工具版本、退出码和检查文件；
 - 注释/格式、Cppcheck、MISRA 和代码审查结果；
+- SOLID 五项原则逐项结果及证据；
 - 每个问题的严重级别、`relative/path:line`、影响、修复建议和基线标记；
-- 整改前后 diff 审阅、复检结果、未验证项和 `通过`/`阻塞` 结论。
+- 整改前后 diff 审阅、复检结果和未验证项；只有 `final-gate` 模式才能输出最终 `通过`/`阻塞` 结论。
 
 ## 参考资料
 
@@ -83,3 +102,5 @@ description: 负责嵌入式项目的代码质量门禁：必要注释、公开 
 - [`quality-code-review`](references/capabilities/quality-code-review/GUIDE.md)
 - [`quality-format-check`](references/capabilities/quality-format-check/GUIDE.md)
 - [`quality-static-analysis`](references/quality-static-analysis/GUIDE.md)
+- [`quality-mode-contract.md`](references/quality-mode-contract.md)
+- [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)

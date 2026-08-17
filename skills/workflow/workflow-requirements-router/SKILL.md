@@ -1,6 +1,6 @@
 ---
 name: workflow-requirements-router
-description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-requirements-challenge 进行 RCP 澄清、目的与可行性质疑，再交给 workflow-review-gate（必经审查门禁），放行后由 workflow-integration-plan 规划与分发。
+description: 作为插件首个需求处理入口，编排 Agent 分析、按风险选择 Spec 力度、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-requirements-challenge 进行 RCP 澄清、目的与可行性质疑，再交给 workflow-review-gate（必经审查门禁），放行后由 workflow-integration-plan 规划与分发。
 ---
 
 # 嵌入式需求约束路由
@@ -13,7 +13,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 - RCP 澄清、需求目的与可行性质疑：`workflow-requirements-challenge`；代码前审查与门禁判定：`workflow-review-gate`；放行后的跨层审计、分层设计、迁移顺序、文件级改造顺序与分发：`workflow-integration-plan`。
 - 最终代码/变更集的独立 Review 编排（输出前最后一层门禁）：`workflow-final-review`。
-- 代码注释、格式、Cppcheck/MISRA 和代码审查质量门禁：`tools-quality`；Map、内存/栈、Unity 和项目级验证：`tools-verification`。
+- 代码注释、格式、Cppcheck/MISRA 和代码审查质量门禁：`tools-quality`；中间阶段使用 `mode: advisory`，最终审查使用 `mode: final-gate`；Map、内存/栈、Unity 和项目级验证：`tools-verification`。
 
 ## 阶段一：分配 Agent 分析需求
 
@@ -54,7 +54,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 ## 阶段三：生成需求约束包
 
-需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 完成补证、目的质疑和可行性质疑；完成后，带有质疑结论和证据的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。方案选择不属于本 Skill 链路。RCP 必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
+需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 完成补证、目的质疑和可行性质疑；完成后，带有质疑结论和证据的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。方案选择不属于本 Skill 链路。RCP 必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。Router 还必须依据 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md) 选择 `spec_rigor` 和 `spec_overlays`，说明风险原因、最低交付物及升级触发条件。
 
 RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rcp-template.md)。Router 交付的是 `preliminary` RCP；`workflow-requirements-challenge` 必须先读取仓库规则和项目证据，按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清，每轮最多提出四个高影响问题并给出推荐，完成后输出质疑结论并交给 `workflow-review-gate`，不生成方案 A/B。
 
@@ -78,11 +78,17 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 
 下游提示词必须明确：`workflow-requirements-challenge` 只能在 RCP 的范围和证据内澄清、质疑，不得生成代码或方案选择；RCP 完成补证和质疑结论后交给 `workflow-review-gate`。`workflow-review-gate` 只能在 RCP 范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。审查放行后由 workflow-integration-plan 完成分层/审计/迁移设计与分发。
 
+## 需求变化总门禁
+
+用户提出新需求，或现有需求的范围、业务规则、状态/权限、接口约束、资源边界或验收标准发生变化时，必须先暂停代码施工。Router 将变化回传 `workflow-requirements-challenge` 和 `workflow-review-gate`，先更新 RCP、Review-Package 和正式 `spec.md`，重新审查放行后，才能更新 `plan.md`、`task.md` 并恢复实现。
+
+不得先改代码再补写 Spec，也不得通过修改任务状态、方案描述或实现注释绕过 Spec 变更门禁。只有确认需求没有变化、且当前代码不满足最新 `spec.md` 时，才可以在原范围内走“先补失败测试、再实现”的修复流程。
+
 ## 必经交接与分发
 
 1. 所有请求的 RCP 一律先交接给 `workflow-requirements-challenge`；RCP 完成补证和质疑结论后，再交给 `workflow-review-gate`（必经审查门禁）。Router 不直接交接实现层 Skill；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计。
 2. `workflow-integration-plan` 在审查放行后生成阶段级 Agent/Skill 基线，`workflow-task-breakdown` 再生成任务级分配；`workflow-task-execution` 按当前任务复核一个主实现 Skill 和必要辅助 Skill。Router 不提前替下游决定任务级分配。
-3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；其中注释、格式、Cppcheck/MISRA 和代码审查质量门禁交给 `tools-quality`，Map/内存/Unity 验证交给 `tools-verification`。
+3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；中间检查调用 `tools-quality(mode: advisory)`，最终质量出口调用 `tools-quality(mode: final-gate)`，Map/内存/Unity 验证交给 `tools-verification`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
 | 请求事实 | 实现层 Skill（由 workflow-integration-plan 分发） |
@@ -112,6 +118,10 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 
 ```text
 状态：分析中 | 待用户确认 | 待补证 | 可交接 | 阻塞
+Spec 力度：<prototype | lightweight | full>
+Spec 叠加门禁：<none | human_review | versioned | both>
+风险依据：<命中的风险信号、证据和升级触发条件>
+最低交付物：<最小提示词 | spec.md | spec.md + plan.md + task.md + 测试>
 必经下游：workflow-review-gate
 实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>
 参与 Agent：<embedded-lead + 一个或多个专用 Agent>
@@ -134,4 +144,4 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 - 不引用归档 Skill 作为 active 路由目标；只输出 catalog 中的 canonical ID。
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
 
-跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
+跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；风险力度选择见 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
