@@ -67,7 +67,8 @@ const TOOL_CANONICAL_DEFINITIONS = [
   ['tools-linker', 'tools', 'Keil、GCC、IAR 链接脚本与内存布局'],
   ['tools-debug', 'tools', 'GDB、OpenOCD、Ozone、RTOS 和崩溃诊断'],
   ['tools-observability', 'tools', 'ELOG、RTT、串口和 SystemView 运行时观测'],
-  ['tools-quality', 'tools', '代码审查、AI 代码约束、Map、静态分析和 Unity 测试'],
+  ['tools-quality', 'tools', '代码注释、格式检查、代码审查、Cppcheck、MISRA 和静态质量门禁'],
+  ['tools-verification', 'tools', 'Map/RAM/ROM/栈分析、Unity/Fake 测试和项目级验证'],
   ['tools-git', 'tools', '项目 Git 分支、提交、同步、恢复与嵌入式验证交接'],
   ['tools-release', 'tools', 'OTA 打包、升级、回滚和发布验证'],
   ['tools-learning-tutor', 'tools', '基于项目代码提问、理解检查和 Obsidian 学习笔记生成']
@@ -96,8 +97,12 @@ const TOOL_ALIASES = {
     'serial-monitor', 'observability-systemview', 'systemview-module'
   ],
   'tools-quality': [
-    'quality-code-review', 'embedded-reviewer', 'quality-map-analysis', 'map-analyzer',
-    'quality-static-analysis', 'static-analysis', 'quality-unity-testing', 'embedded-unity-testing'
+    'quality-code-review', 'embedded-reviewer', 'quality-static-analysis', 'static-analysis',
+    'quality-format-check', 'code-quality', 'quality-gate', 'misra-check'
+  ],
+  'tools-verification': [
+    'quality-map-analysis', 'map-analyzer', 'quality-unity-testing', 'embedded-unity-testing',
+    'verification-quality', 'firmware-verification'
   ],
   'tools-release': [
     'release-ota-package', 'ota-package', 'release-ota-update', 'ota-update-system'

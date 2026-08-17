@@ -81,7 +81,7 @@ const CANONICAL_ORDER = [
   'vendor_mcu', 'vendor_rtos', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal',
   'vendor_flashdb', 'vendor_letter_shell', 'vendor_algorithm',
   'tools-build', 'tools-flash', 'tools-linker',
-  'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
+  'tools-debug', 'tools-observability', 'tools-quality', 'tools-verification', 'tools-git', 'tools-release',
   'tools-learning-tutor'
 ];
 

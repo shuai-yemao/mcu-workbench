@@ -106,7 +106,7 @@ Mermaid 只辅助理解，不能替代源码和配置证据。
 - Vendor 是第三方底座（HAL/CMSIS/FreeRTOS/LVGL/FatFS/算法库/SDK），源码不复制、只登记映射（vendor_mapping.md + patch/）；不反向调用任何上层。
 
 发现层归属冲突或需要变更依赖图时，交接 `workflow-review-gate`；
-需要实施代码改动时交接 `workflow-final-review`；质量检查交接 `tools-quality`。
+需要实施代码改动时交接 `workflow-final-review`；代码注释、格式、Cppcheck/MISRA 和代码审查交接 `tools-quality`，Map/内存/Unity 与项目验证交接 `tools-verification`。
 
 ## 输出格式
 

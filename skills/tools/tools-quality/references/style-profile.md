@@ -6,7 +6,7 @@ version: "1.0.0"
 
 # 嵌入式项目 C/C++ 编码规范
 
-> 本规范是 tools-quality 的全项目代码基线，适用于 AI 生成、代码生成器产物、人工新增、人工修改和已有代码重审。
+> 本规范由 tools-quality 承接为全项目代码质量基线，适用于 AI 生成、代码生成器产物、人工新增、人工修改和已有代码重审。
 > 本规范整合命名规范、头文件模板、Doxygen 注释规范、代码排版规则和通用质量原则；顶层架构以
 > [`software-layer-contract.md`](../../../workflow/workflow-review-gate/references/software-layer-contract.md) 为唯一来源。
 

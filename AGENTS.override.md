@@ -43,7 +43,8 @@
 | 计划任务拆解 | `workflow-task-breakdown` | 读取 `spec.md`、审查通过的 `plan.md` 和项目文件，拆分有顺序、可独立验证的任务并输出 `task.md`；未达到可交付前不得执行实现 |
 | 单项任务执行 | `workflow-task-execution` | 按 `task.md` 依赖顺序每次执行一个任务，先补测试，再实现/检查/状态回写；Spec 矛盾或缺关键决定则阻塞 |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 强制执行格式/注释初检；失败时仅作格式与必要注释整改并复检，复检通过才放行 |
-| 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |
+| 代码注释、格式、代码审查、Cppcheck/MISRA 质量门禁 | `tools-quality` | 统一执行注释、格式、代码审查、Cppcheck/MISRA 检查，记录规则、工具、范围、基线和复检 |
+| Map/RAM/ROM/栈分析、Unity 与项目验证 | `tools-verification` | 编排项目级内存、主机测试、构建和目标验证证据，区分证据等级 |
 | App、Service、Platform、Impl、Vendor | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
 | 烧录、调试、观测和发布 | `tools-flash`、`tools-debug`、`tools-observability`、`tools-release` | 先确认工具、产物、目标和观测通道 |
 
@@ -55,7 +56,7 @@
 Review 结论之外，必须执行以下宿主专项闭环。此规则仅覆盖格式和注释质量，
 不授权修改逻辑、接口、资源生命周期、错误处理或分层设计。
 
-1. **强制初检**：在最终放行前，依据 `tools-quality` 检查变更范围的格式和注释。
+1. **强制初检**：在最终放行前，调用 `tools-quality` 检查变更范围的格式和注释，并按需运行 Cppcheck/MISRA。
    风格优先级为用户明确要求、目标工程已确认的 `.clang-format`/`.editorconfig`
    或等效构建配置、相邻源码，最后才是 `style-profile.md` 基线。记录命令、绝对
    `cwd`、工具版本、退出码、检查范围与每个问题的 `relative/path:line`。

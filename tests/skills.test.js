@@ -6,9 +6,9 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps active entries and exposes 47 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(49);
-    expect(CANONICAL_SKILLS).toHaveLength(47);
+  test('catalog keeps active entries and exposes 48 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(50);
+    expect(CANONICAL_SKILLS).toHaveLength(48);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
@@ -21,7 +21,7 @@ describe('Skills catalog and loader', () => {
       'service_system', 'service_battery', 'service_backlight', 'service_calendar', 'service_diagnosis',
       'service_log', 'service_ota', 'service_power', 'service_sensor', 'service_storage', 'service_watchdog',
       'tools-build', 'tools-flash', 'tools-linker',
-      'tools-debug', 'tools-observability', 'tools-quality', 'tools-git', 'tools-release',
+      'tools-debug', 'tools-observability', 'tools-quality', 'tools-verification', 'tools-git', 'tools-release',
       'tools-learning-tutor', 'workflow-final-review', 'workflow-claude-layering'
     ]));
     expect(CANONICAL_SKILLS.find((skill) => skill.id === 'app-architecture')).toMatchObject({
@@ -42,7 +42,10 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('gang-flash')).toBe('tools-flash');
     expect(resolveSkillId('debug-gdb-openocd')).toBe('tools-debug');
     expect(resolveSkillId('rtt-monitor')).toBe('tools-observability');
-    expect(resolveSkillId('map-analyzer')).toBe('tools-quality');
+    expect(resolveSkillId('map-analyzer')).toBe('tools-verification');
+    expect(resolveSkillId('quality-static-analysis')).toBe('tools-quality');
+    expect(resolveSkillId('misra-check')).toBe('tools-quality');
+    expect(resolveSkillId('quality-unity-testing')).toBe('tools-verification');
     expect(resolveSkillId('ota-update-system')).toBe('tools-release');
     expect(resolveSkillId('bsp-peripheral-driver')).toBe('impl_bsp');
     expect(resolveSkillId('os-abstraction')).toBe('platform_os');
@@ -74,8 +77,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(47);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(47);
+    expect(listAvailableSkills()).toHaveLength(48);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(48);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -87,6 +90,8 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('vendor_stm32')).toContain('name: vendor_mcu');
     expect(getSkillContent('workflow-requirements-challenge')).toContain('name: workflow-requirements-challenge');
     expect(getSkillContent('workflow-task-breakdown')).toContain('name: workflow-task-breakdown');
+    expect(getSkillContent('tools-quality')).toContain('name: tools-quality');
+    expect(getSkillContent('tools-verification')).toContain('name: tools-verification');
   });
 
   test('workflow router emits a bounded, canonical routing contract', () => {
@@ -119,6 +124,7 @@ describe('Skills catalog and loader', () => {
     expect(router).toContain('workflow-integration-plan');
     expect(router).toContain('workflow-final-review');
     expect(router).toContain('tools-quality');
+    expect(router).toContain('tools-verification');
     expect(router).toContain('不引用归档 Skill 作为 active 路由目标');
   });
 
@@ -297,7 +303,7 @@ describe('Skills catalog and loader', () => {
   test('registry is a compatibility view derived from catalog', () => {
     expect(Object.keys(getAllSkills())).toHaveLength(SKILL_CATALOG.length);
     expect(listSkillNames()).toEqual(Object.keys(getAllSkills()));
-    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(9);
+    expect(Object.keys(getSkillsByCategory('tools'))).toHaveLength(10);
     expect(getSkillAliases()['build-keil']).toBe('tools-build');
     expect(getSkillAliases()['tool-build-keil']).toBe('tools-build');
     expect(getSkillAliases()['embedded']).toBe('workflow-requirements-router');
@@ -334,7 +340,7 @@ describe('Skills catalog and loader', () => {
     const archived = SKILL_CATALOG.filter((skill) => skill.archived);
     const tools = SKILL_CATALOG.filter((skill) => skill.layer === 'tools' && skill.canonical);
     expect(archived).toHaveLength(0);
-    expect(tools).toHaveLength(9);
+    expect(tools).toHaveLength(10);
     expect(SKILL_CATALOG.filter((skill) => skill.layer === 'hardware')).toHaveLength(2);
     expect(tools.every((skill) => skill.path.startsWith('skills/tools/'))).toBe(true);
   });

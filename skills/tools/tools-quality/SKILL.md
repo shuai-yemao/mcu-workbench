@@ -1,110 +1,85 @@
 ---
 name: tools-quality
-description: 负责嵌入式项目代码生成与修改约束、代码审查、Map 分析、静态分析、MISRA 和 Unity 测试；当用户要求质量门禁、统一代码格式、代码审查、内存占用分析或单元测试时使用。
+description: 负责嵌入式项目的代码质量门禁：必要注释、公开 API Doxygen、格式检查、代码审查、Cppcheck、MISRA 和静态质量报告。项目级验证、Map/RAM/ROM/栈分析与 Unity 测试交给 tools-verification。
 ---
 
-# 质量与验证工具
+# 代码质量工具
 
 ## 职责
 
-统一处理项目代码生成/修改审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
+统一执行和记录嵌入式 C/C++ 的代码质量检查，覆盖 AI 生成代码、代码生成器产物、人工新增/修改代码和已有代码重审。检查范围包括：
+
+- 必要的文件/模块说明、公开 API Doxygen，以及表达所有权、阻塞/ISR/DMA/并发、硬件约束和错误恢复所必需的中文注释；
+- 项目格式规则、`.editorconfig`、`.clang-format`、80 列硬限制及相邻源码风格；
+- 编译器诊断、Cppcheck、MISRA 规则和项目静态分析配置；
+- 代码审查中的接口契约、错误路径、资源所有权、边界、ISR/DMA/并发和分层问题；
+- 质量问题的严重级别、基线差异、定位、修复建议和复检证据。
 
 ## 路由边界
 
-本 skill 承担**静态分析流**（编码期/构建期预防）：代码审查、Map/RAM/ROM/栈估算、统一 Cppcheck（包含可选 MISRA checker）、Unity 行为验证。静态分析只能发现"可疑模式"，不能证明运行时一定正确——发现潜在栈溢出、时序、中断嵌套问题时，交接 [`tools-debug`](../tools-debug/SKILL.md)（调试流）在运行时验证；需要长稳/偶发观测交接 [`tools-observability`](../tools-observability/SKILL.md)（日志流）。静态门禁不替代目标运行、观测通道和实物验收。
+本 Skill 是唯一的代码质量检查入口。它不承担链接 Map 文件解析、RAM/ROM/栈占用分析、Unity/Fake 测试编排、目标板运行观测或发布验证；这些交给 [`tools-verification`](../tools-verification/SKILL.md)、[`tools-observability`](../tools-observability/SKILL.md)、[`tools-build`](../tools-build/SKILL.md) 或 [`tools-release`](../tools-release/SKILL.md)。
 
-## 变体
+静态检查只能说明源码或配置满足检查规则，不能证明目标板运行、时序、DMA、IRQ 或硬件电平正确。需要运行时证据时，必须明确交接给验证、调试或观测流程。
 
-代码审查、Map 分析、静态分析、格式检查和 Unity 的原始资料分别保留在 `references/quality-*` 或 `references/capabilities/*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。
+## 输入与规则优先级
 
-Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
-项目代码审查、项目风格 profile 与 clang-format 基线由本 Skill 统一承接。
-其余质量工具的完整资料见 [`capability-index.md`](references/capability-index.md)。
+开始前声明：变更范围、绝对项目根目录、分支/提交或 diff、受管辖目录、第三方 Vendor 排除项、工具版本、配置文件、质量基线和输出位置。
 
-## 全项目代码生成、修改与审查基线
+规则优先级固定为：
 
-本节适用于 AI 生成代码、代码生成器产物、人工新增代码、人工修改代码和已有代码重审，
-覆盖 App、Service、Platform、Impl、Vendor 以及工具脚本中的嵌入式 C/C++ 代码。它是
-全项目唯一的代码质量入口；不再为 BSP 生成代码建立一套平行的总规则。
+1. 用户明确要求；
+2. 目标工程的 `.editorconfig`、`.clang-format`、编译/构建配置和已确认的质量配置；
+3. 目标目录相邻源码的稳定写法；
+4. 本 Skill 的 [`style-profile.md`](references/style-profile.md) 与 [`review-gates.md`](references/review-gates.md)；
+5. 保守的 C/C++ 默认规则。
 
-先按 [项目风格 profile](references/style-profile.md) 建立可追溯约束，再按 [项目代码审查门禁](references/review-gates.md)
-分开检查风格、功能和安全风险。领域 Skill 只能增加领域约束，不能重新定义全项目格式、注释、审查分类或顶层架构。
+任何偏差都要记录来源、适用范围、理由和是否需要用户确认。不能用猜测补齐缺失的项目规则。
 
-1. 风格优先级为：用户明确要求 → `.editorconfig`、`.clang-format`、IDE 或构建配置 → 相邻源码 → 保守 C 默认。
-2. 在生成、修改或重审前说明 profile 的来源和适用目录；审查报告必须把 profile 偏差与功能/安全问题分开分级。
-3. 除非项目或用户明确采用其他约定，否则按 [项目风格 profile](references/style-profile.md) 的硬性约束执行：按 App/Service/Platform/Impl/Vendor 分层命名，使用 `g_/s_/p_/pf_` 变量前缀、公开函数 Doxygen 注释、**注释语言默认中文**、左对齐-填充-右对齐注释，并将 80 列作为硬限制。
-4. 先检查编译、接口、错误路径和资源所有权；再检查 ISR/DMA/并发、数组边界及硬件约束；最后报告风格偏差。
+## 执行流程
 
-### 统一注释与对齐管线
+### 1. 先确定范围和基线
 
-所有层的新文件和已有文件统一采用 [`项目风格 profile`](references/style-profile.md)。
-生成器、重构工具和人工修改后的代码不得绕过这套管线，也不再使用单独的 BSP 生成代码注释 Profile。
+检查 `git status`、目标 diff、工程配置和相邻源码，区分新增问题与既有基线问题。记录每条命令的绝对 `cwd`、工具版本、退出码、检查文件范围和 `relative/path:line` 定位。
 
-新生成文件与已有 C/H 文件都必须经过同一套注释重生成和代码块对齐管线：
-一级分区 80 列、二级分区 60 列、三级分区 40 列；同一数据类型定义或代码块内的
-声明、赋值、初始化和行尾注释必须对齐。已有注释保留语义内容，但旧格式、缺失标签
-和缺失阶段注释必须重新生成；不满足这些规则时不得放行。
+### 2. 注释与 API 文档
 
-第三方 Vendor 源码默认不进入自动重生成范围。项目自维护的 Vendor 算法或公共库
-必须在项目根目录 `.mcu-workbench/quality-scope.json` 的 `managedVendorRoots`
-中显式登记，登记后才与其他层使用同一套格式、分区和注释管线；这不等同于允许
-修改未登记的第三方库。
+检查文件/模块职责、公开函数/类型的 Doxygen、参数、返回值、所有权、生命周期、阻塞属性、ISR/DMA/并发约束、硬件限制和错误恢复说明。注释必须解释非显然约束，不得逐行翻译实现、推测不存在的硬件事实或掩盖功能缺陷。
 
-### 领域附加门禁
+### 3. 格式检查
 
-BSP/Impl 代码仍需额外核对器件协议、Driver/Handle/Port 所有权、OSAL/IRQ/DMA、GPIO
-极性和 Fake 覆盖等领域证据；这些是全项目质量基线之上的补充，不得复制全局格式和审查规则。
-GPIO 输出类生成切片额外按 [`GPIO 输出外设检查表`](../../bsp/references/gpio-output-peripheral-checklist.md)
-核对极性与上下文、失败后 ready 状态、错误码保留、Port 回滚、并发注册及 Fake GPIO 覆盖。
-不可用复杂设备的 OSAL/IRQ 模板代替这些证据。
+优先使用项目已有的格式工具和配置。适用时运行 `clang-format --dry-run --Werror`，并运行 `git diff --check`。格式整改只能改格式，不得改变函数签名、控制流、常量、数据结构、资源路径或包含依赖。
 
-## 三级验证闭环
+### 4. Cppcheck 与静态分析
 
-```mermaid
-flowchart LR
-    A[Mock/命令序列测试] --> B[真实板 RTT 日志]
-    B --> C[逻辑分析仪波形]
-    C --> A
-```
+按项目配置执行 Cppcheck 和已有静态分析入口，记录规则集、抑制项、工具版本、扫描范围和退出码。必须区分 error、warning、style、performance、portability、information 与基线问题；不能把静态告警直接改写为运行时故障或目标板结论。
 
-| 层级 | 工具 | 验证什么 | 局限 |
-|------|------|---------|------|
-| 第一级 | Mock / PC 测试 | 协议状态机、边界条件、错误注入 | 不验证时序、硬件行为 |
-| 第二级 | 目标板 + RTT/串口日志 | 真实寄存器、真实延时、真实错误码 | 不验证电平时序、中断耗时 |
-| 第三级 | 逻辑分析仪 / DWT | 电平时序、ISR 耗时、DMA 行为 | 不验证软件逻辑正确性 |
+### 5. MISRA 规则
 
-**关键原则**：
+按项目采用的 MISRA 版本和规则元数据执行检查。每条偏差必须标明规则编号、严重级别、代码位置、是否属于已有基线、处置方式和复检证据。缺少规则映射时标记 `UNMAPPED`，不得假称已完成 MISRA 合规认证。
 
-- 三层结论必须交叉验证
-- 复杂环境（真实板）通过不代表简单环境（Mock）通过
-- 简单环境（Mock）通过也不代表复杂环境（真实板）通过
-- 改了任何一层都要回其他两层重测
+### 6. 代码审查与报告
 
-### 实施建议
+使用 [`capability-index.md`](references/capability-index.md) 选择详细检查表，分离报告：风格/注释、静态规则、功能风险、接口/资源所有权、ISR/DMA/并发、安全和分层问题。代码审查可提出问题，但不擅自扩大实现范围。
 
-1. **Mock 测试**：在 PC 上注入 Fake IIC/SPI/Timebase/IRQ/DMA，跑 Driver/Handler 全部状态机
-2. **RTT 日志**：在目标板打印关键状态转换、错误码、耗时
-3. **逻辑分析仪**：捕获 I2C/SPI 波形、GPIO 翻转、INT/DMA 时序
-4. **DWT 周期计数器**：测量 ISR 耗时，验证 < 5μs 等硬实时约束
+## 受限整改
 
-## 输出
+`workflow-final-review` 或用户明确授权时，本 Skill 只能直接写回格式问题和必要注释。Cppcheck、MISRA、接口、功能、架构、安全、资源生命周期和并发问题必须交回对应实现或验证流程处理。整改前后必须审阅 diff，确认无行为变化，再用同一工具和范围复检。
 
-输出可复现命令、问题等级、证据文件、基线差异和修复后的回归结果。构建产物由 [`tools-build`](../tools-build/SKILL.md) 提供，发布验证交接 [`tools-release`](../tools-release/SKILL.md)。
+## 固定输出
 
-## 多仓库执行规则
+输出至少包含：
 
-质量工具所在仓库与固件仓库可能不同。运行记录必须声明两个绝对根目录，并为每条命令记录绝对 `cwd`；质量命令在工具仓库执行，格式、主机测试和固件构建在固件仓库执行。相对路径解析失败属于流程错误，必须纠正命令上下文后再判断代码质量。
+- 检查范围、项目根目录、基线和规则来源；
+- 命令、绝对 `cwd`、工具版本、退出码和检查文件；
+- 注释/格式、Cppcheck、MISRA 和代码审查结果；
+- 每个问题的严重级别、`relative/path:line`、影响、修复建议和基线标记；
+- 整改前后 diff 审阅、复检结果、未验证项和 `通过`/`阻塞` 结论。
 
-## 软件分层门禁
+## 参考资料
 
-先运行 `npm run validate:architecture -- --root <firmware-root>`，再运行相关主机 Fake 测试和目标固件构建。门禁按 `App → Service → Platform 接口 ← Impl → Vendor` 检查依赖方向，并检查 BSP Driver/Port、Core 公共头、BSP/OS Wrapper 与原生 RTOS 边界，不绑定具体 MCU 或传感器名称。静态门禁不替代目标运行、观测通道和实物验收。
-
-当架构扫描包含已登记基线问题时，退出码非零必须同时报告基线数量、当前数量和新增差异；只有“零新增”才能称为本阶段通过，不能把非零退出码直接改写成全量通过。
-
-### 当前工程架构扫描规则边界
-
-在当前工程中，BSP Driver 对 `platform_*.h` 的引用是 Platform 公共契约依赖，不应被 `BSP_HAL_DRIVER_CONCRETE_DEPENDENCY` 按关键字整体拒绝；规则必须继续拒绝 HAL、RTOS、CMSIS-OS、OSAL 和具体后端依赖。`impl_os/inc/impl_os_freertos.h` 与 `impl_os/src/impl_os_*.c` 属于具体 FreeRTOS 后端边界，不能仅按 `inc` 目录套用 OS Wrapper 规则。
-
-规则修正时必须保留 `ISR_CRITICAL_TOKEN_IGNORED` 等真实并发/安全告警，也不得通过忽略整个 Vendor 目录消除 timeout warning。验收要报告误报类别消失、真实告警保留和基线新增差异三项结果。
-
-对生成外设切片，先执行 `npm run validate:layer -- --root <firmware-root> --core <core> --device-type <type> --device <device>`，再执行 `validate:architecture`、全项目格式检查与主机 Fake 测试。`validate:layer` 只检查该命令参数定位的生成文件，不替代全项目质量审查；它按设备 profile 检查 Core 公开头泄漏、Wrapper 依赖、Port 单一公开注册函数、声明的 OSAL 资源注入、Handler 边界，以及 `style-profile.md` 要求的文件头、公开 API、必要约束和注释语言。
+- [`capability-index.md`](references/capability-index.md)
+- [`style-profile.md`](references/style-profile.md)
+- [`review-gates.md`](references/review-gates.md)
+- [`quality-code-review`](references/capabilities/quality-code-review/GUIDE.md)
+- [`quality-format-check`](references/capabilities/quality-format-check/GUIDE.md)
+- [`quality-static-analysis`](references/quality-static-analysis/GUIDE.md)

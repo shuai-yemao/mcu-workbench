@@ -85,9 +85,9 @@ find drivers test \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} +
 
 ## 边界
 
-- 不检查 Doxygen 注释完整性（由 `tools-quality` 代码审查门禁检查）
-- 不检查命名规范（由 `tools-quality` 代码审查门禁检查）
-- 不检查逻辑正确性（由编译器与 `tools-quality` 代码审查门禁检查）
+- Doxygen 注释完整性由 `tools-quality` 代码质量门禁检查
+- 命名规范由 `tools-quality` 项目级审查检查
+- 不检查逻辑正确性（由编译器与 `workflow-final-review` 代码审查检查）
 - 不自动修复注释的左对齐/右对齐填充（生成器或人工修改后均需按规范控制）
 
 ## 输出示例

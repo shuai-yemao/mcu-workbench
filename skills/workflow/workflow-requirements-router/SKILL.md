@@ -13,7 +13,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 - RCP 澄清、需求目的与可行性质疑：`workflow-requirements-challenge`；代码前审查与门禁判定：`workflow-review-gate`；放行后的跨层审计、分层设计、迁移顺序、文件级改造顺序与分发：`workflow-integration-plan`。
 - 最终代码/变更集的独立 Review 编排（输出前最后一层门禁）：`workflow-final-review`。
-- 风格规则、静态质量门禁和质量检查工具来源：`tools-quality`。
+- 代码注释、格式、Cppcheck/MISRA 和代码审查质量门禁：`tools-quality`；Map、内存/栈、Unity 和项目级验证：`tools-verification`。
 
 ## 阶段一：分配 Agent 分析需求
 
@@ -82,7 +82,7 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 
 1. 所有请求的 RCP 一律先交接给 `workflow-requirements-challenge`；RCP 完成补证和质疑结论后，再交给 `workflow-review-gate`（必经审查门禁）。Router 不直接交接实现层 Skill；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计。
 2. `workflow-integration-plan` 在审查放行后生成阶段级 Agent/Skill 基线，`workflow-task-breakdown` 再生成任务级分配；`workflow-task-execution` 按当前任务复核一个主实现 Skill 和必要辅助 Skill。Router 不提前替下游决定任务级分配。
-3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
+3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；其中注释、格式、Cppcheck/MISRA 和代码审查质量门禁交给 `tools-quality`，Map/内存/Unity 验证交给 `tools-verification`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
 
 | 请求事实 | 实现层 Skill（由 workflow-integration-plan 分发） |

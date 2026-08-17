@@ -2,12 +2,12 @@
 
 | 阶段 | 输入 | 负责人 | 产物 | 退出条件 |
 | --- | --- | --- | --- | --- |
-| 范围与证据 | 最终代码/变更集、接口与约束 | `embedded-lead` | 审查范围与证据表 | 明确被审版本/diff 与基线 |
-| 格式与注释初检 | 变更集、`tools-quality/style-profile`、目标工程格式配置 | `verification-engineer` | 格式检查证据、注释完整性证据、profile 偏差清单 | 完成格式和必要注释检查；失败转入受限整改 |
-| 受限整改与复检 | 初检问题、已确认文件范围 | `verification-engineer` | 整改文件清单、整改前后 `git diff` 审阅、同条件复检证据 | 仅格式化和补充/更正必要注释；无函数签名、控制流、常量/宏、数据结构、资源/错误路径、包含依赖或分层变化；复检及 `git diff --check` 通过，否则阻塞 |
-| 风格与门禁分类 | 变更集、`review-gates.md` | `verification-engineer` | 风格/功能/安全分离的问题清单 | 风格与功能/安全问题不混类，规则来源可追溯 |
-| 功能与资源 | 接口契约、调用链、资源所有权 | `verification-engineer` / `system-architect` | 分级问题清单 | 无未验证假设被表述为事实 |
-| ISR/DMA/并发与安全 | 并发证据、数据手册、板级条件 | `verification-engineer` / `hardware-integration` | 分级问题清单 | 板级结论有实物证据 |
-| 报告与交接 | 各阶段结果 | `embedded-lead` | 结构化审查报告 | 仅当格式/注释整改复检通过时才可放行；阻塞项与待补验证明确 |
+| 范围与 Spec 证据 | 最终代码/变更集、`spec.md`、接口与约束 | `embedded-lead` | 审查范围与 Spec 逐条追踪矩阵 | 重新读取 Spec，明确被审版本/diff 与基线；不依赖任务勾选状态 |
+| 基线验证 | 项目测试、类型检查、构建和专项入口 | `toolchain-engineer` / `verification-engineer` | 命令、绝对 cwd、版本、退出码和产物记录 | 三类验证均实际执行；失败或不可复现进入阻塞 |
+| 逐条实现核对 | Spec 条目、源码、配置、测试 | `system-architect` / `verification-engineer` | 每条要求的代码/测试证据和结果 | 范围、业务规则和验收标准无遗漏或未解释项 |
+| 遗漏修复与复验 | 失败测试/检查、已批准范围内的最小修复 | 对应实现 Skill / `firmware-engineer` | 失败证据、修复 diff、测试/类型检查/构建复验结果 | 不扩大 Spec 或方案；需要新决定时阻塞回传上游 |
+| 代码质量门禁 | 变更集、`tools-quality`、目标工程格式/静态分析配置 | `verification-engineer` | 注释、格式、Cppcheck/MISRA 质量报告和规则偏差清单 | 完成质量检查；失败转入质量整改或阻塞 |
+| 复检与专项审查 | 修复后变更集、`review-gates.md` | `verification-engineer` / `hardware-integration` | 同条件复检、分层/资源/ISR/DMA/并发/安全问题清单 | 复检及 `git diff --check` 通过；板级结论有实物证据 |
+| 报告与交接 | 各阶段结果 | `embedded-lead` | 结构化审查报告 | 每条 Spec 有证据且所有验证门禁通过才可放行 |
 
-本 Skill 只对格式和必要注释执行受限整改，不生成实现、不修复功能/安全/架构问题、不产生超出该范围的替换代码或修复补丁。若当前会话未分派 agent，由主会话执行相同阶段职责；不得凭空声明已分派或已验证。
+本 Skill 可以在已批准范围内修复直接对应 Spec 的遗漏，但必须先补充失败测试/检查并完成测试、类型检查、构建和 Spec 追踪复验；不得扩大范围、替换方案或自行补充关键决定。注释、格式和静态分析门禁由 `tools-quality` 承担；若当前会话未分派 agent，由主会话执行相同阶段职责；不得凭空声明已分派或已验证。
