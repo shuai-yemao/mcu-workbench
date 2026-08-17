@@ -56,6 +56,8 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 生成目的/可行性质疑和两个候选方案；用户选择后，带有决策记录的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。它必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
 
+RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rcp-template.md)。Router 交付的是 `preliminary` RCP；`workflow-requirements-challenge` 必须先检查模板中的关键约束域，逐个补证并一次只向用户提出一个当前最重要的问题，完成后才生成方案 A/B。
+
 ```text
 需求约束包
 ├─ 元数据：request_id、生成时间、项目路径、分支/提交、状态

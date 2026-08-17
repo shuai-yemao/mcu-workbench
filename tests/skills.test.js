@@ -86,9 +86,24 @@ describe('Skills catalog and loader', () => {
 
   test('workflow router emits a bounded, canonical routing contract', () => {
     const router = getSkillContent('workflow-requirements-router');
+    const rcpTemplate = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-requirements-router',
+      'references',
+      'rcp-template.md'
+    ), 'utf8');
     expect(router).toContain('## 路由单（固定输出）');
     expect(router).toContain('必经下游：workflow-review-gate');
     expect(router).toContain('workflow-requirements-challenge');
+    expect(router).toContain('references/rcp-template.md');
+    expect(rcpTemplate).toContain('# 需求约束包（RCP）模板');
+    expect(rcpTemplate).toContain('confirmed');
+    expect(rcpTemplate).toContain('user-confirmed');
+    expect(rcpTemplate).toContain('selected_option');
+    expect(rcpTemplate).toContain('workflow-review-gate');
     expect(router).toContain('实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>');
     expect(router).toContain('只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限');
     expect(router).not.toContain('参考 Skill');
@@ -157,6 +172,11 @@ describe('Skills catalog and loader', () => {
 
   test('requirements challenge produces two options and blocks before selection', () => {
     const challenge = getSkillContent('workflow-requirements-challenge');
+    expect(challenge).toContain('## RCP 完善问答阶段');
+    expect(challenge).toContain('先执行 RCP 完整性检查');
+    expect(challenge).toContain('一次只向用户提出一个问题');
+    expect(challenge).toContain('用户回答后回填 RCP');
+    expect(challenge).toContain('只有 RCP 完成上述补证门禁后，才能进入本节');
     expect(challenge).toContain('目的质疑');
     expect(challenge).toContain('可行性质疑');
     expect(challenge).toContain('方案 A');
