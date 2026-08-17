@@ -11,7 +11,7 @@
 | `impl` | Impl 落地：OS Port、板级组合根、器件驱动、Handler 机制 |
 | `vendor` | Vendor 底座登记：源码只登记映射不复制（D7） |
 | `hardware` | PCB、仪器和硬件分析 |
-| `tools` | 构建、烧录、链接、调试、观测、质量、发布 |
+| `tools` | 构建、烧录、链接、调试、观测、代码质量、项目验证、发布 |
 
 ## 工具主入口
 
@@ -21,7 +21,8 @@ tools-flash          烧录
 tools-linker         链接与内存
 tools-debug          调试与故障诊断
 tools-observability  日志与运行时观测
-tools-quality        质量与验证
+tools-quality        代码注释、格式、代码审查、Cppcheck、MISRA
+tools-verification   Map/内存/栈分析、Unity/Fake 与项目级验证
 tools-release        发布与 OTA
 tools-learning-tutor 项目提问与 Obsidian 学习笔记
 ```

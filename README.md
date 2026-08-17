@@ -15,33 +15,31 @@ skills/
 ├─ service/        # 业务服务
 ├─ vendor/         # Vendor 底座知识、路由和内容契约
 ├─ hardware/       # PCB、仪器和硬件分析
-└─ tools/          # 构建、烧录、链接、调试、观测、质量、发布
+└─ tools/          # 构建、烧录、链接、调试、观测、代码质量、项目验证、发布
 ```
 
 ## Canonical skills
 
-当前目录为 **49 catalog / 47 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **50 catalog / 48 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
 workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-task-breakdown workflow-task-execution workflow-final-review workflow-claude-layering
 app-architecture
-platform_os impl_os
-platform_bsp impl_board impl_bsp impl_bsp_handler
-platform_mcu platform_common platform_middleware
+platform_mcu platform_os platform_bsp platform_common platform_middleware
 impl_os impl_board impl_bsp impl_middleware
 vendor_mcu vendor_rtos vendor_lvgl vendor_stack vendor_fatfs vendor_fal
 vendor_flashdb vendor_letter_shell vendor_algorithm
 service_system service_battery service_backlight service_calendar service_diagnosis
 service_log service_ota service_power service_sensor service_storage service_watchdog
-tools-build tools-flash tools-linker tools-debug
-tools-observability tools-quality tools-git tools-release tools-learning-tutor
+tools-build tools-flash tools-linker tools-debug tools-observability
+tools-quality tools-verification tools-git tools-release tools-learning-tutor
 ```
 
 `vendor_stm32` 和 `vendor_dsp` 保留为兼容别名，分别解析到 `vendor_mcu` 和 `vendor_algorithm`。目标工程的 Vendor 物理目录统一为 `05_Vendor/`：MCU/RTOS 完整保留，中间件/算法按需保留，并由目标工程 Git 管理整个目录。Service、App 和 Platform 公共头只能经 Platform/Impl 访问 Vendor。
 
 ## 工具方向
 
-`skills/tools/` 按用途保留 9 个主入口。旧工具入口已移除，其旧调用名仍可解析到新的 `tools-*` 入口；项目学习与笔记生成由 `tools-learning-tutor` 负责。
+`skills/tools/` 按用途保留 10 个主入口。`tools-quality` 是唯一代码质量检查入口；`tools-verification` 负责 Map/内存/栈、Unity/Fake 和项目级验证。旧工具入口已移除，其旧调用名仍可解析到新的 `tools-*` 入口；项目学习与笔记生成由 `tools-learning-tutor` 负责。
 
 旧 Skill 的能力流程、脚本和资源已内化到对应 canonical Skill 的 active `references/capabilities/`，每个目标入口通过 `references/capability-index.md` 按需读取。
 
