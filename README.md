@@ -10,33 +10,34 @@
 skills/
 ├─ workflow/       # 路由、项目集成和协作流程
 ├─ app/            # 嵌入式 APP 软件架构
-├─ os/             # OS Wrapper、Port 与 Runtime
-├─ bsp/            # BSP Wrapper、Port、HAL Driver、Handler
-├─ core/ mcu/      # Core 公共 MCU 能力与厂商平台实现
-├─ middleware/     # LVGL、通信、存储、算法
-├─ system/         # 跨层系统能力
+├─ platform/       # Platform 公共能力契约
+├─ impl/           # OS、Board、BSP 与 Middleware 适配实现
+├─ service/        # 业务服务
+├─ vendor/         # Vendor 底座知识、路由和内容契约
 ├─ hardware/       # PCB、仪器和硬件分析
 └─ tools/          # 构建、烧录、链接、调试、观测、质量、发布
 ```
 
 ## Canonical skills
 
-当前目录为 **46 catalog / 44 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **49 catalog / 47 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
-workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-final-review workflow-claude-layering
+workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-task-breakdown workflow-task-execution workflow-final-review workflow-claude-layering
 app-architecture
 platform_os impl_os
 platform_bsp impl_board impl_bsp impl_bsp_handler
-platform_mcu platform_common platform_middleware vendor_stm32
-middleware-lvgl middleware-communication middleware-storage middleware-fal
-middleware-flashdb middleware-letter-shell middleware-algorithms
-software-system
+platform_mcu platform_common platform_middleware
+impl_os impl_board impl_bsp impl_middleware
+vendor_mcu vendor_rtos vendor_lvgl vendor_stack vendor_fatfs vendor_fal
+vendor_flashdb vendor_letter_shell vendor_algorithm
+service_system service_battery service_backlight service_calendar service_diagnosis
+service_log service_ota service_power service_sensor service_storage service_watchdog
 tools-build tools-flash tools-linker tools-debug
 tools-observability tools-quality tools-git tools-release tools-learning-tutor
 ```
 
-Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter。
+`vendor_stm32` 和 `vendor_dsp` 保留为兼容别名，分别解析到 `vendor_mcu` 和 `vendor_algorithm`。目标工程的 Vendor 物理目录统一为 `05_Vendor/`：MCU/RTOS 完整保留，中间件/算法按需保留，并由目标工程 Git 管理整个目录。Service、App 和 Platform 公共头只能经 Platform/Impl 访问 Vendor。
 
 ## 工具方向
 
@@ -46,7 +47,7 @@ Adapter 只存在于 OS 和 BSP；Core、Middleware、Driver 不设置 Adapter�
 
 硬件方向本轮不重构，仍保留在 `skills/hardware/`。
 
-完整迁移关系见 [docs/skills-migration.md](docs/skills-migration.md)。
+完整迁移关系以 `skills/catalog.js` 中的 `MIGRATION_MAP` 为准。
 
 ## 验证
 
@@ -58,13 +59,13 @@ claude plugin validate .
 
 ## Agent 团队
 
-插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。详细职责、写入边界和交接协议见 [docs/agents.md](docs/agents.md)。
+插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。
 
-Workflow 层有六个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责质疑需求目的与可行性、生成两个方案并等待用户选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张审查清单并重组为 BRD/PRD/SRSys），`workflow-integration-plan` 负责跨层规划与实现层分发，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析；持续扩展规则见 [docs/workflows.md](docs/workflows.md)。
+Workflow 层有八个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（必选产出四张独立 Markdown 审查清单、Review-Package，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责按依赖每次只执行一项任务，复核并记录 Agent/Skill 分配，先补测试再实现、检查并回写状态，之后才进入实现层，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
 
 ### 需求约束入口
 
-`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。Router 输出可审计的初步需求约束包（RCP）后，固定交接给 `workflow-requirements-challenge`，由其质疑需求目的与工程可行性、生成两个可比较方案并等待用户选择；带选择记录的更新 RCP 再交给 `workflow-review-gate`（必经审查门禁）完成反猜测审查与放行/阻塞判定；放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计并分发实现层。
+`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。Router 输出可审计的初步需求约束包（RCP）后，固定交接给 `workflow-requirements-challenge`，由其先补齐 RCP 并质疑需求目的与工程可行性；完成质疑结论的更新 RCP 再交给 `workflow-review-gate`（必经审查门禁）完成反猜测审查和放行/阻塞判定；放行后由 `workflow-integration-plan` 生成并审查 `plan.md`，再由 `workflow-task-breakdown` 生成 `task.md`，交给 `workflow-task-execution` 按依赖逐项执行，最后分发实现层。
 
 RCP 会区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，同时携带证据位置、责任边界与验证边界；`workflow-review-gate` 发现新约束时必须回传 Router 更新 RCP，不能静默扩大范围。
 
@@ -84,7 +85,7 @@ npm run agent:artifacts -- record --project . --agent embedded-lead --task "proj
 ├─ project.json
 └─ runs/<timestamp>-<agent>-<task>.json
 
-docs/
+目标工程 docs/
 ├─ architecture/   # 架构和调用链
 ├─ verification/   # 构建、测试、硬件和质量证据
 ├─ devlog/         # 开发日志
@@ -140,7 +141,7 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 ## Codex 适配
 
-本仓库同时提供 `.codex-plugin/plugin.json`，与 Claude Code 共用 `skills/` 和 catalog。Codex 适配说明、canonical Skill 同步和校验命令见 [docs/codex-adaptation.md](docs/codex-adaptation.md)。
+本仓库同时提供 `.codex-plugin/plugin.json`，与 Claude Code 共用 `skills/` 和 catalog。Codex 适配入口为 `.codex-plugin/plugin.json`，同步和校验使用 `scripts/sync-codex-skills.js` 与 `scripts/validate-plugin.js`。
 
 安装启用后可在 Codex Composer 中使用 `@mcu-workbench` 快捷触发插件。
 
@@ -155,4 +156,4 @@ claude plugin validate .
 git diff --check
 ```
 
-插件根目录的 `agents/` 由 Claude Code 自动发现；不在 `plugin.json` 中添加 `agents` 字段，也不默认启用 hooks、MCP 或主 Agent。插件边界见 [docs/plugin-boundaries.md](docs/plugin-boundaries.md)，整体执行流见 [docs/plugin-execution-flow.md](docs/plugin-execution-flow.md)。
+插件根目录的 `agents/` 由 Claude Code 自动发现；不在 `plugin.json` 中添加 `agents` 字段，也不默认启用 hooks、MCP 或主 Agent。插件边界和执行流以对应的 canonical Skill、`codex/AGENTS.md` 及宿主 manifest 为准。

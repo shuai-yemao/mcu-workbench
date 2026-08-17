@@ -2,7 +2,7 @@
 
 > 用途：将自然语言需求整理为可审计、可补证、可交接的 Requirement Constraint Package。
 >
-> 使用方式：复制本模板到目标项目的 `<project_root>/00_Docs/04_需求文档/`，替换所有 `<...>` 占位符。用户选择方案前，状态为 `preliminary`，不得交给 `workflow-review-gate`；用户选择后，回填决策字段，才形成正式 RCP。
+> 使用方式：复制本模板到目标项目的 `<project_root>/00_Docs/04_需求文档/`，替换所有 `<...>` 占位符。Router 和 Challenge 完成补证前，状态为 `preliminary`；补证和质疑结论完成后，才形成可交给 `workflow-review-gate` 的正式 RCP。本模板不包含方案选择字段。
 
 ## 1. 元数据
 
@@ -11,8 +11,8 @@
 | request_id | `<REQ-...>` |
 | 生成时间 | `<YYYY-MM-DDTHH:mm:ss+08:00>` |
 | RCP 版本 | `<v0.1>` |
-| RCP 状态 | `preliminary` / `selected` / `blocked` |
-| 工作流状态 | `分析中` / `待补证` / `待用户选择` / `已选择` / `阻塞` |
+| RCP 状态 | `preliminary` / `challenged` / `blocked` |
+| 工作流状态 | `分析中` / `待补证` / `可交接` / `阻塞` |
 | 项目路径 | `<目标项目绝对路径>` |
 | 分支/提交 | `<branch or commit>` |
 | 目标交付物 | `<代码/文档/审查/构建产物等>` |
@@ -126,11 +126,11 @@ App → Service → Platform ← Impl → Vendor
 
 ## 10. 人工补证记录
 
-Challenge 阶段一次只提出一个当前影响最大的用户问题。每次回答都必须回填本节和对应约束域。
+Challenge 阶段先读取仓库规则和项目证据，再按范围/非目标、业务规则、状态/权限、验收标准四类缺口进行分轮澄清。每轮最多提出 4 个真正影响实现的问题；每个问题必须给出推荐、说明影响，并在回答后回填本节和对应约束域。
 
-| ID | 问题 | 为什么需要 | 用户回答 | 可信等级 | 回填字段 | 状态 |
-|---|---|---|---|---|---|---|
-| Q-01 | `<question>` | `<scope/acceptance impact>` | `<answer>` | `user-confirmed` | `<RCP field>` | `待提问/已提问/已回答/已回填` |
+| ID | 类别 | 问题 | 为什么需要 | 推荐 | 用户回答 | 可信等级 | 回填字段 | 状态 |
+|---|---|---|---|---|---|---|---|---|
+| Q-01 | `scope/business-rule/state-permission/acceptance` | `<question>` | `<scope/acceptance impact>` | `<recommended answer or stance>` | `<answer>` | `user-confirmed` | `<RCP field>` | `待提问/已提问/已回答/已回填` |
 
 ## 11. 验收标准与验证边界
 
@@ -158,63 +158,18 @@ Challenge 阶段一次只提出一个当前影响最大的用户问题。每次�
 - 验收缺口：`<gaps>`
 - 可行性结论：`<可行/有条件可行/阻塞>`
 
-## 14. 方案与用户决策
+## 14. 质疑结论与交接判定
 
-> 本节在 RCP 完成关键补证后填写。用户选择前不得交给 `workflow-review-gate`。
-
-### 方案 A：`<name>`
-
-- 解决目标：`<target>`
-- 适用前提：`<preconditions>`
-- 实现范围：`<scope>`
-- 层次与依赖影响：`<impact>`
-- 涉及文件/Skill 类型：`<files and skill>`
-- 资源、并发和生命周期影响：`<impact>`
-- 验收路径与证据等级：`<verification>`
-- 回滚路径：`<rollback>`
-- 优点：`<pros>`
-- 缺点：`<cons>`
-- 主要风险：`<risks>`
-- 实施成本与复杂度：`<cost>`
-
-### 方案 B：`<name>`
-
-- 解决目标：`<target>`
-- 适用前提：`<preconditions>`
-- 实现范围：`<scope>`
-- 层次与依赖影响：`<impact>`
-- 涉及文件/Skill 类型：`<files and skill>`
-- 资源、并发和生命周期影响：`<impact>`
-- 验收路径与证据等级：`<verification>`
-- 回滚路径：`<rollback>`
-- 优点：`<pros>`
-- 缺点：`<cons>`
-- 主要风险：`<risks>`
-- 实施成本与复杂度：`<cost>`
-
-### 方案对比
-
-| 维度 | 方案 A | 方案 B |
-|---|---|---|
-| 目的匹配度 | `<评价>` | `<评价>` |
-| 证据充分度 | `<评价>` | `<评价>` |
-| 实现成本 | `<评价>` | `<评价>` |
-| 架构风险 | `<评价>` | `<评价>` |
-| 可验证性 | `<评价>` | `<评价>` |
-| 可维护性 | `<评价>` | `<评价>` |
-| 回滚难度 | `<评价>` | `<评价>` |
-| 后续扩展性 | `<评价>` | `<评价>` |
-
-### 用户决策
+Challenge 只输出基于证据的目的、可行性、范围和验收结论，不生成方案 A/B、不提供方案推荐、不要求用户选择。
 
 ```text
-decision_status: pending | selected
-selected_option: A | B | pending
-decision_owner: user | pending
-decision_rationale: <reason>
-rejected_option: A | B | pending
-unresolved_risks: <risks>
-new_constraints: <constraints introduced by selection>
+purpose_conclusion: confirmed | user-confirmed | inferred | unverified
+feasibility_conclusion: 可行 | 有条件可行 | 阻塞
+scope_conclusion: <第一版范围与非目标是否清晰>
+acceptance_gaps: <尚不能验证的验收项>
+unresolved_risks: <未关闭风险>
+required_review_gate_checks: <交给 Review Gate 的审查重点>
+handoff_status: 可交接 | 阻塞
 ```
 
 ## 15. 下游交接
@@ -227,10 +182,10 @@ new_constraints: <constraints introduced by selection>
 - 禁止事项：`<forbidden changes/calls>`
 - 输出要求：`<artifacts>`
 - 验收要求：`<verification levels>`
-- 交接状态：`<待补证/待用户选择/可交接/阻塞>`
+- 交接状态：`<待补证/可交接/阻塞>`
 
 ## 16. 当前下一步
 
 - 当前唯一问题：`<one question or none>`
-- 当前唯一动作：`<补证/等待用户选择/交给 Review Gate>`
+- 当前唯一动作：`<补证/交给 Review Gate>`
 - 阻塞项：`<none or blockers>`

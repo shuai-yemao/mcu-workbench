@@ -1,22 +1,110 @@
 ---
 name: workflow-integration-plan
-description: 放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发，携带 RCP/审查包/验收信息交接 workflow-final-review。
+description: 放行后的集成规划与分发：读取放行后的 spec.md 和真实项目文件，生成两个易懂的实施方案供用户选择，审查选定方案并生成 plan.md，再交给 workflow-task-breakdown 生成 task.md，由 workflow-task-execution 按依赖逐项执行后进入唯一实现层 Skill。
 ---
 
 # 集成规划与分发
 
 ## 适用范围
 
-本 Skill 是 `workflow-review-gate` 审查放行后的规划者：消费放行后的审查包（四张清单 + BRD/PRD/SRSys），完成分层审计、迁移路线、文件级改造顺序与分阶段集成计划，并只分发一个实现层 Skill。代码产物就绪后，把最终代码/变更集与验收清单交接给 `workflow-final-review`。本 Skill 不审查既有方案的可行性（门禁已由 `workflow-review-gate` 判定）、不生成实现代码；审查包门禁状态非放行不得分发。
+本 Skill 是 `workflow-review-gate` 审查放行后的规划者：消费放行后的 `spec.md`（需求与约束正式输入）、`Review-Package` 审计证据以及真实项目文件、配置、构建日志和现有运行记录。它先生成两个面向用户、易于比较的实施方案，等待用户选择；再对选定方案进行工程审查，审查通过后生成 `plan.md`（正式实施计划），交给 `workflow-task-breakdown` 拆解为 `task.md`，再交给 `workflow-task-execution` 按依赖顺序逐项执行，最终才进入一个实现层 Skill。代码产物就绪后，把 `spec.md`、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集与验收清单交接给 `workflow-final-review`。本 Skill 不生成实现代码；门禁状态非放行不得继续。
 
 ## 工作流
 
-1. 确认审查包门禁状态为放行（存在 `inferred`/`unverified` 关键事实或未关闭阻塞项时停止，回传 `workflow-review-gate`）。
-2. 读取工程文件、构建日志、启动流程和现有笔记，记录可复现证据。
+1. 确认 Review Gate 已放行，且 `spec.md` 存在、未过期；存在 `inferred`/`unverified` 关键事实或未关闭阻塞项时停止，回传 `workflow-review-gate`。
+2. 读取 `spec.md` 中的范围、约束、文件施工清单和验收清单，再读取真实项目文件、配置、构建日志、启动流程和现有笔记，记录可复现证据。
 3. 画出调用链，确认上层只依赖下层公开契约，识别 APP、Middleware、OS、BSP、Core、Driver 归属。
-4. 输出文件级改造顺序、分阶段集成计划、验收点和未决风险。
-5. 只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
-6. 代码产物就绪后，把最终代码/变更集、RCP、`workflow-review-gate` 放行结论、文件施工表、验收清单、格式 profile/命令和目标文件范围交接给 `workflow-final-review`；该门禁必须执行格式与必要注释整改闭环，复检通过前不得放行。
+4. 基于同一目标和同一 `spec.md` 约束生成两个真实可行、取舍明确的实施方案；用非专业化语言说明每个方案做什么、改哪里、为什么、优缺点、成本、风险和验证方式，然后暂停等待用户选择。
+5. 用户选择后，记录选择理由和放弃方案，对选定方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
+6. 审查通过后，按 [`plan-template.md`](references/plan-template.md) 生成 `<project_root>/00_Docs/04_需求文档/plan.md`，将 `spec.md` 作为需求约束来源，将 `plan.md` 作为实施顺序、阶段级 Agent/Skill 基线和交接依据。
+7. 将 `spec.md` 和已审查通过的 `plan.md` 交给 `workflow-task-breakdown` 生成有序、可独立验证的 `task.md`；`task.md` 未达到 `可交付` 前不得分发实现层 Skill。
+8. 将 `task.md` 交给 `workflow-task-execution`；它每次只选择一个已满足依赖的任务，先补充证明当前行为缺失的测试/检查，再调用原定的唯一实现层 Skill、运行相关检查并回写任务状态。不得在一次调用中直接处理下一项。
+9. 全部任务完成且代码产物就绪后，把 `spec.md`、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集、RCP、`workflow-review-gate` 放行结论、文件施工表、验收清单、格式 profile/命令和目标文件范围交接给 `workflow-final-review`；该门禁必须执行格式与必要注释整改闭环，复检通过前不得放行。
+
+在用户选择前，只输出两个方案的比较结果，不生成正式 `plan.md`，不分发实现层 Skill。若用户要求重新设计，保留原方案和原因，重新生成一轮方案；若连续无法形成两个真实可行方案，状态为 `阻塞` 并回传 `workflow-review-gate` 补证。
+
+### 方案输出要求
+
+两个方案必须服务于同一个 `spec.md` 目标，区别只能来自有意识的工程取舍，例如改动范围、迁移风险、运行时成本、兼容性、验证成本或回滚难度。不得把“做/不做”、明显不可行方案或同一方案的文字改写伪装成两个方案。
+
+每个方案必须用易懂语言说明：
+
+- 一句话概括和适用场景；
+- 要解决的问题和不解决的内容；
+- 预计修改的层、目录和文件类型；
+- 调用链、接口和资源生命周期影响；
+- FreeRTOS/并发/ISR/DMA/内存影响；
+- 验收路径和所需证据等级；
+- 优点、缺点、风险、成本、回滚方式；
+- 尚未确认的事实和选择后需要重点审查的内容。
+
+随后输出一张对比表，至少包含：理解成本、改动范围、实现复杂度、运行时资源、架构风险、可验证性、回滚难度、后续扩展性和推荐适用场景。可以指出倾向，但不得替用户做选择。
+
+方案输出末尾只提出一个问题：请选择 `方案 A`、`方案 B`，或要求重新生成方案。状态保持 `待用户选择`，不得提前生成正式 `plan.md`。
+
+## 固定输出
+
+### 阶段一：方案比较与用户选择
+
+```text
+状态：待用户选择 | 阻塞
+输入 spec.md：<absolute path>
+已读项目证据：<absolute paths, commands, logs>
+共同目标：<plain-language goal>
+
+方案 A：<做什么、改哪里、优点、缺点、成本、风险、验收、回滚>
+方案 B：<做什么、改哪里、优点、缺点、成本、风险、验收、回滚>
+方案对比：<table>
+倾向性建议：<依据；不得替用户选择>
+下一步：<请选择方案 A/B，或要求重新生成>
+```
+
+### 阶段二：选定方案审查
+
+```text
+状态：审查中 | 需修订 | 阻塞 | 通过
+选定方案：<A or B>
+用户理由：<reason>
+审查 Agent：<agents>
+审查结论：<可采用/需修订/阻塞及证据>
+是否改变 spec.md：<否 / 是，已回传 Review Gate>
+下一步：<生成 plan.md / 回传补证或修订>
+```
+
+### 阶段三：plan.md 交接
+
+```text
+状态：approved | blocked
+plan.md：<absolute path>
+spec.md：<absolute path>
+下一步：<交给 workflow-task-breakdown / 回传 workflow-review-gate>
+```
+
+### 阶段四：task.md 交接
+
+```text
+状态：可交付 | 阻塞
+task.md：<absolute path>
+来源 plan.md：<absolute path>
+来源 spec.md：<absolute path>
+任务总数：<number>
+关键串行链：<task IDs>
+可并行组：<groups or none>
+阶段级 Agent/Skill 基线：<plan.md 第 8A 节>
+唯一主实现 Skill：<canonical skill id>
+下一步：<交给 workflow-task-execution 或回传 workflow-integration-plan>
+```
+
+### 选定方案审查
+
+用户选择后，`embedded-lead` 汇总以下审查：
+
+- `system-architect`：分层边界、调用链、接口和迁移影响；
+- `firmware-engineer`：真实代码入口、文件范围、数据流、并发和生命周期；
+- `verification-engineer`：验收条件、测试顺序和证据等级；
+- 涉及硬件时加入 `hardware-integration`；涉及构建、工具链或观测时加入 `toolchain-engineer`。
+
+审查结果逐项标记为 `可采用`、`需修订` 或 `阻塞`，保留文件/配置/命令证据。只有不存在未关闭阻塞项、且修订不改变用户已选目标和 `spec.md` 范围时，才能生成 `plan.md`。如果修订会扩大范围、改变层归属、增加新的硬件/OS 前提或改变验收标准，必须回传 `workflow-review-gate` 更新 `spec.md`，不得在本 Skill 内静默改写。
 
 ## 分层审计与迁移设计
 
@@ -36,7 +124,7 @@ description: 放行后的集成规划与分发：分层审计、迁移路线、�
 涉及 Elog/RTT、文件系统或其他第三方中间件时，文件级计划至少按以下顺序展开：
 
 ```text
-Vendor 登记/编译单元
+Vendor 登记/编译单元（目标工程 05_Vendor）
   → Platform Middleware API
   → Impl direct Adapter + Vendor Port
   → Service object/lifecycle
@@ -47,9 +135,11 @@ Vendor 登记/编译单元
 Middleware Vendor Port 是独立的第三方移植边界，不等同于 BSP Adapter；它可以在 Impl 边界
 使用经审查的 OS/HAL 资源，但不得把原生类型或后端状态泄漏到 Platform/Service。
 
-## 交付计划最低产物
+## plan.md 与交付计划最低产物
 
-每个阶段的交接必须包含四张表：现状表、边界表、文件修改表、验收表（区别于审查包的四张清单——后者由 `workflow-review-gate` 必选重组为 BRD/PRD/SRSys 产品文档）；验收表区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与分发，不代替下游实现。
+`spec.md` 定义需求、工程约束、施工边界和验收要求；`plan.md` 记录用户选择并通过审查的实施路线及阶段级 Agent/Skill 基线；`task.md` 记录由 `plan.md` 拆出的有序、单一责任、可独立验证任务及任务级 Agent/Skill 分配。三者不得互相新增范围。`plan.md` 的固定路径为 `<project_root>/00_Docs/04_需求文档/plan.md`，模板见 [`plan-template.md`](references/plan-template.md)；`task.md` 由 [`workflow-task-breakdown`](../workflow-task-breakdown/SKILL.md) 生成，执行控制由 [`workflow-task-execution`](../workflow-task-execution/SKILL.md) 负责。
+
+每个阶段的交接必须以 `spec.md` 为约束边界、以 `plan.md` 为实施路线、以 `task.md` 为执行顺序，并能回溯到 Review Gate 的四张清单和 Review-Package；阶段计划仍需明确现状表、边界表、文件修改表和验收表的对应关系，验收内容区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与分发，不代替下游实现。
 
 交接 `workflow-final-review` 时还必须列出：格式与注释规则来源、可复现格式检查命令、初始代码范围、允许整改的文件范围和预期验证层级。这样最终门禁能在格式或必要注释缺失时实施受限整改、审阅差异并同条件复检，而不会重开功能或架构设计。
 
@@ -60,15 +150,16 @@ Middleware Vendor Port 是独立的第三方移植边界，不等同于 BSP Adap
 - APP 结构交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
 - OSAL/OS Port 交给 [`platform_os`](../../platform/platform_os/SKILL.md) 或 [`impl_os`](../../impl/impl_os/SKILL.md)。
 - 器件链路交给 [`platform_bsp`](../../platform/platform_bsp/SKILL.md)、[`impl_board`](../../impl/impl_board/SKILL.md) 或 [`impl_bsp`](../../impl/impl_bsp/SKILL.md)（含 Handler 机制子层）。
-- MCU/厂商库交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)。
+- MCU/厂商库交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_mcu`](../../vendor/vendor_mcu/SKILL.md)；目标工程完整保留在 `05_Vendor/vendor_mcu/{stm32,at32,esp32}/`。
+- RTOS 底座交给 [`vendor_rtos`](../../vendor/vendor_rtos/SKILL.md)，目标工程完整保留在 `05_Vendor/vendor_rtos/`；中间件和算法分别交给对应 `vendor_*` Skill，物理路径统一为 `05_Vendor/vendor_middleware/<selected-library>/` 与 `05_Vendor/vendor_algorithm/<selected-library>/`。
 
-分发表（请求事实 → 实现层 Skill）与 Router 的分发依据一致；本 Skill 只按表分发**一个**实现层 Skill，不预分配参考清单。
+分发表（请求事实 → 实现层 Skill）与 Router 的分发依据一致；本 Skill 为每个阶段记录一个主实现 Skill 和必要的 Agent/辅助 Skill 基线，但不执行代码；实际单项分配由 `workflow-task-execution` 依据当前 `task.md` 复核并回写。
 
 ## 硬边界
 
-- 本 skill 不审查既有实现方案的可行性：门禁判定收敛在 `workflow-review-gate`，本 Skill 只消费放行结果。
+- 本 skill 不审查需求约束本身的正确性：该门禁由 `workflow-review-gate` 负责；本 Skill 只基于放行后的 `spec.md` 和项目证据审查用户选定的实施方案。
 - 本 skill 不生成实现代码、不承担最终代码审查（`workflow-final-review`）与代码生成阶段。
-- 审查包门禁状态非放行时不得分发实现层 Skill；发现新事实必须回传 `workflow-review-gate` 更新审查包。
+- 审查包门禁状态非放行、`spec.md` 缺失/过期、`plan.md` 尚未审查通过、阶段级 Agent/Skill 基线缺失或 `task.md` 尚未达到 `可交付` 时不得进入执行；实现层 Skill 只能由 `workflow-task-execution` 按当前单项任务调用。发现新事实必须回传 `workflow-review-gate` 或 `workflow-task-breakdown` 同步更新相关文档。
 - OS/BSP Adapter 仍由各自 Wrapper/Port 组成；Middleware Vendor Port 是另一类 Impl 适配边界，不能被归并为 BSP Adapter。
   通用层调用链仍是 `App → Service → Platform ← Impl → Vendor`；固定后端 Middleware 允许经需求与 Review Gate 明确的
   专用例外：`App → Service → Platform Middleware API → Impl Adapter → Vendor`。Service 调用 Platform 公共 API，Board

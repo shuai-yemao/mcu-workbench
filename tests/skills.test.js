@@ -6,18 +6,18 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps active entries and exposes 44 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(46);
-    expect(CANONICAL_SKILLS).toHaveLength(44);
+  test('catalog keeps active entries and exposes 47 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(49);
+    expect(CANONICAL_SKILLS).toHaveLength(47);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
-      'workflow-requirements-router', 'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-integration-plan', 'app-architecture',
+      'workflow-requirements-router', 'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-integration-plan', 'workflow-task-breakdown', 'workflow-task-execution', 'app-architecture',
       'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware', 'impl_os', 'impl_board',
-      'impl_bsp', 'impl_middleware', 'vendor_stm32', 'vendor_lvgl',
+      'impl_bsp', 'impl_middleware', 'vendor_mcu', 'vendor_rtos', 'vendor_lvgl',
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
       'vendor_flashdb', 'vendor_letter_shell',
-      'vendor_dsp',
+      'vendor_algorithm',
       'service_system', 'service_battery', 'service_backlight', 'service_calendar', 'service_diagnosis',
       'service_log', 'service_ota', 'service_power', 'service_sensor', 'service_storage', 'service_watchdog',
       'tools-build', 'tools-flash', 'tools-linker',
@@ -56,23 +56,26 @@ describe('Skills catalog and loader', () => {
     expect(resolveSkillId('bsp-platform-adapter')).toBe('impl_board');
     expect(resolveSkillId('peripheral-driver')).toBe('impl_board');
     expect(resolveSkillId('embedded-adapter')).toBe('impl_board');
-    expect(resolveSkillId('driver-vendor')).toBe('vendor_stm32');
-    expect(resolveSkillId('platform-stm32-hal')).toBe('vendor_stm32');
-    expect(resolveSkillId('platform-stm32-spl')).toBe('vendor_stm32');
-    expect(resolveSkillId('stm32-hal-development')).toBe('vendor_stm32');
-    expect(resolveSkillId('stm32-spl-development')).toBe('vendor_stm32');
-    expect(resolveSkillId('mcu-platform')).toBe('vendor_stm32');
+    expect(resolveSkillId('driver-vendor')).toBe('vendor_mcu');
+    expect(resolveSkillId('platform-stm32-hal')).toBe('vendor_mcu');
+    expect(resolveSkillId('platform-stm32-spl')).toBe('vendor_mcu');
+    expect(resolveSkillId('stm32-hal-development')).toBe('vendor_mcu');
+    expect(resolveSkillId('stm32-spl-development')).toBe('vendor_mcu');
+    expect(resolveSkillId('mcu-platform')).toBe('vendor_mcu');
+    expect(resolveSkillId('vendor_stm32')).toBe('vendor_mcu');
+    expect(resolveSkillId('vendor-rtos')).toBe('vendor_rtos');
     expect(resolveSkillId('platform-cortex-registers')).toBe('platform_mcu');
     expect(resolveSkillId('protocol-mqtt')).toBe('vendor_stack');
     expect(resolveSkillId('middleware-fatfs')).toBe('vendor_fatfs');
     expect(resolveSkillId('middleware-lvgl')).toBe('vendor_lvgl');
-    expect(resolveSkillId('middleware-algorithms')).toBe('vendor_dsp');
+    expect(resolveSkillId('middleware-algorithms')).toBe('vendor_algorithm');
+    expect(resolveSkillId('vendor_dsp')).toBe('vendor_algorithm');
     expect(resolveSkillId('not-a-skill')).toBeNull();
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(44);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(44);
+    expect(listAvailableSkills()).toHaveLength(47);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(47);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');
@@ -80,8 +83,10 @@ describe('Skills catalog and loader', () => {
     expect(getSkillContent('os-adapter')).toContain('name: platform_os');
     expect(getSkillContent('rtos-freertos')).toContain('name: impl_os');
     expect(getSkillContent('bsp-adapter')).toContain('name: impl_board');
-    expect(getSkillContent('driver-vendor')).toContain('name: vendor_stm32');
+    expect(getSkillContent('driver-vendor')).toContain('name: vendor_mcu');
+    expect(getSkillContent('vendor_stm32')).toContain('name: vendor_mcu');
     expect(getSkillContent('workflow-requirements-challenge')).toContain('name: workflow-requirements-challenge');
+    expect(getSkillContent('workflow-task-breakdown')).toContain('name: workflow-task-breakdown');
   });
 
   test('workflow router emits a bounded, canonical routing contract', () => {
@@ -102,7 +107,9 @@ describe('Skills catalog and loader', () => {
     expect(rcpTemplate).toContain('# 需求约束包（RCP）模板');
     expect(rcpTemplate).toContain('confirmed');
     expect(rcpTemplate).toContain('user-confirmed');
-    expect(rcpTemplate).toContain('selected_option');
+    expect(rcpTemplate).toContain('RCP 状态');
+    expect(rcpTemplate).toContain('challenged');
+    expect(rcpTemplate).not.toContain('selected_option');
     expect(rcpTemplate).toContain('workflow-review-gate');
     expect(router).toContain('实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>');
     expect(router).toContain('只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限');
@@ -128,7 +135,7 @@ describe('Skills catalog and loader', () => {
     expect(integration).toContain('## 实现方案审查与代码前门禁');
     expect(integration).toContain('需求约束包（RCP）');
     expect(integration).toContain('唯一接收方');
-    expect(integration).toContain('带用户选择记录的需求约束包（RCP）');
+    expect(integration).toContain('带补证记录和质疑结论的需求约束包（RCP）');
     expect(integration).toContain('workflow-requirements-challenge');
     expect(integration).toContain('既有需求实现方案');
     expect(integration).toContain('embedded-lead');
@@ -154,50 +161,134 @@ describe('Skills catalog and loader', () => {
     expect(reviewPackage).toContain('需修订');
     expect(reviewPackage).toContain('阻塞风险');
     expect(reviewPackage).toContain('代码阶段判定');
-    expect(integration).toContain('必选产品文档输出（BRD / PRD / SRSys）');
+    expect(integration).toContain('### 必选四份清单文件输出');
     expect(integration).toContain('00_Docs/04_需求文档/');
     expect(integration).toContain('项目文档输出边界');
     expect(integration).toContain('不得回退到插件内部保存');
     expect(integration).toContain('process.cwd()');
     expect(integration).toContain('项目路径缺失');
-    expect(integration).toContain('SRSys');
-    expect(reviewPackage).toContain('## 5. 产品文档映射（BRD / PRD / SRSys）');
-    expect(reviewPackage).toContain('<request_id>-BRD.md');
-    expect(reviewPackage).toContain('<request_id>-PRD.md');
-    expect(reviewPackage).toContain('<request_id>-SRSys.md');
+    expect(integration).toContain('<request_id>-工程现状表.md');
+    expect(integration).toContain('<request_id>-文件施工清单.md');
+    expect(integration).toContain('<request_id>-代码生成约束清单.md');
+    expect(integration).toContain('<request_id>-验收测试清单.md');
+    expect(integration).toContain('### 下游 spec.md 输出');
+    expect(integration).toContain('<project_root>/00_Docs/04_需求文档/spec.md');
+    expect(integration).toContain('只能由四张清单整合生成');
+    expect(reviewPackage).toContain('## 5. 四份独立清单文件输出');
+    expect(reviewPackage).toContain('<request_id>-工程现状表.md');
+    expect(reviewPackage).toContain('<request_id>-文件施工清单.md');
+    expect(reviewPackage).toContain('<request_id>-代码生成约束清单.md');
+    expect(reviewPackage).toContain('<request_id>-验收测试清单.md');
+    expect(reviewPackage).toContain('## 6. 下游 `spec.md` 整合输出');
+    expect(reviewPackage).toContain('<project_root>/00_Docs/04_需求文档/spec.md');
+    expect(reviewPackage).toContain('只能由四张清单整合生成');
+    expect(integration).not.toContain('BRD');
+    expect(integration).not.toContain('PRD');
+    expect(integration).not.toContain('SRSys');
+    expect(reviewPackage).not.toContain('BRD');
+    expect(reviewPackage).not.toContain('PRD');
+    expect(reviewPackage).not.toContain('SRSys');
     expect(reviewPackage).toContain('文档落盘前置条件');
     expect(reviewPackage).toContain('不得写入插件仓库内部');
     expect(reviewPackage).toContain('不生成插件内占位文件');
   });
 
-  test('requirements challenge produces two options and blocks before selection', () => {
+  test('requirements challenge clarifies RCP before review gate', () => {
     const challenge = getSkillContent('workflow-requirements-challenge');
     expect(challenge).toContain('## RCP 完善问答阶段');
-    expect(challenge).toContain('先执行 RCP 完整性检查');
-    expect(challenge).toContain('一次只向用户提出一个问题');
-    expect(challenge).toContain('用户回答后回填 RCP');
-    expect(challenge).toContain('只有 RCP 完成上述补证门禁后，才能进入本节');
+    expect(challenge).toContain('先读取当前仓库和已有项目规则，执行 RCP 完整性检查');
+    expect(challenge).toContain('每轮最多提出 4 个问题');
+    expect(challenge).toContain('第一版范围和非目标');
+    expect(challenge).toContain('空状态、失败状态和权限边界');
+    expect(challenge).toContain('给出基于现有证据的推荐');
+    expect(challenge).toContain('category: scope | business-rule | state-permission | acceptance');
+    expect(challenge).toContain('用户回答后分别回填 RCP');
+    expect(challenge).toContain('只有 RCP 完成上述补证门禁后，才能形成最终质疑结论');
     expect(challenge).toContain('目的质疑');
     expect(challenge).toContain('可行性质疑');
-    expect(challenge).toContain('方案 A');
-    expect(challenge).toContain('方案 B');
-    expect(challenge).toContain('优点');
-    expect(challenge).toContain('缺点');
-    expect(challenge).toContain('待用户选择');
-    expect(challenge).toContain('不得交给 `workflow-review-gate`');
-    expect(challenge).toContain('selected_option');
+    expect(challenge).toContain('质疑结论与交接判定');
+    expect(challenge).toContain('不生成方案 A/B');
+    expect(challenge).toContain('交 workflow-review-gate');
+    expect(challenge).not.toContain('selected_option');
+    expect(challenge).not.toContain('## 用户选择门禁');
+    expect(challenge).not.toContain('待用户选择');
     expect(challenge).toContain('workflow-review-gate');
     expect(challenge).toContain('不生成代码');
   });
 
   test('integration plan dispatches a single implementation skill after gate clearance', () => {
     const plan = getSkillContent('workflow-integration-plan');
-    expect(plan).toContain('只分发一个实现层 Skill');
-    expect(plan).toContain('审查包门禁状态非放行不得分发');
+    const planTemplate = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-integration-plan',
+      'references',
+      'plan-template.md'
+    ), 'utf8');
+    expect(plan).toContain('生成两个面向用户、易于比较的实施方案');
+    expect(plan).toContain('等待用户选择');
+    expect(plan).toContain('选定方案审查');
+    expect(plan).toContain('<project_root>/00_Docs/04_需求文档/plan.md');
+    expect(plan).toContain('plan-template.md');
+    expect(plan).toContain('workflow-task-breakdown');
+    expect(plan).toContain('workflow-task-execution');
+    expect(plan).toContain('task.md');
+    expect(planTemplate).toContain('# 集成实施计划（plan.md）');
+    expect(planTemplate).toContain('### 用户选择');
+    expect(planTemplate).toContain('## 12. 方案审查记录');
+    expect(planTemplate).toContain('## 14. 下游交接');
+    expect(planTemplate).toContain('下游执行 Agent 与 Skill 基线');
+    expect(plan).toContain('唯一主实现 Skill');
+    expect(plan).toContain('阶段级 Agent/Skill 基线');
+    expect(plan).toContain('审查包门禁状态非放行、`spec.md` 缺失/过期、`plan.md` 尚未审查通过、阶段级 Agent/Skill 基线缺失或 `task.md` 尚未达到 `可交付` 时不得进入执行');
     expect(plan).toContain('workflow-final-review');
     expect(plan).toContain('格式与必要注释整改闭环');
     expect(plan).toContain('现状表');
     expect(plan).toContain('文件修改表');
+  });
+
+  test('task breakdown converts an approved plan into ordered verifiable tasks', () => {
+    const taskSkill = getSkillContent('workflow-task-breakdown');
+    const taskTemplate = fs.readFileSync(path.join(
+      __dirname,
+      '..',
+      'skills',
+      'workflow',
+      'workflow-task-breakdown',
+      'references',
+      'task-template.md'
+    ), 'utf8');
+    expect(taskSkill).toContain('plan.md');
+    expect(taskSkill).toContain('spec.md');
+    expect(taskSkill).toContain('有顺序、单一责任、可独立验证');
+    expect(taskSkill).toContain('拓扑排序');
+    expect(taskSkill).toContain('不得修改 `spec.md` 或 `plan.md`');
+    expect(taskSkill).toContain('<project_root>/00_Docs/04_需求文档/task.md');
+    expect(taskSkill).toContain('主 Agent、协作 Agent、主实现 Skill 和辅助 Skill');
+    expect(taskSkill).toContain('allocation_evidence');
+    expect(taskTemplate).toContain('# 实施任务清单（task.md）');
+    expect(taskTemplate).toContain('| 顺序 | task_id |');
+    expect(taskTemplate).toContain('owner_agent');
+    expect(taskTemplate).toContain('supporting_skills');
+    expect(taskTemplate).toContain('命令或条件');
+    expect(taskTemplate).toContain('## 7. 下游交接');
+  });
+
+  test('task execution enforces one-task, test-first, blocked-on-spec and status handoff rules', () => {
+    const execution = getSkillContent('workflow-task-execution');
+    expect(execution).toContain('每次调用只允许选择一个任务');
+    expect(execution).toContain('Agent 与 Skill 分配协议');
+    expect(execution).toContain('primary_agent');
+    expect(execution).toContain('primary_implementation_skill');
+    expect(execution).toContain('辅助 Skill 只能提供约束');
+    expect(execution).toContain('先补充一个能够证明当前行为缺失');
+    expect(execution).toContain('Spec 内存在互相矛盾');
+    expect(execution).toContain('不得自行选择解释');
+    expect(execution).toContain('更新为 `pass`/`完成`');
+    expect(execution).toContain('下一次调用');
+    expect(execution).toContain('验收标准：<criterion-by-criterion result>');
   });
 
   test('registry is a compatibility view derived from catalog', () => {
@@ -246,7 +337,7 @@ describe('Skills catalog and loader', () => {
   });
 
   test('adapter rule is explicit in canonical software skills', () => {
-    for (const id of ['platform_mcu', 'platform_common', 'platform_middleware', 'vendor_stm32', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_dsp']) {
+    for (const id of ['platform_mcu', 'platform_common', 'platform_middleware', 'vendor_mcu', 'vendor_rtos', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb', 'vendor_letter_shell', 'vendor_algorithm']) {
       expect(getSkillContent(id)).not.toMatch(/Adapter\s*(?:接口|目录|实现|分层|设计)/);
     }
     expect(getSkillContent('platform_bsp')).toMatch(/函数表|函数表|注册/);

@@ -1,6 +1,6 @@
 ---
 name: workflow-requirements-router
-description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-requirements-challenge 进行目的与可行性质疑和双方案选择，再交给 workflow-review-gate（必经审查门禁），放行后由 workflow-integration-plan 规划与分发。
+description: 作为插件首个需求处理入口，编排 Agent 分析、补齐项目约束并生成可审计的需求约束包，固定交接给 workflow-requirements-challenge 进行 RCP 澄清、目的与可行性质疑，再交给 workflow-review-gate（必经审查门禁），放行后由 workflow-integration-plan 规划与分发。
 ---
 
 # 嵌入式需求约束路由
@@ -11,7 +11,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 以下职责必须分流，不可由需求约束 Router 代办：
 
-- 需求目的与可行性质疑、双方案比较和用户选择：`workflow-requirements-challenge`；代码前审查与门禁判定：`workflow-review-gate`；放行后的跨层审计、分层设计、迁移顺序、文件级改造顺序与分发：`workflow-integration-plan`。
+- RCP 澄清、需求目的与可行性质疑：`workflow-requirements-challenge`；代码前审查与门禁判定：`workflow-review-gate`；放行后的跨层审计、分层设计、迁移顺序、文件级改造顺序与分发：`workflow-integration-plan`。
 - 最终代码/变更集的独立 Review 编排（输出前最后一层门禁）：`workflow-final-review`。
 - 风格规则、静态质量门禁和质量检查工具来源：`tools-quality`。
 
@@ -54,9 +54,9 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、补齐
 
 ## 阶段三：生成需求约束包
 
-需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 生成目的/可行性质疑和两个候选方案；用户选择后，带有决策记录的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。它必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
+需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 完成补证、目的质疑和可行性质疑；完成后，带有质疑结论和证据的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。方案选择不属于本 Skill 链路。RCP 必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。
 
-RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rcp-template.md)。Router 交付的是 `preliminary` RCP；`workflow-requirements-challenge` 必须先检查模板中的关键约束域，逐个补证并一次只向用户提出一个当前最重要的问题，完成后才生成方案 A/B。
+RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rcp-template.md)。Router 交付的是 `preliminary` RCP；`workflow-requirements-challenge` 必须先读取仓库规则和项目证据，按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清，每轮最多提出四个高影响问题并给出推荐，完成后输出质疑结论并交给 `workflow-review-gate`，不生成方案 A/B。
 
 ```text
 需求约束包
@@ -72,15 +72,15 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 ├─ 优先级与依赖：优先级、前置条件、外部依赖、并行关系、阻塞项
 ├─ 验收标准：静态、主机、构建、目标、实物证据及判定条件
 ├─ 人工确认：问题、影响、候选项、当前答案、状态（待提问/已提问/已回答/已回填）、截止时机
-├─ 质疑与决策：目的质疑、可行性质疑、方案 A/B、优缺点、用户选择、选择理由、放弃方案和未决风险
+├─ 质疑结论：目的质疑、可行性质疑、范围结论、验收缺口和未决风险
 └─ 下游提示词：目标 Skill、范围、输入证据、必须遵守、禁止事项、输出和验收
 ```
 
-下游提示词必须明确：`workflow-requirements-challenge` 只能在 RCP 的范围和证据内质疑，不得生成代码；在用户选择前不得交给 `workflow-review-gate`。`workflow-review-gate` 只能在带选择记录的 RCP 范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。审查放行后由 workflow-integration-plan 完成分层/审计/迁移设计与分发。
+下游提示词必须明确：`workflow-requirements-challenge` 只能在 RCP 的范围和证据内澄清、质疑，不得生成代码或方案选择；RCP 完成补证和质疑结论后交给 `workflow-review-gate`。`workflow-review-gate` 只能在 RCP 范围和证据内工作；若发现新约束，先回传 Router 更新 RCP，不得静默扩大范围。审查放行后由 workflow-integration-plan 完成分层/审计/迁移设计与分发。
 
 ## 必经交接与分发
 
-1. 所有请求的 RCP 一律先交接给 `workflow-requirements-challenge`；用户选择后，更新后的 RCP 再交给 `workflow-review-gate`（必经审查门禁）。Router 不直接交接实现层 Skill；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计。
+1. 所有请求的 RCP 一律先交接给 `workflow-requirements-challenge`；RCP 完成补证和质疑结论后，再交给 `workflow-review-gate`（必经审查门禁）。Router 不直接交接实现层 Skill；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计。
 2. `workflow-integration-plan` 在审查放行后按下表只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限。
 3. 最终代码/变更集的独立 Review 编排由 `workflow-integration-plan` 交接给 `workflow-final-review`；风格规则、静态质量门禁和质量检查工具来源是 `tools-quality`。
 4. 路由结论与验证结论分离：Router 只声明需要何种验证，不宣称验证已通过。
@@ -95,7 +95,7 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 | 器件协议、寄存器序列和 HAL Driver | `impl_bsp` |
 | 多实例、缓存、重试、回调和工作循环 | `impl_bsp`（Handler 机制子层） |
 | CMSIS、寄存器、总线或 MCU 外设能力 | `platform_mcu` |
-| STM32 HAL、ESP-IDF 或厂商 SDK | `vendor_stm32` |
+| STM32、AT32、ESP32 HAL、ESP-IDF 或厂商 SDK | `vendor_mcu` |
 | LVGL | `middleware-lvgl` |
 | MQTT、BLE、CAN、USB 或网络协议 | `middleware-communication` |
 | Flash、文件系统、KV 或存储中间件 | `middleware-storage` |
@@ -111,12 +111,12 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 每次分诊都输出以下字段：
 
 ```text
-状态：分析中 | 待用户确认 | 待用户选择 | 可交接 | 阻塞
+状态：分析中 | 待用户确认 | 待补证 | 可交接 | 阻塞
 必经下游：workflow-review-gate
 实现 Skill：<由 workflow-integration-plan 分发的唯一 canonical ID；未完成 RCP 时为空>
 参与 Agent：<embedded-lead + 一个或多个专用 Agent>
-需求约束包：<完整包或稳定产物绝对路径；用户选择前标记为 preliminary>
-质疑交接：<workflow-requirements-challenge；用户选择前不得交给 workflow-review-gate>
+需求约束包：<完整包或稳定产物绝对路径；RCP 完成前标记为 preliminary>
+质疑交接：<workflow-requirements-challenge；完成补证和质疑结论后交 workflow-review-gate>
 已读证据：<绝对路径、命令或日志位置>
 责任边界：<workflow-review-gate 负责审查与门禁，workflow-integration-plan 负责分层/审计/迁移与分发；明确不负责什么>
 交接契约：<每个交接的输入、输出、资源所有权>
@@ -129,8 +129,8 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 - Adapter 只存在于 OS 和 BSP，且由 Wrapper 与 Port 组成；Core、Middleware、Driver 不创建 Adapter。
 - BSP Wrapper 是平台无关的函数表注册与转发层；BSP Port 才可绑定具体 Driver、Handler 和平台对象。
 - 不使用 Router 实现具体 HAL、器件协议、RTOS、UI 或业务代码。
-- RCP 固定先交接给 workflow-requirements-challenge；用户选择后才交给 workflow-review-gate（必经审查门禁），不直接交接实现层 Skill。
-- 质疑阶段必须输出两个可比较方案并等待用户选择；不得用推测凑出不可行方案，也不得在用户选择前进入审核或实现。
+- RCP 固定先交接给 workflow-requirements-challenge；完成补证和质疑结论后才交给 workflow-review-gate（必经审查门禁），不直接交接实现层 Skill。
+- 质疑阶段只输出证据化的目的、可行性、范围和验收结论，不生成方案 A/B、不要求用户选择，不得用推测扩大 RCP。
 - 不引用归档 Skill 作为 active 路由目标；只输出 catalog 中的 canonical ID。
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
 

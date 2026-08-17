@@ -13,7 +13,7 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 
 在以下时机触发：
 
-- 实现 Skill（`app-architecture`、`platform_os`、`platform_bsp`、`impl_board`、`impl_bsp`、`platform_mcu`、`impl_os`、`vendor_stm32` 等）已输出最终代码、补丁或 `git diff`；
+- 实现 Skill（`app-architecture`、`platform_os`、`platform_bsp`、`impl_board`、`impl_bsp`、`platform_mcu`、`impl_os`、`vendor_mcu` 等）已输出最终代码、补丁或 `git diff`；
 - `workflow-integration-plan` 在代码产物就绪后交接最终代码/变更集与验收清单；
 - 用户要求对现有代码、补丁或 diff 做独立审查。
 
@@ -24,7 +24,8 @@ description: 在最终代码、补丁或 git diff 就绪后执行独立代码审
 1. 最终代码/变更集：目标文件路径、补丁或 `git diff`；
 2. 相关接口与约束：当前接口、资源所有权、错误处理与硬件约束；
 3. 构建或测试入口：可复现命令、绝对工作目录与产物路径；
-4. 目标工程风格证据：用户明确要求、目标工程 `.clang-format`/`.editorconfig` 或等效配置、相邻源码，以及 `tools-quality` 的 [style-profile 编码规范](../../tools/tools-quality/references/style-profile.md)；记录它们的优先级和偏差。
+4. 上游施工边界：需求实施链路必须提供放行后的 `spec.md`、经用户选择和方案审查通过的 `plan.md`、由其拆解并达到 `可交付` 的 `task.md`、`workflow-task-execution` 的逐项执行记录（包括 Agent/Skill 分配、前置失败测试/检查、实现后检查和状态回写）、`workflow-review-gate` 放行结论和上游交接信息；用户直接提交现有 diff 审查时，明确该链路缺失；
+5. 目标工程风格证据：用户明确要求、目标工程 `.clang-format`/`.editorconfig` 或等效配置、相邻源码，以及 `tools-quality` 的 [style-profile 编码规范](../../tools/tools-quality/references/style-profile.md)；记录它们的优先级和偏差。
 
 ## 审查流程
 

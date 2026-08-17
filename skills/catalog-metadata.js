@@ -15,9 +15,11 @@ const LEGACY_SKILL_ENTRIES = [
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
-  ['workflow-requirements-challenge', 'workflow', '需求约束后的目的与可行性质疑：生成两个可比较方案、说明优缺点并等待用户选择'],
-  ['workflow-review-gate', 'workflow', '代码前审查与门禁：反猜测审查、四张清单、BRD/PRD/SRSys 与放行/阻塞判定'],
-  ['workflow-integration-plan', 'workflow', '放行后的集成规划与分发：分层审计、迁移路线、文件级改造顺序与唯一实现层 Skill 分发'],
+  ['workflow-requirements-challenge', 'workflow', '需求约束后的 RCP 澄清、目的与可行性质疑：输出证据化结论并交给 workflow-review-gate'],
+  ['workflow-review-gate', 'workflow', '代码前审查与门禁：反猜测审查、四张清单、spec.md 与放行/阻塞判定'],
+  ['workflow-integration-plan', 'workflow', '读取 spec.md 和项目文件生成两个实施方案，用户选择后审查并生成 plan.md'],
+  ['workflow-task-breakdown', 'workflow', '将审查通过的 plan.md 拆解为有顺序、可独立验证的任务并生成 task.md'],
+  ['workflow-task-execution', 'workflow', '按 plan.md/task.md 分配 Agent 与主/辅助 Skill，并按依赖逐项执行，测试先行、验证、状态回写和 Spec 冲突阻塞'],
   ['workflow-final-review', 'workflow', '最终代码/变更集的独立 Review 编排，作为输出前最后一层门禁，交付按严重级别分组的结构化审查报告'],
   ['app-architecture', 'app', 'APP 的启动、Manager、Task、Logic、UI 与 Profile 边界'],
   ['platform_mcu', 'platform', 'Platform 纯定义：MCU 能力接口（GPIO/I2C/SPI/UART/ADC/TIM/DMA/中断/启动）'],

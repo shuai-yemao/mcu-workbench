@@ -11,7 +11,7 @@
 3. 构建或测试入口：可复现命令、绝对工作目录与产物路径；
 4. 目标工程风格证据：`tools-quality` 的 [style-profile 编码规范](../../../tools/tools-quality/references/style-profile.md) 及来源。
 5. 格式检查配置证据：目标工程 `.clang-format`、`.editorconfig` 或其他已确认配置的路径和内容摘要；工程配置与插件规范不一致时，必须记录偏差，不能静默覆盖插件规范。
-6. 上游交接链：若代码来自需求实施，提供 RCP、`workflow-review-gate` 放行结论、`workflow-integration-plan` 文件施工/验收表及实现层交接信息；用户直接提交现有 diff 审查时，明确该链路缺失，不得伪造。
+6. 上游交接链：若代码来自需求实施，提供放行后的 `spec.md`、经用户选择和方案审查通过的 `plan.md`、由其拆解并达到 `可交付` 的 `task.md`、`workflow-task-execution` 的逐项执行记录（包括 Agent/Skill 分配、前置失败测试/检查、实现后检查和状态回写）、RCP、`workflow-review-gate` 放行结论、`workflow-integration-plan` 文件施工/验收表及实现层交接信息；用户直接提交现有 diff 审查时，明确该链路缺失，不得伪造。
 
 ## 输出
 

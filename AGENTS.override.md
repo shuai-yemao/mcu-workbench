@@ -15,8 +15,8 @@
 
 ## 2. 嵌入式工程工作方式
 
-- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），并固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计与实现层分发。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
-- RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准和阻塞项。会影响实现或验收而无法从项目证实的问题，一次只向用户询问一个。
+- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），并固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计，`workflow-task-breakdown` 生成 `task.md`，`workflow-task-execution` 按依赖逐项控制实现，最后进入最终审查。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
+- RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准和阻塞项。`workflow-requirements-challenge` 应先读取仓库规则和项目证据，再按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清；每轮最多向用户提出四个真正影响实现的问题，并说明推荐。
 - 先读取真实项目结构、构建配置、芯片型号、RTOS 和驱动证据，再给出结论。
 - 按 App → Service → Platform ← Impl → Vendor 分层分析依赖和职责。
 - 明确区分静态检查、主机测试、交叉编译、烧录运行、串口/RTT 和实机验证。
@@ -28,18 +28,20 @@
 - `app-architecture` 负责 `main`、Manager、Task、Logic、UI 和 Profile 的边界；App 只能依赖 Service 层公开接口（D8 门禁），不能直接调用 Platform 实现、Impl、Vendor 或任何芯片/RTOS 头文件。
 - `platform_*` 是能力接口层：只保存能力接口、统一错误码/类型（基线在 `platform_common/platform_error.h`，`platform_err_t`）、对象协议（`platform_object.h` + `platform_lifecycle.h`）与带 `void *context` 的抽象函数表、稳定转发 API，不绑定芯片/RTOS；零实现门禁仅指技能目录，`platform_common` 含对象模型实现。`impl_board` 是板级组合根：装配 `impl_bsp` 驱动与 `impl_bsp_handler` 后端及已确认的 OSAL 资源，并在启动期注册到 Platform 接口。
 - 固定依赖方向为 App → Service → Platform 接口 ← Impl → Vendor。`impl_bsp` 只处理器件协议并隔离 HAL、RTOS 与板级绑定；`impl_bsp_handler` 承担实例生命周期、队列/工作循环、缓存、重试和回调。组合根不得复制 Handler 的业务缓存，也不得承载协议状态机。
-- Vendor 底座（`vendor_*`）源码只登记映射不复制（D7），仅经 patch 落地；Service 携带业务策略，机制留在 Impl。
+- Vendor 底座（`vendor_*`）由目标工程 Git 统一管理整个 `05_Vendor/`：`vendor_mcu`、`vendor_rtos` 完整保留，`vendor_middleware`、`vendor_algorithm` 按需保留，`vendor_metadata` 登记来源/版本/许可证/生成器/补丁/依赖；插件仓库不携带目标工程 Vendor 实际源码。Service 携带业务策略，机制留在 Impl，且只能通过 Platform/Impl 接入 Vendor。
 - 生成 Platform/Impl 切片前先输出设备 profile、Ops 映射、资源生命周期、阻塞/ISR 限制、`style-profile.md` 适用范围和未验证项；缺少目标 `osal.h`、Platform 公共头或板级绑定证据时，标记 `UNRESOLVED_OSAL_API`（或相应未解析标记），不得伪称可编译。
 
 ## 4. Skill 路由与协作
 
-`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计并只分发一个实现层 Skill；执行 agent 在执行中如需其他 Skill 的领域知识（分层约束、验收依据等），按需自行查阅，不预分配参考清单、不设数量上限；不把归档 Skill 当作活动入口。
+`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查放行后由 `workflow-integration-plan` 生成并审查 `plan.md`，记录阶段级 Agent/Skill 基线，再由 `workflow-task-breakdown` 生成带任务级分配的 `task.md`，交给 `workflow-task-execution` 按依赖逐项复核分配并执行；每项任务只有一个主实现 Skill，必要的协作 Agent/辅助 Skill 只能提供知识、审查或验证，不得并行改代码；不把归档 Skill 当作活动入口。
 
 | 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
 | 需求澄清与约束收集 | `workflow-requirements-router` | 生成 RCP，不做设计或实现 |
-| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四张审查清单并重组为 BRD/PRD/SRSys 产品文档，写入目标项目 `<project_root>/00_Docs/04_需求文档/`，不得写入插件内部，判定放行/阻塞 |
-| 放行后的集成规划与分发 | `workflow-integration-plan` | 分层/审计/迁移设计、文件级改造顺序，只分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
+| 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 必选产出四个独立 Markdown 审查清单和 Review-Package；审查放行后整合为下游唯一正式输入 `spec.md`，写入目标项目 `<project_root>/00_Docs/04_需求文档/`，不得写入插件内部，判定放行/阻塞 |
+| 放行后的集成规划与分发 | `workflow-integration-plan` | 读取 `spec.md` 和项目文件生成两个易懂方案，用户选择后审查并输出 `plan.md`，再分发一个实现层 Skill；代码就绪后交接 `workflow-final-review` |
+| 计划任务拆解 | `workflow-task-breakdown` | 读取 `spec.md`、审查通过的 `plan.md` 和项目文件，拆分有顺序、可独立验证的任务并输出 `task.md`；未达到可交付前不得执行实现 |
+| 单项任务执行 | `workflow-task-execution` | 按 `task.md` 依赖顺序每次执行一个任务，先补测试，再实现/检查/状态回写；Spec 矛盾或缺关键决定则阻塞 |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 强制执行格式/注释初检；失败时仅作格式与必要注释整改并复检，复检通过才放行 |
 | 风格规则、静态检查和质量门禁 | `tools-quality` | 区分风格、功能和安全问题，是审查规则与工具来源 |
 | App、Service、Platform、Impl、Vendor | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |

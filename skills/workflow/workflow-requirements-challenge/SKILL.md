@@ -1,28 +1,28 @@
 ---
 name: workflow-requirements-challenge
-description: 需求约束后的目的与可行性质疑：基于 RCP、项目证据和工程边界反向审查嵌入式需求，生成两个可比较方案、说明优缺点并等待用户选择；适用于进入 workflow-review-gate 前的架构、固件、硬件、工具链和插件变更请求。不得生成代码或直接分发实现 Skill。
+description: 需求约束后的澄清、目的与可行性质疑：先读取仓库规则和项目证据，通过每轮最多四个高影响问题完善 RCP，输出带证据的质疑结论并交给 workflow-review-gate；适用于进入代码前审查的架构、固件、硬件、工具链和插件变更请求。不得生成代码、设计方案或直接分发实现 Skill。
 ---
 
-# 需求质疑与方案选择
+# 需求澄清与质疑
 
 ## 职责与边界
 
-本 Skill 位于 `workflow-requirements-router` 与 `workflow-review-gate` 之间。它把已经完成最小约束收集的需求转化为一次受控的工程决策，不替代需求 Router、代码前审查门禁或集成规划。
+本 Skill 位于 `workflow-requirements-router` 与 `workflow-review-gate` 之间。它把已经完成最小约束收集的需求转化为受控的工程约束和审查输入，不替代需求 Router、代码前审查门禁或集成规划。
 
 本 Skill 负责：
 
 - 质疑需求要解决的问题、预期价值和成功标准；
 - 根据项目证据检查技术可行性、边界、依赖、资源和验证条件；
-- 生成两个真实可行、范围不同或取舍不同的候选方案；
-- 对比方案优缺点、成本、风险、验收和回滚路径；
-- 等待用户选择，并将选择结果回填 RCP。
+- 输出需求目的、可行性、范围和验收缺口的证据化结论；
+- 将澄清问答、未决风险和补证结果回填 RCP；
+- 在 RCP 完成后交给 `workflow-review-gate`，不在本 Skill 内进行方案选择。
 
 本 Skill 不负责：
 
 - 代替 `workflow-requirements-router` 收集完整项目约束；
 - 生成代码、修改项目源码、构建、烧录或声称目标板验证通过；
 - 直接交接 `workflow-integration-plan` 或任何实现层 Skill；
-- 在用户未选择前替用户决定方案；
+- 生成方案 A/B、推荐方案或要求用户选择方案；
 - 用推测补齐 HAL、RTOS、板级资源、构建命令或验收证据。
 
 ## 固定输入
@@ -33,11 +33,11 @@ description: 需求约束后的目的与可行性质疑：基于 RCP、项目证
 2. RCP 引用的项目文件、配置、日志或可复现命令；
 3. 已有设计或实现方案（如果用户已经提供）。
 
-RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/references/rcp-template.md) 为准。用户选择方案前，输入 RCP 是 `preliminary`；完成补证并记录用户选择后，才形成可交给 `workflow-review-gate` 的正式 RCP。
+RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/references/rcp-template.md) 为准。Router 交付的 RCP 状态为 `preliminary`；完成补证并形成目的/可行性质疑结论后，才形成可交给 `workflow-review-gate` 的正式 RCP。本 Skill 不包含方案选择或用户决策字段。
 
 ## RCP 完善问答阶段
 
-本 Skill 不应拿到初步 RCP 后立即生成方案。先执行 RCP 完整性检查，并通过证据和单问题问答把 RCP 补齐。
+本 Skill 不应拿到初步 RCP 后立即形成最终结论。先读取当前仓库和已有项目规则，执行 RCP 完整性检查，并通过分轮澄清问答把 RCP 补齐。
 
 ### 完整性检查
 
@@ -53,23 +53,32 @@ RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/refer
 
 能由项目文件、配置、日志或可复现命令确认的内容，先自行读取并回填 RCP；只有无法从项目确认且会影响决策的内容才询问用户。
 
-### 单问题补证循环
+### 分轮澄清问答
 
 如果存在关键缺口：
 
 1. 将状态置为 `待补证`；
-2. 选择当前最影响方案选择、施工范围或验收的问题；
-3. 一次只向用户提出一个问题，并说明需要该答案的原因和影响；
-4. 暂停生成方案，等待用户回答；
-5. 将用户回答写入 RCP 的人工补证记录及对应约束域，可信等级标记为 `user-confirmed`；
-6. 重新执行完整性检查，继续提问或进入方案阶段。
+2. 读取仓库规则、项目结构、现有实现、配置和验证入口；
+3. 从以下四类中选择当前真正影响实现的缺口：
+   - 第一版范围和非目标；
+   - 关键业务规则；
+   - 空状态、失败状态和权限边界；
+   - 可以验证的验收标准。
+4. 每轮最多提出 4 个问题；问题不足 4 个时不得为了凑数增加低价值问题；
+5. 每个问题说明为什么需要、会影响哪些 RCP 字段，并给出基于现有证据的推荐；
+6. 推荐是待用户确认的建议，不得当作 `confirmed` 或 `user-confirmed` 事实；
+    7. 暂停形成质疑结论，等待用户回答；
+8. 将每个回答分别回填 RCP 的人工补证记录及对应约束域，可信等级标记为 `user-confirmed`；
+9. 重新执行完整性检查，继续下一轮澄清或形成质疑结论。
 
-每次补证必须记录：
+每个澄清问题必须记录：
 
 ```text
 question_id:
+category: scope | business-rule | state-permission | acceptance
 question:
 why_needed:
+recommendation:
 user_answer:
 decision_owner: user
 confidence: user-confirmed
@@ -77,15 +86,17 @@ affected_rcp_fields:
 status: 已提问 | 已回答 | 已回填
 ```
 
-只有以下条件全部满足，才能从 `待补证` 进入方案阶段：
+澄清问题的推荐应优先选择能缩小第一版范围、减少实现歧义、明确失败恢复或形成可复现验收条件的答案。若项目证据已经足以确认某项，直接回填为 `confirmed`，不得重复询问用户。
 
-- 影响方案选择的关键事实已达到 `confirmed` 或 `user-confirmed`；
+    只有以下条件全部满足，才能从 `待补证` 进入质疑结论阶段：
+
+    - 影响后续施工或审查的关键事实已达到 `confirmed` 或 `user-confirmed`；
 - 目标、成功标准、范围和明确排除项已经记录；
 - 分层、资源、并发和生命周期边界可以描述；
 - 验收等级和验证条件可以区分；
 - 没有未关闭的关键阻塞项。
 
-如果用户暂时无法回答，保留问题、影响和阻塞状态，不得用推测补齐 RCP，也不得为了满足“两套方案”而提前生成不可审计的方案。
+如果用户暂时无法回答，保留问题、影响和阻塞状态，不得用推测补齐 RCP，也不得为了绕过补证而生成不可审计的实现方案或选择题。
 
 ## 质疑顺序
 
@@ -122,58 +133,30 @@ status: 已提问 | 已回答 | 已回填
 - 前置条件、外部依赖、并行关系和阻塞项；
 - 是否存在越层调用、重复实现、过度抽象或无法回滚的改动。
 
-## 两个候选方案
+## 质疑结论与交接判定
 
-只有 RCP 完成上述补证门禁后，才能进入本节。
+只有 RCP 完成上述补证门禁后，才能形成最终质疑结论。本节只输出基于证据的约束、风险和缺口，不生成方案 A/B，不给出方案推荐，也不要求用户选择。
 
-必须输出且只输出两个候选方案：`方案 A` 和 `方案 B`。两者必须是真实可执行的不同取舍，不得把“做”和“不做”伪装成两个方案，也不得使用一个明显不可行的方案凑数。
-
-每个方案必须包含：
+必须明确记录：
 
 ```text
-方案名称
-解决目标
-适用前提
-实现范围
-层次与依赖影响
-涉及文件/Skill 类型
-资源、并发和生命周期影响
-验收路径与证据等级
-回滚路径
-优点
-缺点
-主要风险
-实施成本与复杂度
+purpose_conclusion: confirmed | user-confirmed | inferred | unverified
+feasibility_conclusion: 可行 | 有条件可行 | 阻塞
+scope_conclusion: <第一版范围与非目标是否清晰>
+acceptance_gaps: <尚不能验证的验收项>
+unresolved_risks: <未关闭风险>
+required_review_gate_checks: <交给 Review Gate 的审查重点>
+handoff_status: 可交接 | 阻塞
 ```
 
-随后使用一张对比表，至少比较：目的匹配度、证据充分度、实现成本、架构风险、可验证性、可维护性、回滚难度和后续扩展性。
-
-可以给出推荐方案，但推荐必须说明依据和未验证项；推荐不等于用户选择。
-
-## 用户选择门禁
-
-输出方案后只提出一个决策问题：请用户选择 `方案 A`、`方案 B`，或明确要求重新生成方案。未获得选择前，状态保持 `待用户选择`，不得交给 `workflow-review-gate`。
-
-用户选择后，记录以下决策字段：
-
-```text
-decision_status: selected
-selected_option: A | B
-decision_owner: user
-decision_rationale: 用户选择理由或明确的选择事实
-rejected_option: A | B
-unresolved_risks: 未关闭风险
-new_constraints: 由选择引入的约束
-```
-
-若用户要求重新生成，保留上一轮方案和原因，最多在同一轮需求中重新生成一次；仍无法形成两个可行方案时阻塞并回传 Router 补证。
+如果仍存在会改变施工范围、约束或验收结论的未决问题，保持 `阻塞` 并回传 Router 补证；不得通过生成多个方案或让用户选择来替代事实确认。方案设计和实现层分发由后续流程负责。
 
 ## 输出格式
 
 固定输出以下结构：
 
 ```text
-状态：分析中 | 待补证 | 待用户选择 | 已选择 | 阻塞
+状态：分析中 | 待补证 | 可交接 | 阻塞
 输入 RCP：<绝对路径或稳定产物标识>
 参与 Agent：embedded-lead + 领域 Agent
 已读证据：<绝对路径、配置键、命令或日志>
@@ -181,8 +164,8 @@ new_constraints: 由选择引入的约束
 RCP 完整性检查：
 - 已确认约束域：<domains>
 - 尚缺约束域：<domains>
-- 当前状态：<待补证/可生成方案>
-- 当前唯一补证问题：<question or none>
+- 当前状态：<待补证/可形成质疑结论>
+- 本轮澄清问题（最多 4 个）：<questions or none>
 
 目的质疑：
 - 需求目的：
@@ -194,16 +177,11 @@ RCP 完整性检查：
 - 风险与缺口：
 - 可行性结论：
 
-方案 A：<完整方案>
-方案 B：<完整方案>
-方案对比：<表格>
-推荐：<A/B/暂不推荐及依据>
-
-用户决策：<待用户选择或已选择及理由>
-RCP 回填：<challenge_result、补证记录、selected_option、decision_rationale、未决风险>
-下游交接：<选择后交 workflow-review-gate；不得直接交实现层>
+质疑结论：<目的、可行性、范围和验收结论>
+RCP 回填：<challenge_result、补证记录、未决风险>
+下游交接：<RCP 完成后交 workflow-review-gate；不得直接交实现层>
 验证边界：<尚需静态/主机/构建/目标/实物证据>
-下一步：<一个补证问题或一个用户选择问题>
+下一步：<下一轮澄清问题或交给 workflow-review-gate 的最小动作>
 ```
 
 Agent 协作输出仍必须包含 `Summary`、`Evidence`、`Changed files`、`Tests`、`Artifacts`、`Blockers` 和 `Next handoff`。本 Skill 默认只读，不产生代码文件；`Changed files` 应为 `none`，除非用户明确授权更新需求文档。
@@ -212,24 +190,25 @@ Agent 协作输出仍必须包含 `Summary`、`Evidence`、`Changed files`、`Te
 
 选择完成后：
 
-1. 将方案 A/B、用户选择、选择理由、放弃方案和未决风险写入 RCP；
-2. 将更新后的 RCP 和本 Skill 的质疑结果交给 `workflow-review-gate`；
-3. 由 `workflow-review-gate` 审查选定方案的工程证据并判定放行或阻塞；
+1. 将澄清问答、目的/可行性结论、验收缺口和未决风险写入 RCP；
+2. 将完成补证后的 RCP 和本 Skill 的质疑结果交给 `workflow-review-gate`；
+3. 由 `workflow-review-gate` 审查 RCP 和既有实现方案的工程证据并判定放行或阻塞；
 4. 只有审核放行后，才由 `workflow-integration-plan` 做分层审计、文件级计划和唯一实现层 Skill 分发。
 
-如果 `workflow-review-gate` 发现新约束，必须回传 Router/本 Skill 更新 RCP，不得静默改变用户选择或扩大施工范围。
+如果 `workflow-review-gate` 发现新约束，必须回传 Router/本 Skill 更新 RCP，不得静默扩大施工范围或替用户补写事实。
 
 ## 验收标准
 
-- 需求没有完成最小 RCP 时，不能直接生成方案；
-- 进入方案阶段前必须先完成 RCP 完整性检查；
-- 对关键缺口一次只提出一个问题，并在用户回答后回填 RCP；
+    - 需求没有完成最小 RCP 时，不能直接形成质疑结论；
+    - 形成质疑结论前必须先完成 RCP 完整性检查；
+- 每轮最多提出 4 个真正影响实现的问题，并在用户回答后分别回填 RCP；
+- 澄清问题必须覆盖第一版范围/非目标、业务规则、状态/权限和可验证验收标准四类缺口；
+- 每个问题必须说明影响并给出推荐，推荐不得冒充已确认事实；
 - 能由项目证据确认的内容不得重复询问用户；
-- 每次补证都记录问题、原因、回答、影响字段和 `user-confirmed` 可信等级；
+- 每个澄清问题都记录类别、原因、推荐、回答、影响字段和 `user-confirmed` 可信等级；
 - 目的和可行性都被明确质疑，并携带证据等级；
-- 每次决策恰好有两个可比较方案；
-- 每个方案都有优缺点、风险、成本和验收路径；
-- 未选择前不会进入 Review Gate 或实现 Skill；
-- 选择结果可以回填 RCP，并保留放弃方案和理由；
-- 方案中的 `inferred`/`unverified` 内容不会被表述为已验证事实；
+- 本 Skill 不生成方案 A/B、不推荐方案、不要求用户选择；
+- 完成 RCP 补证和质疑结论后才能进入 Review Gate；
+- Review Gate 接收的是无方案选择依赖的正式 RCP；
+    - 质疑结论中的 `inferred`/`unverified` 内容不会被表述为已验证事实；
 - 本 Skill 不生成代码、不构建、不烧录、不替代最终 Review。
