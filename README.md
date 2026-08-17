@@ -104,8 +104,6 @@ npm run claude:scan -- --root <dir>
 npm run claude:sync -- --root <dir> --write
 npm run claude:validate -- --root <dir> --strict
 
-# 嵌入式 AI Harness(独立插件,Programmatic API,无 CLI)
-node -e "const {createHarness}=require('./harness/lib'); const h=createHarness({baseDir:'.mcu-workbench'}); ..."
 ```
 
 分层生成和闪存算法配置还可以单独校验：

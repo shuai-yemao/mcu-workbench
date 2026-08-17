@@ -1,6 +1,6 @@
 # 脚本与 Programmatic API
 
-> Node CLI 已移除(2026-08-08)——交互统一走 Skill + lib Programmatic API,与嵌入式 AI Harness 同模式(ADR H13)。
+> Node CLI 已移除(2026-08-08)——交互统一走 Skill + lib Programmatic API。
 > 本文档说明保留的确定性脚本入口与 lib 能力。
 
 ## 分层扫描/同步/校验(claude-layer-api)
@@ -32,21 +32,7 @@ npm run validate:plugin           # 插件结构(45 skills/7 agents/8 layers)
 npm run validate:links            # Markdown 链接(307 文件)
 npm run validate:layer            # 分层契约自检
 npm run validate:flash-algorithm  # 闪存算法 profile
-npm run validate:harness-contracts  # harness 契约类型(tsc --noEmit)
 ```
-
-## 嵌入式 AI Harness(Programmatic API)
-
-独立插件 `harness/`,无 CLI;agent 直调 lib:
-
-```js
-const { createHarness } = require('./harness/lib');
-const h = createHarness({ baseDir: '.mcu-workbench' });
-h.createPipeline(spec); await h.run(); h.report({ runId });
-// campaign({ pipeline, policy, maxRounds }) / compare / trend / decisions
-```
-
-完整说明见 `docs/embedded-ai-harness-plan.md` / `docs/embedded-ai-harness-contributing.md`。
 
 ## 历史说明
 

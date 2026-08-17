@@ -179,7 +179,7 @@ lib/agent-domains.js（DOMAINS → domainSkills() → agent 技能集）
 |---|---|---|---|
 | **Skills 主链路** | 需求 → Router | 四门禁全走，证据驱动 | 需要交付物与文档的完整需求 |
 | **Agent 路由链** | `mcu_workbench_agent_route` | 关键词打分（精确+3/包含+1）直接选 agent | 快速咨询某领域问题 |
-| **脚本/API 链** | `scripts/claude-layer-api.js` / `lib/` | 确定性执行(原 Node CLI 已移除) | 分层扫描/校验、CI 校验、harness 编排 |
+| **脚本/API 链** | `scripts/claude-layer-api.js` / `lib/` | 确定性执行(原 Node CLI 已移除) | 分层扫描/校验、CI 校验 |
 
 ---
 

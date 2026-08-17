@@ -69,7 +69,7 @@ Core、Middleware、Driver 不设置 Adapter。
 
 ## 5. Node CLI 边界(已移除)
 
-> Node CLI(`bin/`、`commands/`、`lib/cli.js`)已删除(2026-08-08)——交互统一走 Skill + lib Programmatic API(与 harness 同模式,ADR H13)。`lib/` 共享引擎保留,可经 Skill/API 接入;`scripts/claude-layer-api.js` 是分层能力的确定性入口。
+> Node CLI(`bin/`、`commands/`、`lib/cli.js`)已删除(2026-08-08)——交互统一走 Skill + lib Programmatic API。`lib/` 共享引擎保留,可经 Skill/API 接入;`scripts/claude-layer-api.js` 是分层能力的确定性入口。
 
 历史对应关系(供理解 lib 与 Skills 的分工):
 

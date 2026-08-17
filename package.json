@@ -20,7 +20,6 @@
     "codex:register": "node scripts/register-codex-marketplace.js",
     "sync:codex": "node scripts/sync-codex-skills.js",
     "validate:architecture": "node scripts/validate-architecture.js",
-    "validate:harness-contracts": "tsc --noEmit -p harness/tsconfig.json",
     "validate:layer": "node scripts/validate-layer-contract.js --self-check",
     "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",

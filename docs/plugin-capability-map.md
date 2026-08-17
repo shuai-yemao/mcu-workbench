@@ -11,7 +11,7 @@
 | 能力链 | 入口 | 主要内容 | 当前定位 |
 |---|---|---|---|
 | Skills 链 | `.claude-plugin/plugin.json` → `skills/` | 架构知识、工作流、参考资料和工具脚本 | 当前主要插件能力 |
-| 脚本/API 链 | `scripts/claude-layer-api.js` → `lib/` | 分层扫描/校验、harness Programmatic API | 确定性入口(原 Node CLI 已移除,2026-08-08) |
+| 脚本/API 链 | `scripts/claude-layer-api.js` → `lib/` | 分层扫描/校验 | 确定性入口(原 Node CLI 已移除,2026-08-08) |
 
 归档内容已从 `archive/` 移除，旧 skill 能力已内化到对应 canonical skill 的 `references/capabilities/`。
 
