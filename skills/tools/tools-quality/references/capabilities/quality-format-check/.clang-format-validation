@@ -11,7 +11,7 @@ UseTab: Always
 IndentCaseLabels: true
 IndentGotoLabels: false
 IndentPPDirectives: BeforeHash
-ColumnLimit: 0
+ColumnLimit: 80
 AllowShortBlocksOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None

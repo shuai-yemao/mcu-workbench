@@ -13,8 +13,8 @@ IndentCaseLabels: true
 IndentGotoLabels: false
 IndentPPDirectives: BeforeHash    # 条件编译层级由人工复核补足
 
-# 不从参考源码推导新的行宽上限
-ColumnLimit: 0
+# 代码和注释统一限制在 80 列以内
+ColumnLimit: 80
 AllowShortBlocksOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
