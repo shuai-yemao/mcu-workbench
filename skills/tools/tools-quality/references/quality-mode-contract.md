@@ -11,6 +11,7 @@
 
 - 当前任务或阶段 ID；
 - 目标项目绝对路径、分支/提交和变更文件；
+- 每个变更文件的代码来源标记：插件生成、插件要求修改或既有无关基线；
 - 当前 diff、相邻源码、格式配置、Cppcheck/MISRA 配置；
 - 已有质量基线和适用验证命令。
 
@@ -36,6 +37,7 @@ next handoff: <caller or implementation Skill>
 - `workflow-final-review` 的测试、类型检查、构建和 `git diff --check` 结果；
 - `tools-verification` 的适用 Map、Unity、架构、目标运行或硬件证据；
 - 最终 `.clang-format`/`.editorconfig`、Cppcheck/MISRA 配置和所有质量报告。
+- 插件硬门禁范围内的命名、函数、注释和格式检查结果。
 
 ## `final-gate` 输出
 
@@ -46,11 +48,14 @@ quality evidence: <comments, format, code review, Cppcheck, MISRA>
 scope trace: <final files and Spec IDs covered>
 verification evidence: <test/typecheck/build/tools-verification references>
 findings: <severity, relative/path:line, impact, repair or blocker>
+plugin hard gate: passed | blocked | not-applicable
 unverified: <missing or non-board-level evidence>
 next handoff: <final user output or upstream Skill>
 ```
 
-只有以下条件同时满足时才能 `passed`：质量检查覆盖最终范围、所有阻塞问题关闭、同条件复检通过、`git diff --check` 通过，且最终审查已提供每条 Spec 的代码/测试证据和适用验证证据。否则必须 `blocked`。
+只有以下条件同时满足时才能 `passed`：质量检查覆盖最终范围、插件硬门禁范围内的命名/函数/注释/格式全部通过、
+所有阻塞问题关闭、同条件复检通过、`git diff --check` 通过，且最终审查已提供每条 Spec 的代码/测试证据和适用验证证据。
+否则必须 `blocked`。
 
 ## 调用纪律
 
