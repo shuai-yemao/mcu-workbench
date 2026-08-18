@@ -48,7 +48,7 @@ describe('generated layer contract validator', () => {
   test('rejects a generated file whose version tag is removed instead of skipping validation', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
-      content.replace(/ \* @version[^\n]*\n/, '')
+      content.replace(/^ \* @version[^\n]*\n/m, '')
     ));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
@@ -87,20 +87,6 @@ describe('generated layer contract validator', () => {
       expect.objectContaining({
         ruleId: 'LAYER_FUNCTION_DOC',
         file: '03_Platform/platform_mcu/Inc/platform_spi.h'
-      })
-    ]));
-  });
-
-  test('rejects a generated source when its step comments are removed', async () => {
-    const root = await createSlice();
-    await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => (
-      content.replace(/\/\* [^\n]*-{3,} [^\n]*\*\//g, '')
-    ));
-
-    expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({
-        ruleId: 'LAYER_SOURCE_STEP_DOC',
-        file: '03_Platform/platform_mcu/Src/platform_spi.c'
       })
     ]));
   });
@@ -150,26 +136,16 @@ describe('generated layer contract validator', () => {
   test('rejects a generated type whose trailing comments are not aligned', async () => {
     const root = await createSlice();
     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
-      content.replace('event_id;  /**< 待处理的事件标识。', 'event_id;   /**< 待处理的事件标识。')
+      content.replace(
+        /(event_id;\s+\/\* 待处理的事件标识。) +\*\//,
+        '$1 */'
+      )
     ));
 
     expect(validate(root).errors).toEqual(expect.arrayContaining([
       expect.objectContaining({
         ruleId: 'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT',
         file: '03_Platform/platform_mcu/Inc/platform_spi.h'
-      })
-    ]));
-  });
-
-  test('rejects a generated source that keeps the generic step placeholder', async () => {
-    const root = await createSlice();
-    await mutate(root, '03_Platform/platform_mcu/Src/platform_spi.c', (content) => content
-      .replace(/\/\* [^\n]*-{3,} [^\n]*\*\//, '/* 入口检查与核心处理 ---------------------------------------------- */'));
-
-    expect(validate(root).errors).toEqual(expect.arrayContaining([
-      expect.objectContaining({
-        ruleId: 'LAYER_SOURCE_STEP_DOC',
-        file: '03_Platform/platform_mcu/Src/platform_spi.c'
       })
     ]));
   });

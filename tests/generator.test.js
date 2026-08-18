@@ -109,9 +109,10 @@ describe('Generator Module', () => {
     expect(byPath['03_Platform/platform_bsp/display/Src/platform_display_wrapper.c']).toBeUndefined();
     for (const file of files) {
       expect(file.content).toContain('@file');
-      expect(file.content).toContain('@par 依赖关系');
-      expect(file.content).toContain('处理流程：');
-      expect(file.content).toContain('Copyright (C) 2024 ProjectName, Inc.(Gmbh) or its affiliates.');
+      expect(file.content).toContain('@par dependencies');
+      expect(file.content).toContain('@note 1 tab == 4 spaces.');
+      expect(file.content).toContain('Copyright (C) 2024 EternalChip, Inc.(Gmbh) or its affiliates.');
+      expect(file.content).toContain('@author Jack | R&D Dept. | EternalChip');
       expect(file.content).toContain('All Rights Reserved.');
     }
     expect(byPath['03_Platform/platform_bsp/display/Inc/platform_display_model.h'])
@@ -146,11 +147,6 @@ describe('Generator Module', () => {
         .filter((line) => /^\/\*/.test(line))
         .filter((line) => line.slice(line.indexOf('/*')).length > 30)
         .every((line) => line.slice(line.indexOf('/*')).length === 60)).toBe(true);
-      expect(lines
-        .filter((line) => /\/\* (?:清理|事件|回调|转发|校验|状态|处理) -+ \*\//.test(line))
-        .filter((line) => /^\s+\/\*/.test(line))
-        .filter((line) => line.slice(line.indexOf('/*')).length > 30)
-        .every((line) => line.slice(line.indexOf('/*')).length === 40)).toBe(true);
     }
   });
 
@@ -189,12 +185,12 @@ describe('Generator Module', () => {
       '/* 公开类型 --------------------------------------------------------------------- */',
       '/** @brief 已有类型说明。 */',
       'typedef struct {',
-      '    uint8_t short_name; /**< 短字段 */',
-      '    uint32_t longer_name; /**< 长字段 */',
+      '    uint8_t short_name; /* 短字段 */',
+      '    uint32_t longer_name; /* 长字段 */',
       '} demo_config_t;',
       '',
       'int demo_read(void) {',
-      '    /* 校验 ---------------- */',
+      '    /* DMA 缓冲区必须在传输完成前保持有效。 */',
       '    return 0;',
       '}',
       ''
@@ -203,23 +199,25 @@ describe('Generator Module', () => {
     const formatted = formatExistingCode(source, 'demo.c');
     const lines = formatted.split(/\r?\n/);
     const secondary = lines.find((line) => line.includes('/* 初始化 '));
-    const tertiary = lines.find((line) => line.includes('/* 校验 '));
-    const memberComments = lines.filter((line) => line.includes('/**<'));
+    const memberComments = lines.filter((line) => /;\s+\/\* /.test(line));
 
     expect(lines.some((line) => line.includes('/* 公开类型 '))).toBe(true);
-    expect(tertiary.slice(tertiary.indexOf('/*')).length).toBe(40);
-    expect(memberComments.map((line) => line.indexOf('/**<'))).toEqual([
-      memberComments[0].indexOf('/**<'),
-      memberComments[0].indexOf('/**<')
+    expect(memberComments.map((line) => line.indexOf('/*'))).toEqual([
+      memberComments[0].indexOf('/*'),
+      memberComments[0].indexOf('/*')
     ]);
+    expect(memberComments.map((line) => line.lastIndexOf('*/'))).toEqual([
+      memberComments[0].lastIndexOf('*/'),
+      memberComments[0].lastIndexOf('*/')
+    ]);
+    expect(memberComments.every((line) => line.length <= 80)).toBe(true);
     expect(secondary).toBeUndefined();
     expect(formatExistingCode(formatted, 'demo.c')).toBe(formatted);
   });
 
-  test('does not duplicate phase comments for existing or consecutive logic steps', () => {
+  test('does not add generic phase comments to existing functions', () => {
     const source = [
       'int demo_write(int value) {',
-      '    /* 处理 ------------------------------- */',
       '    value += 1;',
       '    value += 2;',
       '    return value;',
@@ -229,7 +227,7 @@ describe('Generator Module', () => {
 
     const formatted = formatExistingCode(source, 'demo.c');
 
-    expect((formatted.match(/\/\* 处理 -+ \*\//g) || []).length).toBe(1);
+    expect(formatted).not.toMatch(/\/\* (?:处理|转发|状态|校验|结果) -+/);
     expect(formatExistingCode(formatted, 'demo.c')).toBe(formatted);
   });
 
@@ -241,10 +239,10 @@ describe('Generator Module', () => {
     const driver = files.find((file) => file.path.endsWith('impl_w25q64_driver.c')).content;
     const driverHeader = files.find((file) => file.path.endsWith('impl_w25q64_driver.h')).content;
 
-    expect(driver).toContain('@note 缩进使用 4 个空格，禁止使用 TAB。');
+    expect(driver).toContain('@note 1 tab == 4 spaces.');
     expect(driver).toContain('@brief 读取设备标识。');
-    expect(driver).toMatch(/\/\* 转发 -+ \*\//);
-    expect(driver).toContain('调用注入的底层操作并传播结果。');
+    expect(driver).not.toMatch(/\/\* (?:转发|校验|状态|结果|处理) -+/);
+    expect(driver).not.toContain('调用注入的底层操作并传播结果。');
     expect(driver).not.toContain('入口检查与核心处理');
     expect(driver).not.toContain('成员或枚举值说明');
     expect(driverHeader).toContain('#endif /* IMPL_W25Q64_DRIVER_H */');
@@ -261,18 +259,37 @@ describe('Generator Module', () => {
     expect(header).toContain('/* 初始化 ');
     expect(header).toContain('/* 读写 ');
     expect(header).toContain('/* 回调 ');
-    expect(header).toMatch(/event_id;\s+\/\*\*< 待处理的事件标识。/);
-    expect(header).toMatch(/status;\s+\/\*\*< 事件处理状态。/);
+    expect(header).toMatch(/event_id;\s+\/\* 待处理的事件标识。/);
+    expect(header).toMatch(/status;\s+\/\* 事件处理状态。/);
     expect(header).toMatch(/PLATFORM_ERR_OK\s+= 0,.*\n\s+PLATFORM_ERR_PARAM\s+= 3,/);
     expect(header).not.toContain('成员或枚举值说明');
     expect(source).toContain('/* IRQ 功能开关或事件标识 ');
     expect(source).toContain('event->event_id = PLATFORM_SPI_EVENT_IRQ;');
     expect(source).toContain('event->status   = PLATFORM_ERR_OK;');
     expect(source).toContain('event->sequence += 1U;');
-    expect(source).toMatch(/\/\* 事件 -+ \*\/[\s\S]*event->event_id = PLATFORM_SPI_EVENT_IRQ;/);
-    expect(source).toMatch(/\/\* 状态 -+ \*\/[\s\S]*event->status\s+= PLATFORM_ERR_OK;/);
-    expect(source).toContain('检查输入参数、依赖和前置状态。');
+    expect(source).not.toMatch(/\/\* (?:事件|状态|校验|结果|转发) -+/);
+    expect(source).not.toContain('检查输入参数、依赖和前置状态。');
     expect(header).toContain('#endif /* PLATFORM_SPI_H */');
     expect(source).toContain('if (instance == NULL || instance->pf_init == NULL) {');
+  });
+
+  test('documents public headers and core C functions without documenting trivial helpers', () => {
+    const publicHeader = formatExistingCode('int demo_read(int value);\n', 'Inc/demo.h');
+    const privateHeader = formatExistingCode('int demo_read(int value);\n', 'Private/demo_private.h');
+    const source = formatExistingCode([
+      'static int trivial_helper(int value) { return value; }',
+      'static int demo_transfer(int value) {',
+      '    if (value < 0) {',
+      '        return -1;',
+      '    }',
+      '    return value;',
+      '}',
+      ''
+    ].join('\n'), 'demo.c');
+
+    expect(publicHeader).toMatch(/@brief[\s\S]*@param[\s\S]*demo_read/);
+    expect(privateHeader).not.toMatch(/@param\s+\[in\]\s+value/);
+    expect(source).not.toContain('执行 trivial_helper 的模块操作。');
+    expect(source).toContain('@brief 执行带超时约束的同步数据传输。');
   });
 });

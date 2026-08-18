@@ -198,6 +198,7 @@ function findFunctionContracts(content) {
     const closeParen = signature.lastIndexOf(')');
     contracts.push({
       name,
+      isStatic: /\bstatic\b/.test(code.slice(lineStart, nameStart)),
       start: lineStart,
       returnType: code.slice(lineStart, nameStart).trim(),
       parameters: signature.slice(openParen + 1, closeParen),
@@ -210,45 +211,75 @@ function findFunctionContracts(content) {
   return contracts;
 }
 
-const FUNCTION_STEP_LABELS = ['清理', '事件', '回调', '转发', '校验', '状态', '结果', '处理'];
-
-function requiredFunctionSteps(contract) {
-  const source = maskCommentsAndStrings(contract.body);
-  const required = [];
-  const add = (label) => {
-    if (!required.includes(label)) required.push(label);
-  };
-
-  if (/cleanup_|goto\s+cleanup_/.test(source)) add('清理');
-  if (/callback\s*\(|event_callback/.test(source)) add('回调');
-  if (/^\s*(?:if|switch|for|while)\b|(?:==|!=|<=|>=)\s*(?:NULL|0|false|true)|!\s*[A-Za-z_][\w.\->]*/m.test(source)) {
-    add('校验');
-  }
-  if (/(?:pf_[A-Za-z_]\w*|[A-Za-z_]\w*_ops\s*(?:\.|->)\s*[A-Za-z_]\w*)\s*\(/.test(source)) {
-    add('转发');
-  }
-  if (/(?:event_pending|pending_event_id|pending_status|event_id)\s*(?:\+?=|-=)/.test(source)) {
-    add('事件');
-  }
-  if (/(?:is_inited|is_ready|s_[A-Za-z_]\w*|status)\s*(?:\+?=|-=)/.test(source)) {
-    add('状态');
-  }
-  const sourceWithoutGuardReturns = source
-    .replace(/\bif\s*\([^;{}]*\)\s*\{[^{}]*\}/g, '')
-    .replace(/\bif\s*\([^;{}]*\)\s*return\b[^;]*;/g, '');
-  const returnExpressions = [...sourceWithoutGuardReturns.matchAll(/\breturn\b([\s\S]*?);/g)]
-    .map((match) => match[1]);
-  if (returnExpressions.some((expression) => !/(?:pf_[A-Za-z_]\w*|[A-Za-z_]\w*_ops\s*(?:\.|->)\s*[A-Za-z_]\w*)\s*\(/.test(expression))) {
-    add('结果');
-  }
-  if (required.length === 0) {
-    add('处理');
-  }
-  return required;
+function isPrivateHeaderPath(relative) {
+  const normalized = String(relative || '').replace(/\\/g, '/').toLowerCase();
+  const baseName = path.posix.basename(normalized);
+  return /(?:^|\/)(?:private|priv|internal)(?:\/|$)/.test(normalized)
+    || /(?:^|[-_])(?:private|priv|internal)(?:[-_.]|$)/.test(baseName);
 }
 
-function hasFunctionStepComment(body, label) {
-  return new RegExp(`\\/\\*\\s*${label}\\s*-+\\s*\\*\\/`).test(body);
+function isCoreFunctionContract(contract) {
+  const source = `${contract.name} ${contract.parameters} ${contract.body}`;
+  const bodyLines = contract.body
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !/^\/\//.test(line) && !/^\/\*/.test(line));
+  const controlFlowCount = (source.match(/\b(?:if|for|while|switch|case|return)\b/g) || []).length;
+  const callCount = (contract.body.match(/\b[A-Za-z_]\w*\s*\(/g) || []).length;
+  const riskyOperation = /(?:dma|irq|isr|callback|queue|mutex|semaphore|timeout|retry|state|error|cleanup|register|volatile)/i.test(source);
+  const coreName = /(?:^|_)(?:init|deinit|register|unregister|process|dispatch|notify|transfer|flush|start|stop|cancel|handle|recover|reset|configure|bind|open|close|destroy|create|read|write|get|set)(?:_|$)/i.test(contract.name);
+
+  return coreName || bodyLines.length >= 8 || controlFlowCount >= 3 || callCount >= 3 || riskyOperation;
+}
+
+function requiresFunctionDocumentation(contract, relative) {
+  if (/\.(?:h|hpp)$/i.test(relative)) return !isPrivateHeaderPath(relative);
+  return /\.c$/i.test(relative) && contract.isDefinition && isCoreFunctionContract(contract);
+}
+
+function validateFunctionInternalCommentAlignment(file, errors) {
+  const lines = file.content.split(/\r?\n/);
+  const codeLines = maskCommentsAndStrings(file.content).split(/\r?\n/);
+  let braceDepth = 0;
+  let group = [];
+  const flush = () => {
+    if (group.length > 1) {
+      const commentColumn = group[0].commentColumn;
+      const commentEndColumn = group[0].commentEndColumn;
+      for (const item of group) {
+        if (item.commentColumn !== commentColumn || item.commentEndColumn !== commentEndColumn) {
+          addError(errors, 'LAYER_FORMAT_FUNCTION_COMMENT_ALIGNMENT', file.relative,
+            `Consecutive function comments must align both sides at line ${item.line + 1}.`);
+        }
+      }
+    }
+    group = [];
+  };
+
+  lines.forEach((line, index) => {
+    if (braceDepth === 0) {
+      flush();
+      const code = codeLines[index] || '';
+      braceDepth += (code.match(/{/g) || []).length;
+      braceDepth -= (code.match(/}/g) || []).length;
+      braceDepth = Math.max(0, braceDepth);
+      return;
+    }
+    const match = line.match(/^(\s*)\/(\*(?!\*)\s*[^*]*?\s*\*\/\s*)$/);
+    if (match) {
+      const commentColumn = match[1].length;
+      const commentEndColumn = line.lastIndexOf('*/') + 2;
+      if (group.length > 0 && group.at(-1).commentColumn !== commentColumn) flush();
+      group.push({ line: index, commentColumn, commentEndColumn });
+    } else {
+      flush();
+    }
+    const code = codeLines[index] || '';
+    braceDepth += (code.match(/{/g) || []).length;
+    braceDepth -= (code.match(/}/g) || []).length;
+    braceDepth = Math.max(0, braceDepth);
+  });
+  flush();
 }
 
 function validateCommentCompleteness(files, errors, { strictGeneratedStyle = true } = {}) {
@@ -260,16 +291,27 @@ function validateCommentCompleteness(files, errors, { strictGeneratedStyle = tru
           `Generated file header must contain ${tag}.`);
       }
     }
-    if (!/@par\s+(?:依赖关系|dependencies)/.test(file.content)) {
-      addError(errors, 'LAYER_FILE_DOC', file.relative,
-        'Generated file header must contain @par 依赖关系.');
+    for (const [pattern, description] of [
+      [/^ \* Copyright \(C\) 2024 EternalChip, Inc\.\(Gmbh\) or its affiliates\.$/m, 'the EternalChip copyright line'],
+      [/^ \* @author Jack \| R&D Dept\. \| EternalChip$/m, 'the fixed EternalChip author line']
+    ]) {
+      if (!pattern.test(file.content)) {
+        addError(errors, 'LAYER_FILE_DOC', file.relative,
+          `Generated file header must contain ${description}.`);
+      }
     }
-    if (!/处理流程：|Processing flow:/.test(file.content)) {
+    if (!/^ \* @par dependencies$/m.test(file.content)) {
       addError(errors, 'LAYER_FILE_DOC', file.relative,
-        'Generated file header must contain a processing flow section.');
+        'Generated file header must contain the fixed @par dependencies field.');
+    }
+    if (!/^ \* @note 1 tab == 4 spaces\.$/m.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DOC', file.relative,
+        'Generated file header must contain the fixed indentation note.');
     }
     const contracts = findFunctionContracts(file.content);
     for (const contract of contracts) {
+      const requiresDocumentation = requiresFunctionDocumentation(contract, file.relative);
+      if (!requiresDocumentation) continue;
       if (!contract.comment || !/@brief\b/.test(contract.comment)) {
         addError(errors, 'LAYER_FUNCTION_DOC', file.relative,
           `Function ${contract.name} must have a Doxygen @brief comment.`);
@@ -302,22 +344,6 @@ function validateCommentCompleteness(files, errors, { strictGeneratedStyle = tru
         addError(errors, 'LAYER_FUNCTION_WARNING_DOC', file.relative,
           `Function ${contract.name} must document DMA prerequisites with @warning.`);
       }
-      if (contract.isDefinition) {
-        for (const step of requiredFunctionSteps(contract)) {
-          if (!hasFunctionStepComment(contract.body, step)) {
-            addError(errors, 'LAYER_FUNCTION_STEP_DOC', file.relative,
-              `Function ${contract.name} must document the ${step} logic stage inside its body.`);
-          }
-        }
-      }
-    }
-    if (file.relative.endsWith('.c') && !/\/\*[\s\S]*-{3,}/.test(file.content)) {
-      addError(errors, 'LAYER_SOURCE_STEP_DOC', file.relative,
-        'Generated source must contain at least one dashed step comment for key logic.');
-    }
-    if (file.relative.endsWith('.c') && /入口检查与核心处理/.test(file.content)) {
-      addError(errors, 'LAYER_SOURCE_STEP_DOC', file.relative,
-        'Generated source must use a semantic step comment instead of the generic placeholder.');
     }
     const typePattern = /typedef\s+(?:enum|struct)\s*\{/g;
     for (const match of file.content.matchAll(typePattern)) {
@@ -514,15 +540,19 @@ function parseAssignmentAlignment(line) {
 
 function parseEnumAlignment(line) {
   const match = line.match(
-    /^\s*[A-Z][A-Z0-9_]*\s*=\s*[^,]+,?\s*(?:\/\*\*<.*\*\/)?\s*$/
+    /^\s*[A-Z][A-Z0-9_]*\s*=\s*[^,]+,?\s*(?:\/\*.*\*\/)?\s*$/
   );
   return match ? { operatorColumn: line.indexOf('=') } : null;
 }
 
 function parseTrailingCommentAlignment(line) {
   const match = line.match(/^(\s*.*?\S)\s+(\/\*\*?<[^]*?\*\/|\/\*[^]*?\*\/|\/\/.*)\s*$/);
-  if (!match || /^\s*\/\//.test(match[1]) || /^\s*\/\*/.test(match[1])) return null;
-  return { commentColumn: line.indexOf(match[2]) };
+  if (!match || /^\s*\/\//.test(match[1]) || /^\s*\/\*/.test(match[1])
+    || !/^\/\*/.test(match[2])) return null;
+  return {
+    commentColumn: line.indexOf(match[2]),
+    commentEndColumn: line.lastIndexOf('*/') + 2
+  };
 }
 
 function stripPluginAlignment(content) {
@@ -628,7 +658,6 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
     privateFunctions: '私有函数'
   });
   const secondaryLabels = ['返回值', '超时值', '事件', '配置', '默认值', '初始化', '读写', '回调', '辅助', '接口'];
-  const tertiaryLabels = ['清理', '事件', '回调', '转发', '校验', '状态', '结果', '处理'];
   const validatePartitionWidth = (line, labels, width, ruleId, currentFile, inCodeBlock) => {
     const start = line.indexOf('/*');
     if (start < 0) return;
@@ -667,6 +696,11 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
       lines, file, errors, parseTrailingCommentAlignment,
       'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentColumn', 'Trailing comments'
     );
+    validateAlignmentGroups(
+      lines, file, errors, parseTrailingCommentAlignment,
+      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentEndColumn', 'Trailing comment ends'
+    );
+    validateFunctionInternalCommentAlignment(file, errors);
     if (!datePattern.test(file.content)) {
       addError(errors, 'LAYER_FILE_DATE', file.relative,
         'Generated file header must contain the current date in @version.');
@@ -691,7 +725,6 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
       }
       validatePartitionWidth(line, primaryLabels, 80, 'LAYER_FORMAT_PRIMARY_PARTITION', file, braceDepth > 0);
       validatePartitionWidth(line, secondaryLabels, 60, 'LAYER_FORMAT_SECONDARY_PARTITION', file, braceDepth > 0);
-      validatePartitionWidth(line, tertiaryLabels, 40, 'LAYER_FORMAT_TERTIARY_PARTITION', file, braceDepth > 0);
       const code = line.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '');
       braceDepth += (code.match(/{/g) || []).length;
       braceDepth -= (code.match(/}/g) || []).length;
