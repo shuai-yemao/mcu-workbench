@@ -119,7 +119,7 @@ describe('Generator Module', () => {
       .toContain('backend_context');
   });
 
-  test('formats every generated file with the current header date and 80-column layout', async () => {
+  test('formats every generated file with the universal tab and Allman layout', async () => {
     const files = [
       ...(await generateCorePeripheral('spi', 'stm32f4')),
       ...(await generateBspDriver({
@@ -130,14 +130,15 @@ describe('Generator Module', () => {
       }))
     ];
     const currentDate = new Date().toISOString().slice(0, 10);
+    let generatedTabFound = false;
 
     for (const file of files) {
       const lines = file.content.split(/\r?\n/);
       expect(file.content).toContain(`@version V1.0 ${currentDate}`);
-      expect(lines.some((line) => line.length > 80)).toBe(false);
-      expect(lines.some((line) => line.includes('\t'))).toBe(false);
+      generatedTabFound = generatedTabFound || lines.some((line) => line.includes('\t'));
       expect(lines.some((line) => /typedef\s+(?:struct|enum)\s*\{/.test(line))).toBe(false);
       expect(lines.some((line) => /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/.test(line))).toBe(false);
+      expect(lines.some((line) => /^\s*(?:if|for|while|switch)\b.*\{/.test(line))).toBe(false);
       const paddedComments = lines.filter((line) => /\/\*.*-{5,}.*\*\//.test(line));
       expect(paddedComments
         .filter((line) => /\/\* (?:包含文件|公开|私有)/.test(line))
@@ -148,6 +149,7 @@ describe('Generator Module', () => {
         .filter((line) => line.slice(line.indexOf('/*')).length > 30)
         .every((line) => line.slice(line.indexOf('/*')).length === 60)).toBe(true);
     }
+    expect(generatedTabFound).toBe(true);
   });
 
   test('fails closed when clang-format cannot format a generated file', async () => {
@@ -239,7 +241,7 @@ describe('Generator Module', () => {
     const driver = files.find((file) => file.path.endsWith('impl_w25q64_driver.c')).content;
     const driverHeader = files.find((file) => file.path.endsWith('impl_w25q64_driver.h')).content;
 
-    expect(driver).toContain('@note 1 tab == 4 spaces.');
+      expect(driver).toContain('@note 1 tab == 4 spaces.');
     expect(driver).toContain('@brief 读取设备标识。');
     expect(driver).not.toMatch(/\/\* (?:转发|校验|状态|结果|处理) -+/);
     expect(driver).not.toContain('调用注入的底层操作并传播结果。');
@@ -270,7 +272,7 @@ describe('Generator Module', () => {
     expect(source).not.toMatch(/\/\* (?:事件|状态|校验|结果|转发) -+/);
     expect(source).not.toContain('检查输入参数、依赖和前置状态。');
     expect(header).toContain('#endif /* PLATFORM_SPI_H */');
-    expect(source).toContain('if (instance == NULL || instance->pf_init == NULL) {');
+    expect(source).toMatch(/if \(instance == NULL \|\| instance->pf_init == NULL\)\n\s*\{/);
   });
 
   test('documents public headers and core C functions without documenting trivial helpers', () => {

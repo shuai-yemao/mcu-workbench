@@ -1,13 +1,15 @@
 ---
 name: quality-format-check
-description: 嵌入式 C 代码格式检查 — 使用 clang-format 校验缩进、行宽、大括号、空格等是否符合 style-profile 编码规范。
+description: 嵌入式 C 代码格式检查 — 使用 clang-format 校验插件所有生成代码的缩进、列对齐、大括号、空格等是否符合 style-profile 编码规范。
 version: "1.0.0"
 ---
 
 # 格式检查
 
-> 基于 `.clang-format` 对嵌入式 C 代码进行自动化格式检查。
-> 检查项与 `style-profile` 编码规范保持一致：4 空格缩进、行宽 ≤80、函数/枚举/结构体大括号换行独行、if/for `{` 同行、指针 `*` 靠变量名等。
+> 基于 `.clang-format` 对插件所有生成的 `.c/.h` 文件进行自动化格式检查。
+> 默认排版基线来自审查过的 FreeRTOS/内核源码：TAB 缩进与列对齐、Allman 大括号、条件编译层级、连续声明组对齐；命名、函数和注释规则仍由 `style-profile` 全局约束。
+
+clang-format 对结构体内部的预处理指令可能不会完全保留源文件缩进，`#if/#endif` 的层级缩进需要人工复核。
 
 ## 前置条件
 
@@ -73,15 +75,25 @@ find drivers test \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} +
 
 | 检查项 | clang-format 配置键 | 编码规范对应 |
 |--------|---------------------|-------------|
-| 4 空格缩进 | `IndentWidth: 4`, `UseTab: Never` | 硬性约束 #1 |
-| 行宽 ≤80 | `ColumnLimit: 80` | 硬性约束 #2 |
-| 函数 `{` 换行独行 | `AfterFunction: true` | 排版细节 #3 |
-| if/for `{` 同行 | `AfterControlStatement: false` | 排版细节 #4 |
+| TAB 缩进和列对齐 | `IndentWidth: 4`, `TabWidth: 4`, `UseTab: Always` | 硬性约束 #1 |
+| 不新增固定行宽上限 | `ColumnLimit: 0` | 硬性约束 #2 |
+| 函数 `{` 换行独行 | `BreakBeforeBraces: Allman` | 排版细节 #3 |
+| if/for `{` 换行独行 | `BreakBeforeBraces: Allman` | 排版细节 #4 |
 | 枚举/结构体 `{` 换行独行 | `AfterEnum: true`, `AfterStruct: true` | 排版细节 #5 |
 | 二元运算符空格 | `SpaceBeforeAssignmentOperators: true` | 排版细节 #6 |
 | 括号内无空格 | `SpacesInParentheses: false` | 排版细节 #9 |
 | 指针 `*` 靠变量名 | `PointerAlignment: Right` | 排版细节 #10 |
 | 函数间空一行 | `MaxEmptyLinesToKeep: 1`, `SeparateDefinitionBlocks` | 排版细节 #12 |
+
+统一插件 profile 的关键配置：
+
+| 检查项 | profile 配置键 |
+|--------|----------------|
+| TAB 缩进和列对齐 | `UseTab: Always`, `TabWidth: 4` |
+| Allman 大括号 | `BreakBeforeBraces: Allman` |
+| 条件编译按层级缩进 | `IndentPPDirectives: BeforeHash` |
+| 不新增行宽限制 | `ColumnLimit: 0` |
+| 连续声明组列对齐 | `AlignConsecutiveDeclarations.Enabled: true` |
 
 ## 边界
 

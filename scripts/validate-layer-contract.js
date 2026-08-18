@@ -238,8 +238,8 @@ function requiresFunctionDocumentation(contract, relative) {
 }
 
 function validateFunctionInternalCommentAlignment(file, errors) {
-  const lines = file.content.split(/\r?\n/);
-  const codeLines = maskCommentsAndStrings(file.content).split(/\r?\n/);
+  const lines = file.content.split(/\r?\n/).map((line) => expandTabs(line));
+  const codeLines = maskCommentsAndStrings(file.content).split(/\r?\n/).map((line) => expandTabs(line));
   let braceDepth = 0;
   let group = [];
   const flush = () => {
@@ -280,6 +280,22 @@ function validateFunctionInternalCommentAlignment(file, errors) {
     braceDepth = Math.max(0, braceDepth);
   });
   flush();
+}
+
+function expandTabs(line, tabWidth = 4) {
+  let column = 0;
+  let result = '';
+  for (const character of line) {
+    if (character === '\t') {
+      const spaces = tabWidth - (column % tabWidth);
+      result += ' '.repeat(spaces);
+      column += spaces;
+    } else {
+      result += character;
+      column += 1;
+    }
+  }
+  return result;
 }
 
 function validateCommentCompleteness(files, errors, { strictGeneratedStyle = true } = {}) {
@@ -586,7 +602,7 @@ function stripPluginAlignment(content) {
   }).join('\n');
 }
 
-function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, description) {
+function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, description, maxWidth = null) {
   let group = [];
 
   const flush = () => {
@@ -596,7 +612,7 @@ function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, des
     }
     const columns = new Set(group.map((item) => item[field]));
     const target = Math.max(...group.map((item) => item[field]));
-    if (group.some((item) => target + lines[item.index].length - item[field] > 80)) {
+    if (maxWidth !== null && group.some((item) => target + lines[item.index].length - item[field] > maxWidth)) {
       group = [];
       return;
     }
@@ -674,31 +690,32 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
   };
   for (const file of Object.values(files)) {
     const lines = file.content.split(/\r?\n/);
+    const alignmentLines = lines.map((line) => expandTabs(line));
     if (!strictGeneratedStyle && !file.content.includes('@version')) continue;
     validateClangFormat(file, errors);
     validateAlignmentGroups(
-      lines, file, errors, parseDeclarationAlignment,
+      alignmentLines, file, errors, parseDeclarationAlignment,
       'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
     );
     validateAlignmentGroups(
-      lines, file, errors, parseDeclarationAlignment,
+      alignmentLines, file, errors, parseDeclarationAlignment,
       'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
     );
     validateAlignmentGroups(
-      lines, file, errors, parseAssignmentAlignment,
+      alignmentLines, file, errors, parseAssignmentAlignment,
       'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
     );
     validateAlignmentGroups(
-      lines, file, errors, parseEnumAlignment,
+      alignmentLines, file, errors, parseEnumAlignment,
       'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
     );
     validateAlignmentGroups(
-      lines, file, errors, parseTrailingCommentAlignment,
-      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentColumn', 'Trailing comments'
+      alignmentLines, file, errors, parseTrailingCommentAlignment,
+      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentColumn', 'Trailing comments', 80
     );
     validateAlignmentGroups(
-      lines, file, errors, parseTrailingCommentAlignment,
-      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentEndColumn', 'Trailing comment ends'
+      alignmentLines, file, errors, parseTrailingCommentAlignment,
+      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentEndColumn', 'Trailing comment ends', 80
     );
     validateFunctionInternalCommentAlignment(file, errors);
     if (!datePattern.test(file.content)) {
@@ -707,14 +724,6 @@ function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } =
     }
     let braceDepth = 0;
     lines.forEach((line, index) => {
-      if (line.includes('\t')) {
-        addError(errors, 'LAYER_FORMAT_TAB', file.relative,
-          `Generated source must not contain TAB characters (line ${index + 1}).`);
-      }
-      if (line.length > 80) {
-        addError(errors, 'LAYER_FORMAT_WIDTH', file.relative,
-          `Generated source must not exceed 80 columns (line ${index + 1}).`);
-      }
       if (/typedef\s+(?:struct|enum)\s*\{/.test(line)) {
         addError(errors, 'LAYER_FORMAT_TYPE_BRACE', file.relative,
           `Type definition brace must be on its own line (line ${index + 1}).`);

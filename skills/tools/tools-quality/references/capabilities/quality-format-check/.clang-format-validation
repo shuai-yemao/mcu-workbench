@@ -1,27 +1,23 @@
-# clang-format validation profile for plugin-aligned output.
+# clang-format validation profile for all plugin-generated embedded C/C++ code.
 # The generator applies consecutive declaration/assignment/comment alignment
 # after clang-format; this profile validates the remaining language formatting.
 
 Language: Cpp
-BasedOnStyle: WebKit
+BasedOnStyle: LLVM
+Standard: Cpp11
 IndentWidth: 4
 TabWidth: 4
-UseTab: Never
+UseTab: Always
 IndentCaseLabels: true
-IndentPPDirectives: None
-ColumnLimit: 80
+IndentGotoLabels: false
+IndentPPDirectives: BeforeHash
+ColumnLimit: 0
 AllowShortBlocksOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-BreakBeforeBraces: Custom
-BraceWrapping:
-  AfterFunction: true
-  AfterControlStatement: false
-  AfterEnum: true
-  AfterStruct: true
-  BeforeElse: false
+BreakBeforeBraces: Allman
 InsertBraces: true
 SpaceBeforeParens: ControlStatements
 SpaceAfterCStyleCast: true
@@ -29,7 +25,7 @@ SpaceBeforeAssignmentOperators: true
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpaceAfterLogicalNot: false
-SpacesInAngles: false
+SpacesInAngles: Never
 PointerAlignment: Right
 MaxEmptyLinesToKeep: 1
 SeparateDefinitionBlocks: Leave

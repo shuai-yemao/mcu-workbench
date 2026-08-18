@@ -1,18 +1,20 @@
-# clang-format for embedded C (STM32F4)
-# Matches tools-quality style-profile v1.0
+# clang-format for all plugin-generated embedded C/C++ code.
+# The layout baseline is extracted from the reviewed FreeRTOS kernel source.
 
 Language: Cpp
-BasedOnStyle: WebKit
+BasedOnStyle: LLVM
+Standard: Cpp11
 
 # Indentation
 IndentWidth: 4
 TabWidth: 4
-UseTab: Never                     # 禁止 TAB，只用空格
-IndentCaseLabels: true            # switch-case 缩进
-IndentPPDirectives: None          # #ifdef 等不缩进
+UseTab: Always                    # TAB 用于缩进和连续声明组的列布局
+IndentCaseLabels: true
+IndentGotoLabels: false
+IndentPPDirectives: BeforeHash    # 条件编译层级由人工复核补足
 
-# Line width
-ColumnLimit: 80
+# 不从参考源码推导新的行宽上限
+ColumnLimit: 0
 AllowShortBlocksOnASingleLine: false
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: None
@@ -20,32 +22,26 @@ AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
 
 # Brace style
-BreakBeforeBraces: Custom
-BraceWrapping:
-  AfterFunction: true              # 函数大括号换行独行（style-profile 排版细节 #3）
-  AfterControlStatement: false    # if/for/while 大括号同行（排版细节 #4）
-  AfterEnum: true                  # 枚举/结构体大括号换行独行（排版细节 #5）
-  AfterStruct: true
-  BeforeElse: false
+BreakBeforeBraces: Allman
 
 # Control statements
-InsertBraces: true                  # 控制语句统一使用大括号
+InsertBraces: true                 # 控制语句统一使用大括号
 
 # Spacing
-SpaceBeforeParens: ControlStatements  # if ( 加空格，func( 不加
+SpaceBeforeParens: ControlStatements
 SpaceAfterCStyleCast: true
 SpaceBeforeAssignmentOperators: true
 SpacesInCStyleCastParentheses: false
-SpacesInParentheses: false        # 括号内不加空格
+SpacesInParentheses: false
 SpaceAfterLogicalNot: false
-SpacesInAngles: false
+SpacesInAngles: Never
 
 # Pointer alignment
-PointerAlignment: Right            # uint8_t *p_data
+PointerAlignment: Right
 
 # Blank lines
 MaxEmptyLinesToKeep: 1
-SeparateDefinitionBlocks: Leave  # 函数间空一行
+SeparateDefinitionBlocks: Leave
 
 # Misc
 AlignConsecutiveMacros: false
@@ -57,5 +53,5 @@ AlignConsecutiveDeclarations:
   Enabled: true
   AcrossEmptyLines: false
   AcrossComments: false
-SortIncludes: false               # 不自动排序 include
-ReflowComments: false             # 不自动回绕注释；行尾列由插件质量管线对齐
+SortIncludes: false
+ReflowComments: false             # 注释列由插件质量管线继续对齐
