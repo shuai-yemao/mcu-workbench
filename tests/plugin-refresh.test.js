@@ -14,10 +14,10 @@ function writeFile(root, relativePath, content) {
   fs.writeFileSync(target, content, 'utf8');
 }
 
-function createFixture() {
+function createFixture({ packageVersion = '9.9.9', pluginVersion = packageVersion } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-workbench-refresh-'));
-  writeFile(root, 'package.json', JSON.stringify({ version: '9.9.9' }));
-  writeFile(root, '.codex-plugin/plugin.json', JSON.stringify({ version: '9.9.9' }));
+  writeFile(root, 'package.json', JSON.stringify({ version: packageVersion }));
+  writeFile(root, '.codex-plugin/plugin.json', JSON.stringify({ version: pluginVersion }));
   writeFile(root, 'AGENTS.md', 'agents');
   writeFile(root, 'AGENTS.override.md', 'override');
   writeFile(root, 'codex/AGENTS.md', 'codex');
@@ -56,6 +56,18 @@ describe('check-codex-plugin-refresh', () => {
     expect(report.status).toBe('up_to_date');
     expect(report.action).toBe('none');
     expect(report.source.fingerprint).toBe(report.cache.fingerprint);
+  });
+
+  test('uses the Codex manifest version for the cache location', () => {
+    const source = createFixture({ packageVersion: '9.9.9', pluginVersion: '1.0.0+codex.local' });
+    const cacheRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-workbench-cache-'));
+    fs.cpSync(source, path.join(cacheRoot, '1.0.0+codex.local'), { recursive: true });
+
+    const report = checkCodexPluginRefresh({ source, cacheRoot });
+
+    expect(report.status).toBe('up_to_date');
+    expect(report.source.version).toBe('1.0.0+codex.local');
+    expect(report.cache.path).toBe(path.join(cacheRoot, '1.0.0+codex.local'));
   });
 
   test('detects a changed skill and emits strict status', () => {

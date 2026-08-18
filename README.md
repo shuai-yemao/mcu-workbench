@@ -143,6 +143,19 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 安装启用后可在 Codex Composer 中使用 `@mcu-workbench` 快捷触发插件。
 
+### Codex 本地开发模式
+
+本地开发模式以当前仓库为插件源，通过本地 Marketplace 和官方插件安装命令更新 Codex；不会直接覆盖 `.codex/plugins/cache`：
+
+```powershell
+npm run codex:dev
+npm run codex:dev:install
+npm run codex:dev:check -- --json
+npm run codex:dev:watch
+```
+
+`codex:dev` 只校验并注册本地 Marketplace；`codex:dev:install` 为 Codex manifest 添加一次本地开发缓存后缀，然后执行 `codex plugin add mcu-workbench@mcu-workbench-local`；`codex:dev:watch` 监听 `agents/`、`codex/`、`skills/` 和根级插件文件，变更后自动重复该流程。若系统中的 `codex` CLI 不在默认 PATH，可通过 `CODEX_BIN` 或 `--codex-bin` 指定路径。安装完成后请新建 Codex 对话。
+
 检查本地 Marketplace 源与 Codex 受管缓存是否一致：
 
 ```powershell

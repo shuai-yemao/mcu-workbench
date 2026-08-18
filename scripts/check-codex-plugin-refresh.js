@@ -55,9 +55,12 @@ function parseArgs(argv) {
 }
 
 function readVersion(source) {
-  const packagePath = path.join(source, 'package.json');
-  const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-  return packageJson.version;
+  const manifestPath = path.join(source, '.codex-plugin', 'plugin.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (typeof manifest.version !== 'string' || !manifest.version.trim()) {
+    throw new Error(`Codex plugin manifest must contain a version: ${manifestPath}`);
+  }
+  return manifest.version;
 }
 
 function readGitCommit(source) {

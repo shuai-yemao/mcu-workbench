@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * 版本单一来源同步脚本。
- * package.json 的 version 是唯一版本源，.claude-plugin/plugin.json 与
- * .codex-plugin/plugin.json 的 version 必须与其一致。
+ * package.json 的 version 是正式版本源；Codex 本地开发允许在其后添加
+ * +codex.<token> 缓存后缀，正式同步时会清除该后缀。
  *
  * 用法：
  *   node scripts/sync-plugin-versions.js          # 同步（写回两个 plugin.json）
@@ -43,14 +43,20 @@ function syncVersions() {
   return version;
 }
 
+function isCodexDevelopmentVersion(version, packageVersion) {
+  return version === packageVersion || version.startsWith(`${packageVersion}+codex.`);
+}
+
 /** 校验器：向 errors 追加版本不一致错误。 */
 function checkVersionSync(errors) {
   const pkgVersion = readJson('package.json').version;
-  for (const target of VERSION_TARGETS) {
-    const manifestVersion = readJson(target).version;
-    if (manifestVersion !== pkgVersion) {
-      errors.push(`version: ${target} version(${manifestVersion}) 与 package.json(${pkgVersion}) 不一致，请运行 npm run sync:versions`);
-    }
+  const claudeVersion = readJson('.claude-plugin/plugin.json').version;
+  const codexVersion = readJson('.codex-plugin/plugin.json').version;
+  if (claudeVersion !== pkgVersion) {
+    errors.push(`version: .claude-plugin/plugin.json version(${claudeVersion}) 与 package.json(${pkgVersion}) 不一致，请运行 npm run sync:versions`);
+  }
+  if (!isCodexDevelopmentVersion(codexVersion, pkgVersion)) {
+    errors.push(`version: .codex-plugin/plugin.json version(${codexVersion}) 与 package.json(${pkgVersion}) 不一致，请运行 npm run sync:versions`);
   }
 }
 
@@ -73,6 +79,7 @@ if (require.main === module) {
 module.exports = {
   VERSION_TARGETS,
   getVersions,
+  isCodexDevelopmentVersion,
   syncVersions,
   checkVersionSync
 };
