@@ -59,11 +59,11 @@ claude plugin validate .
 
 插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。
 
-Workflow 层有八个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责按依赖每次只执行一项任务，复核并记录 Agent/Skill 分配，先补测试再实现、检查并回写状态，之后才进入实现层，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
+Workflow 层有八个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责在 Plan 用户批准后以 `auto_until_final_check` 模式按依赖连续执行任务，逐项完成 AI 审查、测试和状态回写，之后自动进入最终检查，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
 
 ### 需求约束入口
 
-`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。Router 输出可审计的初步需求约束包（RCP）后，固定交接给 `workflow-requirements-challenge`，由其先补齐 RCP 并质疑需求目的与工程可行性；完成质疑结论的更新 RCP 再交给 `workflow-review-gate`（必经审查门禁）完成反猜测审查和放行/阻塞判定；放行后由 `workflow-integration-plan` 生成并审查 `plan.md`，再由 `workflow-task-breakdown` 生成 `task.md`，交给 `workflow-task-execution` 按依赖逐项执行，最后分发实现层。
+`workflow-requirements-router` 是插件处理输入需求的第一个 Skill。它先按需求分配 `embedded-lead` 与一个或多个领域 Agent，再读取项目文件、构建配置和日志；无法由证据确认的内容才向用户补问。Router 输出可审计的初步需求约束包（RCP）后，固定交接给 `workflow-requirements-challenge`，由其先补齐 RCP 并质疑需求目的与工程可行性；完成质疑结论的更新 RCP 再交给 `workflow-review-gate`（必经审查门禁）完成反猜测审查和放行/阻塞判定；放行后由 `workflow-integration-plan` 生成并审查 `plan.md`，再由 `workflow-task-breakdown` 自动生成 `task.md`，交给 `workflow-task-execution` 按依赖连续执行，完成 AI 审查、测试和最终检查后才通知用户。例行 Task 和单项任务不再设置用户等待；只有无法依据已批准 Spec/Plan 消除、且需要新增用户决策的硬阻塞才暂停。
 
 RCP 会区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，同时携带证据位置、责任边界与验证边界；`workflow-review-gate` 发现新约束时必须回传 Router 更新 RCP，不能静默扩大范围。
 
@@ -169,6 +169,8 @@ npm run plugin:check-refresh -- --json --strict
 ### 嵌入式任务 Router-first 接入
 
 Codex 的插件 Skill 主要提供工作流指导，不能替代宿主级强制拦截。嵌入式任务应先经过 `workflow-requirements-router`，再依次形成 RCP、Challenge、Review-Package、放行的 `spec.md`、`plan.md` 和 `task.md`，之后才进入实现 Skill。
+
+用户审查固定集中在三个节点：RCP（H-01）、Spec（H-02）和 Plan/方案选择（H-03）。H-03 放行后，Task 生成、任务执行、AI 审查、测试和最终检查自动连续推进；最终通知只报告结果，不等同于提交、推送、烧录或发布授权。
 
 目标工程接入规则和 Gate 记录字段见 [`codex/embedded-workflow-entry.md`](codex/embedded-workflow-entry.md)。接入时保留目标工程已有规则，不修改 `embedded_framework` 或其他宿主适配；缺失或未放行的流程产物应标记为 `blocked`，不能仅凭插件安装、缓存一致或模型自述放行。
 

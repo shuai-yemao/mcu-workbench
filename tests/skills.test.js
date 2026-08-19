@@ -393,9 +393,10 @@ describe('Skills catalog and loader', () => {
     expect(taskTemplate).toContain('## 7. 下游交接');
   });
 
-  test('task execution enforces one-task, test-first, blocked-on-spec and status handoff rules', () => {
+  test('task execution enforces automatic continuation, test-first, blocked-on-spec and status handoff rules', () => {
     const execution = getSkillContent('workflow-task-execution');
-    expect(execution).toContain('每次调用只允许选择一个任务');
+    expect(execution).toContain('auto_until_final_check');
+    expect(execution).toContain('不等待用户逐项审查');
     expect(execution).toContain('Agent 与 Skill 分配协议');
     expect(execution).toContain('primary_agent');
     expect(execution).toContain('primary_implementation_skill');
@@ -404,7 +405,7 @@ describe('Skills catalog and loader', () => {
     expect(execution).toContain('Spec 内存在互相矛盾');
     expect(execution).toContain('不得自行选择解释');
     expect(execution).toContain('更新为 `pass`/`完成`');
-    expect(execution).toContain('下一次调用');
+    expect(execution).toContain('自动进入下一个依赖已满足的任务');
     expect(execution).toContain('验收标准：<criterion-by-criterion result>');
   });
 

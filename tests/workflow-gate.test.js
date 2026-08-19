@@ -15,8 +15,13 @@ function writeFile(root, relativePath, content) {
 
 function createFixture({
   specStatus = 'approved-for-task-execution',
+  specReviewStatus = 'approved',
+  planReviewStatus = 'approved',
+  selectedPlan = '方案 A',
+  planDecisionOwner = 'user',
   taskStatus = 'ready-for-execution',
   previousTaskStatus = 'pass',
+  taskId = 'T-01',
   rcpRequestId = REQUEST_ID,
   includeRcp = true,
 } = {}) {
@@ -34,6 +39,7 @@ function createFixture({
     '',
     `| request_id | \`${REQUEST_ID}\` |`,
     '| Spec 状态 | `' + specStatus + '` |',
+    '| 用户审查状态 | `' + specReviewStatus + '` |',
     `| 输入 RCP | \`${rcpName}\` |`,
     `| Review-Package | \`${reviewPackageName}\` |`,
     ''
@@ -43,6 +49,9 @@ function createFixture({
     '',
     `| request_id | \`${REQUEST_ID}\` |`,
     '| 计划状态 | `approved-for-task-execution` |',
+    '| 用户审查状态 | `' + planReviewStatus + '` |',
+    '| 选定方案 | `' + selectedPlan + '` |',
+    '| 方案选择人 | `' + planDecisionOwner + '` |',
     ''
   ].join('\n'));
   writeFile(root, path.join(documents, 'task.md'), [
@@ -53,7 +62,7 @@ function createFixture({
     '',
     '| ID | 任务 | 主实现 Skill | 前置 | 状态 | 主要产物 |',
     '|---|---|---|---|---|---|',
-    `| T-01 | 入口 | workflow-requirements-router | T-00 | ${previousTaskStatus} | docs |`,
+    `| ${taskId} | 入口 | workflow-requirements-router | T-00 | ${previousTaskStatus} | docs |`,
     ''
   ].join('\n'));
 
@@ -109,6 +118,24 @@ describe('validate-workflow-gate', () => {
     expect(result.report.blocking_reasons.join('\n')).toContain('Spec 状态未放行');
   });
 
+  test('blocks when the user has not approved the Spec gate', () => {
+    const result = runGate(createFixture({ specReviewStatus: 'awaiting_user_review' }));
+
+    expect(result.code).toBe(2);
+    expect(result.report.blocking_reasons.join('\n')).toContain('用户闸门 H-02 未批准');
+  });
+
+  test('blocks when the user has not approved or selected the Plan', () => {
+    const result = runGate(createFixture({
+      planReviewStatus: 'awaiting_user_review',
+      selectedPlan: 'none',
+    }));
+
+    expect(result.code).toBe(2);
+    expect(result.report.blocking_reasons.join('\n')).toContain('用户闸门 H-03 未批准');
+    expect(result.report.blocking_reasons.join('\n')).toContain('H-03 缺少用户选择的实施方案');
+  });
+
   test('blocks a request ID mismatch across workflow documents', () => {
     const result = runGate(createFixture({ rcpRequestId: 'REQ-OTHER' }));
 
@@ -121,6 +148,17 @@ describe('validate-workflow-gate', () => {
 
     expect(result.code).toBe(2);
     expect(result.report.blocking_reasons.join('\n')).toContain('前置任务 T-01 未完成');
+  });
+
+  test('accepts the current three-digit task identifiers for automatic execution', () => {
+    const result = runGate(createFixture({
+      taskId: 'T-001',
+      taskStatus: 'ready-for-auto-execution',
+      previousTaskStatus: 'ready',
+    }));
+
+    expect(result.code).toBe(0);
+    expect(result.report.status).toBe('pass');
   });
 
   test('reports invalid input for a missing project root', () => {

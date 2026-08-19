@@ -117,7 +117,7 @@ RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rc
 每次分诊都输出以下字段：
 
 ```text
-状态：分析中 | 待用户确认 | 待补证 | 可交接 | 阻塞
+状态：分析中 | 待用户确认 | 待补证 | 待用户审查 | 可交接 | 阻塞
 Spec 力度：<prototype | lightweight | full>
 Spec 叠加门禁：<none | human_review | versioned | both>
 风险依据：<命中的风险信号、证据和升级触发条件>
@@ -131,7 +131,8 @@ Spec 叠加门禁：<none | human_review | versioned | both>
 责任边界：<workflow-review-gate 负责审查与门禁，workflow-integration-plan 负责分层/审计/迁移与分发；明确不负责什么>
 交接契约：<每个交接的输入、输出、资源所有权>
 验证边界：<需要的静态/主机/构建/目标/实物证据；当前尚未通过的项>
-下一步：<补证问题，或 workflow-review-gate 执行的一项最小动作>
+用户闸门：`H-01 rcp-review`，状态为 `awaiting_user_review | approved | rejected`
+下一步：<补证问题、等待 H-01、或交给 workflow-review-gate>
 ```
 
 ## 硬约束
@@ -143,5 +144,6 @@ Spec 叠加门禁：<none | human_review | versioned | both>
 - 质疑阶段只输出证据化的目的、可行性、范围和验收结论，不生成方案 A/B、不要求用户选择，不得用推测扩大 RCP。
 - 不引用归档 Skill 作为 active 路由目标；只输出 catalog 中的 canonical ID。
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
+- RCP 完成补证和 Challenge 前，必须输出 H-01 用户审查摘要；未收到用户批准不得进入 Review Gate 的正式放行链。
 
 跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；风险力度选择见 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。

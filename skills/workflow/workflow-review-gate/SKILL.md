@@ -107,7 +107,7 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 四张审查清单是 `lightweight` 和 `full` 审查的**必选审计内容**，与是否存在既有实现方案无关。`prototype` 仍需在 RCP 中记录最小目标和临时边界，但不生成四张正式清单。它们必须同时：
 
 1. 保留在 `Review-Package` 中，作为审计记录和证据追溯源；
-2. 作为四个章节整合进 `spec.md`，交给用户审查和下游 Skill；
+2. 作为四个章节整合进 `spec.md`，交给用户完成 H-02 审查和下游 Skill；
 3. 不生成、不更新、不删除对应的四个独立 Markdown 文件。
 
 命名规范固定为：
@@ -156,6 +156,8 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 - 本 skill 只输出工程事实、反猜测审查结论、含四个清单章节的 Review-Package、spec.md 和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
 - 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；代码注释、格式、Cppcheck/MISRA 和代码审查质量门禁交给 [`tools-quality`](../../tools/tools-quality/SKILL.md)，Map/内存/Unity 与项目验证交给 [`tools-verification`](../../tools/tools-verification/SKILL.md)。
 - 分层审计、迁移路线、文件级改造顺序与实现层分发交给 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
+- H-02 是 Spec 级用户审查闸门；Spec 未记录 `用户审查状态: approved` 前不得进入 Plan。
+- Plan 之后不设置例行用户审查；Task、执行、AI 审查、测试和最终检查由下游自动完成。
 
 ## 参考
 

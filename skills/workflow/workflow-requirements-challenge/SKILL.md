@@ -200,7 +200,7 @@ Agent 协作输出仍必须包含 `Summary`、`Evidence`、`Changed files`、`Te
 1. 将澄清问答、目的/可行性结论、验收缺口和未决风险写入 RCP；
 2. 将完成补证后的 RCP 和本 Skill 的质疑结果交给 `workflow-review-gate`；
 3. 由 `workflow-review-gate` 审查 RCP 和既有实现方案的工程证据并判定放行或阻塞；
-4. 只有审核放行后，才由 `workflow-integration-plan` 做分层审计、文件级计划和唯一实现层 Skill 分发。
+4. 只有用户批准 H-01、且 Review Gate 完成后，才由 `workflow-integration-plan` 做分层审计、文件级计划和唯一实现层 Skill 分发。
 
 如果 `workflow-review-gate` 发现新约束，必须回传 Router/本 Skill 更新 RCP，不得静默扩大施工范围或替用户补写事实。
 
@@ -217,5 +217,6 @@ Agent 协作输出仍必须包含 `Summary`、`Evidence`、`Changed files`、`Te
 - 本 Skill 不生成方案 A/B、不推荐方案、不要求用户选择；
 - 完成 RCP 补证和质疑结论后才能进入 Review Gate；
 - Review Gate 接收的是无方案选择依赖的正式 RCP；
+- H-01～H-03 是唯一的例行用户审查闸门；Task 生成、任务执行和最终检查不设置逐项用户等待。
     - 质疑结论中的 `inferred`/`unverified` 内容不会被表述为已验证事实；
 - 本 Skill 不生成代码、不构建、不烧录、不替代最终 Review。

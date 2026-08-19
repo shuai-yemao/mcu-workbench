@@ -13,7 +13,7 @@
 
 ## 2. 嵌入式工程工作方式
 
-- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），按风险选择 `spec_rigor`，并固定交接给 `workflow-review-gate`（必经审查门禁）；`prototype` 在最小记录后结束，`lightweight` 走局部单项链路，`full` 审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计，`workflow-task-breakdown` 生成 `task.md`，`workflow-task-execution` 按依赖逐项控制实现，最后进入最终审查。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
+- 先由 `workflow-requirements-router` 将自然语言请求整理为可审计的需求约束包（RCP），按风险选择 `spec_rigor`，并固定交接给 `workflow-review-gate`（必经审查门禁）；`prototype` 在最小记录后结束，`lightweight` 走局部单项链路，`full` 审查放行后由 `workflow-integration-plan` 完成分层/审计/迁移设计，`workflow-task-breakdown` 自动生成 `task.md`，`workflow-task-execution` 在 Plan 用户批准后以 `auto_until_final_check` 模式按依赖连续执行、自动审查和测试，最后进入最终审查。Router 与门禁只负责约束、证据和交接，不代替架构设计、代码实现或验证。
 - 需求变化硬门禁：只要范围、业务规则、状态/权限、接口、资源边界或验收标准发生变化，必须先暂停代码，更新并重新放行 `spec.md`，再更新 `plan.md`/`task.md` 和恢复实现；不得先改代码后补写 Spec。
 - 代码施工同时受 [SOLID 代码施工硬门禁](../skills/workflow/workflow-review-gate/references/solid-code-gate.md) 约束：SRP、OCP、LSP、ISP、DIP 必须逐项判断并提供证据；任一适用原则不满足或不可验证，必须阻塞，不得自行放宽。
 - RCP 必须区分 `confirmed`、`user-confirmed`、`inferred`、`unverified`，并记录项目路径、分支/提交、芯片/板卡、软件环境、分层约束、验收标准、风险原因、`spec_rigor`、`spec_overlays` 和阻塞项。Spec 力度依据 [`spec-rigor-by-risk.md`](../skills/workflow/workflow-requirements-router/references/spec-rigor-by-risk.md) 选择，风险不明时按高力度处理。`workflow-requirements-challenge` 应先读取仓库规则和项目证据，再按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清；每轮最多向用户提出四个真正影响实现的问题，并说明推荐。
@@ -42,7 +42,7 @@
 
 ## 4. Skill 路由与协作
 
-`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查按 `spec_rigor` 放行：`prototype` 不进入代码链路，`lightweight` 允许单项局部链路，`full` 由 `workflow-integration-plan` 生成并审查 `plan.md`，记录阶段级 Agent/Skill 基线，再由 `workflow-task-breakdown` 生成带任务级分配的 `task.md`，交给 `workflow-task-execution` 按依赖逐项复核分配并执行；每项任务只有一个主实现 Skill，必要的协作 Agent/辅助 Skill 只能提供知识、审查或验证，不得并行改代码；不把归档 Skill 当作活动入口。
+`workflow-requirements-router` 生成的 RCP 固定交接给 `workflow-review-gate`（必经审查门禁）；审查按 `spec_rigor` 放行：`prototype` 不进入代码链路，`lightweight` 允许单项局部链路，`full` 由 `workflow-integration-plan` 生成并审查 `plan.md`，记录阶段级 Agent/Skill 基线，再由 `workflow-task-breakdown` 自动生成带任务级分配的 `task.md`，交给 `workflow-task-execution` 以 `auto_until_final_check` 模式按依赖连续复核分配并执行；每项任务只有一个主实现 Skill，必要的协作 Agent/辅助 Skill 只能提供知识、审查或验证，不得并行改代码；普通失败由 AI 自动诊断、修复并复测，只有需要新增用户决策的硬阻塞才暂停；不把归档 Skill 当作活动入口。
 
 | 请求类型 | 实现 Skill | 边界 |
 |---|---|---|
@@ -50,7 +50,7 @@
 | 所有请求的 RCP（必经审查门禁） | `workflow-review-gate` | 按风险选择 Spec 力度；`lightweight/full` 在 Review-Package 内保留四个审查章节并按需整合 `spec.md`，`prototype` 只保留最小目标/临时边界；四张清单不单独输出到实际工程，判定放行/阻塞 |
 | 放行后的集成规划与分发 | `workflow-integration-plan` | `full` 生成两个易懂方案供用户选择，`lightweight` 生成一个紧凑方案；审查后输出 `plan.md` 并分发任务/实现 Skill；代码就绪后交接 `workflow-final-review` |
 | 计划任务拆解 | `workflow-task-breakdown` | 读取 `spec.md`、审查通过的 `plan.md` 和项目文件，拆分有顺序、可独立验证的任务并输出 `task.md`；未达到可交付前不得执行实现 |
-| 单项任务执行 | `workflow-task-execution` | 按 `task.md` 依赖顺序每次执行一个任务，先补测试，再实现/检查/状态回写；Spec 矛盾或缺关键决定则阻塞 |
+| 自动任务执行 | `workflow-task-execution` | Plan 用户批准后按 `task.md` 依赖连续执行，逐项先补测试、实现、AI 审查、验证和状态回写；普通失败自动修复复测，需新增用户决策的硬阻塞才暂停 |
 | 最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁） | `workflow-final-review` | 强制执行格式/注释初检；失败时仅作格式与必要注释整改并复检，复检通过才放行 |
 | 代码注释、格式、代码审查、Cppcheck/MISRA 质量门禁 | `tools-quality` | 中间阶段使用 `advisory` 返回质量证据；最终审查使用 `final-gate` 作为代码质量最终出口 |
 | Map/RAM/ROM/栈分析、Unity 与项目验证 | `tools-verification` | 编排项目级内存、主机测试、构建和目标验证证据，区分证据等级 |

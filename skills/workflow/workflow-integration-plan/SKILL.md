@@ -14,12 +14,12 @@ description: 放行后的集成规划与分发：读取按风险放行的 spec.m
 1. 确认 Review Gate 已放行，且读取 `spec.md`（`lightweight`/`full`）及 RCP 中的 `spec_rigor`、`spec_overlays`、风险原因和最低交付物；`prototype` 在此停止，不分发代码施工。存在 `inferred`/`unverified` 关键事实或未关闭阻塞项时停止，回传 `workflow-review-gate`。
 2. 读取 `spec.md` 中的范围、约束、文件施工清单和验收清单，再读取真实项目文件、配置、构建日志、启动流程和现有笔记，记录可复现证据。
 3. 画出调用链，确认上层只依赖下层公开契约，识别 APP、Middleware、OS、BSP、Core、Driver 归属。
-4. 按力度生成方案：`lightweight` 只生成一个紧凑方案，说明局部范围、文件、验收、风险和回滚；`full` 基于同一目标和同一 `spec.md` 约束生成两个真实可行、取舍明确的实施方案，然后暂停等待用户选择。任何模式都不能超出 Spec。
-5. `lightweight` 记录默认方案依据后直接审查；`full` 在用户选择后记录选择理由和放弃方案。随后对方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
+4. 按力度生成方案：`lightweight` 只生成一个紧凑方案，说明局部范围、文件、验收、风险和回滚；`full` 基于同一目标和同一 `spec.md` 约束生成两个真实可行、取舍明确的实施方案，然后暂停等待用户选择。此处是 H-03 用户审查闸门。任何模式都不能超出 Spec。
+5. `lightweight` 记录默认方案依据后进入 H-03 计划审查；`full` 在用户选择后记录选择理由和放弃方案。随后对方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
 6. 审查通过后，按 [`plan-template.md`](references/plan-template.md) 生成 `<project_root>/00_Docs/04_需求文档/plan.md`，将 `spec.md` 作为需求约束来源，将 `plan.md` 作为实施顺序、阶段级 Agent/Skill 基线和交接依据。
-7. 将 `spec.md` 和已审查通过的 `plan.md` 交给 `workflow-task-breakdown` 生成有序、可独立验证的 `task.md`；`task.md` 未达到 `可交付` 前不得分发实现层 Skill。
-8. 将 `task.md` 交给 `workflow-task-execution`；它每次只选择一个已满足依赖的任务，先补充证明当前行为缺失的测试/检查，再调用原定的唯一实现层 Skill、运行相关检查并回写任务状态。不得在一次调用中直接处理下一项。
-9. 全部任务完成且代码产物就绪后，把 `spec.md`、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集、RCP、`workflow-review-gate` 放行结论、文件施工表、验收清单、格式 profile/命令和目标文件范围交接给 `workflow-final-review`；该门禁必须执行格式与必要注释整改闭环，复检通过前不得放行。
+7. 将 `spec.md` 和已审查通过的 `plan.md` 交给 `workflow-task-breakdown` 自动生成有序、可独立验证的 `task.md`；不再等待用户审查 `task.md`。
+8. 将 `task.md` 交给 `workflow-task-execution`，采用 `auto_until_final_check`：每项任务先测试/检查、再实现、再 AI 审查和验证，通过后自动进入下一个依赖任务。只有硬阻塞或需求变化才暂停。
+9. 全部任务完成且代码产物就绪后，自动交给 `workflow-final-review`；最终格式、注释、质量、差异和验收检查完成后再通知用户。需要格式或必要注释整改时，遵循最终的格式与必要注释整改闭环。通知不等于提交、推送、烧录或发布授权。
 
 ## 需求变化门禁
 
@@ -102,7 +102,7 @@ task.md：<absolute path>
 可并行组：<groups or none>
 阶段级 Agent/Skill 基线：<plan.md 第 8A 节>
 唯一主实现 Skill：<canonical skill id>
-下一步：<交给 workflow-task-execution 或回传 workflow-integration-plan>
+下一步：<自动交给 workflow-task-execution 或回传 workflow-integration-plan>
 ```
 
 ### 选定方案审查

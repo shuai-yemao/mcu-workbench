@@ -50,7 +50,7 @@ description: 将已审查通过的 plan.md 结合真实项目文件拆分为有�
 5. 为每个任务补齐执行步骤、输出物、验证方法、预期结果、失败处理、回滚方式，并从阶段级基线分配一个主 Agent、必要协作 Agent、一个主实现 Skill 和必要辅助 Skill；分配必须有证据和理由。
 6. 按依赖关系进行拓扑排序，形成从基础准备到集成回归的执行顺序；发现循环依赖时阻塞并回传。
 7. 生成 `task.md`，保留 `spec.md`/`plan.md` 的来源 ID、证据路径、可信等级和未验证项。
-8. 将 `task.md` 与 `spec.md`、`plan.md` 一起交给 `workflow-task-execution`；由它按依赖顺序逐项控制，并在每一项中交给原定的唯一实现层 Skill。全部任务完成后，由 `workflow-final-review` 依据三者、执行记录和最终变更集执行审查。
+8. 将 `task.md` 与 `spec.md`、`plan.md` 一起交给 `workflow-task-execution`；由它以 `auto_until_final_check` 模式按依赖连续推进，内部仍保持每项任务独立记录并交给原定的唯一实现层 Skill。Task 生成和单项任务完成不设置用户等待；全部任务完成后，由 `workflow-final-review` 依据三者、执行记录和最终变更集执行审查。
 
 ## 任务拆解规则
 
@@ -156,7 +156,7 @@ blockers: <none or blockers>
 ## 交接与回传
 
 - 只有 `task.md` 状态为 `可交付`，且所有 ready 任务都能追溯到 `spec.md`、`plan.md` 及阶段级 Agent/Skill 基线时，才交给 `workflow-task-execution`；
-- `workflow-task-execution` 只能按任务顺序或明确的并行组一次执行一个任务，不得跳过前置任务，也不得在一次调用中继续处理下一项；
+- `workflow-task-execution` 必须按任务顺序或明确的并行组执行，内部一次只修改一个任务的范围，不得跳过前置任务；在 `auto_until_final_check` 模式下，当前任务通过 AI 审查和验证后自动继续下一项，无需用户逐项确认；
 - 新事实不改变范围时，回填对应任务和 `task.md` 并保留证据；
 - 新事实改变范围、接口、层归属、用户选择或验收标准时，停止执行并回传上游；
 - 代码、补丁或 diff 完成后，交接 `spec.md`、`plan.md`、`task.md`、运行记录和最终变更集给 `workflow-final-review`。

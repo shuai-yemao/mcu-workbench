@@ -25,6 +25,8 @@
 | `spec_overlays` | `[]` / `[human_review]` / `[versioned]` / `[human_review, versioned]` |
 | 风险原因 | `<影响范围、敏感性、不可逆性、协作复杂度、验证难度、嵌入式资源风险及证据>` |
 | 最低交付物 | `<提示词 / spec.md / spec.md + plan.md + task.md + 测试等>` |
+| 用户闸门 | `H-01 rcp-review: awaiting_user_review / approved / rejected` |
+| 执行模式 | `auto_until_final_check`（H-03 通过后生效） |
 | 升级触发条件 | `<跨模块、公共接口、生产化、敏感数据、关键资源等>` |
 | 审批要求 | `none` / `review-gate` / `human-review` |
 
@@ -172,6 +174,8 @@ Challenge 阶段先读取仓库规则和项目证据，再按范围/非目标、
 ## 14. 质疑结论与交接判定
 
 Challenge 只输出基于证据的目的、可行性、范围和验收结论，不生成方案 A/B、不提供方案推荐、不要求用户选择。
+
+H-01 通过后才能进入正式 Review Gate；H-02 Spec 审查和 H-03 Plan/方案选择通过后，Task 生成、任务执行、AI 审查、测试和最终检查自动连续推进。只有需要新增用户决策的硬阻塞才暂停。
 
 ```text
 purpose_conclusion: confirmed | user-confirmed | inferred | unverified

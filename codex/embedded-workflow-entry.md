@@ -6,6 +6,8 @@
 
 本材料是项目级入口指导和记录模板，不是 Codex 宿主 Hook；它不能保证模型每次都自动选择 Router。
 
+用户审查固定为三个闸门：RCP（H-01）、Spec（H-02）和 Plan/方案选择（H-03）。H-03 通过后，Task 生成、任务执行、AI 审查、测试和最终检查采用 `auto_until_final_check` 连续推进；不为 Task 或单项任务设置例行用户等待。只有无法依据已批准 Spec/Plan 消除、且需要新增用户决策的硬阻塞才暂停。
+
 ## 目标工程入口规则
 
 ```text
@@ -42,6 +44,12 @@ Codex 任务必须明确：
 | `blocking_reasons` | 缺失、过期、越界或需求变化原因 |
 | `evidence_level` | `static`、`host`、`build`、`target` 或 `physical` |
 | `next_action` | 下一步交接或补证动作 |
+
+自动执行阶段还应记录：
+
+- `execution_mode`：`auto_until_final_check`；
+- `user_gates`：`H-01`、`H-02`、`H-03` 的批准状态；
+- `hard_blocker_policy`：例行失败自动诊断、修复和复测；新增决策才暂停。
 
 以下情况必须阻塞交付：
 

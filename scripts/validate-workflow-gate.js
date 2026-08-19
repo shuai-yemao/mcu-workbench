@@ -17,6 +17,13 @@ const APPROVED_SPEC_STATUSES = new Set([
   'approved-for-delivery',
 ]);
 
+const APPROVED_REVIEW_STATUSES = new Set([
+  'approved',
+  'user-approved',
+  '已批准',
+  '通过',
+]);
+
 function parseArgs(argv) {
   const options = {
     json: false,
@@ -100,24 +107,37 @@ function splitTableRow(line) {
     .map((cell) => cell.trim().replace(/^`|`$/g, ''));
 }
 
-function readTaskRow(text, taskId) {
+function findTaskTable(text) {
   const lines = text.split(/\r?\n/);
-  for (const line of lines) {
-    if (!line.includes(`| ${taskId} |`)) {
-      continue;
-    }
-
+  const headerIndex = lines.findIndex((line) => {
     const cells = splitTableRow(line);
-    if (cells[0] === taskId) {
-      return {
-        id: cells[0],
-        status: cells[4] || null,
-        cells,
-      };
+    return cells[0] === 'ID' && cells.some((cell) => cell === '状态');
+  });
+
+  if (headerIndex < 0) return null;
+
+  const headers = splitTableRow(lines[headerIndex]);
+  const statusIndex = headers.indexOf('状态');
+  const rows = [];
+  for (let index = headerIndex + 2; index < lines.length; index += 1) {
+    if (!lines[index].trim().startsWith('|')) break;
+    const cells = splitTableRow(lines[index]);
+    if (/^T-\d+$/.test(cells[0] || '')) {
+      rows.push({ id: cells[0], status: cells[statusIndex] || null, cells });
     }
   }
 
-  return null;
+  return { rows };
+}
+
+function readTaskRow(text, taskId) {
+  const table = findTaskTable(text);
+  return table ? table.rows.find((row) => row.id === taskId) || null : null;
+}
+
+function readFirstTaskRow(text) {
+  const table = findTaskTable(text);
+  return table && table.rows.length > 0 ? table.rows[0] : null;
 }
 
 function addMissing(result, item) {
@@ -200,6 +220,10 @@ function validate(options) {
   const specStatus = readMarkdownField(specText, 'Spec 状态');
   const planStatus = planText ? readMarkdownField(planText, '计划状态') : null;
   const taskStatus = taskText ? readMarkdownField(taskText, 'task 状态') : null;
+  const specReviewStatus = readMarkdownField(specText, '用户审查状态');
+  const planReviewStatus = planText ? readMarkdownField(planText, '用户审查状态') : null;
+  const selectedPlan = planText ? readMarkdownField(planText, '选定方案') : null;
+  const planDecisionOwner = planText ? readMarkdownField(planText, '方案选择人') : null;
   const reviewStatus = reviewPackageText
     ? readMarkdownField(reviewPackageText, '审查状态')
     : null;
@@ -215,6 +239,18 @@ function validate(options) {
   }
   if (!taskStatus || /blocked|fail/i.test(taskStatus)) {
     addBlock(result, `Task 状态阻塞或缺失：${taskStatus || 'missing'}`);
+  }
+  if (!APPROVED_REVIEW_STATUSES.has(specReviewStatus || '')) {
+    addBlock(result, `用户闸门 H-02 未批准：${specReviewStatus || 'missing'}`);
+  }
+  if (!APPROVED_REVIEW_STATUSES.has(planReviewStatus || '')) {
+    addBlock(result, `用户闸门 H-03 未批准：${planReviewStatus || 'missing'}`);
+  }
+  if (!selectedPlan || /^none$/i.test(selectedPlan)) {
+    addBlock(result, 'H-03 缺少用户选择的实施方案。');
+  }
+  if (planDecisionOwner && planDecisionOwner !== 'user') {
+    addBlock(result, `H-03 方案选择人不是 user：${planDecisionOwner}`);
   }
   if (reviewStatus && !/可交接|approved|pass/i.test(reviewStatus)) {
     addBlock(result, `Review-Package 未完成交接：${reviewStatus}`);
@@ -242,8 +278,13 @@ function validate(options) {
 
   if (taskText) {
     const t01 = readTaskRow(taskText, 'T-01');
-    if (!t01 || !/pass|completed/i.test(t01.status || '')) {
-      addBlock(result, `前置任务 T-01 未完成：${t01 ? t01.status : 'missing'}`);
+    const firstTask = readFirstTaskRow(taskText);
+    if (t01 && !/pass|completed/i.test(t01.status || '')) {
+      addBlock(result, `前置任务 T-01 未完成：${t01.status}`);
+    } else if (!t01 && !firstTask) {
+      addBlock(result, 'Task 缺少可执行任务表。');
+    } else if (!t01 && /blocked|fail/i.test(firstTask.status || '')) {
+      addBlock(result, `首个任务被阻塞：${firstTask.id}=${firstTask.status}`);
     }
   }
 

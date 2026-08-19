@@ -1,6 +1,6 @@
 ---
 name: workflow-task-execution
-description: 按 task.md 的依赖顺序逐项执行实施任务；每次只处理一个任务，先依据 plan.md/task.md 分配所需 Agent、主实现 Skill 和辅助 Skill，再补充证明当前行为缺失的测试，实施、检查、更新 task.md 状态并报告验收标准；发现 Spec 矛盾或关键决定缺失时立即阻塞，不自行扩展范围。
+description: 在 Plan 用户批准后，以 auto_until_final_check 模式按 task.md 的依赖顺序连续执行实施任务；内部每次只处理一个任务，先依据 plan.md/task.md 分配所需 Agent、主实现 Skill 和辅助 Skill，再补充证明当前行为缺失的测试，实施、AI 审查、检查、更新 task.md 状态并自动推进；发现 Spec 矛盾或关键决定缺失时立即阻塞，不自行扩展范围。
 ---
 
 # 任务单项执行
@@ -85,9 +85,9 @@ scope_boundary: <what the assigned agents and Skills may do>
 
 可分配的 canonical Agent 必须来自当前插件已注册集合，例如 `embedded-lead`、`system-architect`、`firmware-engineer`、`hardware-integration`、`toolchain-engineer`、`verification-engineer` 和 `knowledge-engineer`；可分配 Skill 必须能在当前 catalog 中解析。不能把不存在的角色名或临时提示词写成分配结果。
 
-## 单任务执行规则
+## 自动任务执行规则
 
-每次调用只允许选择一个任务：
+Plan 通过后，执行模式为 `auto_until_final_check`。每次内部仍只处理一个任务并完整记录，但任务通过后自动选择下一个依赖已满足的任务，不等待用户逐项审查：
 
 1. 从 `task.md` 中选择依赖已完成、状态为 `ready` 的最早任务；若存在多个可并行任务，也只能选择其中一个。
 2. 依据上述协议解析并复核该任务所需的 Agent 与 Skill，生成 `allocation_id`；分配缺失、冲突或无法由证据唯一确定时，将任务标记为 `blocked` 并停止。
@@ -99,7 +99,8 @@ scope_boundary: <what the assigned agents and Skills may do>
 8. 运行当前任务规定的相关检查，包括测试、静态检查、构建或目标验证；按静态、主机、构建、目标运行和实物证据分别记录。
 9. 审阅 `git diff` 和变更范围，确认没有混入其他任务或无关修复。
 10. 只有验收标准全部满足时，才将当前任务更新为 `pass`/`完成`；否则更新为 `blocked`/`fail`，保留失败证据和下一步补证动作。
-11. 输出本次任务报告后停止，等待下一次调用；不得自动进入下一个任务。
+11. 输出本次任务报告并写入执行记录；若没有硬阻塞、需求变化或最终检查条件，自动进入下一个依赖已满足的任务。
+12. 全部任务完成后自动交给 `workflow-final-review`，完成最终检查后输出通知；不自动执行提交、推送、烧录或发布。
 
 “先补测试”是行为任务的硬门禁。若当前任务属于纯文档、目录登记或无法建立自动化测试的配置变更，也必须先补充能证明当前状态缺失的静态检查、配置断言或可复现检查；如果连这种检查也无法建立，先阻塞并说明原因。
 
@@ -180,19 +181,22 @@ task.md 回写：<status and evidence location>
 
 - 只向分配记录中的一个主实现 Skill 交接当前任务；可同时邀请必要的协作 Agent 和辅助 Skill 提供知识或审查，但不得分配多个主实现 Skill 修改代码；
 - 主 Agent、协作 Agent、主实现 Skill 和辅助 Skill 必须接收当前任务的范围、依赖、测试先行要求和验收标准；
-- 当前任务 `pass` 后，下一次调用才能选择下一个依赖已满足的任务；
+- 当前任务 `pass` 后，在 `auto_until_final_check` 模式下自动选择下一个依赖已满足的任务；
 - 当前任务 `blocked` 时不得跳到后续任务；
+- 普通测试失败、格式失败或可由既有 Spec/Plan 解释的实现失败，必须先由 AI 自动诊断、修复和复测；不得直接等待用户。
+- 只有无法依据既有 Spec/Plan 解决、需要新增用户决策的硬阻塞，才暂停并输出一个明确问题。
 - 所有代码、测试、构建、目标运行和实物证据必须回写到当前任务；
 - 全部任务完成后，将 `spec.md`、`plan.md`、`task.md`、运行记录和最终变更集交给 `workflow-final-review`。
 
 ## 硬边界
 
-- 不一次执行多个任务；
+- 不在同一任务记录中混淆多个任务；允许在 `auto_until_final_check` 模式下按依赖连续执行多个任务；
 - 不跳过前置任务；
 - 不在实现前省略缺失行为测试/检查；
 - 不跳过 Agent/Skill 分配或把未注册的角色/Skill 写成已分配；
 - 不自行解决 Spec 矛盾或补写关键决定；
 - 不扩大范围、不修改用户选择、不替换 `plan.md`；
 - 不将静态/主机证据表述为目标板或实物验证；
+- 不把最终检查完成后的用户通知当作提交、推送、烧录或发布授权；
 - 不得跳过 [SOLID 代码施工硬门禁](../workflow-review-gate/references/solid-code-gate.md)；
 - 不在插件仓库内生成目标项目的 `task.md` 更新。

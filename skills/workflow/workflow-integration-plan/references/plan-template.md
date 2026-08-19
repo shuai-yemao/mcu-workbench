@@ -20,6 +20,7 @@
 | 风险叠加门禁 | `none` / `human_review` / `versioned` / `both` |
 | 选定方案 | `方案 A` / `方案 B` / `紧凑方案` |
 | 方案选择人 | `<user>` |
+| 用户审查状态 | `awaiting_user_review` / `approved` / `rejected` |
 | 方案审查结论 | `通过` / `需修订` / `阻塞` |
 
 ## 2. 一句话说明
@@ -157,6 +158,8 @@ App → Service → Platform ← Impl → Vendor
 
 ## 12. 方案审查记录
 
+Plan 经 H-03 用户批准后，自动进入 `workflow-task-breakdown` 和 `workflow-task-execution`。Task 生成、单项任务执行、AI 审查、测试和最终检查不设置例行用户等待；只有无法依据已批准 Spec/Plan 消除、且需要新增用户决策的硬阻塞才暂停。
+
 | 审查项 | 责任 Agent | 结论 | 证据 | 修订或后续动作 |
 |---|---|---|---|---|
 | 分层和接口 | `system-architect` | `可采用/需修订/阻塞` | `<evidence>` | `<action>` |
@@ -186,7 +189,7 @@ App → Service → Platform ← Impl → Vendor
 - 正式实施计划：`<absolute path>/plan.md`
 - 阶段级 Agent/Skill 基线：`<本文件第 8A 节>`
 - 每项任务的主 Agent、协作 Agent、主实现 Skill 和辅助 Skill：`<由 workflow-task-breakdown 回填到 task.md>`
-- 执行分配规则：`workflow-task-execution` 每次只选择一个任务，先复核分配，再交给一个主实现 Skill；辅助 Skill 不直接并行改代码
+- 执行分配规则：`workflow-task-execution` 在同一时刻只修改一个任务的范围，先复核分配，再交给一个主实现 Skill；任务通过后在 `auto_until_final_check` 模式自动继续，辅助 Skill 不直接并行改代码
 - 目标文件范围：`<files>`
 - 执行前必须确认：`<facts>`
 - 禁止扩大：`<scope and boundary>`

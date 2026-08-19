@@ -1,144 +1,131 @@
-# Spec：Codex Router-first 与嵌入式任务交付门禁
+# Spec：嵌入式工作流用户审查闸门与自动续跑
 
 ## 1. 元数据与 RCP 状态
 
 | 字段 | 内容 |
 |---|---|
-| request_id | `REQ-CODEX-ROUTER-GATE-20260819` |
-| Spec 版本 | `v0.5` |
+| request_id | `REQ-WORKFLOW-HUMAN-GATES-20260819` |
+| Spec 版本 | `v0.1` |
 | Spec 状态 | `approved-for-task-execution` |
 | Spec 力度 | `full` |
-| 风险叠加门禁 | `versioned` |
+| 风险叠加门禁 | `human_review, versioned` |
 | 项目路径 | `C:\\Users\\zhang\\Documents\\mcu-workbench` |
-| 分支/提交 | `host_ai @ 1652881d99578b8c45326d67ba455b6734df716f` |
-| 输入 RCP | `REQ-CODEX-ROUTER-GATE-20260819-RCP.md` |
-| Review-Package | `REQ-CODEX-ROUTER-GATE-20260819-Review-Package.md` |
+| 分支/提交 | `host_ai @ 15d592a175421b4a5cb2b88f5c9c22abf229fe17` |
+| 输入 RCP | `REQ-WORKFLOW-HUMAN-GATES-20260819-RCP.md` |
+| Review-Package | `REQ-WORKFLOW-HUMAN-GATES-20260819-Review-Package.md` |
+| 用户审查状态 | `approved` |
+| 决策负责人 | `user` |
+| 用户批准记录 | `H-01/H-02/H-03 approved; plan=A` |
 
-### 1.1 版本变更
-
-`v0.2`：用户确认扩大本次插件维护写入范围，允许修改 `README.md`、`scripts/`、`package.json` 和 `.github/workflows/ci.yml`，以落地确定性 Gate、命令入口、使用说明和 CI 门禁；继续排除 `embedded_framework`、OpenCode、Claude、HAL/RTOS/BSP 和未经确认的 Codex 宿主 Hook。
-
-`v0.3`：用户确认不恢复已删除 BSP fixture，删除 `tests/validate-bsp-contract.test.js` 中引用这些 fixture 的测试段；保留 `scripts/validate-bsp-contract.js`，并在验收记录中明确测试覆盖减少。独立的 `embedded-framework-baseline.test.js` 快照缺口不在本次处理范围内。
-
-`v0.4`：用户确认移除 `tests/embedded-framework-baseline.test.js` 测试入口，不同步缺失的 `tests/fixtures/embedded-framework` 快照；必须记录基准测试覆盖减少，不得把该测试移除表述为 embedded-framework 验证通过。
-
-`v0.5`：用户确认将 `tests/quality-format-profile.test.js` 的 `ColumnLimit` 期望改为 `80`，与当前质量 profile 保持一致；不修改实际 `.clang-format` 配置。
-
-## 2. 需求与质疑结论
+## 2. 需求目标、范围与非目标
 
 ### 2.1 目标
 
-解决 Codex 偶发绕过嵌入式插件 Router 的问题，形成：
+将嵌入式插件调整为：用户只审查 RCP、Spec 和 Plan；Plan 通过后，Task 生成、逐项执行、AI 审查、测试和最终检查由 AI 自动完成，最终检查完成后再通知用户。
+
+### 2.2 用户审查闸门
+
+| ID | 闸门 | 必须审查 | 未批准时 |
+|---|---|---|---|
+| H-01 | RCP | 目标、范围、非目标、关键业务规则、验收标准 | 等待用户，不进入 Review Gate |
+| H-02 | Spec | 四张审查清单、风险、接口、资源和施工边界 | blocked，不进入 Plan |
+| H-03 | Plan/方案 | 方案选择、文件范围、执行顺序、回滚和验证 | blocked，不进入 Task/执行 |
+| H-04 | 硬阻塞例外 | AI 无法依据既有 Spec/Plan 解决、必须新增用户决策的冲突 | 保持 blocked，向用户提出唯一关键问题 |
+| H-05 | AI 最终检查 | Task 全部完成、AI 审查、测试、Diff 和验证状态 | AI 自动完成；完成后通知用户 |
+
+### 2.3 自动化规则
+
+- H-03 Plan 通过后，采用 `auto_until_final_check` 自动生成 Task、选择依赖满足的任务并连续执行。
+- 每个任务仍保留独立状态、分配记录、测试先行记录、运行检查和变更范围审阅。
+- 任务通过后可以继续下一个任务，不再因为 Task 生成或单项任务完成而等待用户。
+- 普通测试失败先由 AI 自动诊断、修复和复测；只有需要新增用户决策的硬阻塞才进入 H-04。
+- 需求、接口、资源、权限、并发、ISR/DMA 或验收标准发生变化时立即暂停并回到 RCP/Review Gate。
+
+### 2.4 直接范围
+
+- `skills/workflow/workflow-requirements-router/SKILL.md`
+- `skills/workflow/workflow-requirements-challenge/SKILL.md`
+- `skills/workflow/workflow-review-gate/SKILL.md`
+- `skills/workflow/workflow-integration-plan/SKILL.md`
+- `skills/workflow/workflow-task-execution/SKILL.md`
+- `scripts/validate-workflow-gate.js`
+- `tests/workflow-gate.test.js`
+- `README.md`、`codex/AGENTS.md`及其生成的`AGENTS.override.md`
+
+### 2.5 非目标
+
+- 不修改 `.codex-plugin/plugin.json`、`opencode.mjs` 或其他宿主运行时。
+- 不新增未经证实的 Codex Hook、MCP、外部审批系统或宿主级写入拦截。
+- 不修改 `embedded_framework`、固件 C/C++、HAL、RTOS、BSP 或 Vendor 源码。
+
+## 3. 工程事实与约束
+
+| ID | 事实/约束 | 证据 | 可信等级 |
+|---|---|---|---|
+| F-01 | Router-first、RCP、Review Gate、Spec、Plan、Task 链已存在 | `codex/AGENTS.md:16-31` | confirmed |
+| F-02 | 当前 Gate 主要检查文档状态字符串 | `scripts/validate-workflow-gate.js:200-223` | confirmed |
+| F-03 | 当前 Task Execution 每个任务完成后停止 | `skills/workflow/workflow-task-execution/SKILL.md:90-102` | confirmed |
+| F-04 | Codex 适配只声明 `skills/`，无已确认宿主 Hook | `.codex-plugin/plugin.json:19`、`codex/embedded-workflow-entry.md:7` | confirmed |
+| F-05 | 用户确认五类审查边界 | 当前会话用户回复“同意” | user-confirmed |
+
+## 4. 状态与决策记录契约
+
+H-01～H-03 必须记录用户决定；H-04 记录阻塞问题；H-05 记录 AI 最终检查结果：
 
 ```text
-Codex 入口指导
-  → workflow-requirements-router
-  → RCP / Challenge / Review Gate
-  → spec.md / plan.md / task.md
-  → 实现 Skill
-  → 最终 Review 和交付门禁
+gate_id: H-01 | H-02 | H-03 | H-04 | H-05
+review_status: awaiting_user_review | approved | rejected | blocked | ai_pass | ai_fail
+decision_owner: user | ai
+decision: <用户决定或 AI 检查结论>
+decision_basis: <用户确认内容、证据位置或检查产物>
+decision_at: <timestamp>
+scope_effect: none | narrowed | expanded | returned-to-rcp
 ```
 
-### 2.2 范围
+AI 不得用模型自述、插件安装、缓存一致性、静态测试或 CI 结果代替 `decision_owner=user` 的批准记录。
 
-- Codex 入口指导和项目级接入材料；
-- RCP/Spec/Gate 状态的确定性检查；
-- Codex 适配测试和 CI/发布验证；
-- 三类真实 Codex 请求的 Router-first 回归记录；
-- 文档、回滚和版本化交接。
+## 5. 依赖与分层边界
 
-### 2.3 非目标
+```text
+用户输入 → Router → RCP/Challenge → Review Gate → Spec → 用户 H-01/H-02
+                                                            ↓
+                                             Plan → 用户 H-03
+                                                            ↓
+                              自动生成 Task → 自动执行 → AI 审查/测试
+                                                            ↓
+                                             AI H-05 最终检查 → 通知用户
+```
 
-- 不修改 `D:\\zhuomian\\embedded_framework` 固件工程；
-- 不修改 HAL、RTOS、BSP、Driver 或目标板代码；
-- 不重构 OpenCode、Claude 适配；
-- 不假设或伪造 Codex 宿主级 Hook、MCP 或写入拦截能力；
-- 不把静态校验、缓存一致性或主机测试写成真实宿主行为证明。
+插件工作流只负责需求、审查、任务和交接契约，不改变嵌入式软件依赖方向：
 
-### 2.4 目的与可行性
+```text
+App → Service → Platform ← Impl → Vendor
+```
 
-- 目的结论：`user-confirmed`；
-- 可行性结论：`有条件可行`；
-- 真实宿主的绝对零跳过不可作为第一版成功标准；
-- 第一版必须做到：入口指导明确、Gate 可确定性检查、违规交付可识别、宿主行为可测量。
+## 6. 验收清单
 
-## 3. 工程现状与已确认事实
+| ID | 证据等级 | 验收项 | 预期结果 | 状态 |
+|---|---|---|---|---|
+| V-01 | 静态 | Skill、AGENTS、README 一致描述五个闸门 | 旧的“每个任务必停”表述被替换 | pass |
+| V-02 | 主机 | 缺少 H-01/H-02/H-03 批准记录 | Gate 返回 `blocked` 并指出闸门 | pass |
+| V-03 | 主机 | 完整批准链 | Gate 返回 `pass` | pass |
+| V-04 | 主机 | H-04 硬阻塞或需求变化 | 不进入后续任务并输出唯一问题 | pass |
+| V-05 | 主机 | `auto_until_final_check` 状态规则 | Plan 后自动完成 Task 和最终检查 | pass |
+| V-06 | 主机/静态 | 既有插件、链接和兼容性检查 | 无新增回归 | pass |
+| V-07 | 真实宿主 | Codex 自动连续执行行为 | 保持 `unverified`，不由主机测试替代 | blocked |
 
-| ID | 事实 | 证据 | 可信等级 |
-|---|---|---|---|
-| F-01 | Codex Manifest 只声明 `skills/` | `.codex-plugin/plugin.json:19` | `confirmed` |
-| F-02 | Codex AGENTS 已要求 Router-first 和 Review Gate | `codex/AGENTS.md:16-24` | `confirmed` |
-| F-03 | OpenCode 有独立的显式 Router 工具 | `opencode.mjs:174-188` | `confirmed` |
-| F-04 | 插件缓存指纹当前一致 | `npm run plugin:check-refresh -- --json` | `confirmed` |
-| F-05 | 插件校验当前通过 | `npm run validate:plugin` | `confirmed` |
-| F-06 | CI 已覆盖插件校验和 Codex 兼容桥 | `.github/workflows/ci.yml:8-44` | `confirmed` |
-| F-07 | 真实 Codex 首动作尚未验证 | 本轮未执行 Codex Composer | `unverified` |
+## 7. 风险与回滚
 
-## 4. 文件施工范围与责任边界
+- 最大风险：模型仍可能在真实宿主中跳过流程；本 Spec 只承诺可审计的 Skill 指令和确定性 Gate，不承诺宿主级硬拦截。
+- 交付边界：AI 最终检查完成后的通知不等于授权提交、推送、烧录或发布；这些动作仍需单独明确授权。
+- 回滚：按文件回退本次 Workflow Skill、Gate、测试、说明和生成兼容桥变更；不触碰固件工程和其他宿主。
+- 需求变化：任何改变范围、接口、资源边界、验收标准或闸门定义的请求，回到 RCP/Review Gate。
 
-候选施工范围由 `Review-Package` 的 W-01～W-07 约束。最终文件只有在 `plan.md` 方案审查通过后确定；不得在计划阶段外扩。
+## 8. 当前审查状态
 
-原则性边界：
-
-- `codex/`：Codex 入口规则和可复制接入材料；
-- `.codex-plugin/`：只有确认 Manifest 兼容性后才可修改；
-- `scripts/`：只增加确定性 Gate/校验能力；
-- `tests/`：只增加对应的主机回归和契约测试；
-- `.github/workflows/`：只接入插件自身的确定性门禁；
-- `README.md`：只补充使用方式和证据边界；
-- 本次用户确认：上述插件文件可纳入方案 A 的施工范围；此授权不改变其他宿主和固件工程的非目标边界；
-- 测试清理：删除已不存在 `tests/bsp-fixtures/**` 的引用测试，不恢复 fixture，不修改 BSP 校验器实现；
-- 测试清理扩展：删除 `tests/embedded-framework-baseline.test.js` 测试入口，不同步 embedded-framework 快照；
-- 质量基线：将 `tests/quality-format-profile.test.js` 的 `ColumnLimit` 期望改为 `80`，不修改实际格式配置；
-- `embedded_framework`、OpenCode、Claude 逻辑：明确不修改。
-
-## 5. 代码生成与实现约束
-
-| ID | 约束 |
-|---|---|
-| G-01 | 未形成有效 RCP/Spec/Gate 状态前，不得把任何实现 Skill 标记为可执行。 |
-| G-02 | 缺失 RCP、缺失 Spec、Spec 非放行或变更超出允许范围时，Gate 必须返回 `blocked`。 |
-| G-03 | 不把模型自述“已执行 Router”作为唯一证据；必须有文档状态、运行记录或确定性检查结果。 |
-| G-04 | 不把 Codex 缓存一致性当作宿主执行 Skill 的证明。 |
-| G-05 | 保留现有 canonical Skill ID、旧别名、Manifest 基线和 refresh 行为。 |
-| G-06 | 不新增未由当前仓库或宿主文档确认的 Codex Hook/MCP/API。 |
-| G-07 | 生成的 `AGENTS.override.md` 只能由 `build:codex-compat` 产生，不手工维护。 |
-| G-08 | 所有静态、主机、缓存、CI、真实宿主证据必须分级记录。 |
-| G-09 | 本次用户确认扩大插件维护范围，但不得因此扩大到固件工程、其他宿主或未经确认的宿主 API。 |
-| G-10 | 删除过期测试引用必须保留覆盖减少记录；不得通过修改校验器实现或删除无关测试制造假绿。 |
-| G-11 | 移除 embedded-framework 基准测试入口必须保留覆盖减少记录；不得宣称目标工程验证通过。 |
-| G-12 | 质量 profile 测试期望必须与当前已确认的 `ColumnLimit: 80` 配置一致。 |
-
-## 6. 验收测试清单
-
-| ID | 证据等级 | 验收项 | 预期结果 |
-|---|---|---|---|
-| V-01 | 静态 | 插件结构和 Skill/Agent/Manifest 校验 | `npm run validate:plugin` 通过 |
-| V-02 | 主机 | 全量 Jest 回归 | `npm test -- --runInBand` 通过 |
-| V-03 | 主机 | Gate 状态矩阵 | 缺失/blocked 状态失败，approved 状态通过 |
-| V-04 | 主机 | Codex 缓存一致性 | `plugin:check-refresh --json --strict` 给出一致或明确刷新指令 |
-| V-05 | 主机 | Codex 兼容桥 | `build:codex-compat` 后无未预期 diff |
-| V-06 | 真实宿主 | 简单代码任务 | 首个有效动作符合 Router-first，写入前无实现变更 |
-| V-07 | 真实宿主 | 架构设计任务 | 同 V-06 |
-| V-08 | 真实宿主 | 构建/调试任务 | 同 V-06 |
-| V-09 | 交付 | CI/交付门禁 | 无有效 Gate 证据时不能合规放行 |
-
-V-06～V-08 目前是 `unverified`，不得在计划或实现完成前宣称通过。
-
-## 7. Review Gate 判定
-
-- 可采用：项目级入口指导、确定性 Gate、三类宿主回归、CI/缓存兼容验证；
-- 需修订：目标工程材料的具体接入方式、Gate 状态模型和是否修改 Manifest；
-- 阻塞风险：将 Codex 宿主 Hook 作为第一版必要前提；将真实宿主行为写成静态/CI 结果。
-
-当前判定：`approved-for-integration-plan`。
-
-下一阶段必须由 `workflow-integration-plan` 生成两个真实可行方案，比较入口材料分发、Gate 接入位置、修改范围、回滚和验证成本；在用户选择并完成方案审查前，不得生成 `plan.md` 或修改实现代码。
-
-## 8. 交接
-
-- 下游：`workflow-integration-plan`；
-- 输入：本文件、RCP、Review-Package、当前插件源码和 CI 配置；
-- 输出：两个方案 → 用户选择 → 选定方案审查 → `plan.md`；
-- 实现阶段：仅允许在 `plan.md` 和后续 `task.md` 明确范围内施工；
-- 新事实：如果改变范围、Manifest 能力、宿主依赖或验收标准，必须退回 Router/Challenge/Review Gate。
+```text
+spec_status: approved-for-task-execution
+decision_owner: user
+decision: approved; selected_plan=A
+next_action: 自动生成 Task 并执行至 AI 最终检查
+```
