@@ -5,6 +5,10 @@ description: 需求约束后的澄清、目的与可行性质疑：先读取仓�
 
 # 需求澄清与质疑
 
+## 正式输出边界
+
+本 Skill 只更新内部 RCP 状态，不生成或要求用户阅读 RCP Markdown。澄清问题、用户回答、证据等级、目的质疑、可行性质疑和阻塞项必须写入内部 Workflow State；完成后由 Review Gate 将有效约束整合到详细 `spec.md`。
+
 ## 职责与边界
 
 本 Skill 位于 `workflow-requirements-router` 与 `workflow-review-gate` 之间。它把已经完成最小约束收集的需求转化为受控的工程约束和审查输入，不替代需求 Router、代码前审查门禁或集成规划。
@@ -33,7 +37,7 @@ description: 需求约束后的澄清、目的与可行性质疑：先读取仓�
 2. RCP 引用的项目文件、配置、日志或可复现命令；
 3. 已有设计或实现方案（如果用户已经提供）。
 
-RCP 的字段骨架以 [`rcp-template.md`](../workflow-requirements-router/references/rcp-template.md) 为准。Router 交付的 RCP 状态为 `preliminary`；完成补证并形成目的/可行性质疑结论后，才形成可交给 `workflow-review-gate` 的正式 RCP。本 Skill 不包含方案选择或用户决策字段。必须同时读取 [`spec-rigor-by-risk.md`](../workflow-requirements-router/references/spec-rigor-by-risk.md)，复核 `spec_rigor`、`spec_overlays`、风险原因和升级触发条件；不得为了减少文档工作量而降低风险等级。
+RCP 的字段语义以 [`rcp-template.md`](../workflow-requirements-router/references/rcp-template.md) 为准，但 RCP 只作为内部状态，不作为用户项目 Markdown 输出。Router 交付的 RCP 状态为 `preliminary`；完成补证并形成目的/可行性质疑结论后，才形成可交给 `workflow-review-gate` 的正式内部 RCP。本 Skill 不包含方案选择或用户决策字段。必须同时读取 [`spec-rigor-by-risk.md`](../workflow-requirements-router/references/spec-rigor-by-risk.md)，复核 `spec_rigor`、`spec_overlays`、风险原因和升级触发条件；不得为了减少文档工作量而降低风险等级。
 
 ## 需求变化门禁
 

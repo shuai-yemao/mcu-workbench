@@ -5,6 +5,10 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、按风
 
 # 嵌入式需求约束路由
 
+## 正式输出边界
+
+RCP 是内部结构化状态，不生成用户项目中的 RCP Markdown。Router 必须保留需求、证据、可信等级、未决问题、风险和下游交接信息，并写入内部 Workflow State。用户正式接收的文档只有详细 `spec.md`、`plan.md` 和 `task.md`；用户审查从 Spec 开始。
+
 ## 职责与边界
 
 `workflow-requirements-router` 是插件处理用户请求的第一个 Skill。它负责把自然语言请求变成可执行、可追溯、可交接的需求约束包；不在本 Skill 内进行架构设计、代码生成、驱动实现、构建、烧录或代码审查。
@@ -56,7 +60,7 @@ description: 作为插件首个需求处理入口，编排 Agent 分析、按风
 
 需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 完成补证、目的质疑和可行性质疑；完成后，带有质疑结论和证据的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。方案选择不属于本 Skill 链路。RCP 必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。Router 还必须依据 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md) 选择 `spec_rigor` 和 `spec_overlays`，说明风险原因、最低交付物及升级触发条件。
 
-RCP 的 Markdown 字段骨架使用 [`references/rcp-template.md`](references/rcp-template.md)。Router 交付的是 `preliminary` RCP；`workflow-requirements-challenge` 必须先读取仓库规则和项目证据，按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清，每轮最多提出四个高影响问题并给出推荐，完成后输出质疑结论并交给 `workflow-review-gate`，不生成方案 A/B。
+RCP 的字段语义可参考 [`references/rcp-template.md`](references/rcp-template.md)，但该模板不是用户项目 Markdown 输出契约。Router 交付的是内部 `preliminary` RCP 状态；`workflow-requirements-challenge` 必须先读取仓库规则和项目证据，按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清，每轮最多提出四个高影响问题并给出推荐，完成后输出质疑结论并交给 `workflow-review-gate`，不生成方案 A/B。
 
 ```text
 需求约束包
@@ -144,6 +148,6 @@ Spec 叠加门禁：<none | human_review | versioned | both>
 - 质疑阶段只输出证据化的目的、可行性、范围和验收结论，不生成方案 A/B、不要求用户选择，不得用推测扩大 RCP。
 - 不引用归档 Skill 作为 active 路由目标；只输出 catalog 中的 canonical ID。
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
-- RCP 完成补证和 Challenge 前，必须输出 H-01 用户审查摘要；未收到用户批准不得进入 Review Gate 的正式放行链。
+- RCP 完成补证和 Challenge 后进入 Review Gate 内部放行链；不设置 RCP Markdown 用户审查闸门，Spec 是第一个用户正式审查节点。
 
 跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；风险力度选择见 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。

@@ -5,6 +5,10 @@ description: 在最终代码、补丁或 git diff 就绪后执行 Spec 优先的
 
 # 最终代码 Review 编排（输出前最后一层门禁）
 
+## Final Review 与 Verify 边界
+
+Final Review 只保存内部结构化结果，不生成 Final Review Markdown。它只能在所有 Task 完成、Task 级测试通过且最终 Verify 通过后启动。Verify 对照 `spec.md` 验收标准审查整体结果；Verify 发现偏差时必须回到 Spec，不能在 Verify 阶段直接修补后放行。
+
 ## 职责
 
 编排对已产出最终代码或变更集的 Spec 优先独立审查：先重新读取放行后的 `spec.md`，把范围、非目标、业务规则、状态/权限边界和验收标准拆成可追踪条目，再逐条寻找代码与测试证据。任务勾选状态、任务数量或 `task.md` 的“可交付”标记只作为施工上下文，不能证明需求完成。必须实际运行项目测试、类型检查和构建，并最后调用 [`tools-quality`](../../tools/tools-quality/SKILL.md) 的 `mode: final-gate` 形成最终代码质量出口；发现直接对应已批准 Spec、且不需要扩大范围或改变关键设计的遗漏时，先补充能证明缺失的测试/检查，再做最小修复并重新执行全部验证。任一质量复检、需求证据或验证门禁失败时，最终结论为阻塞。本 Skill 不得自行扩展 Spec、替换用户选择的方案或把静态/主机检查表述为板级验证。

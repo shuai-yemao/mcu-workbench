@@ -1,11 +1,17 @@
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const { spawnSync } = require('child_process');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const { spawnSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const SCRIPT = path.join(ROOT, 'scripts', 'validate-workflow-gate.js');
 const REQUEST_ID = 'REQ-GATE-FIXTURE-20260819';
+
+const {
+  createWorkflowState,
+  getWorkflowStatePaths,
+  writeWorkflowState,
+} = require('../lib/workflow-state');
 
 function writeFile(root, relativePath, content) {
   const target = path.join(root, relativePath);
@@ -21,33 +27,44 @@ function createFixture({
   planDecisionOwner = 'user',
   taskStatus = 'ready-for-execution',
   previousTaskStatus = 'pass',
-  taskId = 'T-01',
-  rcpRequestId = REQUEST_ID,
-  includeRcp = true,
+  taskId = 'T-001',
+  includeState = true,
+  stateRequestId = REQUEST_ID,
+  verifyStatus = 'pending',
+  taskIdHeader = 'ID',
 } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-workbench-gate-'));
   const documents = path.join('00_Docs', '04_需求文档');
-  const rcpName = `${REQUEST_ID}-RCP.md`;
-  const reviewPackageName = `${REQUEST_ID}-Review-Package.md`;
 
-  if (includeRcp) {
-    writeFile(root, path.join(documents, rcpName), `| request_id | \`${rcpRequestId}\` |\n| 工作流状态 | \`可交接\` |\n`);
+  if (includeState) {
+    const state = createWorkflowState({
+      requestId: stateRequestId,
+      projectRoot: root,
+      specVersion: 'v1.0',
+      planVersion: 'v1.0',
+      taskVersion: 'v1.0',
+    });
+    state.user_gates.spec = specReviewStatus;
+    state.user_gates.plan = planReviewStatus;
+    state.verify_summary.status = verifyStatus;
+    const statePaths = getWorkflowStatePaths(root, REQUEST_ID);
+    writeWorkflowState(statePaths.statePath, state);
   }
-  writeFile(root, path.join(documents, reviewPackageName), `| request_id | \`${REQUEST_ID}\` |\n| 审查状态 | \`可交接\` |\n`);
+
   writeFile(root, path.join(documents, 'spec.md'), [
     '# Spec',
     '',
     `| request_id | \`${REQUEST_ID}\` |`,
+    '| Spec 版本 | `v1.0` |',
     '| Spec 状态 | `' + specStatus + '` |',
     '| 用户审查状态 | `' + specReviewStatus + '` |',
-    `| 输入 RCP | \`${rcpName}\` |`,
-    `| Review-Package | \`${reviewPackageName}\` |`,
     ''
   ].join('\n'));
   writeFile(root, path.join(documents, 'plan.md'), [
     '# Plan',
     '',
     `| request_id | \`${REQUEST_ID}\` |`,
+    '| 计划版本 | `v1.0` |',
     '| 计划状态 | `approved-for-task-execution` |',
     '| 用户审查状态 | `' + planReviewStatus + '` |',
     '| 选定方案 | `' + selectedPlan + '` |',
@@ -58,11 +75,12 @@ function createFixture({
     '# Task',
     '',
     `| request_id | \`${REQUEST_ID}\` |`,
-    '| task 状态 | `' + taskStatus + '` |',
+    '| 任务清单版本 | `v1.0` |',
+    '| 状态 | `' + taskStatus + '` |',
     '',
-    '| ID | 任务 | 主实现 Skill | 前置 | 状态 | 主要产物 |',
+    `| ${taskIdHeader} | 任务 | 主实现 Skill | 前置 | 状态 | 主要产物 |`,
     '|---|---|---|---|---|---|',
-    `| ${taskId} | 入口 | workflow-requirements-router | T-00 | ${previousTaskStatus} | docs |`,
+    `| ${taskId} | 入口 | workflow-requirements-router | T-000 | ${previousTaskStatus} | docs |`,
     ''
   ].join('\n'));
 
@@ -90,7 +108,7 @@ afterEach(() => {
 });
 
 describe('validate-workflow-gate', () => {
-  test('passes a complete and consistent workflow chain', () => {
+  test('passes a complete workflow chain without internal Markdown artifacts', () => {
     const result = runGate(createFixture());
 
     expect(result.code).toBe(0);
@@ -103,12 +121,12 @@ describe('validate-workflow-gate', () => {
     });
   });
 
-  test('blocks when the RCP is missing', () => {
-    const result = runGate(createFixture({ includeRcp: false }));
+  test('blocks when the internal workflow state is missing', () => {
+    const result = runGate(createFixture({ includeState: false }));
 
     expect(result.code).toBe(2);
     expect(result.report.status).toBe('blocked');
-    expect(result.report.missing_items.join('\n')).toContain('-RCP.md');
+    expect(result.report.missing_items.join('\n')).toContain('state.json');
   });
 
   test('blocks a non-approved Spec status', () => {
@@ -122,7 +140,7 @@ describe('validate-workflow-gate', () => {
     const result = runGate(createFixture({ specReviewStatus: 'awaiting_user_review' }));
 
     expect(result.code).toBe(2);
-    expect(result.report.blocking_reasons.join('\n')).toContain('用户闸门 H-02 未批准');
+    expect(result.report.blocking_reasons.join('\n')).toContain('用户 Spec 闸门未批准');
   });
 
   test('blocks when the user has not approved or selected the Plan', () => {
@@ -132,25 +150,25 @@ describe('validate-workflow-gate', () => {
     }));
 
     expect(result.code).toBe(2);
-    expect(result.report.blocking_reasons.join('\n')).toContain('用户闸门 H-03 未批准');
+    expect(result.report.blocking_reasons.join('\n')).toContain('用户 Plan 闸门未批准');
     expect(result.report.blocking_reasons.join('\n')).toContain('H-03 缺少用户选择的实施方案');
   });
 
-  test('blocks a request ID mismatch across workflow documents', () => {
-    const result = runGate(createFixture({ rcpRequestId: 'REQ-OTHER' }));
+  test('blocks a request ID mismatch in the internal state', () => {
+    const result = runGate(createFixture({ stateRequestId: 'REQ-OTHER' }));
 
     expect(result.code).toBe(2);
-    expect(result.report.blocking_reasons.join('\n')).toContain('RCP request_id 不一致');
+    expect(result.report.blocking_reasons.join('\n')).toContain('内部 Workflow State 无效');
   });
 
-  test('blocks when the previous task is not complete', () => {
+  test('blocks when the first task is not complete', () => {
     const result = runGate(createFixture({ previousTaskStatus: 'pending' }));
 
     expect(result.code).toBe(2);
-    expect(result.report.blocking_reasons.join('\n')).toContain('前置任务 T-01 未完成');
+    expect(result.report.blocking_reasons.join('\n')).toContain('首个任务被阻塞或未就绪');
   });
 
-  test('accepts the current three-digit task identifiers for automatic execution', () => {
+  test('accepts three-digit task identifiers for automatic execution', () => {
     const result = runGate(createFixture({
       taskId: 'T-001',
       taskStatus: 'ready-for-auto-execution',
@@ -159,6 +177,20 @@ describe('validate-workflow-gate', () => {
 
     expect(result.code).toBe(0);
     expect(result.report.status).toBe('pass');
+  });
+
+  test('accepts the task_id header used by the formal task document', () => {
+    const result = runGate(createFixture({ taskIdHeader: 'task_id' }));
+
+    expect(result.code).toBe(0);
+    expect(result.report.status).toBe('pass');
+  });
+
+  test('blocks when final Verify requires a Spec revision', () => {
+    const result = runGate(createFixture({ verifyStatus: 'spec_revision_required' }));
+
+    expect(result.code).toBe(2);
+    expect(result.report.blocking_reasons.join('\n')).toContain('最终 Verify 要求回到 Spec');
   });
 
   test('reports invalid input for a missing project root', () => {
@@ -171,7 +203,7 @@ describe('validate-workflow-gate', () => {
     });
   });
 
-  test('keeps the package command available without changing the plugin manifest', () => {
+  test('keeps the package command available without manifest hooks', () => {
     const packageJson = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
     const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, '.codex-plugin', 'plugin.json'), 'utf8'));
 

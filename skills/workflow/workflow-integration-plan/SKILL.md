@@ -5,6 +5,10 @@ description: 放行后的集成规划与分发：读取按风险放行的 spec.m
 
 # 集成规划与分发
 
+## 任务执行与最终 Verify 边界
+
+本 Skill 生成的 Plan 必须把 Task 级测试和最终 Verify 分开。所有 Task 完成并通过各自测试后统一执行最终 Verify；Verify 对照批准的 `spec.md` 验收标准审查整体结果。Verify 发现偏差时必须回到 Spec，重新生成 Plan/Task，不得在 Verify 阶段直接修补后放行。
+
 ## 适用范围
 
 本 Skill 是 `workflow-review-gate` 审查放行后的规划者：消费按风险放行的 `spec.md`（需求与约束正式输入）、`Review-Package` 审计证据以及真实项目文件、配置、构建日志和现有运行记录。它根据 `spec_rigor` 选择规划力度：`prototype` 不进入本 Skill；`lightweight` 生成一个紧凑、单局部目标的方案，不强制方案 A/B 选择；`full` 生成两个面向用户、易于比较的实施方案并等待选择。方案审查通过后生成 `plan.md`，交给 `workflow-task-breakdown` 拆解为 `task.md`，再交给 `workflow-task-execution` 按依赖顺序逐项执行，最终进入一个实现层 Skill。代码产物就绪后，把适用的 Spec、`plan.md`、`task.md`、逐项执行记录、最终代码/变更集与验收清单交接给 `workflow-final-review`。本 Skill 不生成实现代码；门禁状态非放行不得继续。
@@ -18,8 +22,8 @@ description: 放行后的集成规划与分发：读取按风险放行的 spec.m
 5. `lightweight` 记录默认方案依据后进入 H-03 计划审查；`full` 在用户选择后记录选择理由和放弃方案。随后对方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
 6. 审查通过后，按 [`plan-template.md`](references/plan-template.md) 生成 `<project_root>/00_Docs/04_需求文档/plan.md`，将 `spec.md` 作为需求约束来源，将 `plan.md` 作为实施顺序、阶段级 Agent/Skill 基线和交接依据。
 7. 将 `spec.md` 和已审查通过的 `plan.md` 交给 `workflow-task-breakdown` 自动生成有序、可独立验证的 `task.md`；不再等待用户审查 `task.md`。
-8. 将 `task.md` 交给 `workflow-task-execution`，采用 `auto_until_final_check`：每项任务先测试/检查、再实现、再 AI 审查和验证，通过后自动进入下一个依赖任务。只有硬阻塞或需求变化才暂停。
-9. 全部任务完成且代码产物就绪后，自动交给 `workflow-final-review`；最终格式、注释、质量、差异和验收检查完成后再通知用户。需要格式或必要注释整改时，遵循最终的格式与必要注释整改闭环。通知不等于提交、推送、烧录或发布授权。
+8. 将 `task.md` 交给 `workflow-task-execution`，采用 `auto_until_final_check`：每项任务先补充必要的失败测试/检查，再实现当前 Task、测试当前 Task、完成 AI 审查，通过后自动进入下一个依赖任务；所有 Task 完成后统一执行最终 Verify。只有硬阻塞或需求变化才暂停。
+9. 全部任务完成且代码产物就绪后，先对照 `spec.md` 执行最终 Verify，再交给 `workflow-final-review`；Verify 偏差回到 Spec，Verify 通过后才执行最终格式、注释、质量和差异检查。通知不等于提交、推送、烧录或发布授权。
 
 ## 需求变化门禁
 
@@ -151,7 +155,7 @@ Middleware Vendor Port 是独立的第三方移植边界，不等同于 BSP Adap
 
 每个阶段的交接必须以 `spec.md` 为约束边界、以 `plan.md` 为实施路线、以 `task.md` 为执行顺序，并能回溯到 Review Gate 的四张清单和 Review-Package；阶段计划仍需明确现状表、边界表、文件修改表和验收表的对应关系，验收内容区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与分发，不代替下游实现。
 
-交接 `workflow-final-review` 时还必须列出：格式与注释规则来源、可复现格式检查命令、初始代码范围、允许整改的文件范围和预期验证层级。这样最终门禁能在格式或必要注释缺失时实施受限整改、审阅差异并同条件复检，而不会重开功能或架构设计。
+交接 `workflow-final-review` 时还必须列出：格式与注释规则来源、可复现格式检查命令、初始代码范围、允许整改的文件范围和预期验证层级。这样最终门禁能执行格式与必要注释整改闭环，在格式或必要注释缺失时实施受限整改、审阅差异并同条件复检，而不会重开功能或架构设计。
 
 固件分层交付作为本 Skill 的模式 C：基线、Tools 观测通道、最小系统、OS Adapter、Core、BSP Driver/Handle、Port、Wrapper、集成回归。它扩展模式 A 的审计证据并可映射模式 B 的路线图，但不将 UART 日志定义为软件层，也不在本 Skill 中实现任何一层代码。
 

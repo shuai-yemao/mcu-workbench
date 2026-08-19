@@ -2,6 +2,10 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const {
+  getWorkflowStatePaths,
+  readWorkflowState,
+} = require('../lib/workflow-state');
 
 const EXIT_CODES = {
   PASS: 0,
@@ -111,19 +115,21 @@ function findTaskTable(text) {
   const lines = text.split(/\r?\n/);
   const headerIndex = lines.findIndex((line) => {
     const cells = splitTableRow(line);
-    return cells[0] === 'ID' && cells.some((cell) => cell === '状态');
+    return cells.some((cell) => cell === 'ID' || cell === 'task_id')
+      && cells.some((cell) => cell === '状态');
   });
 
   if (headerIndex < 0) return null;
 
   const headers = splitTableRow(lines[headerIndex]);
+  const idIndex = headers.findIndex((cell) => cell === 'ID' || cell === 'task_id');
   const statusIndex = headers.indexOf('状态');
   const rows = [];
   for (let index = headerIndex + 2; index < lines.length; index += 1) {
     if (!lines[index].trim().startsWith('|')) break;
     const cells = splitTableRow(lines[index]);
-    if (/^T-\d+$/.test(cells[0] || '')) {
-      rows.push({ id: cells[0], status: cells[statusIndex] || null, cells });
+    if (/^T-\d+$/.test(cells[idIndex] || '')) {
+      rows.push({ id: cells[idIndex], status: cells[statusIndex] || null, cells });
     }
   }
 
@@ -199,36 +205,34 @@ function validate(options) {
     addBlock(result, 'spec.md 缺少 request_id。');
   }
 
-  const rcpPath = resolveDocumentPath(
-    documentsDir,
-    readMarkdownField(specText, '输入 RCP'),
-  );
-  const reviewPackagePath = resolveDocumentPath(
-    documentsDir,
-    readMarkdownField(specText, 'Review-Package'),
-  );
-  const rcpText = rcpPath ? readText(rcpPath, checkedFiles) : null;
-  const reviewPackageText = reviewPackagePath
-    ? readText(reviewPackagePath, checkedFiles)
-    : null;
-
-  if (!rcpText) addMissing(result, rcpPath || 'Spec 输入 RCP');
-  if (!reviewPackageText) {
-    addMissing(result, reviewPackagePath || 'Spec Review-Package');
+  const statePaths = getWorkflowStatePaths(options.root, result.request_id);
+  let workflowState = null;
+  if (!fs.existsSync(statePaths.statePath)) {
+    addMissing(result, statePaths.statePath);
+  } else {
+    checkedFiles.push(statePaths.statePath);
+    try {
+      workflowState = readWorkflowState(statePaths.statePath, {
+        expectedRequestId: result.request_id,
+      });
+    } catch (error) {
+      addBlock(result, `内部 Workflow State 无效：${error.message}`);
+    }
   }
 
   const specStatus = readMarkdownField(specText, 'Spec 状态');
   const planStatus = planText ? readMarkdownField(planText, '计划状态') : null;
-  const taskStatus = taskText ? readMarkdownField(taskText, 'task 状态') : null;
+  const taskStatus = taskText
+    ? readMarkdownField(taskText, 'task 状态') || readMarkdownField(taskText, '状态')
+    : null;
   const specReviewStatus = readMarkdownField(specText, '用户审查状态');
   const planReviewStatus = planText ? readMarkdownField(planText, '用户审查状态') : null;
   const selectedPlan = planText ? readMarkdownField(planText, '选定方案') : null;
   const planDecisionOwner = planText ? readMarkdownField(planText, '方案选择人') : null;
-  const reviewStatus = reviewPackageText
-    ? readMarkdownField(reviewPackageText, '审查状态')
-    : null;
-  const rcpWorkflowStatus = rcpText
-    ? readMarkdownField(rcpText, '工作流状态')
+  const specVersion = readMarkdownField(specText, 'Spec 版本');
+  const planVersion = planText ? readMarkdownField(planText, '计划版本') : null;
+  const taskVersion = taskText
+    ? readMarkdownField(taskText, '任务清单版本') || readMarkdownField(taskText, 'task 版本')
     : null;
 
   if (specStatus && !APPROVED_SPEC_STATUSES.has(specStatus)) {
@@ -240,11 +244,15 @@ function validate(options) {
   if (!taskStatus || /blocked|fail/i.test(taskStatus)) {
     addBlock(result, `Task 状态阻塞或缺失：${taskStatus || 'missing'}`);
   }
-  if (!APPROVED_REVIEW_STATUSES.has(specReviewStatus || '')) {
-    addBlock(result, `用户闸门 H-02 未批准：${specReviewStatus || 'missing'}`);
+  const stateSpecGate = workflowState?.user_gates?.spec;
+  const statePlanGate = workflowState?.user_gates?.plan;
+  if (!APPROVED_REVIEW_STATUSES.has(specReviewStatus || '')
+    && !APPROVED_REVIEW_STATUSES.has(stateSpecGate || '')) {
+    addBlock(result, `用户 Spec 闸门未批准：${specReviewStatus || stateSpecGate || 'missing'}`);
   }
-  if (!APPROVED_REVIEW_STATUSES.has(planReviewStatus || '')) {
-    addBlock(result, `用户闸门 H-03 未批准：${planReviewStatus || 'missing'}`);
+  if (!APPROVED_REVIEW_STATUSES.has(planReviewStatus || '')
+    && !APPROVED_REVIEW_STATUSES.has(statePlanGate || '')) {
+    addBlock(result, `用户 Plan 闸门未批准：${planReviewStatus || statePlanGate || 'missing'}`);
   }
   if (!selectedPlan || /^none$/i.test(selectedPlan)) {
     addBlock(result, 'H-03 缺少用户选择的实施方案。');
@@ -252,16 +260,20 @@ function validate(options) {
   if (planDecisionOwner && planDecisionOwner !== 'user') {
     addBlock(result, `H-03 方案选择人不是 user：${planDecisionOwner}`);
   }
-  if (reviewStatus && !/可交接|approved|pass/i.test(reviewStatus)) {
-    addBlock(result, `Review-Package 未完成交接：${reviewStatus}`);
+  if (workflowState?.verify_summary?.status === 'spec_revision_required') {
+    addBlock(result, '最终 Verify 要求回到 Spec，当前 Plan/Task 不得继续。');
   }
-  if (rcpWorkflowStatus && !/可交接|approved|pass/i.test(rcpWorkflowStatus)) {
-    addBlock(result, `RCP 未完成交接：${rcpWorkflowStatus}`);
+  if (workflowState && specVersion && workflowState.spec_version !== specVersion) {
+    addBlock(result, `内部状态 Spec 版本不一致：${workflowState.spec_version}`);
+  }
+  if (workflowState && planVersion && workflowState.plan_version !== planVersion) {
+    addBlock(result, `内部状态 Plan 版本不一致：${workflowState.plan_version}`);
+  }
+  if (workflowState && taskVersion && workflowState.task_version !== taskVersion) {
+    addBlock(result, `内部状态 Task 版本不一致：${workflowState.task_version}`);
   }
 
   const documents = [
-    {name: 'RCP', text: rcpText},
-    {name: 'Review-Package', text: reviewPackageText},
     {name: 'Spec', text: specText},
     {name: 'Plan', text: planText},
     {name: 'Task', text: taskText},
@@ -277,14 +289,11 @@ function validate(options) {
   }
 
   if (taskText) {
-    const t01 = readTaskRow(taskText, 'T-01');
     const firstTask = readFirstTaskRow(taskText);
-    if (t01 && !/pass|completed/i.test(t01.status || '')) {
-      addBlock(result, `前置任务 T-01 未完成：${t01.status}`);
-    } else if (!t01 && !firstTask) {
+    if (!firstTask) {
       addBlock(result, 'Task 缺少可执行任务表。');
-    } else if (!t01 && /blocked|fail/i.test(firstTask.status || '')) {
-      addBlock(result, `首个任务被阻塞：${firstTask.id}=${firstTask.status}`);
+    } else if (!/pass|ready|completed|in_progress|执行中/i.test(firstTask.status || '')) {
+      addBlock(result, `首个任务被阻塞或未就绪：${firstTask.id}=${firstTask.status}`);
     }
   }
 
@@ -298,7 +307,7 @@ function validate(options) {
 function finalize(result, options) {
   if (result.missing_items.length > 0 || result.blocking_reasons.length > 0) {
     result.status = 'blocked';
-    result.next_action = '停止实现，补齐缺失产物或回到 RCP/Review Gate。';
+    result.next_action = '停止实现，补齐内部状态或回到 Spec/Review Gate。';
   }
 
   if (options.json) {

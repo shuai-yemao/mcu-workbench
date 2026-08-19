@@ -139,6 +139,10 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 ## Codex 适配
 
+### 当前 Spec 工作流文档契约（v1.0）
+
+用户正式接收的文档只有 `spec.md`、`plan.md` 和 `task.md`。RCP、Review-Package 和 Final Review 仍然存在，但只保存为内部 JSON/JSONL 状态，不生成用户项目 Markdown。Task 必须逐项实现并测试；所有 Task 完成后统一执行 Verify，Verify 对照 Spec 验收标准审查，发现偏差必须回到 Spec 并使旧 Plan/Task 失效。
+
 本仓库同时提供 `.codex-plugin/plugin.json`，与 Claude Code 共用 `skills/` 和 catalog。Codex 适配入口为 `.codex-plugin/plugin.json`，同步和校验使用 `scripts/sync-codex-skills.js` 与 `scripts/validate-plugin.js`。
 
 安装启用后可在 Codex Composer 中使用 `@mcu-workbench` 快捷触发插件。
@@ -168,9 +172,9 @@ npm run plugin:check-refresh -- --json --strict
 
 ### 嵌入式任务 Router-first 接入
 
-Codex 的插件 Skill 主要提供工作流指导，不能替代宿主级强制拦截。嵌入式任务应先经过 `workflow-requirements-router`，再依次形成 RCP、Challenge、Review-Package、放行的 `spec.md`、`plan.md` 和 `task.md`，之后才进入实现 Skill。
+Codex 的插件 Skill 主要提供工作流指导，不能替代宿主级强制拦截。嵌入式任务应先经过 `workflow-requirements-router`，在内部形成 RCP、Challenge 和 Review Gate 状态，生成并批准详细 `spec.md` 后再生成 `plan.md`、`task.md`，之后才进入实现 Skill。
 
-用户审查固定集中在三个节点：RCP（H-01）、Spec（H-02）和 Plan/方案选择（H-03）。H-03 放行后，Task 生成、任务执行、AI 审查、测试和最终检查自动连续推进；最终通知只报告结果，不等同于提交、推送、烧录或发布授权。
+用户审查固定从详细 `spec.md` 开始，随后审查并批准 `plan.md`/方案选择；RCP、Review-Package 和 Final Review 不单独设置 Markdown 审查闸门。Plan 放行后，Task 生成、逐项实现与测试、最终 Verify 和内部 Final Review 自动连续推进；最终通知只报告结果，不等同于提交、推送、烧录或发布授权。
 
 目标工程接入规则和 Gate 记录字段见 [`codex/embedded-workflow-entry.md`](codex/embedded-workflow-entry.md)。接入时保留目标工程已有规则，不修改 `embedded_framework` 或其他宿主适配；缺失或未放行的流程产物应标记为 `blocked`，不能仅凭插件安装、缓存一致或模型自述放行。
 

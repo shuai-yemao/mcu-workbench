@@ -6,7 +6,9 @@
 
 本材料是项目级入口指导和记录模板，不是 Codex 宿主 Hook；它不能保证模型每次都自动选择 Router。
 
-用户审查固定为三个闸门：RCP（H-01）、Spec（H-02）和 Plan/方案选择（H-03）。H-03 通过后，Task 生成、任务执行、AI 审查、测试和最终检查采用 `auto_until_final_check` 连续推进；不为 Task 或单项任务设置例行用户等待。只有无法依据已批准 Spec/Plan 消除、且需要新增用户决策的硬阻塞才暂停。
+历史规则曾将用户审查拆为 RCP、Spec 和 Plan 三个闸门；当前 v1.0 统一从详细 Spec 开始，再审查并批准 Plan/方案选择。RCP、Review-Package 和 Final Review 不单独生成 Markdown；Plan 放行后，Task 生成、逐项实现与测试、最终 Verify 和内部 Final Review 采用 `auto_until_final_check` 连续推进。只有无法依据已批准 Spec/Plan 消除、且需要新增用户决策的硬阻塞才暂停。
+
+当前 v1.0 文档契约覆盖并替代上述历史闸门说明：用户正式接收的文档只有 `spec.md`、`plan.md` 和 `task.md`；RCP、Review-Package 和 Final Review 只保存为内部 JSON/JSONL 状态。用户审查从 Spec 开始，Plan 批准后才生成 Task。Task 必须逐项实现并测试，所有 Task 完成后统一 Verify；Verify 对照 Spec 验收标准审查，发现偏差必须回到 Spec。
 
 ## 目标工程入口规则
 
@@ -29,7 +31,7 @@ Codex 任务必须明确：
 - 当前任务属于需求、架构、实现、验证还是工具链阶段；
 - 输入、输出、所有权、生命周期、阻塞属性和线程/ISR 上下文；
 - 未确认事实和需要补证的项目条件；
-- RCP、Spec、Plan、Task 和最终 Review 的交接状态。
+- 内部状态、Spec、Plan、Task 和最终 Review 的交接状态。
 
 ## Gate 交付记录
 
@@ -37,7 +39,7 @@ Codex 任务必须明确：
 
 | 字段 | 要求 |
 |---|---|
-| `request_id` | 与 RCP、Review-Package、Spec、Plan、Task 一致 |
+| `request_id` | 与内部状态、Spec、Plan、Task 一致 |
 | `stage` | 当前工作流阶段 |
 | `status` | `missing`、`blocked`、`approved` 或实现/审查阶段状态 |
 | `checked_files` | 实际检查的绝对路径或相对路径 |
@@ -48,12 +50,12 @@ Codex 任务必须明确：
 自动执行阶段还应记录：
 
 - `execution_mode`：`auto_until_final_check`；
-- `user_gates`：`H-01`、`H-02`、`H-03` 的批准状态；
+- `user_gates`：Spec、Plan 和硬阻塞例外的批准状态；
 - `hard_blocker_policy`：例行失败自动诊断、修复和复测；新增决策才暂停。
 
 以下情况必须阻塞交付：
 
-- RCP、Challenge、Review-Package 或 Spec 缺失；
+- 内部状态或 Spec 缺失；
 - Spec 未放行或 Plan/Task 与 Spec 版本不一致；
 - 需求范围、接口、资源边界或验收标准发生变化但未重新走 Spec；
 - 变更超出当前 Plan/Task 文件范围；

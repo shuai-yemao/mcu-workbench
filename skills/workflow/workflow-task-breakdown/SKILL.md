@@ -5,6 +5,10 @@ description: 将已审查通过的 plan.md 结合真实项目文件拆分为有�
 
 # 实施任务拆解
 
+## Task 测试与最终 Verify 边界
+
+每个 Task 必须独立实现并测试；Task 级测试只证明当前任务的局部完成条件，不等同最终验收。所有 Task 完成并通过各自测试后，才进入统一的最终 Verify。最终 Verify 对照 `spec.md` 验收标准审查整体结果，发现偏差必须回到 Spec 工作流，不能直接在 Verify 阶段修改后放行。
+
 ## 适用范围
 
 本 Skill 位于 `workflow-integration-plan` 与 `workflow-task-execution` 之间。它消费经过方案审查通过的 `plan.md`、放行后的 `spec.md` 以及真实项目文件，把实施路线拆成有依赖顺序、单一责任、可独立验证的小任务，并生成 `task.md`。`lightweight` 默认只生成一个局部、可独立验证的任务；`full` 按完整计划拆解多个任务。`prototype` 不进入本 Skill。本 Skill 不重新选择方案、不重新设计架构、不生成代码，不得修改 `spec.md` 或 `plan.md`。

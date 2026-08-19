@@ -27,6 +27,13 @@
 
 ### 2.1 Router-first 入口最小协议
 
+#### 当前 v1.0 文档与执行契约
+
+- RCP、Review-Package 和 Final Review 是内部 JSON/JSONL 状态，不生成用户项目 Markdown。
+- 用户正式接收的文档只有详细 `spec.md`、`plan.md` 和 `task.md`；用户审查从 Spec 开始，Plan 批准后才生成 Task。
+- Task 必须逐项实现并测试；所有 Task 完成后统一执行 Verify。Verify 对照 Spec 验收标准审查，发现偏差必须回到 Spec，旧 Plan/Task 失效。
+- 真实 Codex 宿主是否强制执行该流程仍为 `unverified`；静态或主机测试不得替代宿主证据。
+
 - 所有嵌入式请求的第一有效动作必须是 `workflow-requirements-router`：读取项目证据、识别风险并生成可审计的 RCP。
 - 在 RCP、Challenge、Review-Package 和放行的 `spec.md` 形成前，只允许只读分析、证据收集和阻塞报告，不得进入实现 Skill 或写入业务代码。
 - 目标工程接入时，复制 [`embedded-workflow-entry.md`](./embedded-workflow-entry.md) 中的规则和记录字段；该文件是接入材料，不代表插件已经拥有宿主级拦截能力。

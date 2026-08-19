@@ -5,6 +5,10 @@ description: 代码前审查与门禁：依据项目证据反猜测审查既有�
 
 # 代码前审查门禁
 
+## 正式输出边界
+
+Review-Package 是内部结构化审查状态，不生成用户项目中的 Review-Package Markdown。四张审查清单仍必须完整保留在内部状态中，并整合进详细 `spec.md`；用户正式接收的文档只有 `spec.md`、`plan.md` 和 `task.md`。
+
 ## 适用范围
 
 本 Skill 是 Router 和 `workflow-requirements-challenge` 完成 RCP 补证与目的/可行性质疑后的唯一接收方（必经门禁）：对所有请求完成需求约束和既有实现方案的反猜测审查与代码前门禁判定。审查放行后固定交接给 `workflow-integration-plan` 完成分层/迁移设计与实现层 Skill 分发；门禁阻塞则回传 Router 或 `workflow-requirements-challenge` 补证。本 Skill 不生成实现代码、不分层迁移设计、不分发实现层 Skill。
@@ -17,7 +21,7 @@ description: 代码前审查与门禁：依据项目证据反猜测审查既有�
 <project_root>/00_Docs/04_需求文档/
 ```
 
-其中 `<project_root>` 只能取自用户明确提供或 Router 已确认的目标项目绝对路径。四张清单只作为 `Review-Package` 内的审计章节，不生成四个独立 Markdown 文件；插件仓库、Skill 目录、`process.cwd()`、当前会话工作目录都不是项目根目录，禁止作为文档输出根。
+其中 `<project_root>` 只能取自用户明确提供或 Router 已确认的目标项目绝对路径。四张清单只作为内部 Review-Package 状态的审计章节，不生成 Review-Package Markdown 或四个独立 Markdown 文件；插件仓库、Skill 目录、`process.cwd()`、当前会话工作目录都不是项目根目录，禁止作为文档输出根。
 
 执行前必须完成以下检查：
 
@@ -33,7 +37,7 @@ Skill 内部的 `skills/**` 只能保存维护者编写的规则、模板和设�
 1. 固定输入为 Router/`workflow-requirements-challenge` 更新后的 RCP、目的与可行性质疑结论、既有需求实现方案（无既有方案时以 RCP 与项目证据为审查对象）与项目源码、配置、构建日志和现有运行记录。
 2. 整理工程事实：每个事实、施工建议和验收结论写入来源（`relative/path:line`、配置键或可复现命令）及可信等级（`confirmed` / `user-confirmed` / `inferred` / `unverified`）。
 3. 反猜测审查既有方案，逐项分类为"可采用 / 需修订 / 阻塞风险"。
-4. 必须在 `Review-Package` 内形成四个审查章节；不得将它们分别写成项目 Markdown 文件。`lightweight` 和 `full` 请求审查完成后，将四个章节按对应力度整合为 `spec.md`；`prototype` 只保留目标、临时边界、有效期和不承诺项，不生成正式 `spec.md`。
+4. 必须在内部 Review-Package 状态中形成四个审查章节；不得将它们写成项目 Markdown 文件。`lightweight` 和 `full` 请求审查完成后，将四个章节按对应力度整合为 `spec.md`；`prototype` 只保留目标、临时边界、有效期和不承诺项，不生成正式 `spec.md`。
 5. 门禁判定：全部实施相关事实为 `confirmed` 或 `user-confirmed` 且四张表无未关闭阻塞项，并且 Spec 力度不低于风险要求 → 放行。`prototype` 放行后结束，不得交接代码施工；`lightweight` 只能交接局部、单项施工；`full` 交接 `workflow-integration-plan`。否则保持阻塞并回传 Router。
 
 ## 需求变化门禁
@@ -106,8 +110,8 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 
 四张审查清单是 `lightweight` 和 `full` 审查的**必选审计内容**，与是否存在既有实现方案无关。`prototype` 仍需在 RCP 中记录最小目标和临时边界，但不生成四张正式清单。它们必须同时：
 
-1. 保留在 `Review-Package` 中，作为审计记录和证据追溯源；
-2. 作为四个章节整合进 `spec.md`，交给用户完成 H-02 审查和下游 Skill；
+1. 保留在内部 `Review-Package` 状态中，作为审计记录和证据追溯源；
+2. 作为四个章节整合进 `spec.md`，交给用户完成 Spec 审查和下游 Skill；
 3. 不生成、不更新、不删除对应的四个独立 Markdown 文件。
 
 命名规范固定为：
