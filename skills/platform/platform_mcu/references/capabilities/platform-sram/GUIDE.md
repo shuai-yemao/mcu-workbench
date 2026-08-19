@@ -477,7 +477,7 @@ LR_IROM1 0x08000000 0x00080000 {    ; 512KB Flash
 | ESP32 | DRAM/IRAM (520KB) | 片内 SRAM 分 IRAM/DRAM |
 | ESP32-S3 | SRAM(512KB) | 可配置为 TCM |
 
-- **不覆盖外部 SRAM**（FSMC/FMC 外接 SRAM/PSRAM/SDRAM）— 使用 `vendor_stm32` + FMC 配置
+- **不覆盖外部 SRAM**（FSMC/FMC 外接 SRAM/PSRAM/SDRAM）— 使用 `vendor_mcu` + FMC 配置
 - **不覆盖 MPU 配置** — 使用 `platform-cortex-registers`（MPU 章节）
 - **不覆盖内存保护单元（MPU）与 SRAM 的配合** — 同上
 - **DMA 缓冲区放置细节** 参考 `peripheral-dma`

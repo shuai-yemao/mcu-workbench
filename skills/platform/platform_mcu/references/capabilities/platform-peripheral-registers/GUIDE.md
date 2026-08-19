@@ -441,7 +441,7 @@ p/x *(uint32_t*)0x40000424
 ## 边界定义
 
 ### 不该激活
-- 用户需要的是 HAL 层 API 调用 → 使用 `vendor_stm32`
+- 用户需要的是 HAL 层 API 调用 → 使用 `vendor_mcu`
 - 用户需要的是 ARM 内核寄存器（SCB/NVIC/DWT/MPU）→ 使用 `platform-cortex-registers`
 - 用户需要的是外设高级配置细节（如 ADC 过采样、I2C 时序配置）→ 使用对应的外设 `peripheral-adc` / `bus-i2c` / `bus-spi` / `peripheral-timer` / `bus-uart`
 
@@ -458,7 +458,7 @@ p/x *(uint32_t*)0x40000424
 ## 交接关系
 
 - 同层：`platform-cortex-registers`（内核寄存器 — 互补）
-- 上游：`vendor_stm32`（HAL 对寄存器做了封装，本 skill 教你直读）
+- 上游：`vendor_mcu`（HAL 对寄存器做了封装，本 skill 教你直读）
 - 下游：各外设 skill（`bus-i2c`, `bus-spi`, `peripheral-adc`, `peripheral-timer`, `bus-uart` — 外设级配置）
 
 ## 参考资料

@@ -4,7 +4,7 @@
  * 检查本地 Marketplace 源与 Codex 受管插件缓存是否一致。
  *
  * 本脚本只读，不删除、覆盖或移动 Codex 缓存；发现差异时交接给官方
- * Marketplace Refresh 流程。
+ * 本地 Marketplace 的 Codex plugin add 刷新流程。
  */
 const crypto = require('crypto');
 const fs = require('fs');
@@ -150,7 +150,7 @@ function checkCodexPluginRefresh({ source = ROOT, cacheRoot = CACHE_ROOT } = {})
   const status = reasons.length ? 'refresh_required' : 'up_to_date';
   return {
     status,
-    action: status === 'refresh_required' ? 'marketplace_refresh' : 'none',
+    action: status === 'refresh_required' ? 'codex_plugin_add' : 'none',
     source: {
       path: resolvedSource,
       version: sourceVersion,
@@ -166,7 +166,7 @@ function checkCodexPluginRefresh({ source = ROOT, cacheRoot = CACHE_ROOT } = {})
     },
     reasons,
     instructions: status === 'refresh_required'
-      ? '在 Codex 的 Marketplace 插件上执行 Refresh；必要时重启 Codex。不要直接覆盖 .codex/plugins/cache。'
+      ? '运行 npm run codex:dev:refresh；安装完成后重启 Codex 或新建任务。不要直接覆盖 .codex/plugins/cache。'
       : 'Marketplace 源与当前版本的 Codex 缓存一致。'
   };
 }

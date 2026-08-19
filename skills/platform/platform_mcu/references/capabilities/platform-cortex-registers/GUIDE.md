@@ -7,7 +7,7 @@ version: "1.0.0"
 # ARM Cortex-M 内核架构寄存器指南
 
 > 内核寄存器是 Cortex-M 处理器核心的底层控制接口，所有 STM32 MCU 共享同一套 ARM 内核寄存器架构。
-> 与 vendor_stm32 互补：HAL 封装了寄存器操作，而本 skill 让你直接读写寄存器本身。
+> 与 vendor_mcu 互补：HAL 封装了寄存器操作，而本 skill 让你直接读写寄存器本身。
 > 主要参考：ARMv7-M Architecture Reference Manual (DDI 0403E) / ARMv8-M ARM。
 
 ## 适用场景
@@ -385,7 +385,7 @@ mem32 0x08000000, 16  // Flash 起始向量表
 ## 边界定义
 
 ### 不该激活
-- 用户需要的是 HAL 层的 API 调用 → 使用 `vendor_stm32`
+- 用户需要的是 HAL 层的 API 调用 → 使用 `vendor_mcu`
 - 用户需要的是外设级寄存器（GPIO/USART/TIM 等）→ 使用 `platform-peripheral-registers`
 - 用户需要的是调试器/烧录器配置 → 使用 `tools-flash` / `tools-debug`
 
@@ -401,7 +401,7 @@ mem32 0x08000000, 16  // Flash 起始向量表
 ## 交接关系
 
 - 同层：`platform-peripheral-registers`（外设寄存器，互补）
-- 上游：`vendor_stm32`（HAL API 封装）
+- 上游：`vendor_mcu`（HAL API 封装）
 - 调试时：`tools-debug`（GDB 读取内核寄存器）、`tools-flash`（JLink Commander 读取）
 
 ## 参考资料

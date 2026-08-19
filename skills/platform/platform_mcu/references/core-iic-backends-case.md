@@ -67,6 +67,6 @@ Platform I2C Bus
 
 1. 先建立事务级 I2C Fake（`platform_i2c_ops_t`），固定 read/write 和超时语义。
 2. 把 `bsp_gpio_iic` 迁移为 Impl 层软件时序后端，位级符号设为私有。
-3. 把 Impl Port 中的 HAL I2C 代码迁移为硬件后端（厂商 HAL/LL 由 vendor_stm32 承接）。
+3. 把 Impl Port 中的 HAL I2C 代码迁移为硬件后端（厂商 HAL/LL 由 vendor_mcu 承接）。
 4. 将 AHT21 Driver 的 10 函数总线接口缩减为事务级 Ops。
 5. 用相同测试分别运行 Fake、Hardware 和 Software 后端。

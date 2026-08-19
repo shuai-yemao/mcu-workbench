@@ -7,7 +7,9 @@ description: Service 业务服务：故障码管理、自检、诊断报告（�
 
 ## 边界
 
-Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、可复用的能力组织成服务，**带业务策略**，不是驱动的简单封装，也不是中间件封装。本服务只依赖 Platform 接口（platform_mcu/os 能力接口），不 include Vendor / Impl / HAL 任何符号。
+Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、可复用的能力组织成服务，**带业务策略**，不是驱动的简单封装，也不是中间件封装。本服务依赖 `platform_common` 的 `platform_service_t`、`platform_service_model_init()`、错误码、生命周期和版本查询，以及按需使用的 `platform_mcu`/`platform_os` 能力接口；不 include Vendor / Impl / HAL 任何符号。
+
+当前目标工程通过 `service_manager_register()` 接入公共服务表，并可使用 `platform_version_get_string()` 展示构建版本。对象注册和版本读取是 Common 机制，故障码登记、自检流程、诊断报告和恢复动作仍由本 Service 拥有。
 
 ## 业务策略
 
@@ -34,3 +36,6 @@ Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、
 - 不得包含具体产品 UI/业务流程（那是 app 层职责）。
 
 交接：底层能力经 [`platform_os`](../../platform/platform_os/SKILL.md) / [`platform_mcu`](../../platform/platform_mcu/SKILL.md) / [`platform_bsp`](../../platform/platform_bsp/SKILL.md) 接口获取；实现落地在 impl 层。
+本服务使用 `platform_common` 的 `platform_service_t`/`platform_service_model_init()` 建立服务对象，
+通过 `service_manager_register()` 接入公共服务表，并可使用 `platform_version_get_string()` 展示构建版本。
+这些是对象和诊断信息机制；故障码策略、自检策略和恢复动作仍由本 Service 拥有。

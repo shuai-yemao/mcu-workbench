@@ -14,6 +14,6 @@ reset → detect → configure → ready
 ## 交接
 
 - 总线控制器和 DMA：[`platform_mcu`](../../../platform/platform_mcu/SKILL.md)
-- 厂商 HAL/LL/CMSIS：[`vendor_stm32`](../../../vendor/vendor_stm32/SKILL.md)
+- 厂商 HAL/LL/CMSIS：[`vendor_mcu`](../../../vendor/vendor_mcu/SKILL.md)
 - 板级函数表：[`impl_board`](../../impl_board/SKILL.md)
 - 多实例和生命周期：[`impl_bsp`](../../impl_bsp/SKILL.md)（Handler 子层）

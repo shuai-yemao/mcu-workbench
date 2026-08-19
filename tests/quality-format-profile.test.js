@@ -24,7 +24,7 @@ describe('quality format profiles', () => {
     expect(profile).toContain('UseTab: Always');
     expect(profile).toContain('BreakBeforeBraces: Allman');
     expect(profile).toContain('IndentPPDirectives: BeforeHash');
-    expect(profile).toContain('ColumnLimit: 0');
+    expect(profile).toContain('ColumnLimit: 80');
     expect(profile).toContain('AlignConsecutiveDeclarations:');
     expect(style).toContain('统一嵌入式源码排版 profile');
     expect(style).toContain('适用于插件所有生成代码');

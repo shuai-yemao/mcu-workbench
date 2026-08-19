@@ -489,5 +489,5 @@ DMA1->IFCR;  // 中断清除寄存器
 | ESP32-S3 | GDMA | 自动路由 | 链式描述符 |
 | ESP32(原版) | 无独立DMA | 内嵌I2S/SPI | 无 |
 
-- 上游：`vendor_stm32`（HAL 层 DMA 初始化规范）
+- 上游：`vendor_mcu`（HAL 层 DMA 初始化规范）
 - 下游：`peripheral-adc`, `bus-uart`, `bus-spi`, `peripheral-timer`（外设+DMA 应用配置）

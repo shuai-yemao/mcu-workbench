@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |------|------|------|
 | **Canonical Skills** | `skills/` | 46 catalog / 44 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
-| **文档站点** | `docs/` | VitePress — 架构、验证、迁移文档 |
+| **目标工程产物** | `docs/architecture/`、`docs/verification/`、`docs/devlog/`、`docs/notes/` | Agent 运行时写入的项目报告目录；仓库不维护静态文档站点 |
 | **脚本/API** | `scripts/` + `lib/` | 分层扫描(`scripts/claude-layer-api.js`)与校验 |
 | **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约 |
 | **测试套件** | `tests/` | 35 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
@@ -82,7 +82,7 @@ node scripts/claude-layer-api.js validate --root <firmware-root> --strict
          → verification-engineer（验证）
 ```
 
-详情见 `docs/plugin-execution-flow.md` 和 `docs/workflows.md`。
+执行约束以对应的 `workflow-*` canonical Skill 和 `codex/AGENTS.md` 为准。
 
 ### 分层架构
 
@@ -98,7 +98,7 @@ node scripts/claude-layer-api.js validate --root <firmware-root> --strict
 ```
 
 分层语义：**Platform 纯定义 → Impl 落地 → Vendor 底座登记**（Vendor 源码只登记映射、不复制）。旧 `os-*`/`bsp-*`/`middleware-*` 连字符命名已作为迁移别名登记在 `skills/catalog.js` 的 `MIGRATION_MAP`（174 条），旧名仍可解析到新技能；旧软件技能目录已从 `archive/` 移除，能力已内化到对应 canonical skill 的 `references/capabilities/`。
-分层边界见 `docs/plugin-boundaries.md`，完整迁移关系见 `docs/skills-migration.md`。
+分层边界以 `skills/workflow/workflow-review-gate/references/software-layer-contract.md`、各层 canonical Skill 和 `skills/catalog.js` 的 `MIGRATION_MAP` 为准。
 
 ### Architecture Contract
 
@@ -119,11 +119,11 @@ node scripts/claude-layer-api.js validate --root <firmware-root> --strict
 
 `AGENTS.override.md` 由 `scripts/build-codex-compat.js` 从 `codex/AGENTS.md` 自动生成，通过 Jest 测试保证同步。
 
-OpenCode 适配通过 `@opencode-ai/plugin` 暴露工具。Codex 适配说明见 `docs/codex-adaptation.md`。
+OpenCode 适配通过 `@opencode-ai/plugin` 暴露工具；Codex 适配入口为 `.codex-plugin/plugin.json`，同步和校验使用 `scripts/sync-codex-skills.js` 与 `scripts/validate-plugin.js`。
 
 ## Agent 团队
 
-`agents/` 提供 7 个嵌入式角色，调用方式 `@mcu-workbench:<agent-name>`。每个 agent 在 frontmatter 声明稳定的 `domain` 与 `scope`，**不手写技能清单**——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，技能目录更新后 agent 自动获得新能力。职责与写入边界见 `docs/agents.md`：
+`agents/` 提供 7 个嵌入式角色，调用方式 `@mcu-workbench:<agent-name>`。每个 agent 在 frontmatter 声明稳定的 `domain` 与 `scope`，**不手写技能清单**——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，技能目录更新后 agent 自动获得新能力。职责与写入边界以 `agents/*.md`、`AGENTS.md` 和 `codex/AGENTS.md` 为准：
 
 | Agent | 领域（domain） | 写入范围（scope） |
 |-------|------|----------|
@@ -150,12 +150,12 @@ Agent 遵循分域写入和显式交接协议。运行记录写入 `.mcu-workben
 
 ### Issue tracker
 
-Issues and specs live as GitHub issues (via `gh` CLI) in `shuai-yemao/mcu-workbench`. See `docs/agents/issue-tracker.md`.
+Issues and specs live as GitHub issues (via `gh` CLI) in `shuai-yemao/mcu-workbench`.
 
 ### Triage labels
 
-Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`.
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` at repo root + `docs/adr/` (9 ADRs, 0001-0003/0005-0008/0010-0011, recording architecture-evolution decisions; ADR 0004/0009/0012 were superseded by the `platform_common`/`platform_middleware` split). See `docs/agents/domain.md`.
+Single-context: `CONTEXT.md` at repo root + the canonical architecture and workflow Skills under `skills/`; superseded decisions are tracked through the current Skill contracts and `skills/catalog.js` migration map.

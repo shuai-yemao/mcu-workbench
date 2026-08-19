@@ -15,6 +15,7 @@ describe('AI collaboration skills', () => {
     expect(review).toContain('review-gates.md');
     expect(review).toContain('Cppcheck/MISRA');
     expect(review).toContain('代码质量门禁');
+    expect(review).toContain('mode: final-gate');
   });
 
   test('requires spec-first traceability, full verification and bounded omission repair', () => {
@@ -77,6 +78,10 @@ describe('AI collaboration skills', () => {
     expect(quality).toContain('MISRA');
     expect(quality).toContain('UNMAPPED');
     expect(quality).toContain('受限整改');
+    expect(quality).toContain('mode');
+    expect(quality).toContain('advisory');
+    expect(quality).toContain('final-gate');
+    expect(quality).toContain('不得宣称整个需求或最终交付已经通过');
     expect(quality).toContain('tools-verification');
     expect(verification).toContain('name: tools-verification');
     expect(verification).toContain('Map');

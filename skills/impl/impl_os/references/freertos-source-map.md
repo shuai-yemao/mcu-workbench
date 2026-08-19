@@ -2,7 +2,7 @@
 
 ## 证据范围
 
-本案例来自 `D:\zhuomian\embedded_framework`，分支 `codex/platform-os`，提交 `0bc86f209a8d7025dbd4e8432e469e1c7a7713fd`。以下是静态源码证据，不构成目标构建、烧录或板上运行证明。另有 `05_Vendor/freertos` 的本地 FreeRTOS 源码；版本配置在 `00_Config/FreeRTOSConfig.h` 标注为 V10.3.1。
+本案例来自 `D:\zhuomian\embedded_framework`，分支 `codex/platform-os`，提交 `0bc86f209a8d7025dbd4e8432e469e1c7a7713fd`。以下是静态源码证据，不构成目标构建、烧录或板上运行证明。另有 `05_Vendor/vendor_rtos` 的本地 FreeRTOS 源码；版本配置在 `00_Config/FreeRTOSConfig.h` 标注为 V10.3.1。
 
 ## 两层目录与调用链
 
@@ -14,7 +14,7 @@
 04_Impl/impl_os/inc/impl_os_freertos.h
 04_Impl/impl_os/src/impl_os_*.c
         ↓
-05_Vendor/freertos/include + portable + *.c
+05_Vendor/vendor_rtos/include + portable + *.c
 ```
 
 已确认调用链：

@@ -25,7 +25,7 @@ const CANONICAL_DEFINITIONS = [
   ['platform_mcu', 'platform', 'Platform 纯定义：MCU 能力接口（GPIO/I2C/SPI/UART/ADC/TIM/DMA/中断/启动）'],
   ['platform_os', 'platform', 'Platform 纯定义：OS 能力接口（任务、队列、同步、定时、内存），零实现不绑 RTOS'],
   ['platform_bsp', 'platform', 'Platform 纯定义：板级器件能力接口 + 函数表/注册/对象协议，零实现不绑芯片'],
-  ['platform_common', 'platform', 'Platform 公共对象模型与生命周期：platform_def/error/type 基础 + platform_object/lifecycle + device/service 基类（含 object/device/service 三个 .c 实现），不绑芯片/RTOS'],
+  ['platform_common', 'platform', 'Platform 公共对象模型与生命周期：core + object + manager + version 诊断（当前 16 文件/6 个 .c，含设备与服务全局注册表），不绑芯片/RTOS'],
   ['platform_middleware', 'platform', 'Platform 纯定义：中间件能力接口（log/fs/kv/crypto/gui/comm），零实现不绑芯片/RTOS'],
   ['impl_os', 'impl', 'Impl 落地：具体 RTOS（FreeRTOS）或裸机的 impl_os_*() 原生 Port 实现、调度调试和迁移验收'],
   ['impl_board', 'impl', 'Impl 落地：板级组合根——构造实例、注入 Ops、资源绑定（board_resource_config + board_bsp_register）'],

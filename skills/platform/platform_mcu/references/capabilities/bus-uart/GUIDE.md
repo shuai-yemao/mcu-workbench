@@ -7,7 +7,7 @@ version: "1.0.0"
 # STM32 UART 开发指南
 
 > UART 是嵌入式世界最基础也最常用的通信接口。
-> 与 vendor_stm32（HAL API 参考 + DMA+IDLE 诊断）互补：本 skill 覆盖 UART 独有的
+> 与 vendor_mcu（HAL API 参考 + DMA+IDLE 诊断）互补：本 skill 覆盖 UART 独有的
 > 波特率计算、高级模式（RS485/LIN/多机/Smartcard）、printf 重定向、错误恢复和平台差异。
 
 ## 适用场景
@@ -20,7 +20,7 @@ version: "1.0.0"
 - Smartcard (ISO 7816) 接口
 - 硬件流控（RTS/CTS）
 - 半双工单线模式
-- DMA 双缓冲 + IDLE 变长接收（参考 vendor_stm32 诊断）
+- DMA 双缓冲 + IDLE 变长接收（参考 vendor_mcu 诊断）
 - Printf 重定向（四种方式对比）
 - 串口通信异常诊断（ORE/FE/NE/NF 错误恢复）
 
@@ -394,7 +394,7 @@ HAL_StatusTypeDef ret = HAL_UART_Receive(&huart1, &rx_test, 1, 100);
 - 用户需要的是串口监控/日志捕获 → 使用 `tools-observability`（工具 Skill）
 - 用户需要的是 Modbus 协议调试 → 使用 `vendor_stack`（通信协议）
 - 用户需要的是 CAN 通信 → 使用 `vendor_stack`
-- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `vendor_stm32`
+- 用户需要的是通用 STM32/AT32/ESP32 HAL 开发指导 → 使用 `vendor_mcu`
 - 用户只需要 DMA+IDLE 的诊断 → 使用 `platform-stm32-hal` troubleshooting 第 6b 节
 
 ### 不该做

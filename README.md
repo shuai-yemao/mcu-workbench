@@ -150,11 +150,12 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 ```powershell
 npm run codex:dev
 npm run codex:dev:install
+npm run codex:dev:refresh
 npm run codex:dev:check -- --json
 npm run codex:dev:watch
 ```
 
-`codex:dev` 只校验并注册本地 Marketplace；`codex:dev:install` 为 Codex manifest 添加一次本地开发缓存后缀，然后执行 `codex plugin add mcu-workbench@mcu-workbench-local`；`codex:dev:watch` 监听 `agents/`、`codex/`、`skills/` 和根级插件文件，变更后自动重复该流程。若系统中的 `codex` CLI 不在默认 PATH，可通过 `CODEX_BIN` 或 `--codex-bin` 指定路径。安装完成后请新建 Codex 对话。
+`codex:dev` 只校验并注册本地 Marketplace；`codex:dev:install` 和 `codex:dev:refresh` 为 Codex manifest 添加一次本地开发缓存后缀，然后执行 `codex plugin add mcu-workbench@mcu-workbench-local`，并校验源码与缓存指纹；`codex:dev:watch` 监听 `agents/`、`codex/`、`skills/` 和根级插件文件，变更后自动重复该流程。脚本会跳过失效的 PATH 中 `codex` 启动器，选择可工作的 CLI；也可通过 `CODEX_BIN` 或 `--codex-bin` 指定路径。安装完成后请新建 Codex 对话。
 
 检查本地 Marketplace 源与 Codex 受管缓存是否一致：
 
@@ -163,7 +164,13 @@ npm run plugin:check-refresh
 npm run plugin:check-refresh -- --json --strict
 ```
 
-检查器只读比较插件版本和关键内容；发现差异时输出 `Marketplace → Refresh`，必要时重启 Codex，不直接删除或覆盖 `.codex/plugins/cache`。可以将该命令接入 Windows 任务计划程序，作为后台检测入口。
+检查器只读比较插件版本和关键内容；发现差异时指向 `npm run codex:dev:refresh`，必要时重启 Codex，不直接删除或覆盖 `.codex/plugins/cache`。可以将该命令接入 Windows 任务计划程序，作为后台检测入口。
+
+### 嵌入式任务 Router-first 接入
+
+Codex 的插件 Skill 主要提供工作流指导，不能替代宿主级强制拦截。嵌入式任务应先经过 `workflow-requirements-router`，再依次形成 RCP、Challenge、Review-Package、放行的 `spec.md`、`plan.md` 和 `task.md`，之后才进入实现 Skill。
+
+目标工程接入规则和 Gate 记录字段见 [`codex/embedded-workflow-entry.md`](codex/embedded-workflow-entry.md)。接入时保留目标工程已有规则，不修改 `embedded_framework` 或其他宿主适配；缺失或未放行的流程产物应标记为 `blocked`，不能仅凭插件安装、缓存一致或模型自述放行。
 
 ## 开发与发布检查
 

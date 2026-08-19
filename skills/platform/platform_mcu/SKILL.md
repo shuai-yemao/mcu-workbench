@@ -37,7 +37,7 @@ Platform MCU 定义能力、状态、生命周期入口、抽象 Ops，并可实
 - 不将原始 HAL/SDK 状态码向上泄漏，后端必须映射为 `platform_err_t`；
 - 不为缺少芯片、引脚、外设实例和厂商源码证据的目标猜写后端；公共 Model 构造不等于后端已完成。
 
-芯片绑定交给 Impl，板级片选、引脚和器件装配交给 BSP/组合根；厂商 API 的版本、路径和差异交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)。
+芯片绑定交给 Impl，板级片选、引脚和器件装配交给 BSP/组合根；厂商 API 的版本、路径和差异交给 [`vendor_mcu`](../../vendor/vendor_mcu/SKILL.md)。
 
 ## 公共定义与对象模型
 
@@ -45,7 +45,7 @@ Platform MCU 定义能力、状态、生命周期入口、抽象 Ops，并可实
 
 - 错误码只使用 `platform_error.h` 的 `platform_err_t` 与 `PLATFORM_ERR_*`，通过 `PLATFORM_IS_OK`/`PLATFORM_IS_ERR` 判定；
 - 基础类型只使用 `platform_type.h` 的 `uint8_t`、`uint16_t`、`uint32_t`、`bool_t` 等出口，不在 `platform_mcu` 重新定义类型；
-- 对象身份和生命周期来自 `platform_common` 的 `core/inc`、`object/inc`、`manager/inc`、`diag/inc`；不得复制另一套 `magic/state/handle` 协议。对应公共 Skill 见 [`platform_common`](../platform_common/SKILL.md)。
+- 对象身份和生命周期来自 `platform_common` 的 `core/`、`object/inc|src/`、`manager/inc|src/` 和 `diag/`；不得复制另一套 `magic/state/handle` 协议。对应公共 Skill 见 [`platform_common`](../platform_common/SKILL.md)。
 
 ### 设备四元组
 
@@ -68,7 +68,7 @@ struct platform_xxx_device
 - `cfg`、`ops` 是调用者提供并保证生命周期的只读借用引用，Platform 不释放；`ctx`、`data` 是对象内联状态；
 - 后端句柄只能通过 `void *backend_context` 隔离，公共头不得出现 HAL、CMSIS Device 或 RTOS 句柄；
 - 每类对象通过对应 `platform_*_init()` 绑定名称、配置、Ops 和 `platform_lifecycle_ops_t`；初始化只建立公共身份和契约绑定，不冒充硬件初始化；
-- 生命周期使用 `platform_lifecycle_ops_t` 的 `supported_actions + invoke(p_self, action)` 分发契约，由公共管理器驱动动作；不要按旧的 7 个直接回调字段生成接口；
+- 生命周期使用 `platform_lifecycle_ops_t` 的 `init/start/process/stop/sleep/wakeup/deinit` 直接回调，并由 `platform_lifecycle_stage_t` 统一阶段驱动；不要重新生成旧的 `supported_actions + invoke(p_self, action)` 契约。若目标工程仍存在旧调用，标记为 `mixed/unverified` 并交给迁移任务处理；
 - 异步能力通过 `platform_event_t` 与 `platform_event_callback_cfg_t` 传递完成、错误和中止等事件；回调上下文、执行上下文和缓冲区借用期限必须在具体能力头中明确；
 - 输出代码前检查 `offsetof(concrete_type, base) == 0`，并确认没有隐式全局状态、动态分配或跨对象保存临时缓冲区。
 
@@ -186,7 +186,7 @@ SPI/I2C/UART/ADC 的带 `timeout_ms` 同步接口：调用者等待完整事务�
 ## 交接
 
 - 公共对象、错误码和生命周期：[`platform_common`](../platform_common/SKILL.md)
-- STM32 HAL/LL/CMSIS 与版本矩阵：[`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)
+- STM32/AT32/ESP32 HAL/LL/CMSIS 与版本矩阵：[`vendor_mcu`](../../vendor/vendor_mcu/SKILL.md)
 - 板级装配、片选、实例和 Port：[`impl_board`](../../impl/impl_board/SKILL.md)
 - 外部 Flash/传感器等器件协议：[`impl_bsp`](../../impl/impl_bsp/SKILL.md)
 - 真实构建、烧录和目标观测：[`tools-build`](../../tools/tools-build/SKILL.md)、[`tools-flash`](../../tools/tools-flash/SKILL.md)、[`tools-observability`](../../tools/tools-observability/SKILL.md)

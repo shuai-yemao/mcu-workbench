@@ -1,6 +1,6 @@
 ---
 name: impl_middleware
-description: Impl 中间件接入：默认提供 Platform 直接调用的 impl_xxx.c/.h Adapter；必要时拆出 Vendor Port，隔离 EasyLogger、RTT、FatFs、Crypto、LVGL 或通信 Vendor；不复制或修改第三方源码。
+description: Impl 中间件接入：默认提供 Platform 直接调用的 impl_xxx.c/.h Adapter；必要时拆出 Vendor Port，隔离 EasyLogger、RTT、FatFs、Crypto、LVGL 或通信 Vendor；绑定目标工程 05_Vendor 中按需保留的中间件/算法内容。
 ---
 
 # Impl Middleware（Platform API 适配与 Vendor Port）
@@ -22,8 +22,8 @@ Impl 负责：
 - Vendor 要求的初始化、回调、锁、内存和资源 Port；
 - 失败、降级、重试和资源释放路径。
 
-`impl_middleware` 是固定后端适配层，不是第三方中间件本体。第三方算法、协议栈、对象模型和通用实现仍然属于
-Vendor 目录。Impl 可以直接 include Vendor 头并调用 Vendor API，但不得复制、重写或修改 Vendor 源码。
+`impl_middleware` 是固定后端适配层，不是第三方中间件本体。第三方算法、协议栈、对象模型和通用实现仍然属于目标工程
+`05_Vendor/vendor_middleware/` 或 `05_Vendor/vendor_algorithm/`。Impl 可以直接 include Vendor 头并调用 Vendor API，但不得复制、重写或修改 Vendor 源码。
 
 ## 默认文件与受控拆分
 
@@ -58,7 +58,7 @@ impl_elog_log.c/.h            Platform API 适配
         ↓
 impl_elog_port.c              EasyLogger Port → SEGGER RTT/FreeRTOS/HAL
         ↓
-05_Vendor/easylogger + 05_Vendor/segger_rtt
+05_Vendor/vendor_middleware/easylogger + 05_Vendor/vendor_middleware/segger_rtt
 ```
 
 `platform_log.c` 直接调用 `impl_elog_log_*()`；`impl_elog_log.c` 不直接暴露给 App/Service，也不提供注册/注销函数。
@@ -70,7 +70,7 @@ impl_elog_port.c              EasyLogger Port → SEGGER RTT/FreeRTOS/HAL
 - Vendor 头只进入 Impl Adapter/Port `.c`，不进入 Platform 公共头、Service 或 App；
 - Vendor 原生函数名只保留在 Adapter/Port 或 Vendor 要求的移植点；
 - Adapter/Port 不能承载业务策略、业务缓存、产品状态机或上层编排；
-- Vendor 目录中的第三方 `.c/.h`、通用实现和许可证文件保持原样；
+- `05_Vendor/vendor_middleware`/`vendor_algorithm` 中选定的第三方 `.c/.h`、通用实现和许可证文件保持原样；
 - 只允许修改 Adapter/Port、工程编译注册、明确的板级/工具链配置和移植配置文件；
 - 必须说明资源所有权、初始化顺序、阻塞属性、ISR 限制、线程安全和可重入性；
 - 失败不得静默，必须返回可映射的 `platform_err_t`。
@@ -91,7 +91,7 @@ Impl     → Vendor
 
 ## Vendor、OS 与并发边界
 
-- 不复制或修改 Vendor 源码；版本、许可证、配置和编译单元由 Vendor 目录管理；
+- 不复制或修改 Vendor 源码；版本、许可证、配置和编译单元由目标工程 `05_Vendor/` 管理；
 - Vendor Port 必要时可以使用 FreeRTOS/HAL 资源，但原生类型不得泄漏到 Platform/Service；
 - 必须记录阻塞上限、线程安全、ISR 限制、资源所有权、时基和失败恢复；
 - 不得借 Middleware Port 隐式增加 Task、Queue、异步线程或改变公共 API；
@@ -100,10 +100,10 @@ Impl     → Vendor
 ## 生成前检查
 
 - [ ] Platform API 真实存在且 Vendor-neutral；
-- [ ] 当前文件被识别为固定后端 Adapter，Vendor 本体仍位于 Vendor 目录；
+- [ ] 当前文件被识别为固定后端 Adapter，Vendor 本体仍位于目标工程 `05_Vendor/vendor_middleware` 或 `vendor_algorithm`；
 - [ ] 默认只有一组 `impl_<domain>.c/.h` Adapter 文件；拆分职责已登记；
 - [ ] Adapter/Port 头没有泄漏 Vendor/OS/Platform 私有实现类型；
-- [ ] Vendor 源码未修改、未复制进 Impl；
+- [ ] Vendor 源码未修改、未复制进 Impl，且 Service/App/Platform 公共头没有直接 include Vendor；
 - [ ] 初始化、反初始化、状态和错误映射完整；
 - [ ] 格式化、缓存、输出和资源释放路径有边界；
 - [ ] ISR、阻塞、线程安全、可重入性和内存所有权已声明；

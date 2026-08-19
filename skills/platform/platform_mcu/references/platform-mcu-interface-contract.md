@@ -63,4 +63,4 @@ const xxx_ops_t *ops;
 - 外部 Flash 型号、JEDEC 命令细节和真实读写擦除能力；这不属于当前 `platform_mcu` 头文件范围；
 - 交叉编译、烧录、串口/RTT、逻辑分析仪和目标板运行结果。
 
-这些内容必须由 `impl_board`、`impl_bsp`、`vendor_stm32` 和目标工程的实际配置/运行证据提供。
+这些内容必须由 `impl_board`、`impl_bsp`、`vendor_mcu` 和目标工程的实际配置/运行证据提供。

@@ -43,6 +43,30 @@ jobs:
       - name: Codex 产物一致性
         run: npm run build:codex-compat && git diff --exit-code
 
+  workflow-gate:
+    name: Router-first 交付门禁
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: 安装依赖
+        run: npm ci
+      - name: 执行 Workflow Gate
+        shell: bash
+        run: |
+          set +e
+          echo "workflow_gate_stage=validate"
+          npm run validate:workflow-gate -- --root "$GITHUB_WORKSPACE" --json --strict
+          exit_code=$?
+          echo "workflow_gate_exit_code=$exit_code"
+          if [ "$exit_code" -ne 0 ]; then
+            echo "::error title=Workflow Gate blocked::请查看上方 JSON 输出中的 blocking_reasons 和 missing_items。"
+          fi
+          exit "$exit_code"
+
   firmware-syntax:
     name: 固件 C 语法检查
     runs-on: ubuntu-latest

@@ -74,4 +74,4 @@ Port 可长期持有具体 Driver 和 Handle，并把 Handle 的独立公开函�
 GPIO 输出类的同步生命周期、错误传播与 Fake 验证见 [`gpio-output-peripheral-checklist.md`](../../bsp/references/gpio-output-peripheral-checklist.md)。
 跨 skill 通用错误模式与调试教训见 [`common-error-patterns.md`](../../bsp/references/common-error-patterns.md)。
 
-交接：MCU 外设实现交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md)，厂商库交给 [`vendor_stm32`](../../vendor/vendor_stm32/SKILL.md)，绑定交给 [`impl_board`](../impl_board/SKILL.md)。
+交接：MCU 外设实现交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md)，厂商库交给 [`vendor_mcu`](../../vendor/vendor_mcu/SKILL.md)，绑定交给 [`impl_board`](../impl_board/SKILL.md)。

@@ -35,7 +35,7 @@ flowchart TD
 
 1. APP 只调用 Service；APP 不直接调用任何 Platform 能力接口、Wrapper、Port、Impl 或 Vendor 符号。
 2. Service 承载业务策略，调用 `platform_common` 及 `platform_os`、`platform_bsp`、`platform_middleware`、`platform_mcu` 的公共契约。
-3. `platform_common` 统一基础类型、错误码、对象、生命周期、Ops/Context 和诊断契约；其他 Platform 子域不得复制这些基础体系。
+3. `platform_common` 统一基础类型、错误码、对象、直接生命周期回调、设备/服务注册表和版本查询契约；其他 Platform 子域不得复制这些基础体系。当前 `diag` 已确认版本接口，断言接口需以目标工程文件证据为准。
 4. 顶层架构固定为 App / Service / Platform / Impl / Vendor 五层；OS、BSP、MCU 和 Middleware 是 Platform/Impl 内部能力域，不再作为新的顶层物理层。
 5. Platform OS Wrapper 的公开 API 固定为 `platform_os_*`；Impl OS Port 的内部实现固定为 `impl_os_*()`；Runtime 从 `05_Vendor/vendor_rtos` 接入 FreeRTOS、RT-Thread 或裸机。
 6. BSP Port 是唯一组合根；Handle 只用注入的 OS/Driver Ops；Driver 只用注入的 Platform MCU/Core Ops。

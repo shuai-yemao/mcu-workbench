@@ -7,7 +7,7 @@ description: Service 业务服务：分级日志与业务过滤策略（可选�
 
 ## 边界
 
-Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、可复用的能力组织成服务，**带业务策略**，不是驱动的简单封装，也不是中间件封装。本服务只依赖 Platform 接口：`platform_common` 的 `platform_log.h`（级别/格式/裁剪**机制契约**，日志流转见 [`diag-log-flow.md`](../../platform/platform_common/references/diag-log-flow.md)）+ `platform_bsp` / `platform_mcu`（按需导出通道：串口/存储）；不 include Vendor / Impl / HAL 任何符号。
+Service 是 **App 常见业务抽象**（D10）：把产品业务中可沉淀、可复用的能力组织成服务，**带业务策略**，不是驱动的简单封装，也不是中间件封装。本服务依赖 `platform_common` 的 `platform_service_t`、错误码和生命周期，以及 `platform_middleware` 提供的 `platform_log` 机制；按需通过 `platform_bsp` / `platform_mcu` 获取通道（串口/存储），不 include Vendor / Impl / HAL 任何符号。
 
 最低实现可以是单个静态 `service_log_t` 对象和 `service_log.c/.h`：对象首字段为
 `platform_service_t`，由 Service 自己拥有策略状态、固定缓冲区和生命周期回调。服务类别
@@ -46,4 +46,4 @@ App 只调用兼容门面（`SERVICE_LOG_*`/`service_log_*`），不接触 manag
 - 不得在 `deinit` 与输出并发时释放 backend；必须有停止输出、引用计数或等价的 quiesce 约束。
 - 不得保存临时 tag/格式化缓冲区指针；借用指针必须声明调用者生命周期，复制则必须使用固定容量。
 
-交接：级别/格式/裁剪机制契约经 [`platform_common`](../../platform/platform_common/SKILL.md)（`platform_log.h`）获取；按需导出通道经 [`platform_bsp`](../../platform/platform_bsp/SKILL.md) / [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 接口获取；底层输出通道（elog/RTT）由 Impl 符号实现注入，实现落地在 impl 层。
+交接：Service 对象/生命周期经 [`platform_common`](../../platform/platform_common/SKILL.md) 获取；级别/格式/裁剪机制经 [`platform_middleware`](../../platform/platform_middleware/SKILL.md) 获取；按需导出通道经 [`platform_bsp`](../../platform/platform_bsp/SKILL.md) / [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 接口获取；底层输出通道（elog/RTT）由 Impl 符号实现注入，实现落地在 impl 层。

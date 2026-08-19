@@ -246,7 +246,7 @@ for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
 
 ### 不该激活
 - 用户需要的是给 I2C 设备写驱动（传感器/存储器等）→ 使用 `impl_board`
-- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `vendor_stm32`
+- 用户需要的是通用 STM32/AT32/ESP32 HAL 开发指导 → 使用 `vendor_mcu`
 - 用户需要的是 CAN/Modbus 等其他总线调试 → 使用 `vendor_stack`（通信协议）
 - 用户使用软件模拟 I2C（GPIO 逐位控制）→ 不适用（本 skill 针对硬件 I2C 外设）
 
@@ -274,7 +274,7 @@ for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
 
 ## 交接关系
 
-- 上游：`vendor_stm32`（HAL 开发规范）
+- 上游：`vendor_mcu`（HAL 开发规范）
 - 下游：`impl_board`（I2C 设备驱动开发）
 - 调试时：`tools-observability`（输出扫描结果/调试日志）
 

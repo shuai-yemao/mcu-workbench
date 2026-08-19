@@ -7,7 +7,7 @@ version: "1.0.0"
 # STM32 定时器开发指南
 
 > 定时器是 STM32 功能最丰富的外设——从简单的定时中断到复杂的电机控制。
-> 与 vendor_stm32（HAL API 参考）互补：本 skill 覆盖定时器独有的时钟树 ×2 规则、
+> 与 vendor_mcu（HAL API 参考）互补：本 skill 覆盖定时器独有的时钟树 ×2 规则、
 > 各种工作模式选型、配置计算和常见陷阱。
 
 ## 适用场景
@@ -427,7 +427,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 ## 边界定义
 
 ### 不该激活
-- 用户需要的是系统滴答定时器（SysTick）配置 → 使用 `vendor_stm32` 中的 `HAL_InitTick`
+- 用户需要的是系统滴答定时器（SysTick）配置 → 使用 `vendor_mcu` 中的 `HAL_InitTick`
 - 用户需要的是看门狗（IWDG/WWDG）配置 → 独立于 TIM 外设
 - 用户需要的是 RTC（实时时钟）→ 独立外设
 - 用户需要的是其他 MCU 平台

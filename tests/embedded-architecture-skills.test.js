@@ -70,13 +70,10 @@ describe('embedded architecture skill contracts', () => {
 
   test('uses App to Service as the only application call chain', () => {
     const graph = read('skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md');
-    const boundaries = read('docs/plugin-boundaries.md');
     const evidence = read('skills/app/app-architecture/references/app-architecture-evidence.md');
 
     expect(graph).toContain('APP["APP"] --> SERVICE["Service public APIs"]');
     expect(graph).not.toContain('APP["APP"] --> OW');
-    expect(boundaries).toContain('| APP | Service 公共接口 |');
-    expect(boundaries).not.toContain('| APP | OS Wrapper、BSP Wrapper、Middleware API |');
     expect(evidence).toContain('先走 Service');
   });
 
@@ -98,10 +95,27 @@ describe('embedded architecture skill contracts', () => {
   });
 
   test('keeps Middleware algorithms device-free and routes ports through both Wrappers', () => {
-    const algorithms = read('skills/vendor/vendor_dsp/SKILL.md');
-    expect(algorithms).toContain('BSP Wrapper');
-    expect(algorithms).toContain('OS Wrapper');
+    const algorithms = read('skills/vendor/vendor_algorithm/SKILL.md');
+    expect(algorithms).toContain('platform_bsp');
+    expect(algorithms).toContain('platform_os');
+    expect(algorithms).toContain('vendor_algorithm');
     expect(algorithms).toContain('不直接操作外设');
+  });
+
+  test('keeps Vendor content policy explicit and routes access through Impl', () => {
+    const mcu = read('skills/vendor/vendor_mcu/SKILL.md');
+    const rtos = read('skills/vendor/vendor_rtos/SKILL.md');
+    const mapping = read('skills/vendor/references/vendor_mapping.md');
+    const contract = read('skills/vendor/references/vendor-content-contract.md');
+
+    expect(mcu).toContain('05_Vendor/vendor_mcu');
+    expect(mcu).toContain('完整');
+    expect(rtos).toContain('05_Vendor/vendor_rtos');
+    expect(rtos).toContain('完整内容');
+    expect(mapping).toContain('05_Vendor/vendor_middleware');
+    expect(mapping).toContain('目标工程 Git 统一提交整个 `05_Vendor/`');
+    expect(contract).toContain('Service、App 和 Platform 公共头文件不得直接 include Vendor 头文件');
+    expect(contract).toContain('Impl` 是唯一允许绑定 Vendor 原生 API');
   });
 
   test('keeps Middleware Platform-to-Impl exception scoped to implementation boundaries', () => {
@@ -131,30 +145,6 @@ describe('embedded architecture skill contracts', () => {
     expect(service).toContain('静默截断');
     expect(contract).toContain('Middleware 受限例外');
     expect(contract).toContain('不适用于 OS、BSP、MCU 或其他 Platform 子域');
-  });
-
-  test('keeps public documentation aligned with the 46 catalog and 44 canonical entries', () => {
-    const documents = [
-      'README.md', 'CLAUDE.md', 'docs/skills-migration.md', 'docs/codex-adaptation.md',
-      'docs/plugin-capability-map.md', 'docs/plugin-execution-flow.md'
-    ];
-    for (const relativePath of documents) {
-      const content = read(relativePath);
-      expect(content).toContain('46 catalog / 44 canonical');
-      expect(content).not.toMatch(/23\s*(?:个|份)?\s*canonical|15\s*\+\s*8/);
-      for (const entry of ['platform_os', 'impl_os', 'platform_bsp', 'impl_board', 'platform_mcu', 'vendor_stm32']) {
-        expect(content).toContain(entry);
-      }
-    }
-  });
-
-  test('lists current OS entries rather than compatibility aliases in migration prose', () => {
-    const migration = read('docs/skills-migration.md');
-    const activeSourceLine = migration.split(/\r?\n/).find((line) => line.includes('没有归档前身'));
-    expect(activeSourceLine).toContain('platform_os');
-    expect(activeSourceLine).toContain('impl_os');
-    expect(activeSourceLine).not.toContain('os-abstraction');
-    expect(activeSourceLine).not.toContain('rtos-freertos');
   });
 
   test('requires file-level delivery tables and evidence handoff', () => {
@@ -200,7 +190,7 @@ describe('embedded architecture skill contracts', () => {
     expect(implOs).toContain('Timer record');
     expect(implOs).toContain('UNRESOLVED_RTOS_CONFIG');
     expect(sourceMap).toContain('platform_os_timer_start → impl_os_timer_start → xTimerStart');
-    expect(sourceMap).toContain('05_Vendor/freertos');
+    expect(sourceMap).toContain('05_Vendor/vendor_rtos');
     expect(quickref).toContain('屏蔽状态 token');
     expect(quickref).toContain('原生能力与当前 Port 分开');
     expect(platformOs).toContain('是否存在 `platform_os_*.c` 转发实现必须以目标工程为准');

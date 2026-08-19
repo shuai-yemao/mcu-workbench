@@ -42,7 +42,7 @@ describe('check-codex-plugin-refresh', () => {
     const report = checkCodexPluginRefresh({ source, cacheRoot });
 
     expect(report.status).toBe('refresh_required');
-    expect(report.action).toBe('marketplace_refresh');
+    expect(report.action).toBe('codex_plugin_add');
     expect(report.cache.exists).toBe(false);
   });
 

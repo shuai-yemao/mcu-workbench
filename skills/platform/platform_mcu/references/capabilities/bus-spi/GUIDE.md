@@ -250,7 +250,7 @@ HAL_SPI_TransmitReceive(&hspi, &tx, &rx, 1, 100);
 
 ### 不该激活
 - 用户需要的是给 SPI 设备写驱动（Flash/传感器/LCD 等）→ 使用 `impl_board`
-- 用户需要的是通用 STM32 HAL 开发指导 → 使用 `vendor_stm32`
+- 用户需要的是通用 STM32/AT32/ESP32 HAL 开发指导 → 使用 `vendor_mcu`
 - 用户需要的是 I2C/CAN/Modbus 等其他总线调试 → 使用对应 skill
 
 ### 不该做

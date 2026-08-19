@@ -1,11 +1,11 @@
 # 日志与检测跨层流转契约（跨 Platform 参考）
 
-> 版本：v1.0（2026-08-09）| 依据：软件层契约 v2.0（Port 注入模型）、ADR-001（platform_common 四子域、P2 断言独立于日志）
-> 范围：日志（`platform_middleware/platform_log`）与检测（Common 的 `platform_assert`、MCU 的 `platform_reset_reason` / `platform_hardfault`）在五层之间的流转方式。
+> 版本：v1.1（2026-08-17）| 依据：当前 `embedded_framework` 文件快照
+> 范围：日志（`platform_middleware/platform_log`）与检测（Common 当前已确认的 `platform_version`、目标工程特定的断言、MCU 的 `platform_reset_reason` / `platform_hardfault`）在五层之间的流转方式。
 
 ## 定位
 
-日志与检测是**横切可观测原语**：日志机制在 `platform_middleware`，断言机制在 `platform_common/diag`，复位原因与 HardFault 契约在 `platform_mcu`；策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。
+日志与检测是**横切可观测原语**：日志机制在 `platform_middleware`，版本查询在当前 `platform_common/diag`，断言是否属于 Common 必须以目标工程文件确认，复位原因与 HardFault 契约在 `platform_mcu`；策略在 Service（`service_log` / `service_diagnosis` / `service_watchdog`），落地在 Impl（port 文件）。
 
 ## 流转三方向
 
@@ -40,7 +40,7 @@
 - 宏：`PLATFORM_LOG_A/E/W/I/D/V(tag, fmt, ...)`，调用点捕获 `__FILE__/__FUNCTION__/__LINE__`，显式携带模块 tag。
 - 初始化时机：boot 第一步，任何平台对象使用前（platform_common P2）。
 
-## 断言旁路（P2，独立于日志）
+## 断言旁路（仅在目标工程确认后适用）
 
 ```text
 任一层 PLATFORM_ASSERT(expr) ──失败──► platform_assert_fail
@@ -49,18 +49,18 @@
                                             然后 for(;;) 死循环（配合调试器/看门狗暴露现场）
 ```
 
-断言**不经过 platform_log**（日志可能未初始化或本身故障，故障路径必须自足）。`platform_assert_output` 由 Impl 实现（`impl_assert_output.c`），独立于日志系统。
+如果目标工程实际提供 `platform_assert`，断言应**不经过 platform_log**（日志可能未初始化或本身故障，故障路径必须自足）。当前 `embedded_framework` 快照中相关 Common 断言文件已删除，不能据此宣称断言旁路已接入。
 
 ## 与 Service 的分工（机制 vs 策略）
 
 | 关注点 | 归属 | 内容 |
 |---|---|---|
-| 级别/裁剪/组帧/输出通道 | Platform（`platform_log.h`）+ Impl port | 机制，接口永不改 |
+| 级别/裁剪/组帧/输出通道 | Platform Middleware（`platform_log.h`）+ Impl port | 机制，接口永不改 |
 | 级别过滤策略、环形缓冲覆盖、按需导出（串口/存储） | `service_log` | 策略，可带产品决策 |
 | 故障码登记、自检编排、诊断报告 | `service_diagnosis` | 策略，挂接 assert hook |
 | 喂狗、任务存活监控、消费 reset_reason | `service_watchdog` | 策略 |
 
-`service_log` 依赖 `platform_common`（`platform_log.h` 机制契约）+ `platform_bsp` / `platform_mcu`（按需导出通道），不直接触碰 Vendor。
+`service_log` 依赖 `platform_common`（Service 对象、错误码、生命周期）+ `platform_middleware`（`platform_log.h` 机制契约）+ `platform_bsp` / `platform_mcu`（按需导出通道），不直接触碰 Vendor。
 
 ## 注入点实例（与 software-layer-contract v2.0 一致）
 

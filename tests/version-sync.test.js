@@ -1,10 +1,10 @@
-const { getVersions } = require('../scripts/sync-plugin-versions');
+const { getVersions, isCodexDevelopmentVersion } = require('../scripts/sync-plugin-versions');
 
 describe('plugin version single source', () => {
   test('all plugin manifests match package.json version', () => {
     const versions = getVersions();
     expect(versions.claude).toBe(versions.package);
-    expect(versions.codex).toBe(versions.package);
+    expect(isCodexDevelopmentVersion(versions.codex, versions.package)).toBe(true);
     expect(versions.package).toBe('1.0.0');
   });
 

@@ -53,7 +53,7 @@ Platform registry 保存借用的 Ops/context，再由 `impl_<vendor>_<domain>.c
 - **Vendor 内容策略**：MCU/RTOS 官方底座和生成工程完整保留；中间件/算法只保留实际使用内容；所有内容、许可证、生成器、补丁和依赖由目标工程 Git 管理，插件不携带目标工程 Vendor 实际源码。
 - ❌ **Impl → Platform 实现**（include 平台 `.c`）：越权，禁止。
 - ✅ **Impl → Platform Model 符号**：通过真实存在的 Platform 公共头调用构造函数并链接 Model；不得复制构造逻辑、重复定义符号或包含 `.c` 文件。
-- ⚠️ **基础类型例外**：`platform_type.h` ← `impl_board/board_types.h`（类型出口，基础类型从板级引出）。除上述 Middleware 实现级例外和该基础类型出口外，其余 Platform→Impl 一律禁止。
+- **基础类型出口**：当前 `platform_common/core/platform_type.h` 自包含基础类型，不再 include `impl_board/board_types.h`。若其他目标仍采用板级类型出口，必须标记为 `mixed` 并以该目标工程文件为准。除上述 Middleware 实现级例外外，其余 Platform→Impl 一律禁止。
 - Impl include 的 `platform_*` 头必须真实存在于 03_Platform（防幽灵依赖/漂移）。
 - Board 组合根必须通过唯一的 `impl_board_<board>_middleware.c` 集中注册/注销中间件；MCU 文件不得持有中间件注册职责，失败按逆序回滚。
 
@@ -61,11 +61,11 @@ Platform registry 保存借用的 Ops/context，再由 `impl_<vendor>_<domain>.c
 
 | Platform 抽象 | Impl port | Vendor 底座 |
 |---|---|---|
-| `platform_log`（diag） | `platform_log.c` registry + `impl_middleware/elog/impl_elog_log.c` + `impl_elog_port.c` | easylogger + SEGGER RTT |
-| `platform_assert_output`（diag） | `impl_middleware/impl_assert_output.c` | SEGGER RTT |
+| `platform_log`（platform_middleware） | `platform_log.c` registry + `impl_middleware/elog/impl_elog_log.c` + `impl_elog_port.c` | easylogger + SEGGER RTT |
+| `platform_assert_output`（target-specific/unverified） | `impl_middleware/impl_assert_output.c`（仅目标工程确认后使用） | SEGGER RTT |
 | elog 底层移植 | `impl_middleware/impl_elog_port.c`（Vendor 面向） | easylogger |
 | `platform_reset_reason` / `platform_hardfault` | Impl 芯片 Port（当前未设独立 MCU 子域，留待后续） | CMSIS/寄存器 |
-| `platform_board_manager` 钩子（策略） | `service_system` 注入 | — |
+| `device_manager` / `service_manager`（platform_common 机制） | `04_Impl/impl_board/board_manager.c` 与 App Boot 调用注册/驱动 | 静态 16 槽表；板级顺序不由 Common 固化 |
 
 ## OS 契约
 

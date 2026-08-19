@@ -23,6 +23,15 @@
 - 不把推测、代码生成或静态检查描述为已经完成的硬件验证。
 - 修改一个层次后，使用项目现有构建或测试路径验证该层，再继续向上推进。
 
+### 2.1 Router-first 入口最小协议
+
+- 所有嵌入式请求的第一有效动作必须是 `workflow-requirements-router`：读取项目证据、识别风险并生成可审计的 RCP。
+- 在 RCP、Challenge、Review-Package 和放行的 `spec.md` 形成前，只允许只读分析、证据收集和阻塞报告，不得进入实现 Skill 或写入业务代码。
+- 目标工程接入时，复制 [`embedded-workflow-entry.md`](./embedded-workflow-entry.md) 中的规则和记录字段；该文件是接入材料，不代表插件已经拥有宿主级拦截能力。
+- 交付前必须提供确定性 Gate 结果：缺失、阻塞、过期或越界状态必须报告 `blocked`，只有与当前 Spec/Plan/Task 关联的放行链才能进入交付检查。
+- “Skill 已加载”“缓存指纹一致”或模型自述已执行 Router，都不能单独证明真实宿主已经遵循 Router-first。
+- 入口指导、Gate、主机测试、CI 和真实 Codex 会话必须分别记录证据等级；静态或主机结果不得写成目标宿主行为证明。
+
 ## 3. 分层实现与生成边界
 
 - `app-architecture` 负责 `main`、Manager、Task、Logic、UI 和 Profile 的边界；App 只能依赖 Service 层公开接口（D8 门禁），不能直接调用 Platform 实现、Impl、Vendor 或任何芯片/RTOS 头文件。

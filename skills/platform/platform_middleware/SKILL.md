@@ -33,7 +33,7 @@ description: Platform 中间件 API：每个中间件默认只提供一个稳定
 App → Service → Platform Middleware API → Impl Middleware Adapter → Vendor
 ```
 
-Service/App 只使用 Platform Middleware 公共契约，不直接依赖第三方中间件。
+Service/App 只使用 Platform Middleware 公共契约，不直接依赖第三方中间件。目标工程的中间件物理统一位于 `05_Vendor/vendor_middleware/<selected-library>/`；算法能力也沿用 `Platform Algorithm API → Impl Middleware Adapter → 05_Vendor/vendor_algorithm/<selected-library>`，不得让 Service、App 或 Platform 公共头直接 include Vendor 头文件。
 
 ## 术语与实现归属
 
@@ -41,7 +41,7 @@ Service/App 只使用 Platform Middleware 公共契约，不直接依赖第三�
 
 - `platform_middleware`：定义 Vendor-neutral API、统一错误语义和生命周期，并直接调用固定 Impl Adapter；
 - `impl_middleware`：适配层，提供 Platform 所需的具体函数，并把调用转换给 Vendor；
-- `vendor`：第三方中间件本体，例如 LVGL、EasyLogger、FatFs 或其他协议栈，源码和原始实现归 Vendor 目录管理。
+- `vendor`：第三方中间件本体，例如 LVGL、EasyLogger、FatFs 或其他协议栈，源码和原始实现归目标工程 `05_Vendor/vendor_middleware/` 管理；算法实现归 `05_Vendor/vendor_algorithm/` 管理。
 
 因此，`platform_middleware.c` 可以直接依赖对应的 `impl_middleware` Adapter 头，但不得依赖 Vendor、HAL、RTOS
 或 Vendor 句柄；`impl_middleware` 才能依赖 Vendor。Impl 适配层不得复制第三方实现，也不得把 Vendor 类型、句柄
@@ -123,11 +123,11 @@ Middleware API 不使用四元组对象；需要实例身份的能力改走 Plat
 - [ ] Middleware 不使用四元组对象；需要实例身份的能力已转入 Device/Driver 约束；
 - [ ] 具体格式化、缓存、输出和 Vendor 生命周期没有放入 Platform；
 - [ ] Platform→Impl 只允许 Middleware 的固定 Adapter 直接调用，未扩大到其他 Platform 子域。
-- [ ] Vendor 本体仍由 Vendor 目录管理，未复制到 Platform 或 Impl。
+- [ ] Vendor 本体仍由目标工程 `05_Vendor/vendor_middleware`/`vendor_algorithm` 管理，未复制到 Platform 或 Impl。
 
 ## 禁止
 
-禁止包含第三方源码、具体协议栈实现、业务策略、Vendor 句柄、HAL/寄存器或原生 RTOS 调用；禁止因为“零实现”规则而在 Platform 目录复制 Vendor 或 Impl 逻辑。
+禁止包含第三方源码、具体协议栈/算法实现、业务策略、Vendor 句柄、HAL/寄存器或原生 RTOS 调用；禁止因为“零实现”规则而在 Platform 目录复制 Vendor 或 Impl 逻辑。
 
 ## 交接
 

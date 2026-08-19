@@ -23,7 +23,7 @@ function parseArgs(argv) {
   const options = {
     action: 'setup',
     cachebuster: null,
-    codexBin: process.env.CODEX_BIN || 'codex',
+    codexBin: process.env.CODEX_BIN || null,
     debounceMs: 500,
     json: false,
     strict: false
@@ -31,7 +31,8 @@ function parseArgs(argv) {
 
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
-    if (['setup', 'install', 'check', 'watch'].includes(argument)) options.action = argument;
+    if (argument === 'refresh') options.action = 'install';
+    else if (['setup', 'install', 'check', 'watch'].includes(argument)) options.action = argument;
     else if (argument === '--cachebuster') options.cachebuster = argv[++index];
     else if (argument === '--codex-bin') options.codexBin = argv[++index];
     else if (argument === '--debounce-ms') options.debounceMs = Number(argv[++index]);
@@ -65,6 +66,42 @@ function defaultCachebuster() {
 
 function withCachebuster(version, cachebuster) {
   return `${version.split('+', 1)[0]}+codex.${sanitizeCachebuster(cachebuster)}`;
+}
+
+function uniqueValues(values) {
+  return [...new Set(values.filter((value) => typeof value === 'string' && value.trim()))];
+}
+
+function discoverCodexBins() {
+  const command = process.platform === 'win32' ? 'where.exe' : 'which';
+  const result = spawnSync(command, ['codex'], {
+    encoding: 'utf8',
+    windowsHide: true
+  });
+  const candidates = result.status === 0 && typeof result.stdout === 'string'
+    ? result.stdout.split(/\r?\n/).map((candidate) => candidate.trim())
+    : [];
+  return uniqueValues([...candidates, 'codex']);
+}
+
+function probeCodexBin(codexBin) {
+  const result = spawnSync(codexBin, ['--version'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    shell: process.platform === 'win32',
+    windowsHide: true,
+    timeout: 5000
+  });
+  return result.error == null && result.status === 0;
+}
+
+function resolveCodexBin(requestedBin = null, { candidates = null, probe = probeCodexBin } = {}) {
+  const availableCandidates = uniqueValues(requestedBin ? [requestedBin] : (candidates || discoverCodexBins()));
+  for (const candidate of availableCandidates) {
+    if (probe(candidate)) return candidate;
+  }
+  const checked = availableCandidates.length ? availableCandidates.join(', ') : 'PATH 中的 codex';
+  throw new Error(`未找到可用的 Codex CLI。已检查：${checked}。请使用 --codex-bin <path> 指定可用 CLI。`);
 }
 
 function readCodexManifest() {
@@ -108,7 +145,8 @@ function prepareLocalPlugin({ cachebuster = null } = {}) {
 }
 
 function installLocalPlugin(codexBin) {
-  const result = spawnSync(codexBin, ['plugin', 'add', `${PLUGIN_NAME}@${MARKETPLACE_NAME}`], {
+  const resolvedCodexBin = resolveCodexBin(codexBin);
+  const result = spawnSync(resolvedCodexBin, ['plugin', 'add', `${PLUGIN_NAME}@${MARKETPLACE_NAME}`], {
     cwd: ROOT,
     encoding: 'utf8',
     shell: process.platform === 'win32',
@@ -116,6 +154,7 @@ function installLocalPlugin(codexBin) {
   });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`Codex plugin install failed with exit code ${result.status}`);
+  return resolvedCodexBin;
 }
 
 function checkLocalPlugin({ json = false, strict = false } = {}) {
@@ -133,14 +172,19 @@ function printSetup(prepared) {
   console.log(`Codex local development source: ${ROOT}`);
   console.log(`Local marketplace: ${prepared.marketplacePath}`);
   console.log(`Plugin version: ${prepared.pluginVersion}`);
+  if (prepared.codexBin) console.log(`Codex CLI: ${prepared.codexBin}`);
   console.log(`Install command: codex plugin add ${PLUGIN_NAME}@${MARKETPLACE_NAME}`);
   console.log('安装后请新建 Codex 对话，以加载最新 skills。');
 }
 
 function runInstall(options) {
   const prepared = prepareLocalPlugin({ cachebuster: options.cachebuster || defaultCachebuster() });
-  installLocalPlugin(options.codexBin);
-  printSetup(prepared);
+  const codexBin = installLocalPlugin(options.codexBin);
+  const report = checkCodexPluginRefresh({ source: ROOT });
+  if (report.status !== 'up_to_date') {
+    throw new Error(`Codex 插件安装后内容校验失败：\n${formatReport(report)}`);
+  }
+  printSetup({ ...prepared, codexBin });
 }
 
 function watchLocalPlugin(options) {
@@ -202,6 +246,7 @@ function printHelp() {
 
 setup   校验插件并注册本地 Marketplace，不执行 Codex 安装
 install 更新 Codex 开发缓存后缀，并调用 codex plugin add
+refresh install 的别名，用于强制加载当前源码
 check   检查源码与 Codex 受管缓存是否一致
 watch   监听源码变更并自动执行 install
 
@@ -245,7 +290,10 @@ if (require.main === module) {
 
 module.exports = {
   defaultCachebuster,
+  discoverCodexBins,
   parseArgs,
+  probeCodexBin,
+  resolveCodexBin,
   sanitizeCachebuster,
   updateCachebuster,
   withCachebuster
