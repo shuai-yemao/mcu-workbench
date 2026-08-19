@@ -5,6 +5,23 @@ const { DOMAINS } = require('../lib/agent-domains');
 
 const ROOT = path.resolve(__dirname, '..');
 
+const WORKFLOW_GATE_CONTRACT = [
+  ['workflow gate section', /##\s+Workflow gates/i],
+  ['Router-first entry', /Router-first/],
+  ['Spec approval gate', /Spec is not approved/],
+  ['Plan approval gate', /Plan is not approved/],
+  ['Task owner', /owner_agent/],
+  ['primary implementation skill', /primary implementation skill/],
+  ['Verify boundary', /\bVerify\b/],
+  ['evidence level', /evidence level/],
+  ['Blockers handoff', /\bBlockers\b/],
+  ['Next handoff', /Next handoff/],
+  ['static evidence boundary', /static analysis/],
+  ['host evidence boundary', /host tests/],
+  ['target evidence boundary', /target execution/],
+  ['physical evidence boundary', /physical measurements/]
+];
+
 describe('Claude Code agent definitions', () => {
   test('contains exactly the registered roster agents', () => {
     const files = fs.readdirSync(path.join(ROOT, 'agents')).filter((name) => name.endsWith('.md'));
@@ -37,6 +54,26 @@ describe('Claude Code agent definitions', () => {
     for (const file of fs.readdirSync(path.join(ROOT, 'agents')).filter((name) => name.endsWith('.md'))) {
       const content = fs.readFileSync(path.join(ROOT, 'agents', file), 'utf8');
       for (const section of sections) expect(content).toMatch(section);
+    }
+  });
+
+  test('every roster agent declares the Router-first workflow gate contract', () => {
+    for (const file of fs.readdirSync(path.join(ROOT, 'agents')).filter((name) => name.endsWith('.md'))) {
+      const content = fs.readFileSync(path.join(ROOT, 'agents', file), 'utf8');
+      for (const [label, pattern] of WORKFLOW_GATE_CONTRACT) {
+        try {
+          expect(content).toMatch(pattern);
+        } catch (error) {
+          throw new Error(`${file}: missing ${label}; ${error.message}`);
+        }
+      }
+    }
+  });
+
+  test('agent prompts do not claim host enforcement from repository checks', () => {
+    for (const file of fs.readdirSync(path.join(ROOT, 'agents')).filter((name) => name.endsWith('.md'))) {
+      const content = fs.readFileSync(path.join(ROOT, 'agents', file), 'utf8');
+      expect(content).not.toMatch(/(?:static analysis|host tests?|builds?)\s+(?:alone\s+)?(?:proves?|establishes?)\s+(?:target|physical|final)/i);
     }
   });
 });
