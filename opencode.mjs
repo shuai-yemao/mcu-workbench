@@ -12,6 +12,7 @@ const { CANONICAL_SKILLS, resolveSkillId } = require("./skills/catalog.js");
 const { getSkillContent } = require("./skills/loader.js");
 const { domainSkills, rankAgentsForRequest } = require("./lib/agent-domains.js");
 const { createCodeQualityHooks } = require("./lib/opencode-quality-hook.js");
+const { ensureDashboardStarted, startDashboard, statusDashboard, stopDashboard, renderDashboard, openDashboard } = require("./lib/workflow-dashboard-manager.js");
 const { version: PLUGIN_VERSION } = require("./package.json");
 const yaml = require("js-yaml");
 
@@ -167,8 +168,10 @@ async function discoverProjectEvidence(projectRoot) {
 export default async (_ctx) => {
   const tools = {};
   const agents = await loadAgents();
+  const projectRoot = _ctx.directory || _ctx.worktree || null;
+  ensureDashboardStarted({ root: projectRoot });
   const qualityHooks = createCodeQualityHooks({
-    root: _ctx.directory || _ctx.worktree || process.cwd(),
+    root: projectRoot || process.cwd(),
   });
 
   // ---- 首阶段需求约束路由（旧 route 名称保留兼容） ----
@@ -179,6 +182,7 @@ export default async (_ctx) => {
       projectRoot: tool.schema.string().optional().describe("可选的项目绝对路径；未提供时返回待用户确认问题"),
     },
     async execute(args) {
+      ensureDashboardStarted({ root: args.projectRoot || projectRoot });
       const intake = buildRequirementsIntake(args.request, args.projectRoot || null, agents);
       intake.projectEvidence = await discoverProjectEvidence(args.projectRoot || null);
       return intake;
@@ -186,6 +190,23 @@ export default async (_ctx) => {
   });
   tools.mcu_workbench_requirements_router = requirementsRouterTool;
   tools.mcu_workbench_route = requirementsRouterTool;
+
+  tools.mcu_workbench_dashboard = tool({
+    description: "管理当前嵌入式项目的单文件 HTML 工作台：自动启动、查看状态、单次生成、打开或停止监听器。",
+    args: {
+      action: tool.schema.string().describe("操作：start、status、render、open 或 stop"),
+      projectRoot: tool.schema.string().optional().describe("可选的项目绝对路径；默认使用当前工作目录"),
+    },
+    async execute(args) {
+      const root = args.projectRoot || projectRoot;
+      if (args.action === "start") return startDashboard({ root });
+      if (args.action === "status") return statusDashboard({ root });
+      if (args.action === "render") return renderDashboard({ root });
+      if (args.action === "open") return openDashboard({ root });
+      if (args.action === "stop") return stopDashboard({ root });
+      return { error: "未知操作。可用操作：start、status、render、open、stop。" };
+    },
+  });
 
   // ---- Skill tools ----
   for (const skill of CANONICAL_SKILLS) {

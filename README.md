@@ -111,7 +111,18 @@ npm run workflow:dashboard -- watch `
   --debounce-ms 250
 ```
 
+项目级工作台管理：
+
+```powershell
+npm run workflow:dashboard -- start  --root <absolute-project-root>
+npm run workflow:dashboard -- status --root <absolute-project-root>
+npm run workflow:dashboard -- open   --root <absolute-project-root>
+npm run workflow:dashboard -- stop   --root <absolute-project-root>
+```
+
 默认输出 `<project-root>/workflow-dashboard.html`。可用 `--request-id <id>` 指定当前功能，或用 `--docs-dir <absolute-directory>` 指定当前 request 的文档目录；可用 `--output <absolute-file>` 覆盖输出路径，但仍必须位于项目根目录内。一个 HTML 内通过顶部导航切换项目总览、软件架构、启动流程、工程进度、调整记录、Git 管理、AI 功能任务和当前 Spec/Plan/Task 页面。架构与启动页只读取 `docs/architecture/**`、`docs/boot/**`、`docs/startup/**`、README/CONTEXT 和明确记录；没有资料时显示“未确认”，不从 C/C++ 源码猜测。Task、Workflow、Git、问题和调整会转换为中文摘要与时间线，不把大量原始 JSON 放入主要页面。Markdown 继续支持安全常用子集；watcher 会对全部观测内容去重，只有真正变化时才重写 HTML，不使用固定刷新间隔；浏览器打开 `file://` 后是否自动重新加载，仍需在实际浏览器中单独确认。
+
+插件宿主进入一个可识别的嵌入式项目时，会自动执行一次 `start` 逻辑；同一项目只允许一个 watcher。watcher 的 PID 和日志保存在系统临时目录，不写入项目目录，不生成项目级 JSON；`status`、`stop` 和 `open` 可由插件工具或 CLI 调用。HTML 是可重新生成的项目级产物，源文档、Workflow、Git 和日志才是事实来源。
 
 ## 脚本与 Programmatic API
 
