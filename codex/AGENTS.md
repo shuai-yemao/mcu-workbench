@@ -42,7 +42,8 @@
 ## 3. 分层实现与生成边界
 
 - `app-architecture` 负责 `main`、Manager、Task、Logic、UI 和 Profile 的边界；App 只能依赖 Service 层公开接口（D8 门禁），不能直接调用 Platform 实现、Impl、Vendor 或任何芯片/RTOS 头文件。
-- `platform_*` 是能力接口层：只保存能力接口、统一错误码/类型（基线在 `platform_common/platform_error.h`，`platform_err_t`）、对象协议（`platform_object.h` + `platform_lifecycle.h`）与带 `void *context` 的抽象函数表、稳定转发 API，不绑定芯片/RTOS；零实现门禁仅指技能目录，`platform_common` 含对象模型实现。`impl_board` 是板级组合根：装配 `impl_bsp` 驱动与 `impl_bsp_handler` 后端及已确认的 OSAL 资源，并在启动期注册到 Platform 接口。
+- `platform_*`/`plat_*` 是能力接口层：只保存能力接口、统一错误码/类型和必要配置。目标工程必须先判定 `flat-logical-resource`（如 `plat_gpio.h` + `plat_gpio_*()` + `plat_*_id_t`）或 `object-ops`（对象、`cfg/ctx/data/ops`、生命周期）profile；不能因插件模板存在对象协议就强行生成 `platform_*_init()` 或 Model。两种 profile 都不得绑定芯片/RTOS；`impl_mcu` 负责将逻辑资源或 Ops 绑定到 HAL/CMSIS/SDK，`impl_board` 负责板级组合根，`platform_common` 的对象模型只在目标工程真实使用时参与。
+- `impl_mcu` 是 Platform MCU → Vendor/HAL/SDK 适配层：在 flat profile 中直接实现真实存在的 `plat_*` 公共符号并在内部映射句柄/引脚/DMA/NVIC；在 object-ops profile 中提供 `Ops/context` 和硬件生命周期。它不承载器件协议、BSP Handle 状态机、Service 业务策略或 RTOS 任务。缺少目标公共头、CubeMX 头、精确 MCU/构建证据时标记 `UNRESOLVED_MCU_API`，不得伪称可编译。
 - 固定依赖方向为 App → Service → Platform 接口 ← Impl → Vendor。`impl_bsp` 只处理器件协议并隔离 HAL、RTOS 与板级绑定；`impl_bsp_handler` 承担实例生命周期、队列/工作循环、缓存、重试和回调。组合根不得复制 Handler 的业务缓存，也不得承载协议状态机。
 - Vendor 底座（`vendor_*`）由目标工程 Git 统一管理整个 `05_Vendor/`：`vendor_mcu`、`vendor_rtos` 完整保留，`vendor_middleware`、`vendor_algorithm` 按需保留，`vendor_metadata` 登记来源/版本/许可证/生成器/补丁/依赖；插件仓库不携带目标工程 Vendor 实际源码。Service 携带业务策略，机制留在 Impl，且只能通过 Platform/Impl 接入 Vendor。
 - 生成 Platform/Impl 切片前先输出设备 profile、Ops 映射、资源生命周期、阻塞/ISR 限制、`style-profile.md` 适用范围和未验证项；缺少目标 `osal.h`、Platform 公共头或板级绑定证据时，标记 `UNRESOLVED_OSAL_API`（或相应未解析标记），不得伪称可编译。
@@ -62,6 +63,7 @@
 | 代码注释、格式、代码审查、Cppcheck/MISRA 质量门禁 | `tools-quality` | 中间阶段使用 `advisory` 返回质量证据；最终审查使用 `final-gate` 作为代码质量最终出口 |
 | Map/RAM/ROM/栈分析、Unity 与项目验证 | `tools-verification` | 编排项目级内存、主机测试、构建和目标验证证据，区分证据等级 |
 | App、Service、Platform、Impl、Vendor | 对应 canonical Skill | 按层公开契约实现，禁止跨层绕过 |
+| Platform MCU 到芯片/HAL/SDK 的适配 | `platform_mcu` + `impl_mcu` | 先判定 flat/object profile；逻辑 ID 与物理资源分离，HAL 只留在 Impl |
 | 烧录、调试、观测和发布 | `tools-flash`、`tools-debug`、`tools-observability`、`tools-release` | 先确认工具、产物、目标和观测通道 |
 
 `embedded-lead` 负责协调需求、冲突和风险；按需邀请 `system-architect`、`firmware-engineer`、`hardware-integration`、`toolchain-engineer`、`verification-engineer` 或 `knowledge-engineer`。每个参与者只陈述本领域证据，并输出 Summary、Evidence、Changed files、Tests、Artifacts、Blockers 和 Next handoff。

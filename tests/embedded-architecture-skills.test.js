@@ -25,6 +25,7 @@ describe('embedded architecture skill contracts', () => {
     'skills/platform/platform_bsp/SKILL.md',
     'skills/impl/impl_board/SKILL.md',
     'skills/impl/impl_bsp/SKILL.md',
+    'skills/impl/impl_mcu/SKILL.md',
     'skills/platform/platform_os/SKILL.md',
     'skills/impl/impl_os/SKILL.md',
     'skills/tools/tools-observability/SKILL.md',
@@ -75,6 +76,21 @@ describe('embedded architecture skill contracts', () => {
     expect(graph).toContain('APP["APP"] --> SERVICE["Service public APIs"]');
     expect(graph).not.toContain('APP["APP"] --> OW');
     expect(evidence).toContain('先走 Service');
+  });
+
+  test('keeps MCU API profiles and Impl MCU ownership explicit', () => {
+    const platformMcu = read('skills/platform/platform_mcu/SKILL.md');
+    const implMcu = read('skills/impl/impl_mcu/SKILL.md');
+    const contract = read('skills/workflow/workflow-review-gate/references/software-layer-contract.md');
+
+    expect(platformMcu).toContain('flat-logical-resource');
+    expect(platformMcu).toContain('object-ops');
+    expect(platformMcu).toContain('plat_<capability>.h');
+    expect(implMcu).toContain('impl_mcu');
+    expect(implMcu).toContain('stm32f411_plat_i2c.c');
+    expect(implMcu).toContain('HAL/LL/CMSIS/SDK');
+    expect(contract).toContain('flat logical resource');
+    expect(contract).toContain('直接实现 `plat_*`');
   });
 
   test('publishes all evidence references at their canonical locations', () => {

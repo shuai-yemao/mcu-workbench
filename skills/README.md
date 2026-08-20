@@ -35,6 +35,6 @@ tools-learning-tutor 项目提问与 Obsidian 学习笔记
 App → Service → Platform 接口 ← Impl → Vendor
 ```
 
-App 只依赖 Service（D8 门禁）；Service 只依赖 Platform 接口；Platform 技能目录实现不依赖芯片/RTOS/厂商符号；Impl 落地实现；Vendor 只登记映射不复制。
+App 只依赖 Service（D8 门禁）；Service 只依赖 Platform 接口；Platform 技能目录实现不依赖芯片/RTOS/厂商符号；Impl 落地实现；Vendor 只登记映射不复制。`platform_mcu` 按目标证据支持 `plat_*` 扁平逻辑资源 API 和对象/Ops API 两种 profile，`impl_mcu` 专门承担 MCU/HAL/SDK 适配。
 
 旧 skill 目录已从 `archive/` 移除；旧调用名经 catalog 的 `resolveSkillId()` 兼容解析到当前 active skill。

@@ -4,7 +4,7 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| 真实 Platform MCU 接口契约 | [13 个 `platform_*` 头文件、对象、Ops 与所有权映射](platform-mcu-interface-contract.md) |
+| 真实 Platform MCU 接口契约 | [当前 `flat-logical-resource` 的 `plat_*` 头文件、逻辑 ID、资源与所有权映射；兼容 `object-ops` profile](platform-mcu-interface-contract.md) |
 | I2C 总线配置与诊断 | [完整流程与资源](capabilities/bus-i2c/GUIDE.md) |
 | SPI 总线配置与诊断 | [完整流程与资源](capabilities/bus-spi/GUIDE.md) |
 | UART/USART 配置与诊断 | [完整流程与资源](capabilities/bus-uart/GUIDE.md) |

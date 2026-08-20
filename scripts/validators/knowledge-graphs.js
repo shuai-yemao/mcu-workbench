@@ -109,13 +109,13 @@ function validateSoftwareArchitectureGraph(errors) {
   }
   for (const required of [
     'skill-app-architecture', 'skill-middleware-communication', 'skill-os-adapter',
-    'skill-os-runtime', 'skill-bsp-wrapper', 'skill-bsp-port', 'skill-core-mcu',
+    'skill-os-runtime', 'skill-bsp-wrapper', 'skill-bsp-port', 'skill-core-mcu', 'skill-impl-mcu',
     'skill-mcu-platform', 'skill-tools-build',
     'skill-software-system'
   ]) {
     if (!ids.nodeIds.has(required)) errors.push(`workflow-review-gate: 缺少架构节点 ${required}`);
   }
-  for (const required of ['app-forbids-core', 'app-forbids-driver', 'core-to-driver']) {
+  for (const required of ['app-forbids-core', 'app-forbids-driver', 'core-to-driver', 'platform-mcu-to-impl-mcu']) {
     if (!ids.edgeIds.has(required)) errors.push(`workflow-review-gate: 缺少架构边 ${required}`);
   }
   return graph;

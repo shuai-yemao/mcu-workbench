@@ -6,14 +6,14 @@ const { getSkillContent, listAvailableSkills, loadSkillsFromPlugin } = require('
 const { validatePlugin } = require('../scripts/validate-plugin');
 
 describe('Skills catalog and loader', () => {
-  test('catalog keeps active entries and exposes 49 canonical software and tool skills', () => {
-    expect(SKILL_CATALOG).toHaveLength(51);
-    expect(CANONICAL_SKILLS).toHaveLength(49);
+  test('catalog keeps active entries and exposes 50 canonical software and tool skills', () => {
+    expect(SKILL_CATALOG).toHaveLength(52);
+    expect(CANONICAL_SKILLS).toHaveLength(50);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.id)).size).toBe(SKILL_CATALOG.length);
     expect(new Set(SKILL_CATALOG.map((skill) => skill.legacyId)).size).toBe(SKILL_CATALOG.length);
     expect(CANONICAL_SKILLS.map((skill) => skill.id)).toEqual(expect.arrayContaining([
       'workflow-requirements-router', 'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-document-context', 'workflow-integration-plan', 'workflow-task-breakdown', 'workflow-task-execution', 'app-architecture',
-      'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware', 'impl_os', 'impl_board',
+      'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware', 'impl_os', 'impl_mcu', 'impl_board',
       'impl_bsp', 'impl_middleware', 'vendor_mcu', 'vendor_rtos', 'vendor_lvgl',
       'vendor_stack', 'vendor_fatfs', 'vendor_fal',
       'vendor_flashdb', 'vendor_letter_shell',
@@ -77,8 +77,8 @@ describe('Skills catalog and loader', () => {
   });
 
   test('loader returns every catalog skill and accepts legacy lookup', () => {
-    expect(listAvailableSkills()).toHaveLength(49);
-    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(49);
+    expect(listAvailableSkills()).toHaveLength(50);
+    expect(Object.keys(loadSkillsFromPlugin())).toHaveLength(50);
     expect(getSkillContent('workflow-requirements-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('workflow-router')).toContain('name: workflow-requirements-router');
     expect(getSkillContent('embedded')).toContain('name: workflow-requirements-router');

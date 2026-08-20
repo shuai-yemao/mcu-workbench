@@ -134,6 +134,17 @@ describe('validateArchitectureContract', () => {
     ]));
   }));
 
+  test('recognizes flat Platform MCU headers as public contracts', () => withFixture({
+    '03_Platform/platform_mcu/plat_i2c.h': '#include "stm32f4xx_hal.h"\nplatform_err_t plat_i2c_write(void);',
+    '03_Platform/platform_mcu/plat_spi.h': 'typedef I2C_HandleTypeDef leaked_handle_t;'
+  }, (root) => {
+    const errors = validateArchitectureContract({ root }).errors;
+    expect(errors).toEqual(expect.arrayContaining([
+      expect.objectContaining({ file: '03_Platform/platform_mcu/plat_i2c.h', ruleId: 'CORE_PUBLIC_VENDOR_INCLUDE' }),
+      expect.objectContaining({ file: '03_Platform/platform_mcu/plat_spi.h', ruleId: 'CORE_PUBLIC_VENDOR_TYPE' })
+    ]));
+  }));
+
   test('allows Platform public contracts in BSP Drivers and recognizes Impl OS backend headers', () => withFixture({
     '04_Impl/impl_bsp/display/Inc/impl_display_driver.h': [
       '#include "platform_gpio.h"',

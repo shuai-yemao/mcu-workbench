@@ -52,6 +52,15 @@ describe('software layered architecture knowledge graph', () => {
     expect(graph.edges.find((edge) => edge.id === 'service-to-platform-bsp')).toEqual(
       expect.objectContaining({ from: 'service-api', to: 'platform-bsp-contract', relation: 'uses-contract' })
     );
+    expect(graph.nodes.find((node) => node.id === 'skill-impl-mcu')).toEqual(
+      expect.objectContaining({ path: 'skills/impl/impl_mcu/SKILL.md', layer: 'impl' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'platform-mcu-to-impl-mcu')).toEqual(
+      expect.objectContaining({ from: 'platform-mcu-contract', to: 'impl-mcu-contract', relation: 'implemented-by' })
+    );
+    expect(graph.edges.find((edge) => edge.id === 'flat-api-to-impl-mcu')).toEqual(
+      expect.objectContaining({ relation: 'same-symbol-implementation' })
+    );
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-core').to).toBe('skill-core-mcu');
     expect(graph.edges.find((edge) => edge.id === 'app-forbids-driver').to).toBe('skill-mcu-platform');
     expect(graph.edges.find((edge) => edge.id === 'core-to-driver').relation).toBe('uses-native-api');

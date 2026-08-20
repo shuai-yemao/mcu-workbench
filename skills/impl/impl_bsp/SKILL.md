@@ -11,7 +11,7 @@ description: Impl 落地：器件 Driver 协议子层 + 同类 Driver Handle 机
 ## 固定流程
 
 1. 创建 `bsp_xxx_config.h`，集中地址、时序、能力开关和编译期限制；板级句柄不放入配置头。
-2. 写出南北向接口表：Driver 北向为实例操作；南向注入事务级总线、tick/delay、GPIO、IRQ、DMA、yield、trace。可注入函数以 `void *context` 为首参，确保 Port 可以直接组装 Ops。事务级 Bus Ops 至少说明 read/write/memory read/memory write 的地址、长度、超时单位和错误码；不得注入 START、STOP、ACK、send-byte、SDA 方向或临界区等软件 IIC 细节。
+2. 写出南北向接口表：Driver 北向为实例操作；南向根据目标 `platform_mcu` profile 使用事务级 Bus、tick/delay、GPIO、IRQ、DMA、yield、trace。`object-ops` 可注入以 `void *context` 为首参的 Ops；`flat-logical-resource` 可直接调用真实存在的 `plat_i2c_*`、`plat_spi_*`、`plat_gpio_*`、`plat_dma_*` 和 `plat_tick_*` 公共函数，但不得因此 include HAL。事务级 Bus 至少说明地址、长度、超时单位和错误码；不得注入 START、STOP、ACK、send-byte、SDA 方向或临界区等软件 IIC 细节。
 3. Driver 与 Handle 均按 `cfg / ctx / data / ops` 定义。Driver `ctx` 只保存 resource 提供并由 Port 注入的 MCU/Core 上下文；Handle `cfg` 保存同一类别 Driver 集合，`ctx` 保存调度/选择上下文，`data` 保存聚合缓存和运行状态。
 4. 定义实例状态：`is_inited`、注入 Ops、私有上下文和设备操作；初始化失败回滚，反初始化可重复。
 5. 默认采用 `instance_only`：模块级仅导出构造函数和必要生命周期入口；其余行为放在对象 `ops` 或 `static` 函数中。兼容例外遵循 [`api-policy.md`](references/api-policy.md)。

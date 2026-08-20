@@ -17,13 +17,13 @@ Driver/Handle 实例、调用 Platform Model 构造函数、绑定 Platform 接�
 
 ## 组合根职责
 
-为每个抽象函数建立"抽象函数 → Platform 能力 → 参数/状态转换 → 阻塞与 ISR 限制"映射表。生成 Impl 不直接调用 HAL/LL；平台初始化与总线绑定应封装在 platform_mcu 后端或注入 Ops。
+为每个抽象函数建立"抽象函数 → Platform 能力 → 参数/状态转换 → 阻塞与 ISR 限制"映射表。Board/Port 不直接调用 HAL/LL；MCU 资源初始化和总线绑定由 `impl_mcu` 完成。对于 `platform_mcu` 的 `flat-logical-resource` profile，Board/Driver 可以调用真实存在的 `plat_*` 公共函数；对于 `object-ops` profile，才通过资源对象注入 Ops。
 
 - 允许：持有具体 Driver/Handle/平台对象，调用 Platform 公共构造函数，从 resource 获取并选择 MCU/Core 实例，注入 Driver，再把同一类别 Driver 集合注入 Handle，并创建后注入 Handle 所需 OSAL 任务、队列或同步资源。
 - 禁止：放置设备命令、寄存器语义、协议状态机、软件 IIC/SPI 位时序，或在 Impl 定义 Handle 的任务入口、业务循环、重试、缓存更新和回调逻辑。
 - Handle 的业务缓存只能保留在 Handle 实例；组合根不得维护重复的 `latest`/`cache` 数据副本。
 - 先从目标工程公开 `platform_os.h` 确认 profile 声明的 mutex、queue、task 或时基 API；组合根创建资源、注入 Handle、在装配失败时回收。缺少该证据时只能输出带 `UNRESOLVED_PLATFORM_OS_API` 的预览，不能虚构可编译 Platform OS 名称。
-- 对 context-first Ops，直接复制 `pf_*` 与 `p_context` 到下一层函数表；禁止函数指针强转和仅为签名转换而存在的桥接函数。
+- 对 `object-ops` 的 context-first Ops，直接复制 `pf_*` 与 `p_context` 到下一层函数表；禁止函数指针强转和仅为签名转换而存在的桥接函数。`flat-logical-resource` 不得为了模拟 Ops 增加空的 Adapter。
 - 若真实 Platform/OS API 的参数顺序或返回类型无法直接匹配，允许在 Port 保留最薄的签名适配函数；
   适配函数只能转换参数、上下文和错误码，不能执行协议、重试、缓存、线程循环或业务回调，且必须在
   manifest 中记录原因。禁止通过函数指针强转绕过类型检查。
