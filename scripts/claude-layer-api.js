@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * claude-layer-api —— Claude 规则设计、创建引导、分层与 README 扫描/同步/校验的 Programmatic 入口(替代原 CLI 命令)。
- * 由 workflow-claude-layering skill 直调,包装 lib/claude-layer.js 的 runClaudeLayer。
+ * claude-layer-api —— Claude 规则设计、创建引导、分层扫描/同步/校验的 Programmatic 入口(替代原 CLI 命令)。
+ * 由 workflow-claude-layering skill 直调，README 兼容动作转发给 Context API。
  * 用法:
  *   node scripts/claude-layer-api.js <action> --root <dir> [--write] [--strict] [--rules-confirmed] [--config <path>]
  * action: design | bootstrap | init | scan | sync | validate
@@ -9,7 +9,9 @@
  */
 
 const path = require('path');
+const fs = require('fs');
 const { runClaudeLayer } = require('../lib/claude-layer');
+const { runDocumentContext } = require('../lib/document-context');
 
 function parseArgs(argv) {
   const options = { action: argv[0] };
@@ -54,8 +56,18 @@ function main() {
       rulesConfirmed: Boolean(options.rulesConfirmed),
       configPath: options.config
     });
-    console.log(JSON.stringify(result, null, 2));
-    process.exit(result.exitCode || 0);
+    const contextConfig = path.join(path.resolve(options.root), '.mcu-workbench', 'document-context.json');
+    const shouldForwardReadme = options.action === 'init' || fs.existsSync(contextConfig);
+    const contextResult = shouldForwardReadme && ['init', 'scan', 'sync', 'validate'].includes(options.action)
+      ? runDocumentContext({
+        action: options.action,
+        root: path.resolve(options.root),
+        write: Boolean(options.write),
+        strict: Boolean(options.strict)
+      })
+      : null;
+    console.log(JSON.stringify({ ...result, documentContext: contextResult }, null, 2));
+    process.exit(Math.max(result.exitCode || 0, contextResult ? (contextResult.exitCode || 0) : 0));
   } catch (err) {
     console.error(JSON.stringify({ success: false, action: options.action, errors: [{ code: 'RUNTIME', message: err.message }], exitCode: 1 }));
     process.exit(1);

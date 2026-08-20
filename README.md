@@ -20,10 +20,10 @@ skills/
 
 ## Canonical skills
 
-当前目录为 **50 catalog / 48 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录为 **51 catalog / 49 canonical**；下列为当前入口（旧名只经兼容映射解析）：
 
 ```text
-workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-task-breakdown workflow-task-execution workflow-final-review workflow-claude-layering
+workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-task-breakdown workflow-task-execution workflow-final-review workflow-claude-layering workflow-document-context
 app-architecture
 platform_mcu platform_os platform_bsp platform_common platform_middleware
 impl_os impl_board impl_bsp impl_middleware
@@ -59,7 +59,7 @@ claude plugin validate .
 
 插件根目录 `agents/` 提供 7 个可显式调用的嵌入式开发角色：Lead、架构、固件、硬件集成、工具链、验证和知识工程。使用 `@mcu-workbench:<agent-name>` 调用。每个 agent 声明稳定的 `domain` 与 `scope`，不手写技能清单——技能集由 `lib/agent-domains.js` 领域注册表从 `skills/catalog.js` 自动派生，插件技能目录更新后 agent 自动获得新能力，不因版本更新退化。稳定运行记录由 `scripts/agent-artifacts.js` 写入 `.mcu-workbench/`。
 
-Workflow 层有八个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责在 Plan 用户批准后以 `auto_until_final_check` 模式按依赖连续执行任务，逐项完成 AI 审查、测试和状态回写，之后自动进入最终检查，`workflow-claude-layering` 负责目标工程 Claude 分层规则的扫描、同步与校验，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
+Workflow 层有九个 active 入口：`workflow-requirements-router` 负责需求约束和路由，`workflow-requirements-challenge` 负责 RCP 澄清、需求目的与可行性质疑，不负责方案选择，`workflow-review-gate` 负责代码前审查与放行/阻塞门禁（在 Review-Package 内保留四个审查清单章节，不单独输出到实际工程，并在放行后整合生成下游正式输入 `spec.md`），`workflow-integration-plan` 负责读取 `spec.md` 和项目文件生成两个实施方案，用户选择后审查并输出带阶段级 Agent/Skill 基线的 `plan.md`，`workflow-task-breakdown` 负责把 `plan.md` 拆解为有顺序、可独立验证且带任务级分配的 `task.md`，`workflow-task-execution` 负责在 Plan 用户批准后以 `auto_until_final_check` 模式按依赖连续执行任务，逐项完成 AI 审查、测试和状态回写，之后自动进入最终检查，`workflow-claude-layering` 负责 Claude.md 和 `.claude/rules/` 分层规则的扫描、同步与校验，`workflow-document-context` 负责项目 README、文档上下文和会话交接，`workflow-final-review` 负责最终代码、补丁或 diff 的独立 Review 编排（输出前最后一层门禁）。旧的 `workflow-router` 仅作为兼容别名解析。
 
 ### 需求约束入口
 
@@ -92,16 +92,49 @@ npm run agent:artifacts -- record --project . --agent embedded-lead --task "proj
 
 Agent 遵循分域写入和显式交接协议；Lead 维护最终汇总，写入 Obsidian 必须经过用户确认。
 
-## 脚本与 Programmatic API
+### 工作流实时 HTML 看板
 
-仓库不提供 Node CLI 命令(已移除——交互统一走 Skill + lib API),保留两类确定性脚本入口:
+插件提供宿主无关的本地文件监听器，用于生成每个项目唯一的自包含 `workflow-dashboard.html`。它只读项目架构/启动资料、`.mcu-workbench/workflows/*`、Git 观测信息和当前 request 文档，不修改源文件、Git 状态或 workflow 状态，也不依赖 HTTP 服务、CDN 或 Claude/OpenCode/Codex 专有 Hook。
+
+一次性生成：
 
 ```powershell
-# 分层扫描/同步/校验(供 workflow-claude-layering skill 与人工使用)
+npm run workflow:dashboard -- render `
+  --root <absolute-project-root>
+```
+
+持续监听并重生成：
+
+```powershell
+npm run workflow:dashboard -- watch `
+  --root <absolute-project-root> `
+  --debounce-ms 250
+```
+
+默认输出 `<project-root>/workflow-dashboard.html`。可用 `--request-id <id>` 指定当前功能，或用 `--docs-dir <absolute-directory>` 指定当前 request 的文档目录；可用 `--output <absolute-file>` 覆盖输出路径，但仍必须位于项目根目录内。一个 HTML 内通过顶部导航切换项目总览、软件架构、启动流程、工程进度、调整记录、Git 管理、AI 功能任务和当前 Spec/Plan/Task 页面。架构与启动页只读取 `docs/architecture/**`、`docs/boot/**`、`docs/startup/**`、README/CONTEXT 和明确记录；没有资料时显示“未确认”，不从 C/C++ 源码猜测。Task、Workflow、Git、问题和调整会转换为中文摘要与时间线，不把大量原始 JSON 放入主要页面。Markdown 继续支持安全常用子集；watcher 会对全部观测内容去重，只有真正变化时才重写 HTML，不使用固定刷新间隔；浏览器打开 `file://` 后是否自动重新加载，仍需在实际浏览器中单独确认。
+
+## 脚本与 Programmatic API
+
+仓库主要通过 Skill + lib API 协作，同时保留确定性的脚本入口：
+
+```powershell
+# Claude 分层扫描/同步/校验(供 workflow-claude-layering skill 与人工使用)
 npm run claude:init -- --root <dir> --write
 npm run claude:scan -- --root <dir>
 npm run claude:sync -- --root <dir> --write
 npm run claude:validate -- --root <dir> --strict
+
+# 项目 README 与文档上下文(供 workflow-document-context skill 与人工使用)
+npm run document-context:init -- --root <dir> --write
+npm run document-context:sync -- --root <dir> --write
+npm run document-context:validate -- --root <dir> --strict
+
+# 文档登记、对话交接、需求提升和最小上下文
+node scripts/document-context-api.js register-document --root <dir> --data '<json>'
+node scripts/document-context-api.js handoff --root <dir> --data '<json>'
+node scripts/document-context-api.js promote --root <dir> --request-id REQ-001 --document-id DOC-001 --base-revision 1 --approved-by user
+node scripts/document-context-api.js context --root <dir> --profile request --request-id REQ-001 --budget 12000
+node scripts/document-context-api.js archive --root <dir> --request-id REQ-001
 
 ```
 

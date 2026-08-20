@@ -10,6 +10,7 @@ const {
   RULES_RELATIVE_DIRECTORY,
   REPORT_RELATIVE_PATH
 } = require('../lib/claude-layer');
+const { runDocumentContext } = require('../lib/document-context');
 
 function withFixture(callback) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-layering-'));
@@ -49,6 +50,19 @@ async function withFixtureAsync(callback) {
 }
 
 describe('Claude layering', () => {
+  test('does not generate README artifacts from the Claude layering entry point', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'claude-no-readme-'));
+    try {
+      fs.writeFileSync(path.join(root, 'CMakeLists.txt'), 'project(no_readme_fixture)\n', 'utf8');
+      const result = runClaudeLayer({ action: 'init', root, write: true });
+      expect(result.exitCode).toBe(0);
+      expect(fs.existsSync(path.join(root, 'Claude.md'))).toBe(true);
+      expect(fs.existsSync(path.join(root, 'README.md'))).toBe(false);
+    } finally {
+      fs.rmSync(root, { recursive: true, force: true });
+    }
+  });
+
   test('scans STM32/CMake evidence, source references, and unknown source files', () => withFixture((root) => {
     const scan = scanProject({ root, config: createDefaultConfig() });
 
@@ -139,6 +153,7 @@ describe('Claude layering', () => {
         'sync-and-validate'
       ]);
       expect(fs.existsSync(path.join(root, 'Claude.md'))).toBe(true);
+      runDocumentContext({ action: 'init', root, write: true });
       expect(fs.existsSync(path.join(root, 'README.md'))).toBe(true);
       expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '00-project.md'))).toBe(true);
       expect(fs.existsSync(path.join(root, RULES_RELATIVE_DIRECTORY, '10-app.md'))).toBe(true);
@@ -178,9 +193,8 @@ describe('Claude layering', () => {
         ''
       ].join('\n'), 'utf8');
 
-      const config = createDefaultConfig(root);
-      const scan = scanProject({ root, config });
-      const readmePaths = scan.readme.entries.map((entry) => entry.path);
+       const readmeScan = runDocumentContext({ action: 'scan', root });
+       const readmePaths = readmeScan.scan.readme.entries.map((entry) => entry.path);
       expect(readmePaths).toEqual(expect.arrayContaining([
         '',
         '00_Docs',
@@ -200,7 +214,7 @@ describe('Claude layering', () => {
         '03_Platform/platform_mcu/inc/deep'
       ]));
 
-      const result = runClaudeLayer({ action: 'init', root, write: true });
+      const result = runDocumentContext({ action: 'init', root, write: true });
       expect(result.exitCode).toBe(0);
       expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('# 手写 Platform 说明');
       expect(fs.readFileSync(path.join(root, '03_Platform', 'README.md'), 'utf8')).toContain('mcu-workbench:readme-managed:start');
@@ -226,14 +240,14 @@ describe('Claude layering', () => {
       expect(fs.existsSync(path.join(root, 'build', 'generated', 'README.md'))).toBe(false);
 
       fs.appendFileSync(path.join(root, '03_Platform', 'README.md'), '\n## 手写补充\n', 'utf8');
-      expect(runClaudeLayer({ action: 'validate', root }).exitCode).toBe(0);
+      expect(runDocumentContext({ action: 'validate', root }).exitCode).toBe(0);
       const readmePath = path.join(root, '03_Platform', 'README.md');
       const readmeContent = fs.readFileSync(readmePath, 'utf8');
       fs.writeFileSync(readmePath, readmeContent.replace(
         '<!-- mcu-workbench:readme-managed:end -->',
         'manual edit inside managed block\n<!-- mcu-workbench:readme-managed:end -->'
       ), 'utf8');
-      const drift = runClaudeLayer({ action: 'validate', root });
+      const drift = runDocumentContext({ action: 'validate', root });
       expect(drift.exitCode).toBe(1);
       expect(drift.errors).toEqual(expect.arrayContaining([
         expect.objectContaining({ code: 'MANAGED_ARTIFACT_DRIFT', file: '03_Platform/README.md' })

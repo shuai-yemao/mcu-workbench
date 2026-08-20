@@ -15,6 +15,7 @@ const LEGACY_SKILL_ENTRIES = [
 
 const CANONICAL_DEFINITIONS = [
   ['workflow-claude-layering', 'workflow', '嵌入式工程 Claude 多文件分层规则的扫描、同步与校验'],
+  ['workflow-document-context', 'workflow', '项目 README、文档上下文、会话交接和文档状态的登记、同步与校验'],
   ['workflow-requirements-challenge', 'workflow', '需求约束后的 RCP 澄清、目的与可行性质疑：输出证据化结论并交给 workflow-review-gate'],
   ['workflow-review-gate', 'workflow', '代码前审查与门禁：反猜测审查、四张清单、spec.md 与放行/阻塞判定'],
   ['workflow-integration-plan', 'workflow', '读取 spec.md 和项目文件生成两个实施方案，用户选择后审查并生成 plan.md'],

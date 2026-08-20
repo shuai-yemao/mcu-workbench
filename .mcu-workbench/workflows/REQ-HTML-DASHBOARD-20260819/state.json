@@ -1,0 +1,135 @@
+{
+  "request_id": "REQ-HTML-DASHBOARD-20260819",
+  "state_version": 1,
+  "project_root": "D:\\zhuomian\\embedded_framework",
+  "spec_version": "v0.8",
+  "plan_version": "v0.8",
+  "task_version": "v0.8",
+  "current_stage": "final_review",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": ["versioned"],
+  "requirements": [
+    "在三份正式文档输出时生成一个可浏览的 HTML 看板",
+    "看板显示 spec.md、plan.md、task.md 的内容以及 Task 进度和问题/阻塞项",
+    "看板由宿主无关的本地文件监听器驱动，并随文档或 workflow 状态更新而刷新",
+    "HTML 为自包含文件，不依赖外部 CDN、前端构建工具或宿主专有 Hook",
+    "看板界面以简体中文为主，概览、进度、问题、事件和文档导航便于快速浏览",
+    "spec.md、plan.md、task.md 支持安全渲染常用 Markdown，而不是仅显示原始文本",
+    "通过 Spec、Plan、Task 选择按钮切换文档，默认只展示一个文档",
+    "把 workflow 状态和事件转换为中文项目实时视图，不把大量原始 JSON 放入页面主内容",
+    "只有 spec.md、plan.md、task.md、state.json 或 events.jsonl 的内容真正变化时才重写 HTML",
+    "一个项目只生成一个 HTML 看板，内部提供项目级驾驶舱页面",
+    "看板展示项目整体软件架构设计和启动流程图，并标注事实来源与未确认项",
+    "看板展示工程进度和调整记录/趋势",
+    "看板提供只读 Git 管理页面，展示分支、提交、工作区和变更摘要",
+    "看板展示 AI 针对功能需求、开发、测试、审查和阻塞的任务进展",
+    "看板项目根目录固定为 D:\\zhuomian\\embedded_framework，并识别其 00_Docs/04_需求文档 下的平铺 REQ 文档"
+  ],
+  "constraints": [
+    "不得覆盖既有根目录 spec.md、plan.md、task.md 或其他用户未提交文档",
+    "正式看板输出位于目标项目根目录 D:\\zhuomian\\embedded_framework",
+    "监听器只能读取文档和 state.json/events.jsonl，不修改源文档和 workflow 状态",
+    "Markdown 和状态内容必须进行 HTML 转义，防止文档内容破坏页面结构",
+    "不执行文档中的原始 HTML、脚本或不安全链接；Markdown 渲染保持自包含和无外部运行时依赖",
+    "主机测试、静态检查和真实宿主行为必须分开记录"
+  ],
+  "evidence": [
+    {"level": "confirmed", "artifact": "00_Docs/04_需求文档/spec.md", "detail": "正式文档包含 request_id、Spec/Plan/Task 工作流契约，且属于上一项已完成需求"},
+    {"level": "confirmed", "artifact": "lib/workflow-state.js:165-179", "detail": "workflow 状态统一位于 .mcu-workbench/workflows/<request_id>/state.json 与 events.jsonl"},
+    {"level": "confirmed", "artifact": "scripts/validate-workflow-gate.js:202-218", "detail": "Gate 读取三份正式文档和 workflow state"},
+    {"level": "confirmed", "artifact": "opencode.mjs:150-183", "detail": "OpenCode 具有插件工具入口，但文档写入仍由宿主/模型行为决定"},
+    {"level": "confirmed", "artifact": ".codex-plugin/plugin.json; .claude-plugin/plugin.json", "detail": "Codex/Claude manifest 暴露 Skills，不提供统一文档写入 Hook"},
+    {"level": "user-confirmed", "artifact": "当前会话", "detail": "用户选择宿主无关的本地文件监听器 + 自包含 HTML"},
+    {"level": "confirmed", "artifact": "git status --short", "detail": "已有 REQ-AGENT-PROMPT-GATES-20260819 未提交目录，必须保留"}
+  ],
+  "decisions": [
+    {"decision": "host_independent_file_watcher", "status": "user-confirmed"},
+    {"decision": "self_contained_html", "status": "user-confirmed"},
+    {"decision": "request_scoped_document_directory", "status": "confirmed-by-existing-worktree-pattern"},
+    {"decision": "document_selector_single_document_view", "status": "user-confirmed"},
+    {"decision": "human_readable_project_status_without_raw_json", "status": "user-confirmed"},
+    {"decision": "single_html_multi_page_navigation", "status": "user-confirmed"},
+    {"decision": "content_change_only_refresh", "status": "user-confirmed"},
+    {"decision": "project_level_single_html_cockpit", "status": "user-confirmed"},
+    {"decision": "architecture_startup_progress_git_ai_pages", "status": "user-confirmed"},
+    {"decision": "embedded_framework_project_root", "status": "user-confirmed"},
+    {"decision": "flat_request_document_discovery", "status": "confirmed-by-target-project-evidence"}
+  ],
+  "open_questions": [
+    {
+      "id": "Q-UI-MARKDOWN-SCOPE",
+      "status": "resolved",
+      "question": "是否按推荐的常用 GFM 子集实现 Markdown：标题、粗体、斜体、删除线、链接、无序/有序列表、任务列表、引用、代码块、行内代码、表格和分隔线；原始 HTML、脚本、iframe 和外部图片默认不执行/不渲染？",
+      "impact": "该选择决定渲染器范围、安全边界和 Spec 验收项"
+    },
+    {
+      "id": "Q-REFRESH-BOUNDARY",
+      "status": "resolved",
+      "question": "是否接受移除 HTML 固定自动刷新，并由 watcher 仅在源内容真正变化时重写 HTML；浏览器自动重新加载依赖当前宿主对 file:// 文件变化的支持，否则需要手动刷新？若要求浏览器必然自动刷新，则需允许新增本地 SSE/WebSocket 服务。",
+      "impact": "决定是否保持自包含 file:// 架构，或引入本地通知服务"
+    },
+    {
+      "id": "Q-MULTI-PAGE-OUTPUT",
+      "status": "resolved",
+      "question": "多页面是否生成多个独立的自包含 HTML 文件，并由顶部快速导航互相跳转？",
+      "impact": "决定输出文件清单、watcher 原子更新边界和导航链接设计"
+    },
+    {
+      "id": "Q-ARCH-SOURCE",
+      "status": "resolved",
+      "question": "架构设计和启动流程图是否严格以目标项目已有的 docs/architecture/**、docs/boot/** 或 startup 文档、README/CONTEXT 及明确的项目记录为事实来源；没有来源时显示未确认，不从 C/C++ 源码自动猜测？",
+      "impact": "决定图表数据契约、可信等级展示和是否允许源码静态分析扩展；若选择源码自动分析，范围、误判处理和验收成本都会扩大",
+      "recommendation": "先采用文档/记录证据优先，缺失时显示未确认；源码分析作为后续可选扩展",
+      "user_answer": "确定：采用文档/记录证据优先，缺失时显示未确认，不从源码自动猜测",
+      "confidence": "user-confirmed"
+    }
+  ],
+  "challenge_summary": {
+    "purpose_conclusion": "user-confirmed",
+    "feasibility_conclusion": "有条件可行",
+    "scope_conclusion": "第一版提供独立 watcher、一次性渲染和浏览器自动刷新；不依赖宿主 Hook，不修改源文档和 workflow 状态",
+    "acceptance_gaps": [
+      "真实 Claude/OpenCode/Codex 是否自动启动 watcher 不能由仓库主机测试证明",
+      "浏览器对本地 file:// 自动刷新行为需要在实际 Windows 环境人工确认"
+    ],
+    "unresolved_risks": [
+      "同一 request 的文档和状态可能被原子替换，监听器必须处理 rename/change 重复事件",
+      "Markdown 内容可能很大，页面需要在不引入外部依赖的前提下保持可读"
+    ],
+    "required_review_gate_checks": [
+      "源文档只读、输出路径隔离和路径解析安全",
+      "HTML 转义、JSON/JSONL 损坏状态和部分写入恢复",
+      "Task 状态统计与 blockers/事件展示的一致性",
+      "watcher 停止、重复事件去抖和无源文件时的错误页面"
+    ],
+    "handoff_status": "可交接",
+    "requirements_change": "user-confirmed: Chinese-first UI, responsive layout, safe common GFM subset, document selector, human-readable project status without raw JSON, single HTML multi-page navigation, content-change-only refresh, project-level architecture/startup/progress/adjustment/Git/AI feature cockpit",
+    "requirements_change_status": "confirmed: architecture and startup diagram source boundary"
+  },
+  "review_package": {
+    "status": "approved",
+    "engineering_facts": "confirmed",
+    "file_scope": [
+      "lib/workflow-dashboard.js",
+      "scripts/workflow-dashboard.js",
+      "tests/workflow-dashboard.test.js",
+      "package.json",
+      "README.md",
+      "workflow-dashboard.html"
+    ],
+    "non_targets": ["firmware", "HAL", "RTOS", "BSP", "Vendor", "host_manifests", "existing_user_documents"],
+    "verification": ["host", "static", "build"],
+    "blockers": []
+  },
+  "user_gates": {
+    "spec": "approved_for_v0.8",
+    "plan": "approved_for_v0.8",
+    "hard_blocker": "none"
+  },
+  "task_summary": {"total": 18, "completed": 18, "current_task": "T-018"},
+  "verify_summary": {"status": "passed", "deviations": [], "dashboard_acceptance": "v0.8_embedded_framework_project_cockpit_passed", "dashboard_render": {"issues": 9, "output_path": "D:\\zhuomian\\embedded_framework\\workflow-dashboard.html", "workflow_requests": 10}, "dashboard_tests": "16/16", "evidence_level": "host_static_build"},
+  "final_review_summary": {"status": "passed", "findings": ["项目级单 HTML、架构/启动证据边界、工程进度与调整记录、只读 Git 页面、AI 功能任务汇总、嵌套资料变更监听和内容摘要去重均已通过验证"], "unverified": ["浏览器 file:// 自动重新加载", "宿主自动启动 watcher", "超大项目资料容量", "缺少明确启动资料时的项目现场补录"], "evidence_level": "host_static_build"},
+  "blockers": [],
+  "updated_at": "2026-08-20T10:00:00+08:00"
+}
