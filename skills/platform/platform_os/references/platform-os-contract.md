@@ -1,30 +1,82 @@
-# Platform OS 公共转发/Impl 契约
+# Platform OS 公共契约参考
 
-## 稳定接口
+## 适用范围
 
-Platform OS 公共转发层只暴露项目需要且 Impl 已实现的最小 `platform_os_*` API：任务、队列、信号量、互斥锁、软件定时器、延时、时基、内存和临界区。事件、Notify、取消等能力不得从某个 RTOS 的能力反推为 Platform OS 已具备。句柄、超时单位、ISR 可用性、所有权和错误码必须在接口文档中固定；现有工程的实际返回类型和错误别名还要与规范目标分开记录。该层不是 BSP Wrapper。
+本文件定义如何审查 `platform_os` 公共头、实现 `.c` 和具体后端之间的
+契约。它是规范参考，不是某个 RTOS 工程的公共头，也不自动生成新的 OS
+能力。
 
-## Impl 责任
+## 1. 公共接口边界
 
-公开 `platform_os_*` 转发调用内部 `impl_os_*()`，Impl 再绑定 FreeRTOS、RT-Thread 或裸机。`platform_os_internal_*.h` 只声明两层内部接口，不是第三层。原生 RTOS 头文件、`xTask*`、`xQueue*` 等只能出现在 Impl 和具体 RTOS reference 中。转发层不包含 RTOS 头文件，也不保存业务状态。
+Platform OS 公共头只暴露项目实际需要且后端与测试已经证明的最小
+`platform_os_*` 能力。推荐按任务、队列、二值/计数信号量、互斥锁、软件
+定时器、延时、时基、内存和临界区分别记录契约。
 
-```text
-Caller → platform_os_task_create() → impl_os_task_create() → native RTOS API
-```
+公共头不得 include 或暴露 FreeRTOS、RT-Thread、CMSIS-OS、CMSIS compiler、
+HAL、芯片寄存器、板级类型或 C 标准库头文件。公共类型和错误码必须从已确认
+的 `platform_common` 出口取得；现有工程的真实返回类型和别名必须单独记录。
 
-FreeRTOS、RT-Thread 和裸机映射只能作为实现示例；公共能力清单必须以当前 Impl 的实际头文件、实现和测试为准。目标工程若有 `platform_os_*.c`，应将其视为上层转发实现，不据此改变 Platform/Impl 的边界。
+## 2. 实现剖面判定
 
-## 验收矩阵
+| 剖面 | 调用链 | 必须确认的证据 | 不允许的推断 |
+|---|---|---|---|
+| `direct-platform-backend` | `platform_os_* → platform_os.c → native API` | Platform `.c`、原生 include、配置和构建入口 | 不得因为没有 `impl_os_*` 就判定架构错误 |
+| `explicit-impl-bridge` | `platform_os_* → internal header → impl_os_* → native API` | internal 头、Platform/Impl `.c`、配置和测试 | 不得因为存在 `impl_os_*` 就判定所有能力都经过它 |
+| `bare-metal-or-fake` | `platform_os_* → timebase/fake backend` | 时基、Fake/Mock、Port 和测试 | 不得把 Fake 结果写成目标板运行证据 |
+| `mixed` | 按能力族存在不同链路 | 每个能力族的公共头/实现/测试 | 不得把一个能力族的链路套到全部能力 |
+| `missing` | 无法确认链路 | 缺失文件、配置或构建入口记录 | 不得伪称可编译或已验证 |
 
-| 场景 | 必须证明 |
+`platform_os_internal_*.h` 只有在目标工程真实存在并被实现使用时才记录；
+它是两层内部边界，不是向 App/Service 输出的第三层 API。`impl_os_*` 也只
+在真实头文件、实现和测试共同证明时登记。
+
+## 3. 能力契约检查表
+
+每个公共 API 至少记录以下内容：
+
+| 契约项 | 必须回答的问题 |
 |---|---|
-| 任务创建/删除 | 生命周期、栈单位、优先级、名称限制和失败回收 |
-| 队列/可选事件 | 阻塞超时、ISR 版本、生产者/消费者所有权，以及该能力是否真实实现 |
-| 锁 | 递归规则、优先级反转策略、mutex owner、ISR 限制和超时语义 |
-| 定时 | period/timeout 单位、时基来源、timer service task 回调上下文和停止/重启行为 |
-| 临界区 | 任务/ISR 屏蔽状态 token、嵌套和退出对称性 |
-| 内存/Timer | heap owner、Timer ID/record 生命周期、callback 上下文和删除路径 |
-| 错误 | 参数、超时、忙、资源不足、不支持和 ISR 上下文错误的可区分映射 |
-| 裸机替代 | Fake/Mock 不依赖 RTOS，仍能运行 APP 单元测试 |
+| 句柄 | 谁创建、谁拥有、谁销毁；句柄失效后如何处理？ |
+| 输入/输出 | 缓冲区由谁提供和释放？是否异步借用？是否允许为空？ |
+| 单位 | timeout/period/delay 是毫秒、tick 还是其他单位？转换位于哪里？ |
+| 阻塞 | 是否阻塞？最大等待时间如何定义？超时后对象状态是什么？ |
+| 上下文 | 是否允许 ISR？是否需要 FromISR 变体？回调运行在哪个上下文？ |
+| 并发 | 是否线程安全、可重入？共享状态由谁保护？ |
+| 错误 | 原生失败值如何映射到 Platform 错误？创建失败如何回滚？ |
+| 生命周期 | init、运行、停止、删除和 deinit 的顺序是什么？ |
 
-具体 FreeRTOS 的文件、配置和端口证据见 [`freertos-source-map.md`](../../../impl/impl_os/references/freertos-source-map.md)。
+## 4. 典型验收矩阵
+
+| 能力族 | Platform 侧必须确认 | 后端侧必须确认 | 关键风险 |
+|---|---|---|---|
+| Task | 入口、参数、栈单位、优先级、名称、删除规则 | native create/delete、scheduler/config | 栈/优先级/调度器状态 |
+| Queue | 深度、单项大小、收发缓冲区方向、timeout | copy 语义、ISR 变体、失败值 | const 方向、阻塞和所有权 |
+| Semaphore | 二值/计数、初值、最大计数、ISR 规则 | native give/take 和 config | 计数边界、上下文限制 |
+| Mutex | 所有权、递归规则、ISR 禁止规则 | native mutex 规则、优先级继承 | 不能套用普通 semaphore 规则 |
+| Timer | period 单位、callback 参数、停止/删除、record 所有权 | timer service task、ID/record、配置 | callback 并发、删除释放 |
+| Heap | 分配器、失败结果、释放者、上下文 | RTOS heap、对齐/区域、hook | 碎片、泄漏、实时性 |
+| Critical | enter/exit 成对、token 类型、上下文 | native critical API、屏蔽状态 | token 丢失或伪造对称 |
+
+Event Group、Task Notification、Stream Buffer、Message Buffer 和取消语义
+不能只凭 RTOS 原生 API 存在就加入公共矩阵；必须同时有公共头、后端实现和
+测试证据。
+
+## 5. 验证与证据等级
+
+- `confirmed`：公共头、实现、配置或测试中存在直接证据。
+- `user-confirmed`：用户明确确认的工程约束或架构决定。
+- `inferred`：由相邻文件推断，但尚未有直接证据；不能作为放行依据。
+- `unverified`：缺少构建、配置、运行或实物证据。
+- `nearest`：找到最接近的案例或路径，但不能证明目标工程一致。
+- `mixed`：不同能力族的证据状态不一致。
+- `missing`：关键文件、配置、构建入口或测试缺失。
+
+静态源码映射、主机测试、日志和文档描述不能替代交叉编译、目标运行、串口
+/RTT 观测或实物时序证据。
+
+## 6. 交接
+
+Platform OS 先输出公共契约和证据矩阵；只有出现具体 RTOS 配置、原生 API、
+单位转换、ISR 规则、错误映射或后端资源生命周期时，才交接
+[`impl_os`](../../../impl/impl_os/SKILL.md)。交接必须携带公共头、实现文件、
+配置、构建入口、测试和未验证项，不得只携带函数名或目录名。

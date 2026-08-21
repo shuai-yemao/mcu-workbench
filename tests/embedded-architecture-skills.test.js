@@ -42,17 +42,19 @@ describe('embedded architecture skill contracts', () => {
     }
   });
 
-  test('uses the verified two-layer OS naming consistently', () => {
+  test('keeps OS implementation profiles explicit and naming consistent', () => {
     const abstraction = read('skills/platform/platform_os/SKILL.md');
     const contract = read('skills/platform/platform_os/references/platform-os-contract.md');
     const freertos = read('skills/impl/impl_os/SKILL.md');
     const freertosMap = read('skills/impl/impl_os/references/freertos-source-map.md');
 
-    expect(abstraction).toContain('impl_os_*()');
-    expect(contract).toContain('platform_os_task_create() → impl_os_task_create()');
-    expect(freertosMap).toContain('platform_os_task_create → impl_os_task_create → xTaskCreate');
-    const removedFunctionName = ['os', 'task', 'create', 'impl'].join('_');
-    expect(`${abstraction}\n${contract}\n${freertos}\n${freertosMap}`).not.toContain(removedFunctionName);
+    expect(abstraction).toContain('direct-platform-backend');
+    expect(abstraction).toContain('explicit-impl-bridge');
+    expect(contract).toContain('platform_os_* → platform_os.c → native API');
+    expect(contract).toContain('platform_os_* → internal header → impl_os_* → native API');
+    expect(freertos).toContain('impl_os_*');
+    expect(freertosMap).toContain('capability_profile:');
+    expect(`${abstraction}\n${contract}\n${freertos}\n${freertosMap}`).not.toContain('os_impl_');
   });
 
   test('does not retain removed OS names in the canonical OS Skill content', () => {
@@ -163,6 +165,25 @@ describe('embedded architecture skill contracts', () => {
     expect(contract).toContain('不适用于 OS、BSP、MCU 或其他 Platform 子域');
   });
 
+  test('routes LVGL through one platform_gui.h contract and an Impl implementation', () => {
+    const platform = read('skills/platform/platform_middleware/SKILL.md');
+    const impl = read('skills/impl/impl_middleware/SKILL.md');
+    const vendor = read('skills/vendor/vendor_lvgl/SKILL.md');
+    const porting = read('skills/vendor/vendor_lvgl/references/porting-contract.md');
+    const integration = read('skills/workflow/workflow-integration-plan/SKILL.md');
+
+    expect(platform).toContain('platform_gui.h');
+    expect(platform).toContain('单头、Impl 直实现');
+    expect(platform).toContain('platform_lvgl.h');
+    expect(impl).toContain('impl_lvgl_gui.c');
+    expect(impl).toContain('impl_lvgl_gui.h');
+    expect(impl).toContain('platform_gui_*()');
+    expect(impl).toContain('LVGL v8/v9');
+    expect(vendor).toContain('唯一的\n`platform_middleware/platform_gui.h`');
+    expect(porting).toContain('03_Platform/platform_middleware/platform_gui.h');
+    expect(integration).toContain('platform_gui.h`\n是唯一 Platform 公共头');
+  });
+
   test('requires file-level delivery tables and evidence handoff', () => {
     const integration = read('skills/workflow/workflow-integration-plan/SKILL.md');
     expect(integration).toContain('现状表');
@@ -190,9 +211,8 @@ describe('embedded architecture skill contracts', () => {
     expect(adapterGuide).not.toContain('Adapter 才调用 HAL');
     expect(driverGuide).toContain('START、STOP、ACK、SDA 方向、总线锁和临界区不注入 Driver');
     expect(handlerGuide).toContain('必须先在当前 OSAL Port');
-    expect(freertosMap).toContain('impl_os_task_create');
-    const removedFunctionName = ['os', 'task', 'create', 'impl'].join('_');
-    expect(freertosMap).not.toContain(removedFunctionName);
+    expect(freertosMap).toContain('capability_profile');
+    expect(freertosMap).toContain('impl task source');
   });
 
   test('keeps OS skills grounded in the embedded_framework impl_os evidence', () => {
@@ -202,15 +222,17 @@ describe('embedded architecture skill contracts', () => {
     const platformOs = read('skills/platform/platform_os/SKILL.md');
     const contract = read('skills/platform/platform_os/references/platform-os-contract.md');
 
-    expect(implOs).toContain('platform_os_internal_*.h');
+    expect(implOs).toContain('internal 头（如有）');
+    expect(implOs).toContain('direct-platform-backend');
     expect(implOs).toContain('Timer record');
     expect(implOs).toContain('UNRESOLVED_RTOS_CONFIG');
-    expect(sourceMap).toContain('platform_os_timer_start → impl_os_timer_start → xTimerStart');
-    expect(sourceMap).toContain('05_Vendor/vendor_rtos');
+    expect(sourceMap).toContain('platform_os_timer_start');
+    expect(sourceMap).toContain('FreeRTOS native');
     expect(quickref).toContain('屏蔽状态 token');
-    expect(quickref).toContain('原生能力与当前 Port 分开');
-    expect(platformOs).toContain('是否存在 `platform_os_*.c` 转发实现必须以目标工程为准');
-    expect(contract).toContain('Timer ID/record 生命周期');
+    expect(quickref).toContain('原生能力、公开能力与当前 Port 分开');
+    expect(platformOs).toContain('Platform `.c` 是否直接 include RTOS 原生头文件');
+    expect(contract).toContain('Timer');
+    expect(contract).toContain('record 所有权');
   });
 
   test('keeps repository-relative BSP adapter script paths valid', () => {

@@ -1,56 +1,111 @@
-# Platform OS / FreeRTOS 两层映射案例（非 BSP Wrapper）
+# Platform OS FreeRTOS 案例参考
 
-## 固定源码
+## 案例定位
 
-证据来自实践工程 `D:\zhuomian\embedded_framework` 当前工作树：已确认文件、include、类型、宏、配置与函数映射。这是静态源码证据，不构成目标构建、烧录或板上运行证明；工作树中存在的未提交修改不应被本参考覆盖。
+本文件只记录 FreeRTOS 工程的取证方法和典型风险，不把某个工程的目录、
+版本、配置或提交号升级为所有项目的默认事实。使用时必须填写目标工程路径、
+分支/提交、公共头、实现文件、`FreeRTOSConfig.h`、Port 文件、构建入口和测试。
+
+证据状态至少使用 `confirmed`、`user-confirmed`、`inferred`、`unverified`、
+`nearest`、`mixed` 或 `missing`。
+
+## 1. 目录和文件取证
+
+不要只根据目录名称判断层归属。至少检查：
+
+| 证据 | 需要回答的问题 |
+|---|---|
+| Platform 公共头 | 是否只有 RTOS-neutral 类型、句柄、错误和配置？ |
+| Platform `.c` | 是否直接 include FreeRTOS 并调用 native API？ |
+| internal 头 | 是否真实存在？是否只声明内部调用？ |
+| Impl `.c/.h` | 是否存在 `impl_os_*`？职责是后端绑定还是第二套公共 API？ |
+| FreeRTOS 配置 | API 是否由 `FreeRTOSConfig.h` 和端口裁剪证明？ |
+| 构建入口 | 这些文件是否实际进入目标构建？ |
+| 测试 | 公共能力、失败值、ISR 和释放路径是否被验证？ |
+
+如果只找到相近工程或旧提交，状态为 `nearest`，不能直接写成目标工程
+`confirmed`。
+
+## 2. 两种合法调用链
+
+### 2.1 直接 Platform 后端
 
 ```text
-03_Platform/platform_os/
-├─ inc/                  # platform_os.h、platform_os_*.h 公共头
-├─ inc/                  # platform_os_internal_*.h 内部边界
-└─ src/                  # Platform OS 转发，文件名 platform_os_*.c
-04_Impl/impl_os/
-├─ inc/                  # impl_os_freertos.h
-└─ src/                  # Port 实现，文件名 impl_os_*.c
+Caller → platform_os_* → platform_os.c → FreeRTOS native API
 ```
 
-真实调用链包括：
+只有在 Platform `.c`、原生 include、配置和构建入口都被确认时，才能采用
+`direct-platform-backend`。此剖面不要求创建 `impl_os_*` 二次桥接；Impl OS
+Skill 仍可用于审查 FreeRTOS 上下文、配置、单位、错误和资源生命周期。
+
+### 2.2 显式 Impl 桥接
 
 ```text
-platform_os_task_create() → impl_os_task_create() → xTaskCreate()
-platform_os_queue_send()  → impl_os_queue_send()  → xQueueSend()/xQueueSendFromISR()
-platform_os_timer_start() → impl_os_timer_start() → xTimerStart()/xTimerStartFromISR()
-platform_os_heap_malloc() → impl_os_heap_malloc() → pvPortMalloc()
+Caller → platform_os_* → platform_os_internal_*.h
+       → impl_os_* → FreeRTOS native API
 ```
 
-因此内部函数命名是 `impl_os_*()`，源文件统一采用 `impl_os_*.c`。当前工程可静态确认 task、queue、binary/counting semaphore、mutex、timer、heap 等公开族及相应 Impl；没有 `platform_os_event_*` 或 task-notify 公共接口。
+只有在 internal 头、Platform/Impl 实现、配置和测试都能闭合时，才能采用
+`explicit-impl-bridge`。internal 头不对 App/Service 输出，`impl_os_*` 不得
+复制一套公共 Platform API。
 
-`00_Config/FreeRTOSConfig.h` 证实使用 V10.3.1、1 kHz tick、mutex/counting/timer、动态/静态分配和 heap_4；每个项目都必须重新读取配置，不能复制这些值作为默认事实。
+### 2.3 混合或缺失
 
-## 扩展顺序
+不同能力族可以采用不同链路。例如任务直接绑定而 Timer 通过 Impl；此时标记
+`mixed` 并按能力族建立矩阵。缺少构建入口、配置或测试时标记 `missing` 或
+`unverified`，不补写调用链。
 
-1. 调用方确实需要该语义。
-2. 公共头定义句柄、所有权、单位、ISR 能力和错误码。
-3. Platform OS 转发层只做校验与语义转换，调用 `impl_os_*()`；它不属于已废弃的 BSP Wrapper。
-4. 每个启用的 Impl 都实现或显式报告不支持。
-5. Fake 与具体 RTOS 测试覆盖成功、超时、ISR 和资源回收。
+## 3. FreeRTOS 能力取证矩阵
 
-## 已观察风险（只读源码观察）
+| 能力 | 常见 native API | 必须核对的 Platform/Port 语义 |
+|---|---|---|
+| Task | `xTaskCreate`、delete、suspend/resume、delay、tick | 栈单位、名称长度、优先级、调度器状态、入口参数 |
+| Queue | `xQueueCreate`、send/receive、FromISR | 消息复制、缓冲区方向、深度、阻塞、ISR 唤醒 |
+| Semaphore | binary/counting create、give/take、FromISR | 初值、最大计数、计数边界、上下文 |
+| Mutex | `xSemaphoreCreateMutex`、give/take | mutex 的 ISR 限制、优先级继承、递归规则 |
+| Timer | `xTimerCreate`、start/stop/change/delete/reset | service task 上下文、period 单位、Timer ID/record、删除并发 |
+| Heap | `pvPortMalloc`、`vPortFree` | heap 实现、分配失败、释放者、调用上下文、对齐 |
+| Critical | port critical enter/exit、FromISR token | token 对称、屏蔽状态、嵌套和 ISR 规则 |
 
-- `platform_os_queue_receive` 的接收缓冲区方向必须是可写指针，不能因错误的 const 约束迫使 Port 强转。
-- 接口附近若同时出现 ms 和 ticks 注释，必须固定单位；转换只发生在 OS Port。
-- ISR 临界区如果需要保存屏蔽状态，enter 必须返回 token，exit 必须使用同一 token；不能无条件开中断。
-- 错误码映射要区分超时、参数、资源不足、不支持和 ISR 上下文错误，不能全部折叠为资源失败。
-- `impl_os_mutex.c` 对 mutex 存在 ISR 分支；必须按 FreeRTOS mutex 规则复核，不能将分支存在当作安全证明。
-- `impl_os_task.c` 的 ISR 临界区 enter/exit 接口没有闭合屏蔽状态 token；应作为生成和最终 Review 门禁。
-- `impl_os_timer.c` 的 callback 通过 Timer ID 取得 record，delete 路径必须核对 record 的释放和并发关系。
+FreeRTOS 原生 Event Group、Task Notification、Stream Buffer 和 Message Buffer
+不等于 Platform OS 已公开能力。若目标工程确实公开这些能力，必须另有公共头、
+实现和测试证据，不能由本案例文件单独放行。
 
-## 其他 Port 的语义示例
+## 4. 必须保留的风险复核
 
-| Platform OS | FreeRTOS 示例 | RT-Thread 示例 | 裸机示例 |
-|---|---|---|---|
-| `platform_os_task_delay_ms` | `vTaskDelay` | `rt_thread_mdelay` | 注入时基轮询或调度器 hook |
-| `platform_os_mutex_take` | `xSemaphoreTake` | `rt_mutex_take` | 临界区或单线程状态机 |
-| `platform_os_queue_send` | `xQueueSend` | `rt_mq_send` | 固定容量环形队列 |
+- Queue receive 的输出缓冲区必须是可写方向，不能用错误的 `const` 约束迫使
+  Port 强制转换。
+- Mutex 不能套用普通 semaphore 的 FromISR 规则；必须按 FreeRTOS mutex
+  约束审查。
+- native critical enter-from-ISR 返回的屏蔽状态 token 必须原样传给对应 exit；
+  无条件传 0 或无条件开中断只能标记为风险。
+- Timer callback 如果通过 Timer ID 借用 record，必须闭合 record 创建者、
+  释放者、删除时机和 callback 并发关系。
+- 创建、分配、启动、停止、删除和 deinit 的失败路径必须记录对象状态和回滚。
+- 条件编译 API 必须由 `FreeRTOSConfig.h`、端口和实际构建入口证明；否则使用
+  `UNRESOLVED_RTOS_CONFIG` 或 `UNVERIFIED_BUILD_ENTRY`。
 
-这些只是语义映射示例，不声明相应 Port 已存在。
+## 5. 案例记录模板
+
+```text
+project_root: <absolute target firmware path>
+branch_commit: <branch @ commit>
+rtos_version: <confirmed or unverified>
+platform_public_headers: <paths>
+platform_sources: <paths>
+internal_headers: <paths or missing>
+impl_sources: <paths or missing>
+rtos_config: <paths or unverified>
+build_entry: <command/path or unverified>
+capability_profile: direct-platform-backend | explicit-impl-bridge | bare-metal-or-fake | mixed | missing
+evidence_status: confirmed | user-confirmed | inferred | unverified | nearest | mixed | missing
+validation_levels: static | host | build | target | physical
+unresolved_items: <list>
+```
+
+## 6. 交接边界
+
+Platform OS reference 负责确认公共能力和调用链剖面；具体 FreeRTOS API、配置、
+Port、上下文、单位转换、错误映射和资源生命周期交给
+[`impl_os`](../../../impl/impl_os/SKILL.md)。主机/静态结果必须与交叉编译、目标
+运行、串口/RTT 或实物时序证据分开记录。

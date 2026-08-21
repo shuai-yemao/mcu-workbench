@@ -1,59 +1,98 @@
 ---
 name: impl_os
-description: Impl 落地：具体 RTOS（尤其 FreeRTOS）或裸机的 impl_os_*() 原生 Port 实现、调度调试和迁移验收。用户提到 OSAL、任务/队列/信号量/互斥锁/软件定时器/heap、FreeRTOSConfig、FromISR、tick 转换、临界区或 RTOS Port 时必须使用本 Skill。
+description: Impl 落地：具体 RTOS（尤其 FreeRTOS）或裸机的 impl_os_*() 后端实现、配置审查、调度诊断和迁移验收。用户提到 OSAL、任务/队列/同步、Timer、heap、FreeRTOSConfig、FromISR、tick、临界区或 RTOS Port 时使用本 Skill。
 ---
 
-# Impl OS（平台适配 · OS 绑定）
+# Impl OS（具体运行时 · 后端绑定）
 
 ## 边界
 
-处理具体 RTOS 或裸机运行时的原生配置与 `impl_os_*()` Port 实现：任务、队列、二值/计数信号量、互斥锁、软件定时器、heap、临界区、tick 和调度诊断。稳定的项目接口由 [`platform_os`](../../platform/platform_os/SKILL.md) 定义；本层只负责把 Platform 接口落到具体 RTOS。
+Impl OS 负责具体 RTOS 或裸机运行时的原生配置、资源绑定、单位转换、错误
+映射、上下文限制、生命周期、回滚和验证。稳定的项目接口由
+[`platform_os`](../../platform/platform_os/SKILL.md) 定义；本层不承载 Service
+策略、设备协议、业务缓存或 Handler 工作循环。
 
-在当前 FreeRTOS 证据工程中，调用链是：
+不要把 `impl_os_*` 自动理解为每个工程都必须存在的第二套 Adapter。先读取
+Platform 公共头、实现 `.c`、internal 头（如有）、配置、构建入口和测试，再
+判断下列实现剖面。
 
-```text
-platform_os_* → platform_os_internal_*.h → impl_os_* → FreeRTOS native API
-```
+## 实现剖面
 
-`platform_os_internal_*.h` 是 Platform/Impl 的内部边界，不是第三层；`impl_os_freertos.h` 是 Port 的 FreeRTOS 头文件和配置宏聚合入口。目标工程中真实路径、函数和配置以 [`freertos-source-map.md`](references/freertos-source-map.md) 为准。
+| 剖面 | 典型调用链 | Impl OS 的职责 |
+|---|---|---|
+| `direct-platform-backend` | `platform_os_* → platform_os.c → native API` | 审查 Platform `.c` 的 RTOS 绑定、配置、单位、错误和资源语义；不新增二次桥接 |
+| `explicit-impl-bridge` | `platform_os_* → internal header → impl_os_* → native API` | 实现或审查真实存在的 `impl_os_*` 后端函数和内部契约 |
+| `bare-metal-or-fake` | `platform_os_* → timebase/fake backend` | 审查裸机时基、Fake/Mock 和可测试替代后端 |
+| `mixed` | 按能力族使用不同链路 | 每个能力族单独记录实现和验证证据 |
+| `missing` | 关键文件/配置/构建入口缺失 | 输出未解析标记，不声称可编译或可运行 |
 
 ## 规则
 
-FreeRTOS 类型和 `xTask*`/`xQueue*`/`xSemaphore*`/`xTimer*` 只能出现在 Impl 或本 Skill 的具体 RTOS references 中；APP、Service、BSP Driver 和 Platform 公共头使用 `platform_os_*`。不要为 FreeRTOS 再创建第二套 Adapter。
+FreeRTOS 类型和 `xTask*`、`xQueue*`、`xSemaphore*`、`xTimer*` 等原生 API
+只能出现在真实 Impl/Port 实现和明确标注的 RTOS reference 中。APP、Service
+和 Platform 公共头使用 `platform_os_*`，不直接 include RTOS。
 
-Impl 先从当前 Platform 公共头和实现确认 period/timeout 的单位，再保持其所有权和错误语义映射到原生 API；不能仅凭参数名或注释猜测 ms/ticks。转换只能位于 Impl。Tickless、Idle Hook、Trace Hook、stack overflow hook 和 malloc failed hook 属于本层；任务看门狗、故障恢复和系统重启策略交给 [`software-system`](../../service/service_system/SKILL.md)。
+先从当前 Platform 公共头和实现确认 period、timeout、delay 和 tick 的单位，
+再在后端转换；不能仅凭参数名或注释猜测 ms/ticks。每个 API 必须单独记录：
 
-每个 API 都要单独记录：任务/ISR 上下文、是否阻塞、超时单位、句柄/缓冲区/record 所有权、原生失败值到 Platform 错误码的映射、初始化失败回滚和 deinit 行为。`FromISR` 分支只证明调用了 ISR 变体，不自动证明对象类型、优先级或临界区语义安全。
+- 任务/ISR 上下文、是否阻塞、最大等待和超时单位；
+- 句柄、缓冲区、Timer record、回调参数和堆内存的所有权；
+- 线程安全性、可重入性、异步借用期限和释放时机；
+- 原生失败值到 Platform 错误码的映射；
+- 初始化失败回滚、重复 deinit 和删除后的对象状态。
 
-## 当前 FreeRTOS Port 能力
+`FromISR` 分支只证明调用了 ISR 变体，不自动证明对象类型、优先级、临界区
+或调度语义安全。
 
-| 能力 | 目标工程观察 | 生成/审查要求 |
+## 当前能力审查矩阵
+
+| 能力 | FreeRTOS 观察对象 | 必须审查 |
 |---|---|---|
-| Task | `impl_os_task.c` 使用 `xTaskCreate`、删除/挂起/恢复、delay、scheduler、tick | 栈单位、名称长度、优先级范围和 scheduler 前后状态必须取证 |
-| Queue | `xQueueCreate`、send/receive、ISR send/receive、waiting count | 消息大小、队列深度、阻塞超时和 ISR 版本分别记录 |
-| Semaphore | binary/counting create、give/take、ISR give/take | 计数边界、初始值和 ISR 适用性分别核验 |
-| Mutex | `xSemaphoreCreateMutex`、give/take | FreeRTOS mutex 不按普通 semaphore 的 ISR 规则推断；源代码分支必须作为风险复核 |
-| Timer | `xTimerCreate`、start/stop/change/delete/reset、period get、callback | callback 上下文是 timer service task；Timer ID 指向的 record 生命周期必须闭环 |
-| Heap | `pvPortMalloc`/`vPortFree` | 记录 heap 实现、分配失败行为、调用上下文和释放者 |
+| Task | create/delete、挂起/恢复、delay、scheduler、tick | 栈单位、名称、优先级、入口参数、scheduler 前后状态 |
+| Queue | create、send/receive、FromISR、waiting count | 消息大小、复制语义、深度、阻塞、可写输出方向 |
+| Semaphore | binary/counting create、give/take、FromISR | 初值、最大计数、边界、ISR 适用性 |
+| Mutex | create、give/take、递归（如有） | FreeRTOS mutex 的 ISR 限制、优先级继承、所有权 |
+| Timer | create、start/stop/change/delete/reset、callback | service task 上下文、period 单位、ID/record 生命周期 |
+| Heap | `pvPortMalloc`、`vPortFree` 或替代分配器 | heap 实现、失败策略、释放者、上下文、对齐 |
+| Critical | native critical enter/exit、FromISR token | token 对称、屏蔽状态、嵌套和 ISR 规则 |
 
-Event Group、Task Notify、stream/message buffer 即使在 FreeRTOS 原生存在，也不能写成当前 Platform OS 已公开能力，除非公共头、Impl 和测试共同证明。
+Event Group、Task Notification、Stream Buffer、Message Buffer 和取消语义即使
+在 FreeRTOS 原生存在，也不能写成当前 Platform OS 已公开能力，除非公共头、
+后端实现和测试共同证明。
 
 ## 必须触发的风险门禁
 
-- **ISR 互斥锁**：先核对 FreeRTOS 对 mutex 的 ISR 限制；不能因为代码存在 `xSemaphoreGiveFromISR`/`xSemaphoreTakeFromISR` 分支就放行。
-- **临界区 token**：若 native `enter-from-ISR` 返回屏蔽状态 token，接口必须返回并在 exit 使用同一 token；无条件传 0 或无条件开中断只能标为风险。
-- **Timer record**：若 callback 通过 Timer ID 借用外部 record，必须说明 record 创建者、释放者、删除时机和 callback 并发关系。
-- **失败回滚**：检查空指针、分配失败、创建失败、句柄输出初始化和重复 deinit；静态检查不能证明无泄漏。
-- **配置裁剪**：每个条件编译 API 必须由 `FreeRTOSConfig.h` 或目标配置证明；未证明的 API 只能生成预览并标 `UNRESOLVED_RTOS_CONFIG`。
+- **Mutex ISR**：核对 FreeRTOS mutex 的 ISR 限制；不能因代码存在
+  `xSemaphoreGiveFromISR`/`xSemaphoreTakeFromISR` 就放行。
+- **Critical token**：native enter-from-ISR 返回屏蔽状态 token 时，接口必须
+  返回并在 exit 使用同一 token；无条件传 0 或无条件开中断只能标为风险。
+- **Timer record**：callback 通过 Timer ID 借用 record 时，必须闭合创建者、
+  释放者、删除时机和 callback 并发关系。
+- **失败回滚**：检查空指针、分配失败、创建失败、输出句柄初始化、重复 deinit
+  和资源泄漏；静态检查不能证明无泄漏。
+- **配置裁剪**：每个条件编译 API 必须由 `FreeRTOSConfig.h`、Port 和目标构建
+  入口证明；未证明时标记 `UNRESOLVED_RTOS_CONFIG`。
+- **构建入口**：缺少目标构建入口时标记 `UNVERIFIED_BUILD_ENTRY`，不能把源码
+  映射或主机测试写成目标通过。
 
 ## 证据与工作流
 
-1. 读取 `platform_os` 公共头、`platform_os_internal_*.h`、Wrapper `.c`、Impl `.c`、FreeRTOSConfig 和 Vendor 端口。
-2. 输出能力矩阵和 `platform_os_* → impl_os_* → native API` 调用链，逐项标记 `confirmed`/`inferred`/`unverified`。
-3. 对单位、所有权、阻塞/ISR、错误码和资源回收做反猜测审查。
-4. 用 Fake/Mock 覆盖成功、失败、超时、ISR 投递和释放；再分别规划交叉编译、目标运行和实物时序验证。
-5. 目标工程没有构建入口时，保留 `UNVERIFIED_BUILD_ENTRY`，不能把源码映射或主机测试写成目标通过。
+1. 读取 Platform 公共头、对应 `.c`、internal 头（如有）、Impl/Port、
+   `FreeRTOSConfig.h`、Vendor RTOS 和构建入口。
+2. 输出按能力族划分的剖面和调用链，标记 `confirmed`、`user-confirmed`、
+   `inferred`、`unverified`、`nearest`、`mixed` 或 `missing`。
+3. 对单位、所有权、阻塞/ISR、错误码、配置裁剪和资源回收做反猜测审查。
+4. 先用 Fake/Mock 覆盖成功、失败、超时、ISR 投递和释放；再分别规划交叉编译、
+   目标运行、串口/RTT 和实物时序验证。
+5. 不同能力族证据不一致时使用 `mixed`，不能用一个最完整能力族代表整个 Port。
 
-源码目录、配置、端口映射和目标工程观察见 [`freertos-source-map.md`](references/freertos-source-map.md)；原生 API 速查见 [`freertos-api-quickref.md`](references/freertos-api-quickref.md)。
+源码映射见 [`freertos-source-map.md`](references/freertos-source-map.md)，原生
+API 速查见 [`freertos-api-quickref.md`](references/freertos-api-quickref.md)。
 
-源文件可以命名为 `impl_os_*.c`，内部函数统一采用 `impl_os_*()`。不要把某个工程的路径、FreeRTOS 版本或配置值复制成所有项目的默认事实；项目案例必须放在 reference，并标出证据等级。
+## 生成与审查禁止事项
+
+- 不为 FreeRTOS 复制一套没有公共头/测试依据的第二套 Adapter。
+- 不把 RTOS 原生能力自动升级为 Platform 公共能力。
+- 不把某个工程路径、版本、配置值或提交号当作所有项目默认事实。
+- 不把静态检查、主机测试、日志或文档描述写成目标构建、烧录或板上运行通过。
+- 不把任务看门狗、故障恢复和系统重启策略放入 OS Port；这些属于系统服务策略。
