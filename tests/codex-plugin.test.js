@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
 const { validatePlugin } = require('../scripts/validate-plugin');
 const { validateClaudeManifestSkillPaths } = require('../scripts/validators/manifest');
@@ -38,5 +39,21 @@ describe('Codex plugin adapter', () => {
       errors
     );
     expect(errors).toContain('manifest: skills 路径不存在 ./skills/not-real/');
+  });
+
+  test('Claude manifest lists only tracked skill directories', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, '.claude-plugin', 'plugin.json'), 'utf8'));
+    for (const skillPath of manifest.skills) {
+      const directory = path.join(ROOT, skillPath.slice(2));
+      expect(fs.statSync(directory).isDirectory()).toBe(true);
+      const tracked = execFileSync('git', ['ls-files', '--', `${skillPath.slice(2)}**`], {
+        cwd: ROOT,
+        encoding: 'utf8'
+      }).trim();
+      const hasSkillDirectory = fs.readdirSync(directory, { withFileTypes: true }).some((entry) => (
+        entry.isDirectory() && fs.existsSync(path.join(directory, entry.name, 'SKILL.md'))
+      ));
+      expect(tracked !== '' || hasSkillDirectory).toBe(true);
+    }
   });
 });

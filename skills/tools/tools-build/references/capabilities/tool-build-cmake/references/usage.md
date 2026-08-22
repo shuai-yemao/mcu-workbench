@@ -16,16 +16,16 @@
 
 ```bash
 # 探测构建环境
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py --detect
 
 # 列出可用预设
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py --list-presets --source /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py --list-presets --source /path/to/project
 
 # 使用预设构建
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py --source /path/to/project --preset debug
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py --source /path/to/project --preset debug
 
 # 手动指定构建目录和类型
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py \
   --source /path/to/project \
   --build-dir /path/to/project/build \
   --build-type Debug
@@ -36,7 +36,7 @@ python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
 ### 1. 环境探测
 
 ```bash
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py --detect
 ```
 
 输出 cmake 版本、可用生成器、工具链编译器等信息，适合在构建前确认环境就绪。
@@ -44,7 +44,7 @@ python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py --detect
 ### 2. 使用预设构建
 
 ```bash
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py \
   --source /repo/fw \
   --preset debug
 ```
@@ -54,7 +54,7 @@ python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
 ### 3. 手动配置构建
 
 ```bash
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py \
   --source /repo/fw \
   --build-dir /repo/fw/build/debug \
   --generator Ninja \
@@ -65,7 +65,7 @@ python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
 ### 4. 指定构建目标
 
 ```bash
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py \
   --source /repo/fw \
   --preset debug \
   --target app
@@ -74,7 +74,7 @@ python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
 ### 5. 仅搜索已有产物
 
 ```bash
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py \
   --scan-artifacts /repo/fw/build/debug
 ```
 
@@ -83,7 +83,7 @@ python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
 ### 6. 清理后重新构建
 
 ```bash
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py \
   --source /repo/fw \
   --preset debug \
   --clean

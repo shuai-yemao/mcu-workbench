@@ -11,9 +11,11 @@ describe('agent artifact protocol', () => {
   test('initializes stable project roots without overwriting metadata', () => {
     const result = initProject({ projectRoot: root, projectId: 'gr5526-lvgl', mcu: 'GR5526', toolchain: 'Keil' });
     expect(fs.existsSync(result.path)).toBe(true);
-    for (const relative of ['docs/architecture', 'docs/verification', 'docs/devlog', 'docs/notes', '.mcu-workbench/runs']) {
+    for (const relative of ['00_Docs/06_嵌入式插件输出/architecture', '00_Docs/06_嵌入式插件输出/verification', '00_Docs/06_嵌入式插件输出/devlog', '00_Docs/06_嵌入式插件输出/notes', '.mcu-workbench/runs']) {
       expect(fs.existsSync(path.join(root, relative))).toBe(true);
     }
+    expect(result.metadata.artifact_roots.architecture).toBe('00_Docs/06_嵌入式插件输出/architecture');
+    expect(result.metadata.artifact_roots.notes).toBe('00_Docs/06_嵌入式插件输出/notes');
     expect(() => initProject({ projectRoot: root })).toThrow(/already exists/);
   });
 
@@ -27,14 +29,19 @@ describe('agent artifact protocol', () => {
       status: 'completed',
       inputs: ['project tree'],
       evidence: ['src/main.c'],
-      changedFiles: ['docs/architecture/layers.md'],
+      changedFiles: ['00_Docs/06_嵌入式插件输出/architecture/layers.md'],
       tests: ['npm test'],
-      artifacts: ['docs/architecture/layers.md'],
+      artifacts: ['00_Docs/06_嵌入式插件输出/architecture/layers.md'],
       blockers: [],
-      handoff: ['firmware-engineer']
+      handoff: ['firmware-engineer'],
+      workingDirectories: ['C:/tools/mcu-workbench', 'D:/firmware'],
+      commands: ['npm run validate:architecture', 'cmake --build --preset Debug'],
+      attempts: ['attempt-1: format command used wrong cwd; corrected']
     });
     const record = JSON.parse(fs.readFileSync(result.path, 'utf8'));
-    for (const field of ['run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files', 'tests', 'artifacts', 'blockers', 'handoff']) expect(record[field]).toBeDefined();
+    for (const field of ['run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files', 'tests', 'artifacts', 'blockers', 'handoff', 'working_directories', 'commands', 'attempts']) expect(record[field]).toBeDefined();
+    expect(record.working_directories).toEqual(['C:/tools/mcu-workbench', 'D:/firmware']);
+    expect(record.attempts).toHaveLength(1);
     const metadata = JSON.parse(fs.readFileSync(path.join(root, '.mcu-workbench', 'project.json'), 'utf8'));
     expect(metadata.active_agents).toContain('system-architect');
     expect(() => writeRunRecord({ projectRoot: root, runId: '20260723T120000Z-system-architect-audit', agent: 'system-architect', task: 'audit layers', status: 'completed' })).toThrow(/already exists/);

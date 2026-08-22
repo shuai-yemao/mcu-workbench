@@ -1,3 +1,9 @@
+/**
+ * 磁盘加载层。职责边界：
+ * - `catalog.js` 持有元数据事实源；`registry.js` 在事实之上派生查询视图；
+ * - `loader.js` 只负责从磁盘读取 SKILL.md 内容并解析 frontmatter，
+ *   不持有任何技能元数据或派生逻辑。
+ */
 const fs = require('fs');
 const path = require('path');
 const { CANONICAL_SKILLS, SKILL_BY_CANONICAL_ID, resolveSkillId } = require('./catalog');
@@ -32,7 +38,8 @@ function loadSkillsFromPlugin() {
       description: meta.description || skill.description,
       path: path.dirname(skillFile),
       content,
-      category: skill.layer,
+      layer: skill.layer,
+      category: skill.layer, // 兼容别名：旧宿主读 skill.category。
       legacyName: skill.legacyId
     }];
   }).filter(([, skill]) => skill));

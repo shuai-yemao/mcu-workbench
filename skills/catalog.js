@@ -4,33 +4,31 @@
  */
 const {
   LEGACY_SKILL_ENTRIES,
-  ARCHIVED_SOFTWARE_LAYERS,
   CANONICAL_DEFINITIONS,
+  SERVICE_DEFINITIONS,
+  VENDOR_DEFINITIONS,
   TOOL_CANONICAL_DEFINITIONS,
-  TOOL_ALIASES
+  TOOL_ALIASES,
+  CANONICAL_ALIASES
 } = require('./catalog-metadata');
 
+// 归档已删除，LEGACY_SKILL_ENTRIES 仅含仍作为 active 入口的 legacy 技能，archived 恒为 false。
 const LEGACY_SKILL_CATALOG = LEGACY_SKILL_ENTRIES.map(([id, legacyId, layer, description]) => {
   const isToolsSkill = layer === 'operations';
-  const isArchived = (ARCHIVED_SOFTWARE_LAYERS.has(layer)
-    && !['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(id))
-    || isToolsSkill;
   const activeLayer = isToolsSkill ? 'tools' : layer;
   return {
     id,
     legacyId,
     layer: activeLayer,
     description,
-    archived: isArchived,
-    path: isArchived
-      ? (isToolsSkill ? `archive/tools-legacy/${id}` : `archive/software-legacy/${layer}/${id}`)
-      : `skills/${activeLayer}/${id}`,
+    archived: false,
+    path: `skills/${activeLayer}/${id}`,
     canonical: false
   };
 });
 
 const EXISTING_CANONICAL_SKILLS = LEGACY_SKILL_CATALOG
-  .filter((skill) => ['workflow-router', 'rtos-freertos', 'middleware-lvgl'].includes(skill.id))
+  .filter((skill) => ['workflow-requirements-router'].includes(skill.id))
   .map((skill) => ({ ...skill, canonical: true }));
 
 const TOOL_MIGRATION_MAP = Object.fromEntries(
@@ -40,6 +38,22 @@ const TOOL_MIGRATION_MAP = Object.fromEntries(
 const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
   ...EXISTING_CANONICAL_SKILLS,
   ...CANONICAL_DEFINITIONS.map(([id, layer, description]) => ({
+    id,
+    legacyId: id,
+    layer,
+    description,
+    path: `skills/${layer}/${id}`,
+    canonical: true
+  })),
+  ...SERVICE_DEFINITIONS.map(([id, layer, description]) => ({
+    id,
+    legacyId: id,
+    layer,
+    description,
+    path: `skills/${layer}/${id}`,
+    canonical: true
+  })),
+  ...VENDOR_DEFINITIONS.map(([id, layer, description]) => ({
     id,
     legacyId: id,
     layer,
@@ -58,34 +72,27 @@ const CANONICAL_DEFINITIONS_BY_ID = Object.fromEntries([
 ].map((skill) => [skill.id, skill]));
 
 const CANONICAL_ORDER = [
-  'workflow-router', 'workflow-project-integration', 'app-architecture',
-  'os-abstraction', 'rtos-freertos', 'bsp-adapter', 'bsp-hal-driver',
-  'bsp-handler', 'core-mcu', 'driver-vendor', 'middleware-lvgl',
-  'middleware-communication', 'middleware-storage', 'middleware-algorithms',
-  'software-system', 'tools-build', 'tools-flash', 'tools-linker',
-  'tools-debug', 'tools-observability', 'tools-quality', 'tools-release',
+  'workflow-requirements-router', 'workflow-requirements-challenge', 'workflow-claude-layering', 'workflow-document-context', 'workflow-review-gate', 'workflow-integration-plan', 'workflow-task-breakdown', 'workflow-task-execution', 'app-architecture',
+  'workflow-final-review',
+  'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware',
+  'impl_os', 'impl_mcu', 'impl_board', 'impl_bsp', 'impl_middleware',
+  'service_system', 'service_battery', 'service_backlight', 'service_calendar', 'service_diagnosis',
+  'service_log', 'service_ota', 'service_power', 'service_sensor', 'service_storage', 'service_watchdog',
+  'vendor_mcu', 'vendor_rtos', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal',
+  'vendor_flashdb', 'vendor_letter_shell', 'vendor_algorithm',
+  'tools-build', 'tools-flash', 'tools-linker',
+  'tools-debug', 'tools-observability', 'tools-quality', 'tools-verification', 'tools-git', 'tools-release',
   'tools-learning-tutor'
 ];
 
 const CANONICAL_SKILLS = CANONICAL_ORDER.map((id) => ({
   ...CANONICAL_DEFINITIONS_BY_ID[id],
-  aliases: TOOL_ALIASES[id] || []
+  aliases: [...(TOOL_ALIASES[id] || []), ...(CANONICAL_ALIASES[id] || [])]
 }));
-
-const TUTOR_ENTRY = {
-  id: 'workflow-learning-tutor',
-  legacyId: 'learning-tutor',
-  layer: 'workflow',
-  description: '嵌入式代码学习与 Obsidian 笔记辅导',
-  archived: true,
-  path: 'archive/software-legacy/workflow/workflow-learning-tutor',
-  canonical: false
-};
 
 const SKILL_CATALOG = [
   ...CANONICAL_SKILLS,
-  ...LEGACY_SKILL_CATALOG.filter((skill) => !CANONICAL_SKILLS.some((canonical) => canonical.id === skill.id)),
-  TUTOR_ENTRY
+  ...LEGACY_SKILL_CATALOG.filter((skill) => !CANONICAL_SKILLS.some((canonical) => canonical.id === skill.id))
 ];
 
 const SKILL_BY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.id, skill]));
@@ -93,102 +100,129 @@ const SKILL_BY_CANONICAL_ID = Object.fromEntries(CANONICAL_SKILLS.map((skill) =>
 const SKILL_BY_LEGACY_ID = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.legacyId, skill]));
 
 const MIGRATION_MAP = {
-  'workflow-architecture': 'workflow-project-integration',
-  'project-integration': 'workflow-project-integration',
-  'embedded-architect': 'workflow-project-integration',
-  'embedded-project-integration': 'workflow-project-integration',
-  'workflow-code-porting': 'workflow-project-integration',
-  'code-porting': 'workflow-project-integration',
-  'bsp-device-adaptation': 'bsp-adapter',
-  'bsp-platform-adapter': 'bsp-adapter',
-  'peripheral-driver': 'bsp-adapter',
-  'embedded-adapter': 'bsp-adapter',
-  'bsp-device-driver': 'bsp-hal-driver',
-  'bsp-peripheral-driver': 'bsp-hal-driver',
-  'bsp-device-service': 'bsp-handler',
-  'bsp-peripheral-handler': 'bsp-handler',
-  'platform-cortex-registers': 'core-mcu',
-  'platform-cortex-interrupts': 'core-mcu',
-  'platform-cortex-memory': 'core-mcu',
-  'platform-mcu-architecture': 'core-mcu',
-  'platform-peripheral-registers': 'core-mcu',
-  'platform-option-bytes': 'core-mcu',
-  'platform-sram': 'core-mcu',
-  'platform-internal-flash': 'core-mcu',
-  'platform-stm32-hal': 'driver-vendor',
-  'platform-stm32-spl': 'driver-vendor',
-  'arm-core-registers': 'core-mcu',
-  'arm-interrupt-exception': 'core-mcu',
-  'arm-memory-architecture': 'core-mcu',
-  'chip-architecture': 'core-mcu',
-  'mcu-peripheral-registers': 'core-mcu',
-  'option-bytes': 'core-mcu',
-  'sram-module': 'core-mcu',
-  'flash-module': 'core-mcu',
-  'stm32-hal-development': 'driver-vendor',
-  'stm32-spl-development': 'driver-vendor',
-  'bus-i2c': 'core-mcu',
-  'bus-spi': 'core-mcu',
-  'bus-uart': 'core-mcu',
-  'peripheral-adc': 'core-mcu',
-  'peripheral-dma': 'core-mcu',
-  'peripheral-motor-control': 'core-mcu',
-  'peripheral-timer': 'core-mcu',
-  'i2c-bus': 'core-mcu',
-  'spi-bus': 'core-mcu',
-  'uart-module': 'core-mcu',
-  'adc-module': 'core-mcu',
-  'dma-module': 'core-mcu',
-  'motor-control': 'core-mcu',
-  'timer-module': 'core-mcu',
-  'protocol-ble': 'middleware-communication',
-  'protocol-can': 'middleware-communication',
-  'protocol-cellular': 'middleware-communication',
-  'protocol-gps': 'middleware-communication',
-  'protocol-lora': 'middleware-communication',
-  'protocol-modbus': 'middleware-communication',
-  'protocol-mqtt': 'middleware-communication',
-  'protocol-usb': 'middleware-communication',
-  'protocol-wifi': 'middleware-communication',
-  'protocol-ymodem': 'middleware-communication',
-  'ble-module': 'middleware-communication',
-  'can-debug': 'middleware-communication',
-  'cellular-module': 'middleware-communication',
-  'gps-module': 'middleware-communication',
-  'lora-module': 'middleware-communication',
-  'modbus-debug': 'middleware-communication',
-  'mqtt-module': 'middleware-communication',
-  'usb-module': 'middleware-communication',
-  'wifi-module': 'middleware-communication',
-  'ymodem-module': 'middleware-communication',
-  'middleware-dsp': 'middleware-algorithms',
-  'middleware-fft': 'middleware-algorithms',
-  'dsp-module': 'middleware-algorithms',
-  'fft-module': 'middleware-algorithms',
-  'middleware-fatfs': 'middleware-storage',
-  'middleware-sfud': 'middleware-storage',
-  'fatfs-module': 'middleware-storage',
-  'sfud-module': 'middleware-storage',
-  'system-bootloader': 'software-system',
-  'system-low-power': 'software-system',
-  'system-watchdog': 'software-system',
-  'security-aes': 'software-system',
-  'security-crc': 'software-system',
-  'security-firmware-signing': 'software-system',
-  'security-rsa': 'software-system',
-  'bootloader-design': 'software-system',
-  'lowpower-design': 'software-system',
-  'watchdog-module': 'software-system',
-  'aes-module': 'software-system',
-  'crc-module': 'software-system',
-  'firmware-sign': 'software-system',
-  'rsa-module': 'software-system',
+  'workflow-router': 'workflow-requirements-router',
+  'workflow-architecture': 'workflow-integration-plan',
+  'project-integration': 'workflow-review-gate',
+  'workflow-project-integration': 'workflow-review-gate',
+  'embedded-architect': 'workflow-integration-plan',
+  'embedded-project-integration': 'workflow-review-gate',
+  'workflow-code-porting': 'workflow-integration-plan',
+  'code-porting': 'workflow-integration-plan',
+  'os-adapter': 'platform_os',
+  'os-abstraction': 'platform_os',
+  'os-runtime': 'impl_os',
+  'rtos-freertos': 'impl_os',
+  'freertos-module': 'impl_os',
+  'bsp-port': 'impl_board',
+  'bsp-adapter': 'impl_board',
+  'bsp-device-adaptation': 'impl_board',
+  'bsp-platform-adapter': 'impl_board',
+  'peripheral-driver': 'impl_board',
+  'embedded-adapter': 'impl_board',
+  'bsp-hal-driver': 'impl_bsp',
+  'bsp-device-driver': 'impl_bsp',
+  'bsp-peripheral-driver': 'impl_bsp',
+  'bsp-handler': 'impl_bsp',
+  'bsp-device-service': 'impl_bsp',
+  'bsp-peripheral-handler': 'impl_bsp',
+  'platform-cortex-registers': 'platform_mcu',
+  'platform-cortex-interrupts': 'platform_mcu',
+  'platform-cortex-memory': 'platform_mcu',
+  'platform-mcu-architecture': 'platform_mcu',
+  'platform-peripheral-registers': 'platform_mcu',
+  'platform-option-bytes': 'platform_mcu',
+  'platform-sram': 'platform_mcu',
+  'platform-internal-flash': 'platform_mcu',
+  'driver-vendor': 'vendor_mcu',
+  'vendor_stm32': 'vendor_mcu',
+  'platform-stm32-hal': 'vendor_mcu',
+  'platform-stm32-spl': 'vendor_mcu',
+  'arm-core-registers': 'platform_mcu',
+  'arm-interrupt-exception': 'platform_mcu',
+  'arm-memory-architecture': 'platform_mcu',
+  'chip-architecture': 'platform_mcu',
+  'mcu-peripheral-registers': 'platform_mcu',
+  'option-bytes': 'platform_mcu',
+  'sram-module': 'platform_mcu',
+  'flash-module': 'platform_mcu',
+  'stm32-hal-development': 'vendor_mcu',
+  'stm32-spl-development': 'vendor_mcu',
+  'mcu-platform': 'vendor_mcu',
+  'vendor-stm32': 'vendor_mcu',
+  'vendor-rtos': 'vendor_rtos',
+  'freertos-kernel': 'vendor_rtos',
+  'rt-thread-kernel': 'vendor_rtos',
+  'software-system': 'service_system',
+  'middleware-lvgl': 'vendor_lvgl',
+  'middleware-communication': 'vendor_stack',
+  'middleware-storage': 'vendor_fatfs',
+  'middleware-fal': 'vendor_fal',
+  'middleware-flashdb': 'vendor_flashdb',
+  'middleware-letter-shell': 'vendor_letter_shell',
+  'middleware-algorithms': 'vendor_algorithm',
+  'vendor_dsp': 'vendor_algorithm',
+  'lvgl-module': 'vendor_lvgl',
+  'core-mcu': 'platform_mcu',
+  'bsp-wrapper': 'platform_bsp',
+  'bus-i2c': 'platform_mcu',
+  'bus-spi': 'platform_mcu',
+  'bus-uart': 'platform_mcu',
+  'peripheral-adc': 'platform_mcu',
+  'peripheral-dma': 'platform_mcu',
+  'peripheral-motor-control': 'platform_mcu',
+  'peripheral-timer': 'platform_mcu',
+  'i2c-bus': 'platform_mcu',
+  'spi-bus': 'platform_mcu',
+  'uart-module': 'platform_mcu',
+  'adc-module': 'platform_mcu',
+  'dma-module': 'platform_mcu',
+  'motor-control': 'platform_mcu',
+  'timer-module': 'platform_mcu',
+  'protocol-ble': 'vendor_stack',
+  'protocol-can': 'vendor_stack',
+  'protocol-cellular': 'vendor_stack',
+  'protocol-gps': 'vendor_stack',
+  'protocol-lora': 'vendor_stack',
+  'protocol-modbus': 'vendor_stack',
+  'protocol-mqtt': 'vendor_stack',
+  'protocol-usb': 'vendor_stack',
+  'protocol-wifi': 'vendor_stack',
+  'protocol-ymodem': 'vendor_stack',
+  'ble-module': 'vendor_stack',
+  'can-debug': 'vendor_stack',
+  'cellular-module': 'vendor_stack',
+  'gps-module': 'vendor_stack',
+  'lora-module': 'vendor_stack',
+  'modbus-debug': 'vendor_stack',
+  'mqtt-module': 'vendor_stack',
+  'usb-module': 'vendor_stack',
+  'wifi-module': 'vendor_stack',
+  'ymodem-module': 'vendor_stack',
+  'middleware-dsp': 'vendor_algorithm',
+  'middleware-fft': 'vendor_algorithm',
+  'dsp-module': 'vendor_algorithm',
+  'fft-module': 'vendor_algorithm',
+  'vendor-dsp': 'vendor_algorithm',
+  'middleware-fatfs': 'vendor_fatfs',
+  'middleware-sfud': 'vendor_fatfs',
+  'fatfs-module': 'vendor_fatfs',
+  'sfud-module': 'vendor_fatfs',
+  'system-bootloader': 'service_system',
+  'system-low-power': 'service_system',
+  'system-watchdog': 'service_system',
+  'security-aes': 'service_system',
+  'security-crc': 'service_system',
+  'security-firmware-signing': 'service_system',
+  'security-rsa': 'service_system',
+  'bootloader-design': 'service_system',
+  'lowpower-design': 'service_system',
+  'watchdog-module': 'service_system',
+  'aes-module': 'service_system',
+  'crc-module': 'service_system',
+  'firmware-sign': 'service_system',
+  'rsa-module': 'service_system',
   'workflow-devlog': 'tools-learning-tutor',
   'devlog': 'tools-learning-tutor',
-  'embedded-ai-collab': 'workflow-project-integration',
-  'embedded-ai-coding-standard': 'tools-quality',
-  'embedded-ai-prompt-templates': 'workflow-project-integration',
-  'embedded-ai-code-review': 'tools-quality',
   ...TOOL_MIGRATION_MAP
 };
 
@@ -203,64 +237,15 @@ function resolveSkillId(id) {
   return null;
 }
 
-// Derived compatibility registry. Keep catalog.js as the only skill metadata source;
-// registry.js only re-exports this view for the legacy Node API.
-const SKILLS = Object.fromEntries(SKILL_CATALOG.map((skill) => [skill.id, {
-  name: skill.id,
-  description: skill.description,
-  category: skill.layer,
-  platforms: ['all'],
-  legacyName: skill.legacyId,
-  aliases: skill.aliases || [],
-  canonical: Boolean(skill.canonical),
-  archived: Boolean(skill.archived)
-}]));
-
-function getAllSkills() {
-  return { ...SKILLS };
-}
-
-function getSkillsByCategory(category) {
-  return Object.fromEntries(
-    Object.entries(SKILLS).filter(([, skill]) => skill.category === category)
-  );
-}
-
-function getSkillsByPlatform(platform) {
-  return Object.fromEntries(
-    Object.entries(SKILLS).filter(([, skill]) =>
-      skill.platforms.includes(platform) || skill.platforms.includes('all')
-    )
-  );
-}
-
-function listSkillNames() {
-  return Object.keys(SKILLS);
-}
-
-function getSkillAliases() {
-  const aliases = {};
-  for (const skill of SKILL_CATALOG) {
-    const target = resolveSkillId(skill.id) || skill.id;
-    if (skill.legacyId && skill.legacyId !== target) aliases[skill.legacyId] = target;
-    for (const alias of skill.aliases || []) aliases[alias] = target;
-  }
-  for (const [alias, target] of Object.entries(MIGRATION_MAP)) aliases[alias] = target;
-  return aliases;
-}
-
+// 职责边界：本文件只持有"事实"（目录、别名、迁移映射、ID 解析），不派生查询视图。
+// 查询视图（SKILLS、getAllSkills 等）在 registry.js 中基于本文件派生；
+// 磁盘加载（SKILL.md 内容、frontmatter）在 loader.js 中实现。
 module.exports = {
-  SKILLS,
   SKILL_CATALOG,
   CANONICAL_SKILLS,
   MIGRATION_MAP,
   SKILL_BY_ID,
   SKILL_BY_CANONICAL_ID,
   SKILL_BY_LEGACY_ID,
-  resolveSkillId,
-  getAllSkills,
-  getSkillsByCategory,
-  getSkillsByPlatform,
-  getSkillAliases,
-  listSkillNames
+  resolveSkillId
 };

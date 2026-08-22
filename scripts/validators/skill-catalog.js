@@ -24,7 +24,7 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
     if (legacyIds.has(skill.legacyId)) errors.push(`catalog: 重复旧名称 ${skill.legacyId}`);
     ids.add(skill.id);
     legacyIds.add(skill.legacyId);
-    expectedLayers.add(skill.layer);
+    if (!skill.archived) expectedLayers.add(skill.layer);
 
     const directory = path.join(ROOT, skill.path);
     const skillFile = path.join(directory, 'SKILL.md');
@@ -49,6 +49,75 @@ function validateSkillCatalogAndFilesystem(manifest, errors) {
   const actualDirectories = findSkillDirectories(path.join(ROOT, 'skills')).map((directory) => path.resolve(directory));
   for (const directory of actualDirectories) {
     if (!expectedDirectories.has(directory)) errors.push(`未登记的 skill 目录：${path.relative(ROOT, directory)}`);
+  }
+
+  // D12/阶段 2 门禁（2026-08-09 放开）：Platform 层允许无芯片/RTOS/厂商依赖的公共实现（.c/.cpp）。
+  // include 仅限 platform_*.h 与标准库；芯片/RTOS/厂商符号禁止——绑定硬件/OS 的实现必须在 Impl。
+  const platformRoot = path.join(ROOT, 'skills', 'platform');
+  if (fs.existsSync(platformRoot)) {
+    const implFiles = (function collect(dir, results) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) collect(full, results);
+        else if (/\.(?:c|cpp)$/.test(entry.name)) results.push(full);
+      }
+      return results;
+    })(platformRoot, []);
+    const forbiddenInclude = /#include\s*[<"](?:stm32|hal|freertos|FreeRTOS|cmsis|arm_|core_|esp_|rte_|vendor)/i;
+    const forbiddenSymbols = /(?:HAL_[A-Za-z_]+|xTask[A-Za-z_]*|osKernel|NVIC_|RCC_|__HAL_)/;
+    for (const impl of implFiles) {
+      const content = fs.readFileSync(impl, 'utf8');
+      const incMatches = content.match(forbiddenInclude) || [];
+      const symMatches = content.match(forbiddenSymbols) || [];
+      if (incMatches.length || symMatches.length) {
+        errors.push(`Platform 层实现禁止芯片/RTOS/厂商依赖：${path.relative(ROOT, impl)}（命中：${[...incMatches, ...symMatches].slice(0, 3).join(', ')}；绑定硬件/OS 的实现必须在 Impl）`);
+      }
+    }
+    // 2026-08-09 扩展：Platform 层禁反向依赖——目录内文本（.c/.h/.md）禁 include impl_* 或 04_Impl 路径。
+    const platformTextFiles = (function collect(dir, results) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) collect(full, results);
+        else if (/\.(?:c|h|md|cpp)$/.test(entry.name)) results.push(full);
+      }
+      return results;
+    })(platformRoot, []);
+    const forbiddenImplInclude = /#include\s*[<"](?:impl_|\.\.\/.*04_Impl)/;
+    for (const file of platformTextFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      const matches = content.match(forbiddenImplInclude) || [];
+      if (matches.length) {
+        errors.push(`Platform 层禁止反向依赖 Impl：${path.relative(ROOT, file)}（命中：${matches.slice(0, 3).map((m) => m.trim()).join(', ')}；Platform 不依赖 Impl）`);
+      }
+    }
+  }
+
+  // D8/阶段 5 门禁：App 只调 Service——App 目录禁止 include Vendor / Impl / HAL 符号。
+  const appRoot = path.join(ROOT, 'skills', 'app');
+  if (fs.existsSync(appRoot)) {
+    const appSkillFiles = (function collect(dir, results) {
+      for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        const full = path.join(dir, entry.name);
+        if (entry.isDirectory()) collect(full, results);
+        else if (/\.md$/.test(entry.name)) results.push(full);
+      }
+      return results;
+    })(appRoot, []);
+    const forbiddenAppPattern = /(?:^|[^A-Za-z_])(?:#include\s*[<"][^>"]+[>"]|HAL_[A-Za-z_]+|xTask[A-Za-z_]*|impl_[a-z_]+|vendor_[a-z_]+)/gm;
+    for (const file of appSkillFiles) {
+      const content = fs.readFileSync(file, 'utf8');
+      // 剥离反引号代码引用、行内链接目标与禁止性描述行，只检查"正文实际调用"形态。
+      const sanitized = content
+        .replace(/`[^`]*`/g, '')          // 反引号代码 token
+        .replace(/\[[^\]]*\]\([^)]*\)/g, '') // markdown 链接
+        .split(/\r?\n/)
+        .filter((line) => !/禁止|不得|不直接|不调用|不允许|only|forbid|ban|不 include|不引用/i.test(line))
+        .join('\n');
+      const matches = sanitized.match(forbiddenAppPattern) || [];
+      if (matches.length) {
+        errors.push(`App 层禁止底层依赖：${path.relative(ROOT, file)}（App 只调 Service；命中：${matches.slice(0, 3).map((m) => m.trim()).join(', ')}）`);
+      }
+    }
   }
 
   const activeText = findTextFiles(path.join(ROOT, 'skills'))

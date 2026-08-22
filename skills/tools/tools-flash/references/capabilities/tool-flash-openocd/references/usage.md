@@ -17,18 +17,18 @@
 
 ```bash
 # 探测 OpenOCD 环境和已连接探针
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py --detect
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py --detect
 
 # 扫描工作区中的 OpenOCD 配置线索
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py --scan-configs /path/to/project
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py --scan-configs /path/to/project
 
 # 烧录 ELF（自动探测探针）
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact /path/to/firmware.elf \
   --target target/stm32f4x.cfg
 
 # 烧录 BIN（需要指定基地址）
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact /path/to/firmware.bin \
   --target target/stm32f4x.cfg \
   --base-address 0x08000000
@@ -39,7 +39,7 @@ python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
 ### 1. 环境与探针探测
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py --detect
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py --detect
 ```
 
 输出 OpenOCD 版本和已连接的调试探针列表。
@@ -47,7 +47,7 @@ python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py --detect
 ### 2. 使用接口 + 目标配置烧录
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/debug/app.elf \
   --interface stlink \
   --target target/stm32f4x.cfg
@@ -56,7 +56,7 @@ python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
 ### 3. 使用板级配置烧录
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/debug/app.elf \
   --config board/st_nucleo_f4.cfg
 ```
@@ -66,7 +66,7 @@ python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
 ### 4. 烧录 BIN 文件
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/firmware.bin \
   --interface cmsis-dap \
   --target target/stm32f1x.cfg \
@@ -78,7 +78,7 @@ BIN 文件必须提供 `--base-address`，否则脚本会拒绝执行。
 ### 5. 跳过校验或复位
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/app.elf \
   --config board/st_nucleo_f4.cfg \
   --no-verify \
@@ -88,7 +88,7 @@ python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
 ### 6. 扫描工作区配置线索
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --scan-configs /repo/fw
 ```
 
@@ -141,23 +141,23 @@ NRST     →  NRST (可选，用于硬件复位)
 
 ```bash
 # 1. 编译
-python3 skills/operations/tool-build-cmake/scripts/cmake_builder.py --project /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py --project /path/to/project
 
 # 2. 烧录
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/debug/app.elf \
   --interface stlink \
   --target target/stm32f4x.cfg
 
 # 3. 验证串口输出
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --wait "System Start"
 ```
 
 ### 生产烧录
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/release/app.hex \
   --interface stlink \
   --target target/stm32f4x.cfg \
@@ -190,7 +190,7 @@ python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
 尝试提高适配器速度：
 
 ```bash
-python3 skills/operations/tool-flash-openocd/scripts/openocd_flasher.py \
+python3 skills/tools/tools-flash/references/capabilities/tool-flash-openocd/scripts/openocd_flasher.py \
   --artifact build/app.elf \
   --interface cmsis-dap \
   --target target/stm32f1x.cfg \

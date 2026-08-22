@@ -1,50 +1,124 @@
 ---
 name: tools-quality
-description: 负责嵌入式代码审查、Map 分析、静态分析、MISRA 和 Unity 测试；当用户要求质量门禁、内存占用分析或单元测试时使用。
+description: 负责嵌入式项目的代码质量检查与最终质量出口：必要注释、公开 API Doxygen、格式检查、代码审查、Cppcheck、MISRA 和静态质量报告。支持 advisory 阶段检查与 final-gate 最终门禁；项目级验证、Map/RAM/ROM/栈分析与 Unity 测试交给 tools-verification。
 ---
 
-# 质量与验证工具
+# 代码质量工具
 
 ## 职责
 
-统一处理代码审查、编译产物分析、静态规则、内存占用和目标无关的 Unity 测试。先声明检查范围、基线和输出格式，再选择工具变体。
+统一执行和记录嵌入式 C/C++ 的代码质量检查，覆盖 AI 生成代码、代码生成器产物、人工新增/修改代码和已有代码重审。检查范围包括：
 
-## 变体
+- 必要的文件/模块说明、公开 API Doxygen，以及表达所有权、阻塞/ISR/DMA/并发、硬件约束和错误恢复所必需的注释；普通说明默认使用中文，需要同时对齐起始列和结束列的连续行尾注释默认使用简短、直白的英文；
+- 项目格式规则、`.editorconfig`、`.clang-format`、TAB/列对齐/大括号布局及相邻源码风格；
+- 编译器诊断、Cppcheck、MISRA 规则和项目静态分析配置；
+- 代码审查中的接口契约、错误路径、资源所有权、边界、ISR/DMA/并发和分层问题；
+- 指针有效性审查：区分可为空参数、外部边界、已验证内部指针、函数指针、缓冲区长度、生命周期和所有权；
+- 函数设计中的短小、单一职责、统一抽象层级、逐层下降、描述性命名、参数数量和重复逻辑；
+- 代码审查中的 SOLID 五项原则：SRP、OCP、LSP、ISP、DIP；
+- 质量问题的严重级别、基线差异、定位、修复建议和复检证据。
 
-代码审查、Map 分析、静态分析和 Unity 的原始资料分别保留在 `references/quality-*/GUIDE.md` 下；需要脚本时使用对应命名空间中的脚本。
+质量检查必须区分代码来源，并先标记变更范围：
 
-Unity 源码版本和测试证据见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
-AI 协作编码规范、审查清单与质量工具完整流程见 [`capability-index.md`](references/capability-index.md)。
+- **插件生成代码**：插件生成的文件、代码片段和符号，必须完整执行
+  [`style-profile.md`](references/style-profile.md) 的命名、函数、注释和格式规则。
+- **插件要求修改的代码**：即使文件原本已经存在，只要本次修改由插件规则、生成流程或插件交接任务明确要求，
+  本次涉及的文件名、函数、代码块、新增符号和注释同样必须完整执行上述规则。
+- **既有无关代码**：保留原有文件名、公开 API 和无关区域，只作为基线记录，不得用基线豁免插件要求修改的范围。
 
-## 三级验证闭环
+前两类属于插件质量**硬门禁**：命名、函数设计、注释完整性/语言约定、对齐和格式任一不满足，`final-gate` 必须
+判定为 `阻塞`；目标工程较严格的规则可以叠加，但较宽松的工程配置、相邻旧代码或既有基线不能豁免插件规则。
+不得通过自动重命名或全文件重排消除未纳入插件修改范围的既有基线。
 
-```mermaid
-flowchart LR
-    A[Mock/命令序列测试] --> B[真实板 RTT 日志]
-    B --> C[逻辑分析仪波形]
-    C --> A
-```
+## 路由边界
 
-| 层级 | 工具 | 验证什么 | 局限 |
-|------|------|---------|------|
-| 第一级 | Mock / PC 测试 | 协议状态机、边界条件、错误注入 | 不验证时序、硬件行为 |
-| 第二级 | 目标板 + RTT/串口日志 | 真实寄存器、真实延时、真实错误码 | 不验证电平时序、中断耗时 |
-| 第三级 | 逻辑分析仪 / DWT | 电平时序、ISR 耗时、DMA 行为 | 不验证软件逻辑正确性 |
+本 Skill 是唯一的代码质量检查入口。它不承担链接 Map 文件解析、RAM/ROM/栈占用分析、Unity/Fake 测试编排、目标板运行观测或发布验证；这些交给 [`tools-verification`](../tools-verification/SKILL.md)、[`tools-observability`](../tools-observability/SKILL.md)、[`tools-build`](../tools-build/SKILL.md) 或 [`tools-release`](../tools-release/SKILL.md)。
 
-**关键原则**：
+静态检查只能说明源码或配置满足检查规则，不能证明目标板运行、时序、DMA、IRQ 或硬件电平正确。需要运行时证据时，必须明确交接给验证、调试或观测流程。
 
-- 三层结论必须交叉验证
-- 复杂环境（真实板）通过不代表简单环境（Mock）通过
-- 简单环境（Mock）通过也不代表复杂环境（真实板）通过
-- 改了任何一层都要回其他两层重测
+## 调用模式
 
-### 实施建议
+本 Skill 可被其他 Skill 复用，但必须显式声明 `mode`：
 
-1. **Mock 测试**：在 PC 上注入 Fake IIC/SPI/Timebase/IRQ/DMA，跑 Driver/Handler 全部状态机
-2. **RTT 日志**：在目标板打印关键状态转换、错误码、耗时
-3. **逻辑分析仪**：捕获 I2C/SPI 波形、GPIO 翻转、INT/DMA 时序
-4. **DWT 周期计数器**：测量 ISR 耗时，验证 < 5μs 等硬实时约束
+### `advisory`：阶段检查模式
 
-## 输出
+由实现 Skill、`workflow-task-execution`、`tools-verification` 或其他中间流程调用。输入当前任务的代码范围、配置和 diff，输出 `Quality Evidence Package`，包括检查命令、问题、基线差异、整改建议和复检状态。该模式只能返回“阶段检查通过/失败/待补”，不得宣称整个需求或最终交付已经通过，也不得结束主流程。
 
-输出可复现命令、问题等级、证据文件、基线差异和修复后的回归结果。构建产物由 [`tools-build`](../tools-build/SKILL.md) 提供，发布验证交接 [`tools-release`](../tools-release/SKILL.md)。
+### `final-gate`：最终质量出口模式
+
+只能由 `workflow-final-review` 或用户直接要求最终代码质量审查时调用。除代码质量输入外，必须接收最终变更集、放行后的 `spec.md`、Spec 逐条追踪矩阵，以及测试、类型检查、构建和适用的 `tools-verification` 证据。它复核质量证据是否覆盖最终范围，并输出 `Final Quality Gate`：`通过` 或 `阻塞`、问题清单、未验证项和交接建议。
+
+`final-gate` 是代码质量的最终出口，但不替代 `workflow-final-review` 对 Spec 的逐条核对，也不替代 `tools-verification` 的 Map、Unity、目标运行或硬件证据。缺少任一必需证据时必须阻塞。
+
+两种模式的详细输入、输出和调用约束见 [`quality-mode-contract.md`](references/quality-mode-contract.md)。
+
+## 输入与规则优先级
+
+开始前声明：变更范围、绝对项目根目录、分支/提交或 diff、受管辖目录、第三方 Vendor 排除项、工具版本、配置文件、质量基线和输出位置。
+
+规则优先级固定为：
+
+1. 用户明确要求；
+2. 目标工程的 `.editorconfig`、`.clang-format`、编译/构建配置和已确认的质量配置；
+3. 目标目录相邻源码的稳定写法；
+4. 本 Skill 的 [`style-profile.md`](references/style-profile.md) 与 [`review-gates.md`](references/review-gates.md)；
+5. 保守的 C/C++ 默认规则。
+
+任何偏差都要记录来源、适用范围、理由和是否需要用户确认。不能用猜测补齐缺失的项目规则。
+对插件生成代码和插件要求修改的代码，`style-profile.md` 是不可降低的最低质量门槛；目标工程配置和相邻源码只能
+提供更严格的补充规则，不能用较宽松规则覆盖插件的命名、函数、注释或格式要求。
+
+## 执行流程
+
+### 1. 先确定范围和基线
+
+检查 `git status`、目标 diff、工程配置和相邻源码，区分新增问题与既有基线问题。记录每条命令的绝对 `cwd`、工具版本、退出码、检查文件范围和 `relative/path:line` 定位。
+
+### 2. 注释与 API 文档
+
+检查文件/模块职责、公开函数/类型的 Doxygen、参数、返回值、所有权、生命周期、阻塞属性、ISR/DMA/并发约束、硬件限制和错误恢复说明。指针检查必须回到有效性契约：外部可为空边界检查并处理，内部已验证指针不重复机械判空，指针与长度/生命周期/所有权不一致时阻塞。注释必须解释非显然约束，不得逐行翻译实现、推测不存在的硬件事实或掩盖功能缺陷。
+
+### 3. 格式检查
+
+优先使用项目已有的格式工具和配置。适用时运行 `clang-format --dry-run --Werror`，并运行 `git diff --check`。格式整改只能改格式，不得改变函数签名、控制流、常量、数据结构、资源路径或包含依赖。
+
+### 4. Cppcheck 与静态分析
+
+按项目配置执行 Cppcheck 和已有静态分析入口，记录规则集、抑制项、工具版本、扫描范围和退出码。必须区分 error、warning、style、performance、portability、information 与基线问题；不能把静态告警直接改写为运行时故障或目标板结论。
+
+### 5. MISRA 规则
+
+按项目采用的 MISRA 版本和规则元数据执行检查。每条偏差必须标明规则编号、严重级别、代码位置、是否属于已有基线、处置方式和复检证据。缺少规则映射时标记 `UNMAPPED`，不得假称已完成 MISRA 合规认证。
+
+### 6. 代码审查与报告
+
+使用 [`capability-index.md`](references/capability-index.md) 选择详细检查表，分离报告：风格/注释、静态规则、功能风险、接口/资源所有权、ISR/DMA/并发、安全、分层和 SOLID 问题。SOLID 检查必须遵守 [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)，逐项记录 SRP、OCP、LSP、ISP、DIP 的适用性、代码证据、测试/检查证据和阻塞原因。代码审查可提出问题，但不擅自扩大实现范围。
+
+函数审查必须逐项记录：是否足够短小、是否只做一件事、语句是否处于同一抽象层级、函数排列是否逐层下降、名称是否描述职责、参数数量是否合理、是否存在重复逻辑。无法从代码和测试证据证明时，必须标记为待补或阻塞。
+
+## 受限整改
+
+`workflow-final-review` 或用户明确授权时，本 Skill 只能直接写回格式问题和必要注释。Cppcheck、MISRA、接口、功能、架构、安全、资源生命周期和并发问题必须交回对应实现或验证流程处理。整改前后必须审阅 diff，确认无行为变化，再用同一工具和范围复检。
+
+## 固定输出
+
+输出至少包含：
+
+- 调用模式：`advisory` 或 `final-gate`；
+- 检查范围、项目根目录、基线和规则来源；
+- 命令、绝对 `cwd`、工具版本、退出码和检查文件；
+- 注释/格式、Cppcheck、MISRA 和代码审查结果；
+- SOLID 五项原则逐项结果及证据；
+- 每个问题的严重级别、`relative/path:line`、影响、修复建议和基线标记；
+- 整改前后 diff 审阅、复检结果和未验证项；只有 `final-gate` 模式才能输出最终 `通过`/`阻塞` 结论。
+
+## 参考资料
+
+- [`capability-index.md`](references/capability-index.md)
+- [`style-profile.md`](references/style-profile.md)
+- [`review-gates.md`](references/review-gates.md)
+- [`quality-code-review`](references/capabilities/quality-code-review/GUIDE.md)
+- [`quality-format-check`](references/capabilities/quality-format-check/GUIDE.md)
+- [`quality-static-analysis`](references/quality-static-analysis/GUIDE.md)
+- [`quality-mode-contract.md`](references/quality-mode-contract.md)
+- [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)

@@ -1,6 +1,6 @@
 {
   "name": "mcu-workbench",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "嵌入式开发生命周期全覆盖的 Claude Code / OpenCode 插件",
   "main": "index.js",
   "exports": {
@@ -9,18 +9,43 @@
       "import": "./opencode.mjs"
     }
   },
-  "bin": {
-    "mcu-workbench": "bin/mcu-workbench.js"
-  },
   "scripts": {
-    "test": "jest",
+    "test": "jest --runInBand",
     "build": "echo 'Build complete'",
-    "cli": "node bin/mcu-workbench.js",
     "agent:artifacts": "node scripts/agent-artifacts.js",
+    "workflow:dashboard": "node scripts/workflow-dashboard.js",
+    "build:codex-compat": "node scripts/build-codex-compat.js",
+    "build:opencode-commands": "node scripts/build-opencode-commands.js",
+    "sync:versions": "node scripts/sync-plugin-versions.js",
+    "check:versions": "node scripts/sync-plugin-versions.js --check",
     "codex:register": "node scripts/register-codex-marketplace.js",
+    "codex:dev": "node scripts/codex-local-dev.js setup",
+    "codex:dev:install": "node scripts/codex-local-dev.js install",
+    "codex:dev:refresh": "node scripts/codex-local-dev.js refresh",
+    "codex:dev:check": "node scripts/codex-local-dev.js check",
+    "codex:dev:watch": "node scripts/codex-local-dev.js watch",
     "sync:codex": "node scripts/sync-codex-skills.js",
-    "migrate:capabilities": "node scripts/materialize-skill-capabilities.js --check",
+    "plugin:check-refresh": "node scripts/check-codex-plugin-refresh.js",
+    "validate:workflow-gate": "node scripts/validate-workflow-gate.js",
+    "validate:architecture": "node scripts/validate-architecture.js",
+    "validate:layer": "node scripts/validate-layer-contract.js --self-check",
+    "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",
+    "claude:init": "node scripts/claude-layer-api.js init",
+    "claude:design": "node scripts/claude-layer-api.js design",
+    "claude:bootstrap": "node scripts/claude-layer-api.js bootstrap",
+    "claude:scan": "node scripts/claude-layer-api.js scan",
+    "claude:sync": "node scripts/claude-layer-api.js sync",
+    "claude:validate": "node scripts/claude-layer-api.js validate",
+    "document-context:design": "node scripts/document-context-api.js design",
+    "document-context:scan": "node scripts/document-context-api.js scan",
+    "document-context:init": "node scripts/document-context-api.js init",
+    "document-context:sync": "node scripts/document-context-api.js sync",
+    "document-context:validate": "node scripts/document-context-api.js validate",
+    "document-context:context": "node scripts/document-context-api.js context",
+    "document-context:promote": "node scripts/document-context-api.js promote",
+    "document-context:archive": "node scripts/document-context-api.js archive",
+    "validate:flash-algorithm": "node scripts/validate-flash-algorithm-profile.js --profile skills/tools/tools-flash/references/capabilities/tool-flash-algorithm/profiles/w25q64-ui-3m-stm32f411-pb12-15.json",
     "report:skills": "node scripts/report-skills.js"
   },
   "keywords": [
@@ -41,6 +66,8 @@
     "@opencode-ai/plugin": "^1.18.5"
   },
   "devDependencies": {
-    "jest": "^29.0.0"
+    "@types/node": "^22.20.1",
+    "jest": "^29.0.0",
+    "typescript": "^5.9.3"
   }
 }

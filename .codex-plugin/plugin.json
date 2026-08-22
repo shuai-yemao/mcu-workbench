@@ -1,6 +1,6 @@
 {
   "name": "mcu-workbench",
-  "version": "1.0.0",
+  "version": "1.0.0+codex.20260820130444",
   "description": "面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 与工具集。",
   "author": {
     "name": "MCU-Workbench Team"
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "MCU-Workbench",
     "shortDescription": "嵌入式 MCU 开发 Skills 与工具链",
-    "longDescription": "提供 APP、OS、BSP、Core、Driver、Middleware、构建调试和项目产物管理能力。",
+    "longDescription": "提供 App、Service、Platform、Impl、Vendor 五层软件架构、构建调试和项目产物管理能力。",
     "developerName": "MCU-Workbench Team",
     "category": "Developer Tools",
     "capabilities": [
@@ -29,7 +29,7 @@
       "Build and Debug"
     ],
     "defaultPrompt": [
-      "审计这个嵌入式项目的 APP、OS、BSP 分层",
+      "审计这个嵌入式项目的 App、Service、Platform、Impl 分层",
       "分析当前 MCU 工程的构建和调试问题",
       "根据项目证据生成开发日志和验证报告"
     ],

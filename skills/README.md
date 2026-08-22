@@ -4,14 +4,14 @@
 
 | 层级 | 主职责 |
 |---|---|
-| `workflow` | 请求路由、工程集成和 APP 架构 |
-| `rtos` | OSAL、OS Wrapper、OS Port、FreeRTOS |
-| `bsp` | BSP Wrapper、BSP Port、hal_driver、Handler |
-| `platform` | MCU Core 与厂商 Driver |
-| `middleware` | LVGL、通信、存储、算法 |
-| `system` | Bootloader、低功耗、看门狗、安全 |
+| `workflow` | 请求路由、工程集成和 AI 协作流程 |
+| `app` | 嵌入式 APP 的 main、Manager、Task、Logic、UI、Profile |
+| `service` | Service 业务层：service_system + 10 个业务服务（带业务策略，D10） |
+| `platform` | Platform 能力接口（mcu/os/bsp/middleware）+ 公共定义（common），不绑芯片/RTOS；允许无芯片/RTOS/厂商依赖的公共实现（common 含对象模型实现） |
+| `impl` | Impl 落地：OS Port、板级组合根、器件驱动、Handler 机制 |
+| `vendor` | Vendor 底座登记：源码只登记映射不复制（D7） |
 | `hardware` | PCB、仪器和硬件分析 |
-| `tools` | 构建、烧录、链接、调试、观测、质量、发布 |
+| `tools` | 构建、烧录、链接、调试、观测、代码质量、项目验证、发布 |
 
 ## 工具主入口
 
@@ -21,7 +21,8 @@ tools-flash          烧录
 tools-linker         链接与内存
 tools-debug          调试与故障诊断
 tools-observability  日志与运行时观测
-tools-quality        质量与验证
+tools-quality        代码注释、格式、代码审查、Cppcheck、MISRA
+tools-verification   Map/内存/栈分析、Unity/Fake 与项目级验证
 tools-release        发布与 OTA
 tools-learning-tutor 项目提问与 Obsidian 学习笔记
 ```
@@ -31,16 +32,9 @@ tools-learning-tutor 项目提问与 Obsidian 学习笔记
 ## 软件调用链
 
 ```text
-APP
-├─ OS Wrapper → OS Port → FreeRTOS/其他 OS
-├─ BSP Wrapper → BSP Port → hal_driver
-└─ Middleware API
-
-hal_driver → Core → Driver
+App → Service → Platform 接口 ← Impl → Vendor
 ```
 
-Core、Middleware、Driver 不创建 Adapter。
+App 只依赖 Service（D8 门禁）；Service 只依赖 Platform 接口；Platform 技能目录实现不依赖芯片/RTOS/厂商符号；Impl 落地实现；Vendor 只登记映射不复制。`platform_mcu` 按目标证据支持 `plat_*` 扁平逻辑资源 API 和对象/Ops API 两种 profile，`impl_mcu` 专门承担 MCU/HAL/SDK 适配。
 
-## 归档
-
-`archive/software-legacy/` 和 `archive/tools-legacy/` 不属于 active manifest，只保留原始内容和兼容迁移依据。
+旧 skill 目录已从 `archive/` 移除；旧调用名经 catalog 的 `resolveSkillId()` 兼容解析到当前 active skill。

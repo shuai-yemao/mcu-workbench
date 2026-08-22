@@ -1,0 +1,204 @@
+- main [ref=e2]:
+  - button "☰ 页面导航" [ref=e3] [cursor=pointer]
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - text: Embedded Framework
+        - generic [ref=e7]: 项目工作台
+      - tablist "项目工作台页面导航" [ref=e8]:
+        - generic [ref=e9]:
+          - heading "项目状态" [level=2] [ref=e10]
+          - generic [ref=e11]:
+            - button "项目总览" [ref=e12] [cursor=pointer]
+            - button "功能进度" [ref=e13] [cursor=pointer]
+        - generic [ref=e14]:
+          - heading "工程信息" [level=2] [ref=e15]
+          - generic [ref=e16]:
+            - button "架构与启动" [ref=e17] [cursor=pointer]
+            - button "Git 与调整" [ref=e18] [cursor=pointer]
+            - button "构建与验证" [ref=e19] [cursor=pointer]
+            - button "资源与硬件" [ref=e20] [cursor=pointer]
+        - generic [ref=e21]:
+          - heading "协作与调试" [level=2] [ref=e22]
+          - generic [ref=e23]:
+            - button "AI 工作流与问题" [ref=e24] [cursor=pointer]
+            - button "调试日志" [ref=e25] [cursor=pointer]
+      - generic [ref=e26]: 8 个页面集中展示输入内容变化时更新
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: Embedded Framework
+          - heading "项目工程工作台" [level=1] [ref=e31]
+        - generic [ref=e32]: 项目：embedded_framework生成时间：2026-08-20T11:05:12.062Z仅在输入内容变化时更新
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - heading "架构与启动" [level=2] [ref=e36]
+          - generic [ref=e37]: 点击节点或步骤查看说明和证据
+        - generic [ref=e38]:
+          - heading "软件架构图" [level=3] [ref=e39]
+          - paragraph [ref=e40]: 关系来自工程文件中的 Mermaid 架构设计图；不会根据目录结构猜测依赖。
+          - generic [ref=e41]:
+            - img "工程软件架构关系图" [ref=e42]:
+              - button "查看 01_App 职责": 01_App：启动编排、任务入口和用户场景。 来源：五层职责说明.md / 依赖方向说明.md。
+              - button "查看 02_Service 职责" [ref=e46] [cursor=pointer]:
+                - generic: 02_Service
+              - button "查看 03_Platform 职责" [ref=e48] [cursor=pointer]:
+                - generic: 03_Platform
+              - button "查看 04_Impl 职责" [ref=e50] [cursor=pointer]:
+                - generic: 04_Impl
+              - button "查看 05_Vendor 职责" [ref=e52] [cursor=pointer]:
+                - generic: 05_Vendor
+              - button "查看 06_Toolchain 职责" [ref=e54] [cursor=pointer]:
+                - generic: 06_Toolchain
+            - generic [ref=e56]: 点击架构节点查看职责与证据。
+            - paragraph [ref=e57]: 图源：00_Docs/02_架构设计/依赖方向说明.md；虚线表示接口契约。
+        - generic [ref=e58]:
+          - heading "工程目录层级" [level=3] [ref=e59]
+          - paragraph [ref=e60]: 目录来自当前工程；二级目录直接展示，三级目录可展开查看。
+          - generic [ref=e61]:
+            - group [ref=e62]:
+              - button "▣ 路径：01_App；第 1 级架构层：启动编排、任务入口和用户场景。 来源：工程实际目录和五层职责说明.md。" [ref=e64] [cursor=pointer]
+              - generic [ref=e65]:
+                - button "📁 app_boot" [ref=e67] [cursor=pointer]
+                - button "📁 app_system" [ref=e69] [cursor=pointer]
+            - group [ref=e70]:
+              - button "▣ 02_Service" [ref=e72] [cursor=pointer]
+              - generic [ref=e73]:
+                - button "📁 service_diagnosis" [ref=e75] [cursor=pointer]
+                - button "📁 service_gui" [ref=e77] [cursor=pointer]
+                - button "📁 service_log" [ref=e79] [cursor=pointer]
+                - button "📁 service_storage" [ref=e81] [cursor=pointer]
+                - button "📁 service_system" [ref=e83] [cursor=pointer]
+            - group [ref=e84]:
+              - button "▣ 03_Platform" [ref=e86] [cursor=pointer]
+              - generic [ref=e87]:
+                - group [ref=e88]:
+                  - button "📁 platform_bsp" [ref=e90] [cursor=pointer]
+                  - text: 📁 📁 📁 📁 📁
+                - group [ref=e91]:
+                  - button "📁 platform_common" [ref=e93] [cursor=pointer]
+                  - text: 📁 📁 📁 📁
+                - button "📁 platform_config" [ref=e95] [cursor=pointer]
+                - button "📁 platform_mcu" [ref=e97] [cursor=pointer]
+                - button "📁 platform_middleware" [ref=e99] [cursor=pointer]
+                - group [ref=e100]:
+                  - button "📁 platform_os" [ref=e102] [cursor=pointer]
+                  - text: 📁 📁 📁
+            - group [ref=e103]:
+              - button "▣ 04_Impl" [ref=e105] [cursor=pointer]
+              - generic [ref=e106]:
+                - group [ref=e107]:
+                  - button "📁 impl_board" [ref=e109] [cursor=pointer]
+                  - text: 📁 📁
+                - button "📁 impl_mcu" [ref=e111] [cursor=pointer]
+                - group [ref=e112]:
+                  - button "📁 impl_middleware" [ref=e114] [cursor=pointer]
+                  - text: 📁 📁 📁 📁
+                - group [ref=e115]:
+                  - button "📁 impl_os" [ref=e117] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e118]:
+                  - button "📁 impl_service_port" [ref=e120] [cursor=pointer]
+                  - text: 📁
+            - group [ref=e121]:
+              - button "▣ 05_Vendor" [ref=e123] [cursor=pointer]
+              - generic [ref=e124]:
+                - group [ref=e125]:
+                  - button "📁 circle_buffer" [ref=e127] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e128]:
+                  - button "📁 easylogger" [ref=e130] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e131]:
+                  - button "📁 fal" [ref=e133] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e134]:
+                  - button "📁 flashdb" [ref=e136] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e137]:
+                  - button "📁 freertos" [ref=e139] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e140]:
+                  - button "📁 lvgl" [ref=e142] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e143]:
+                  - button "📁 segger_rtt" [ref=e145] [cursor=pointer]
+                  - text: 📁 📁
+                - group [ref=e146]:
+                  - button "📁 stm32f411ceu6" [ref=e148] [cursor=pointer]
+                  - text: 📁 📁
+            - group [ref=e149]:
+              - button "▣ 06_Toolchain" [ref=e151] [cursor=pointer]
+              - generic [ref=e152]:
+                - button "📁 cmake" [ref=e154] [cursor=pointer]
+                - group [ref=e155]:
+                  - button "📁 cubemx" [ref=e157] [cursor=pointer]
+                  - text: 📁
+          - generic [ref=e158]: 点击架构层或文件夹查看路径、层级和职责。
+          - paragraph [ref=e159]: 已扫描每个架构层的二级、三级目录；点击文件夹可展开或收起下级目录。
+        - generic [ref=e160]:
+          - heading "启动流程图" [level=3] [ref=e161]
+          - paragraph [ref=e162]: 从上电/复位到程序运行；启动文件未纳入证据时会明确显示“未确认”。
+          - generic [ref=e163]:
+            - generic [ref=e164]:
+              - button "1. 上电 / 复位 → C 运行时入口 当前工程未收集启动文件、向量表或复位处理器证据；main() 之前的处理尚未确认。 证据：启动文件未确认 · 未确认" [ref=e165] [cursor=pointer]:
+                - strong [ref=e166]: 1. 上电 / 复位 → C 运行时入口
+                - text: 当前工程未收集启动文件、向量表或复位处理器证据；main() 之前的处理尚未确认。
+                - generic [ref=e167]: 证据：启动文件未确认 · 未确认
+              - generic [ref=e168]: ↓
+            - generic [ref=e169]:
+              - button "2. HAL_Init() 源码已确认" [ref=e170] [cursor=pointer]:
+                - generic [ref=e171]: 2. HAL_Init()
+                - generic [ref=e172]: 源码已确认
+              - generic [ref=e173]: ↓
+            - generic [ref=e174]:
+              - button "3. SystemClock_Config() 源码已确认" [ref=e175] [cursor=pointer]:
+                - generic [ref=e176]: 3. SystemClock_Config()
+                - generic [ref=e177]: 源码已确认
+              - generic [ref=e178]: ↓
+            - generic [ref=e179]:
+              - button "4. MX_*_Init() 外设初始化 源码已确认" [ref=e180] [cursor=pointer]:
+                - generic [ref=e181]: 4. MX_*_Init() 外设初始化
+                - generic [ref=e182]: 源码已确认
+              - generic [ref=e183]: ↓
+            - generic [ref=e184]:
+              - button "5. osKernelInitialize() 源码已确认" [ref=e185] [cursor=pointer]:
+                - generic [ref=e186]: 5. osKernelInitialize()
+                - generic [ref=e187]: 源码已确认
+              - generic [ref=e188]: ↓
+            - generic [ref=e189]:
+              - button "6. MX_FREERTOS_Init() 源码已确认" [ref=e190] [cursor=pointer]:
+                - generic [ref=e191]: 6. MX_FREERTOS_Init()
+                - generic [ref=e192]: 源码已确认
+              - generic [ref=e193]: ↓
+            - generic [ref=e194]:
+              - button "7. osKernelStart() 源码已确认" [ref=e195] [cursor=pointer]:
+                - generic [ref=e196]: 7. osKernelStart()
+                - generic [ref=e197]: 源码已确认
+              - generic [ref=e198]: ↓
+            - generic [ref=e199]:
+              - button "8. StartDefaultTask 源码已确认" [ref=e200] [cursor=pointer]:
+                - generic [ref=e201]: 8. StartDefaultTask
+                - generic [ref=e202]: 源码已确认
+              - generic [ref=e203]: ↓
+            - generic [ref=e204]:
+              - button "9. app_boot_init() 源码已确认" [ref=e205] [cursor=pointer]:
+                - generic [ref=e206]: 9. app_boot_init()
+                - generic [ref=e207]: 源码已确认
+              - generic [ref=e208]: ↓
+            - generic [ref=e209]:
+              - button "10. app_system_process() 源码已确认" [ref=e210] [cursor=pointer]:
+                - generic [ref=e211]: 10. app_system_process()
+                - generic [ref=e212]: 源码已确认
+              - generic [ref=e213]: ↓
+            - generic [ref=e214]:
+              - button "11. osDelay(10) 源码已确认" [ref=e215] [cursor=pointer]:
+                - generic [ref=e216]: 11. osDelay(10)
+                - generic [ref=e217]: 源码已确认
+              - generic [ref=e218]: ↓
+            - button "12. APP_SYSTEM_STATE_RUNNING 源码已确认" [ref=e220] [cursor=pointer]:
+              - generic [ref=e221]: 12. APP_SYSTEM_STATE_RUNNING
+              - generic [ref=e222]: 源码已确认
+          - generic [ref=e223]: 点击启动步骤查看说明与证据。
+        - group [ref=e224]:
+          - generic "查看架构与启动原文证据" [ref=e225] [cursor=pointer]

@@ -9,3 +9,5 @@
 | SEGGER RTT 移植 | [完整流程与资源](capabilities/observability-rtt-porting/GUIDE.md) |
 | 串口数据监控 | [完整流程与资源](capabilities/observability-serial-monitor/GUIDE.md) |
 | SEGGER SystemView 追踪 | [完整流程与资源](capabilities/observability-systemview/GUIDE.md) |
+| SWV / ITM 内核跟踪输出 | [完整流程与资源](capabilities/observability-swv-itm/GUIDE.md) |
+| 面包屑崩溃前记录与启动报告 | [完整流程与资源](capabilities/observability-breadcrumb/GUIDE.md) |

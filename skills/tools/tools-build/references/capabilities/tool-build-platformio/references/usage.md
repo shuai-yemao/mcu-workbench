@@ -16,25 +16,25 @@
 
 ```bash
 # 探测 PlatformIO 环境
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --detect
 
 # 列出可用环境
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --list-envs --project-dir /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --list-envs --project-dir /path/to/project
 
 # 构建默认环境
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project
 
 # 构建指定环境
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --env esp32dev
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --env esp32dev
 
 # 清理
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --clean
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --clean
 
 # 上传固件
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --upload
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --project-dir /path/to/project --upload
 
 # 列出设备
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --list-devices
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --list-devices
 ```
 
 ## 常见模式
@@ -42,7 +42,7 @@ python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --
 ### 1. 环境探测
 
 ```bash
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py --detect
 ```
 
 输出 PlatformIO CLI 版本和路径。
@@ -50,7 +50,7 @@ python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py --
 ### 2. 列出工程环境
 
 ```bash
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py \
   --list-envs \
   --project-dir /path/to/project
 ```
@@ -58,7 +58,7 @@ python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
 ### 3. 构建指定环境
 
 ```bash
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py \
   --project-dir /path/to/project \
   --env nucleo_f429zi \
   --verbose
@@ -67,12 +67,12 @@ python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
 ### 4. 清理后重新构建
 
 ```bash
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py \
   --project-dir /path/to/project \
   --env esp32dev \
   --clean
 
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py \
   --project-dir /path/to/project \
   --env esp32dev
 ```
@@ -80,14 +80,14 @@ python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
 ### 5. 仅扫描已有产物
 
 ```bash
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py \
   --scan-artifacts /path/to/project/.pio/build/esp32dev
 ```
 
 ### 6. 上传固件到设备
 
 ```bash
-python3 skills/operations/tool-build-platformio/scripts/platformio_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py \
   --project-dir /path/to/project \
   --env nucleo_f429zi \
   --upload

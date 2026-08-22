@@ -1,0 +1,57 @@
+# clang-format for all plugin-generated embedded C/C++ code.
+# The layout baseline is extracted from the reviewed FreeRTOS kernel source.
+
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: Cpp11
+
+# Indentation
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always                    # TAB 用于缩进和连续声明组的列布局
+IndentCaseLabels: true
+IndentGotoLabels: false
+IndentPPDirectives: BeforeHash    # 条件编译层级由人工复核补足
+
+# 代码和注释统一限制在 80 列以内
+ColumnLimit: 80
+AllowShortBlocksOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# Brace style
+BreakBeforeBraces: Allman
+
+# Control statements
+InsertBraces: true                 # 控制语句统一使用大括号
+
+# Spacing
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: true
+SpaceBeforeAssignmentOperators: true
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpaceAfterLogicalNot: false
+SpacesInAngles: Never
+
+# Pointer alignment
+PointerAlignment: Right
+
+# Blank lines
+MaxEmptyLinesToKeep: 1
+SeparateDefinitionBlocks: Leave
+
+# Misc
+AlignConsecutiveMacros: false
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: false
+SortIncludes: false
+ReflowComments: false             # 注释列由插件质量管线继续对齐

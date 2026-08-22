@@ -15,25 +15,25 @@
 
 ```bash
 # 探测 IAR 环境
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --detect
 
 # 扫描工作区工程文件
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --scan /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --scan /path/to/project
 
 # 列出工程中的配置
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --list-configs --project path/to/app.ewp
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --list-configs --project path/to/app.ewp
 
 # 编译默认配置
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp
 
 # 编译指定配置
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp --config Debug
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp --config Debug
 
 # 重新编译（clean + build）
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp --rebuild
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp --rebuild
 
 # 清理
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp --config Debug --clean
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --project path/to/app.ewp --config Debug --clean
 ```
 
 ## 常见模式
@@ -41,7 +41,7 @@ python3 skills/operations/tool-build-iar/scripts/iar_builder.py --project path/t
 ### 1. 环境探测
 
 ```bash
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --detect
 ```
 
 输出 IAR 安装路径、iarbuild.exe 位置。
@@ -49,7 +49,7 @@ python3 skills/operations/tool-build-iar/scripts/iar_builder.py --detect
 ### 2. 扫描工作区工程文件
 
 ```bash
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py --scan /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py --scan /path/to/project
 ```
 
 在工作区中递归搜索 `.ewp` 和 `.eww` 文件。
@@ -57,7 +57,7 @@ python3 skills/operations/tool-build-iar/scripts/iar_builder.py --scan /path/to/
 ### 3. 列出工程配置
 
 ```bash
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py \
   --list-configs \
   --project path/to/app.ewp
 ```
@@ -65,7 +65,7 @@ python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
 ### 4. 编译指定配置
 
 ```bash
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py \
   --project path/to/app.ewp \
   --config "Release"
 ```
@@ -73,7 +73,7 @@ python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
 ### 5. 重新编译
 
 ```bash
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py \
   --project path/to/app.ewp \
   --config "Debug" \
   --rebuild
@@ -82,7 +82,7 @@ python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
 ### 6. 仅扫描已有产物
 
 ```bash
-python3 skills/operations/tool-build-iar/scripts/iar_builder.py \
+python3 skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py \
   --scan-artifacts path/to/Debug/Exe
 ```
 

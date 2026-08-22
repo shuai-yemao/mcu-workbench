@@ -81,7 +81,7 @@ break main.c:200 if HAL_GetTick() > 10000
 
 ```bash
 # 通过 gdb_debugger.py 启动调试会话
-python3 skills/operations/debug-gdb-openocd/scripts/gdb_debugger.py \
+python3 skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py \
   --elf build/debug/app.elf \
   --interface stlink \
   --target target/stm32f4x.cfg \

@@ -1,0 +1,91 @@
+{
+  "request_id": "REQ-SPEC-WORKFLOW-DOC-20260819",
+  "state_version": 1,
+  "project_root": "C:\\Users\\zhang\\Documents\\mcu-workbench",
+  "spec_version": "v1.0",
+  "plan_version": "v1.0",
+  "task_version": "v1.0",
+  "current_stage": "completed",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": [
+    "human_review",
+    "versioned"
+  ],
+  "requirements": [
+    "formal_docs_spec_plan_task_only",
+    "internal_rcp_review_package_final_review_json_jsonl",
+    "task_item_implementation_and_test",
+    "final_verify_against_spec",
+    "verify_deviation_returns_to_spec"
+  ],
+  "constraints": [
+    "no_firmware_scope",
+    "no_manifest_hooks",
+    "preserve_common_claude_opencode_boundaries"
+  ],
+  "evidence": [
+    {
+      "level": "host",
+      "artifact": "npm test -- --runInBand"
+    },
+    {
+      "level": "static",
+      "artifact": "npm run validate:plugin"
+    },
+    {
+      "level": "static",
+      "artifact": "npm run validate:links"
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "plan_a",
+      "status": "user-confirmed"
+    }
+  ],
+  "open_questions": [],
+  "user_gates": {
+    "spec": "approved",
+    "plan": "approved",
+    "hard_blocker": "none"
+  },
+  "task_summary": {
+    "total": 10,
+    "completed": 10,
+    "current_task": null
+  },
+  "verify_summary": {
+    "status": "passed",
+    "deviations": [],
+    "acceptance_ids": [
+      "V-01",
+      "V-02",
+      "V-03",
+      "V-04",
+      "V-05",
+      "V-06",
+      "V-07",
+      "V-08",
+      "V-09",
+      "V-10",
+      "V-11",
+      "V-12"
+    ],
+    "evidence_level": "host_and_static"
+  },
+  "final_review_summary": {
+    "status": "passed",
+    "findings": [],
+    "evidence_level": "host_and_static",
+    "checks": [
+      "npm test -- --runInBand",
+      "npm run validate:plugin",
+      "npm run validate:links",
+      "npm run validate:workflow-gate -- --root C:\\Users\\zhang\\Documents\\mcu-workbench --json --strict",
+      "git diff --check"
+    ]
+  },
+  "blockers": [],
+  "updated_at": "2026-08-19T14:12:04.537Z"
+}

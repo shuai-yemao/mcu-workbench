@@ -1,0 +1,363 @@
+- main [ref=e2]:
+  - button "☰ 页面导航" [ref=e3] [cursor=pointer]
+  - generic [ref=e4]:
+    - complementary [ref=e5]:
+      - generic [ref=e6]:
+        - text: Embedded Framework
+        - generic [ref=e7]: 项目工作台
+      - tablist "项目工作台页面导航" [ref=e8]:
+        - generic [ref=e9]:
+          - heading "项目状态" [level=2] [ref=e10]
+          - generic [ref=e11]:
+            - button "项目总览" [ref=e12] [cursor=pointer]
+            - button "功能进度" [ref=e13] [cursor=pointer]
+        - generic [ref=e14]:
+          - heading "工程信息" [level=2] [ref=e15]
+          - generic [ref=e16]:
+            - button "架构与启动" [ref=e17] [cursor=pointer]
+            - button "Git 与调整" [ref=e18] [cursor=pointer]
+            - button "构建与验证" [ref=e19] [cursor=pointer]
+            - button "资源与硬件" [ref=e20] [cursor=pointer]
+        - generic [ref=e21]:
+          - heading "协作与调试" [level=2] [ref=e22]
+          - generic [ref=e23]:
+            - button "AI 工作流与问题" [ref=e24] [cursor=pointer]
+            - button "调试日志" [ref=e25] [cursor=pointer]
+      - generic [ref=e26]: 8 个页面集中展示输入内容变化时更新
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: Embedded Framework
+          - heading "项目工程工作台" [level=1] [ref=e31]
+        - generic [ref=e32]: 项目：embedded_framework生成时间：2026-08-20T12:07:23.848Z仅在输入内容变化时更新
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - heading "架构与启动" [level=2] [ref=e36]
+          - generic [ref=e37]: 点击节点或步骤查看说明和证据
+        - generic [ref=e38]:
+          - heading "软件架构图" [level=3] [ref=e39]
+          - paragraph [ref=e40]: 关系来自工程文件中的 Mermaid 架构设计图；不会根据目录结构猜测依赖。
+          - generic [ref=e41]:
+            - img "工程软件架构关系图" [ref=e42]:
+              - button "查看 01_App 职责": 01_App：启动编排、任务入口和用户场景。 来源：五层职责说明.md / 依赖方向说明.md。
+              - button "查看 02_Service 职责" [ref=e46] [cursor=pointer]:
+                - generic: 02_Service
+              - button "查看 03_Platform 职责" [ref=e48] [cursor=pointer]:
+                - generic: 03_Platform
+              - button "查看 04_Impl 职责" [ref=e50] [cursor=pointer]:
+                - generic: 04_Impl
+              - button "查看 05_Vendor 职责" [ref=e52] [cursor=pointer]:
+                - generic: 05_Vendor
+              - button "查看 06_Toolchain 职责" [ref=e54] [cursor=pointer]:
+                - generic: 06_Toolchain
+            - generic [ref=e56]: 工程目录已嵌入架构图：层 → 二级目录 → 三级目录
+            - generic [ref=e57]:
+              - generic [ref=e58]:
+                - button "查看架构层 01_App" [ref=e59] [cursor=pointer]: 01_App
+                - paragraph [ref=e60]: 启动编排、任务入口和用户场景。
+                - generic [ref=e61]:
+                  - button "查看目录 01_App/app_boot" [ref=e62] [cursor=pointer]:
+                    - generic [ref=e63]: 📁
+                    - generic [ref=e64]: app_boot
+                  - button "查看目录 01_App/app_system" [ref=e65] [cursor=pointer]:
+                    - generic [ref=e66]: 📁
+                    - generic [ref=e67]: app_system
+              - generic [ref=e68]: →
+              - generic [ref=e69]:
+                - button "查看架构层 02_Service" [ref=e70] [cursor=pointer]: 02_Service
+                - paragraph [ref=e71]: 业务服务、日志和系统生命周期门面。
+                - generic [ref=e72]:
+                  - button "查看目录 02_Service/service_diagnosis" [ref=e73] [cursor=pointer]:
+                    - generic [ref=e74]: 📁
+                    - generic [ref=e75]: service_diagnosis
+                  - button "查看目录 02_Service/service_gui" [ref=e76] [cursor=pointer]:
+                    - generic [ref=e77]: 📁
+                    - generic [ref=e78]: service_gui
+                  - button "查看目录 02_Service/service_log" [ref=e79] [cursor=pointer]:
+                    - generic [ref=e80]: 📁
+                    - generic [ref=e81]: service_log
+                  - button "查看目录 02_Service/service_storage" [ref=e82] [cursor=pointer]:
+                    - generic [ref=e83]: 📁
+                    - generic [ref=e84]: service_storage
+                  - button "查看目录 02_Service/service_system" [ref=e85] [cursor=pointer]:
+                    - generic [ref=e86]: 📁
+                    - generic [ref=e87]: service_system
+              - generic [ref=e88]: →
+              - generic [ref=e89]:
+                - button "查看架构层 03_Platform" [ref=e90] [cursor=pointer]: 03_Platform
+                - paragraph [ref=e91]: 稳定的能力接口、类型、对象和生命周期契约。
+                - generic [ref=e92]:
+                  - button "查看目录 03_Platform/platform_bsp" [ref=e93] [cursor=pointer]:
+                    - generic [ref=e94]: 📁
+                    - generic [ref=e95]: platform_bsp
+                  - generic [ref=e96]:
+                    - button "查看目录 03_Platform/platform_bsp/display" [ref=e97] [cursor=pointer]:
+                      - generic [ref=e98]: 📁
+                      - generic [ref=e99]: display
+                    - button "查看目录 03_Platform/platform_bsp/imu" [ref=e100] [cursor=pointer]:
+                      - generic [ref=e101]: 📁
+                      - generic [ref=e102]: imu
+                    - button "查看目录 03_Platform/platform_bsp/storage" [ref=e103] [cursor=pointer]:
+                      - generic [ref=e104]: 📁
+                      - generic [ref=e105]: storage
+                    - button "查看目录 03_Platform/platform_bsp/temp_humi" [ref=e106] [cursor=pointer]:
+                      - generic [ref=e107]: 📁
+                      - generic [ref=e108]: temp_humi
+                    - button "查看目录 03_Platform/platform_bsp/touch" [ref=e109] [cursor=pointer]:
+                      - generic [ref=e110]: 📁
+                      - generic [ref=e111]: touch
+                  - button "查看目录 03_Platform/platform_common" [ref=e112] [cursor=pointer]:
+                    - generic [ref=e113]: 📁
+                    - generic [ref=e114]: platform_common
+                  - generic [ref=e115]:
+                    - button "查看目录 03_Platform/platform_common/core" [ref=e116] [cursor=pointer]:
+                      - generic [ref=e117]: 📁
+                      - generic [ref=e118]: core
+                    - button "查看目录 03_Platform/platform_common/diag" [ref=e119] [cursor=pointer]:
+                      - generic [ref=e120]: 📁
+                      - generic [ref=e121]: diag
+                    - button "查看目录 03_Platform/platform_common/manager" [ref=e122] [cursor=pointer]:
+                      - generic [ref=e123]: 📁
+                      - generic [ref=e124]: manager
+                    - button "查看目录 03_Platform/platform_common/object" [ref=e125] [cursor=pointer]:
+                      - generic [ref=e126]: 📁
+                      - generic [ref=e127]: object
+                  - button "查看目录 03_Platform/platform_config" [ref=e128] [cursor=pointer]:
+                    - generic [ref=e129]: 📁
+                    - generic [ref=e130]: platform_config
+                  - button "查看目录 03_Platform/platform_mcu" [ref=e131] [cursor=pointer]:
+                    - generic [ref=e132]: 📁
+                    - generic [ref=e133]: platform_mcu
+                  - button "查看目录 03_Platform/platform_middleware" [ref=e134] [cursor=pointer]:
+                    - generic [ref=e135]: 📁
+                    - generic [ref=e136]: platform_middleware
+                  - button "查看目录 03_Platform/platform_os" [ref=e137] [cursor=pointer]:
+                    - generic [ref=e138]: 📁
+                    - generic [ref=e139]: platform_os
+                  - generic [ref=e140]:
+                    - button "查看目录 03_Platform/platform_os/inc" [ref=e141] [cursor=pointer]:
+                      - generic [ref=e142]: 📁
+                      - generic [ref=e143]: inc
+                    - button "查看目录 03_Platform/platform_os/inc_internal" [ref=e144] [cursor=pointer]:
+                      - generic [ref=e145]: 📁
+                      - generic [ref=e146]: inc_internal
+                    - button "查看目录 03_Platform/platform_os/src" [ref=e147] [cursor=pointer]:
+                      - generic [ref=e148]: 📁
+                      - generic [ref=e149]: src
+              - generic [ref=e150]: →
+              - generic [ref=e151]:
+                - button "查看架构层 04_Impl" [ref=e152] [cursor=pointer]: 04_Impl
+                - paragraph [ref=e153]: MCU/HAL、板级组合、设备 Driver、OS 和中间件 Port。
+                - generic [ref=e154]:
+                  - button "查看目录 04_Impl/impl_board" [ref=e155] [cursor=pointer]:
+                    - generic [ref=e156]: 📁
+                    - generic [ref=e157]: impl_board
+                  - generic [ref=e158]:
+                    - button "查看目录 04_Impl/impl_board/inc" [ref=e159] [cursor=pointer]:
+                      - generic [ref=e160]: 📁
+                      - generic [ref=e161]: inc
+                    - button "查看目录 04_Impl/impl_board/src" [ref=e162] [cursor=pointer]:
+                      - generic [ref=e163]: 📁
+                      - generic [ref=e164]: src
+                  - button "查看目录 04_Impl/impl_mcu" [ref=e165] [cursor=pointer]:
+                    - generic [ref=e166]: 📁
+                    - generic [ref=e167]: impl_mcu
+                  - button "查看目录 04_Impl/impl_middleware" [ref=e168] [cursor=pointer]:
+                    - generic [ref=e169]: 📁
+                    - generic [ref=e170]: impl_middleware
+                  - generic [ref=e171]:
+                    - button "查看目录 04_Impl/impl_middleware/elog" [ref=e172] [cursor=pointer]:
+                      - generic [ref=e173]: 📁
+                      - generic [ref=e174]: elog
+                    - button "查看目录 04_Impl/impl_middleware/fal" [ref=e175] [cursor=pointer]:
+                      - generic [ref=e176]: 📁
+                      - generic [ref=e177]: fal
+                    - button "查看目录 04_Impl/impl_middleware/flashdb" [ref=e178] [cursor=pointer]:
+                      - generic [ref=e179]: 📁
+                      - generic [ref=e180]: flashdb
+                    - button "查看目录 04_Impl/impl_middleware/lvgl" [ref=e181] [cursor=pointer]:
+                      - generic [ref=e182]: 📁
+                      - generic [ref=e183]: lvgl
+                  - button "查看目录 04_Impl/impl_os" [ref=e184] [cursor=pointer]:
+                    - generic [ref=e185]: 📁
+                    - generic [ref=e186]: impl_os
+                  - generic [ref=e187]:
+                    - button "查看目录 04_Impl/impl_os/inc" [ref=e188] [cursor=pointer]:
+                      - generic [ref=e189]: 📁
+                      - generic [ref=e190]: inc
+                    - button "查看目录 04_Impl/impl_os/src" [ref=e191] [cursor=pointer]:
+                      - generic [ref=e192]: 📁
+                      - generic [ref=e193]: src
+                  - button "查看目录 04_Impl/impl_service_port" [ref=e194] [cursor=pointer]:
+                    - generic [ref=e195]: 📁
+                    - generic [ref=e196]: impl_service_port
+                  - button "查看目录 04_Impl/impl_service_port/log_port" [ref=e198] [cursor=pointer]:
+                    - generic [ref=e199]: 📁
+                    - generic [ref=e200]: log_port
+              - generic [ref=e201]: →
+              - generic [ref=e202]:
+                - button "查看架构层 05_Vendor" [ref=e203] [cursor=pointer]: 05_Vendor
+                - paragraph [ref=e204]: STM32 HAL/CMSIS、FreeRTOS 和第三方底座。
+                - generic [ref=e205]:
+                  - button "查看目录 05_Vendor/circle_buffer" [ref=e206] [cursor=pointer]:
+                    - generic [ref=e207]: 📁
+                    - generic [ref=e208]: circle_buffer
+                  - generic [ref=e209]:
+                    - button "查看目录 05_Vendor/circle_buffer/inc" [ref=e210] [cursor=pointer]:
+                      - generic [ref=e211]: 📁
+                      - generic [ref=e212]: inc
+                    - button "查看目录 05_Vendor/circle_buffer/src" [ref=e213] [cursor=pointer]:
+                      - generic [ref=e214]: 📁
+                      - generic [ref=e215]: src
+                  - button "查看目录 05_Vendor/easylogger" [ref=e216] [cursor=pointer]:
+                    - generic [ref=e217]: 📁
+                    - generic [ref=e218]: easylogger
+                  - generic [ref=e219]:
+                    - button "查看目录 05_Vendor/easylogger/inc" [ref=e220] [cursor=pointer]:
+                      - generic [ref=e221]: 📁
+                      - generic [ref=e222]: inc
+                    - button "查看目录 05_Vendor/easylogger/src" [ref=e223] [cursor=pointer]:
+                      - generic [ref=e224]: 📁
+                      - generic [ref=e225]: src
+                  - button "查看目录 05_Vendor/fal" [ref=e226] [cursor=pointer]:
+                    - generic [ref=e227]: 📁
+                    - generic [ref=e228]: fal
+                  - generic [ref=e229]:
+                    - button "查看目录 05_Vendor/fal/inc" [ref=e230] [cursor=pointer]:
+                      - generic [ref=e231]: 📁
+                      - generic [ref=e232]: inc
+                    - button "查看目录 05_Vendor/fal/src" [ref=e233] [cursor=pointer]:
+                      - generic [ref=e234]: 📁
+                      - generic [ref=e235]: src
+                  - button "查看目录 05_Vendor/flashdb" [ref=e236] [cursor=pointer]:
+                    - generic [ref=e237]: 📁
+                    - generic [ref=e238]: flashdb
+                  - generic [ref=e239]:
+                    - button "查看目录 05_Vendor/flashdb/inc" [ref=e240] [cursor=pointer]:
+                      - generic [ref=e241]: 📁
+                      - generic [ref=e242]: inc
+                    - button "查看目录 05_Vendor/flashdb/src" [ref=e243] [cursor=pointer]:
+                      - generic [ref=e244]: 📁
+                      - generic [ref=e245]: src
+                  - button "查看目录 05_Vendor/freertos" [ref=e246] [cursor=pointer]:
+                    - generic [ref=e247]: 📁
+                    - generic [ref=e248]: freertos
+                  - generic [ref=e249]:
+                    - button "查看目录 05_Vendor/freertos/include" [ref=e250] [cursor=pointer]:
+                      - generic [ref=e251]: 📁
+                      - generic [ref=e252]: include
+                    - button "查看目录 05_Vendor/freertos/portable" [ref=e253] [cursor=pointer]:
+                      - generic [ref=e254]: 📁
+                      - generic [ref=e255]: portable
+                  - button "查看目录 05_Vendor/lvgl" [ref=e256] [cursor=pointer]:
+                    - generic [ref=e257]: 📁
+                    - generic [ref=e258]: lvgl
+                  - generic [ref=e259]:
+                    - button "查看目录 05_Vendor/lvgl/include" [ref=e260] [cursor=pointer]:
+                      - generic [ref=e261]: 📁
+                      - generic [ref=e262]: include
+                    - button "查看目录 05_Vendor/lvgl/src" [ref=e263] [cursor=pointer]:
+                      - generic [ref=e264]: 📁
+                      - generic [ref=e265]: src
+                  - button "查看目录 05_Vendor/segger_rtt" [ref=e266] [cursor=pointer]:
+                    - generic [ref=e267]: 📁
+                    - generic [ref=e268]: segger_rtt
+                  - generic [ref=e269]:
+                    - button "查看目录 05_Vendor/segger_rtt/Config" [ref=e270] [cursor=pointer]:
+                      - generic [ref=e271]: 📁
+                      - generic [ref=e272]: Config
+                    - button "查看目录 05_Vendor/segger_rtt/RTT" [ref=e273] [cursor=pointer]:
+                      - generic [ref=e274]: 📁
+                      - generic [ref=e275]: RTT
+                  - button "查看目录 05_Vendor/stm32f411ceu6" [ref=e276] [cursor=pointer]:
+                    - generic [ref=e277]: 📁
+                    - generic [ref=e278]: stm32f411ceu6
+                  - generic [ref=e279]:
+                    - button "查看目录 05_Vendor/stm32f411ceu6/CMSIS" [ref=e280] [cursor=pointer]:
+                      - generic [ref=e281]: 📁
+                      - generic [ref=e282]: CMSIS
+                    - button "查看目录 05_Vendor/stm32f411ceu6/STM32F4xx_HAL_Driver" [ref=e283] [cursor=pointer]:
+                      - generic [ref=e284]: 📁
+                      - generic [ref=e285]: STM32F4xx_HAL_Driver
+              - generic [ref=e286]: →
+              - generic [ref=e287]:
+                - button "查看架构层 06_Toolchain" [ref=e288] [cursor=pointer]: 06_Toolchain
+                - paragraph [ref=e289]: 启动、构建和目标工程组合边界。
+                - generic [ref=e290]:
+                  - button "查看目录 06_Toolchain/cmake" [ref=e291] [cursor=pointer]:
+                    - generic [ref=e292]: 📁
+                    - generic [ref=e293]: cmake
+                  - button "查看目录 06_Toolchain/cubemx" [ref=e294] [cursor=pointer]:
+                    - generic [ref=e295]: 📁
+                    - generic [ref=e296]: cubemx
+                  - button "查看目录 06_Toolchain/cubemx/stm32f411ceu6" [ref=e298] [cursor=pointer]:
+                    - generic [ref=e299]: 📁
+                    - generic [ref=e300]: stm32f411ceu6
+            - generic [ref=e301]: 点击架构节点查看职责与证据。
+            - paragraph [ref=e302]: 图源：00_Docs/02_架构设计/依赖方向说明.md；虚线表示接口契约。
+        - generic [ref=e303]:
+          - heading "启动流程图" [level=3] [ref=e304]
+          - paragraph [ref=e305]: 从上电/复位到程序运行；启动文件未纳入证据时会明确显示“未确认”。
+          - generic [ref=e306]:
+            - generic [ref=e307]:
+              - button "1. 上电 / 复位 → C 运行时入口 当前工程未收集启动文件、向量表或复位处理器证据；main() 之前的处理尚未确认。 证据：启动文件未确认 · 未确认" [ref=e308] [cursor=pointer]:
+                - strong [ref=e309]: 1. 上电 / 复位 → C 运行时入口
+                - text: 当前工程未收集启动文件、向量表或复位处理器证据；main() 之前的处理尚未确认。
+                - generic [ref=e310]: 证据：启动文件未确认 · 未确认
+              - generic [ref=e311]: ↓
+            - generic [ref=e312]:
+              - button "2. HAL_Init() 源码已确认" [ref=e313] [cursor=pointer]:
+                - generic [ref=e314]: 2. HAL_Init()
+                - generic [ref=e315]: 源码已确认
+              - generic [ref=e316]: ↓
+            - generic [ref=e317]:
+              - button "3. SystemClock_Config() 源码已确认" [ref=e318] [cursor=pointer]:
+                - generic [ref=e319]: 3. SystemClock_Config()
+                - generic [ref=e320]: 源码已确认
+              - generic [ref=e321]: ↓
+            - generic [ref=e322]:
+              - button "4. MX_*_Init() 外设初始化 源码已确认" [ref=e323] [cursor=pointer]:
+                - generic [ref=e324]: 4. MX_*_Init() 外设初始化
+                - generic [ref=e325]: 源码已确认
+              - generic [ref=e326]: ↓
+            - generic [ref=e327]:
+              - button "5. osKernelInitialize() 源码已确认" [ref=e328] [cursor=pointer]:
+                - generic [ref=e329]: 5. osKernelInitialize()
+                - generic [ref=e330]: 源码已确认
+              - generic [ref=e331]: ↓
+            - generic [ref=e332]:
+              - button "6. MX_FREERTOS_Init() 源码已确认" [ref=e333] [cursor=pointer]:
+                - generic [ref=e334]: 6. MX_FREERTOS_Init()
+                - generic [ref=e335]: 源码已确认
+              - generic [ref=e336]: ↓
+            - generic [ref=e337]:
+              - button "7. osKernelStart() 源码已确认" [ref=e338] [cursor=pointer]:
+                - generic [ref=e339]: 7. osKernelStart()
+                - generic [ref=e340]: 源码已确认
+              - generic [ref=e341]: ↓
+            - generic [ref=e342]:
+              - button "8. StartDefaultTask 源码已确认" [ref=e343] [cursor=pointer]:
+                - generic [ref=e344]: 8. StartDefaultTask
+                - generic [ref=e345]: 源码已确认
+              - generic [ref=e346]: ↓
+            - generic [ref=e347]:
+              - button "9. app_boot_init() 源码已确认" [ref=e348] [cursor=pointer]:
+                - generic [ref=e349]: 9. app_boot_init()
+                - generic [ref=e350]: 源码已确认
+              - generic [ref=e351]: ↓
+            - generic [ref=e352]:
+              - button "10. app_system_process() 源码已确认" [ref=e353] [cursor=pointer]:
+                - generic [ref=e354]: 10. app_system_process()
+                - generic [ref=e355]: 源码已确认
+              - generic [ref=e356]: ↓
+            - generic [ref=e357]:
+              - button "11. osDelay(10) 源码已确认" [ref=e358] [cursor=pointer]:
+                - generic [ref=e359]: 11. osDelay(10)
+                - generic [ref=e360]: 源码已确认
+              - generic [ref=e361]: ↓
+            - button "12. APP_SYSTEM_STATE_RUNNING 源码已确认" [ref=e363] [cursor=pointer]:
+              - generic [ref=e364]: 12. APP_SYSTEM_STATE_RUNNING
+              - generic [ref=e365]: 源码已确认
+          - generic [ref=e366]: 点击启动步骤查看说明与证据。
+        - group [ref=e367]:
+          - generic "查看架构与启动原文证据" [ref=e368] [cursor=pointer]

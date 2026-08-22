@@ -1,0 +1,470 @@
+{
+  "source": {
+    "repository": "https://github.com/shuai-yemao/stm32f411ceu6_freertos_transplant.git",
+    "branch": "Sensor_temp_humi",
+    "commit": "eb5f38b3acb55063b6a3e2777aae2fb983cda8bf"
+  },
+  "summary": {
+    "files": 84,
+    "errors": 45,
+    "warnings": 31
+  },
+  "findings": [
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/handler/Inc/bsp_temp_humi_handler.h",
+      "line": 273
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/handler/Inc/bsp_temp_humi_handler.h",
+      "line": 284
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 109
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 117
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 124
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 131
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 138
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 147
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Inc/bsp_gpio_iic.h",
+      "line": 155
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 145
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 169
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 193
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 195
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 227
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 250
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 274
+    },
+    {
+      "ruleId": "BSP_SOFT_I2C_BACKEND",
+      "severity": "error",
+      "file": "Bsp/Borad_drive/Sensor_temp_humi/iic/Src/bsp_gpio_iic.c",
+      "line": 302
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 63
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 164
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 169
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 175
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 176
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 177
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 178
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 179
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 180
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 188
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 195
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 196
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 197
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 200
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 201
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 202
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 204
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 243
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 254
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 259
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 261
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 263
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 265
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 267
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 279
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_BUS_OP",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 285
+    },
+    {
+      "ruleId": "BSP_PORT_SOFT_I2C_PRIMITIVE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 302
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_BUS_OP",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 308
+    },
+    {
+      "ruleId": "BSP_PORT_VENDOR_CONFIG_CALL",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 363
+    },
+    {
+      "ruleId": "BSP_PORT_DUPLICATE_DEVICE_CACHE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 727
+    },
+    {
+      "ruleId": "BSP_PORT_DUPLICATE_DEVICE_CACHE",
+      "severity": "error",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 728
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 598
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Bsp/Porting/drv_adapter_port_temp_humi/Src/drv_adapter_port_temp_humi.c",
+      "line": 615
+    },
+    {
+      "ruleId": "WRAPPER_PLATFORM_DEPENDENCY",
+      "severity": "error",
+      "file": "Bsp/Wapper/drv_adapter_wapper_temp_humi/Src/drv_adapter_wapper_temp_humi.c",
+      "line": 31
+    },
+    {
+      "ruleId": "CORE_PUBLIC_VENDOR_TYPE",
+      "severity": "error",
+      "file": "Core/Inc/adc.h",
+      "line": 35
+    },
+    {
+      "ruleId": "CORE_PUBLIC_VENDOR_TYPE",
+      "severity": "error",
+      "file": "Core/Inc/i2c.h",
+      "line": 35
+    },
+    {
+      "ruleId": "CORE_PUBLIC_VENDOR_TYPE",
+      "severity": "error",
+      "file": "Core/Inc/i2c.h",
+      "line": 37
+    },
+    {
+      "ruleId": "CORE_PUBLIC_VENDOR_TYPE",
+      "severity": "error",
+      "file": "Core/Inc/spi.h",
+      "line": 35
+    },
+    {
+      "ruleId": "CORE_PUBLIC_VENDOR_TYPE",
+      "severity": "error",
+      "file": "Core/Inc/spi.h",
+      "line": 37
+    },
+    {
+      "ruleId": "CORE_PUBLIC_VENDOR_TYPE",
+      "severity": "error",
+      "file": "Core/Inc/usart.h",
+      "line": 35
+    },
+    {
+      "ruleId": "LOG_GLOBAL_IRQ_LOCK",
+      "severity": "warning",
+      "file": "DebugComponent/easylogger/port/elog_port.c",
+      "line": 47
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/FreeRTOS/src/os_impl_mutex.c",
+      "line": 109
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/FreeRTOS/src/os_impl_queue.c",
+      "line": 75
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/FreeRTOS/src/os_impl_queue.c",
+      "line": 118
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/FreeRTOS/src/os_impl_sema.c",
+      "line": 135
+    },
+    {
+      "ruleId": "ISR_CRITICAL_TOKEN_IGNORED",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/FreeRTOS/src/os_impl_task.c",
+      "line": 141
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/inc/osal_mutex.h",
+      "line": 37
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/inc/osal_queue.h",
+      "line": 40
+    },
+    {
+      "ruleId": "OSAL_CONST_OUTPUT_PARAMETER",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/inc/osal_queue.h",
+      "line": 42
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/inc/osal_queue.h",
+      "line": 45
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/inc/osal_sema.h",
+      "line": 43
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/inc/osal_internal_mutex.h",
+      "line": 38
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/inc/osal_internal_queue.h",
+      "line": 36
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/inc/osal_internal_queue.h",
+      "line": 39
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/inc/osal_internal_sema.h",
+      "line": 41
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/src/osal_mutex.c",
+      "line": 71
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/src/osal_queue.c",
+      "line": 63
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/src/osal_queue.c",
+      "line": 79
+    },
+    {
+      "ruleId": "AMBIGUOUS_TIMEOUT_UNIT",
+      "severity": "warning",
+      "file": "Middlewares/os_adapter/shared/src/osal_sema.c",
+      "line": 88
+    }
+  ]
+}

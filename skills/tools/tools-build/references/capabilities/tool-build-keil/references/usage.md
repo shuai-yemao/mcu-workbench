@@ -16,22 +16,22 @@
 
 ```bash
 # 探测 Keil MDK 环境
-python skills/operations/tool-build-keil/scripts/keil_builder.py --detect
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --detect
 
 # 列出工程中的目标
-python skills/operations/tool-build-keil/scripts/keil_builder.py --list-targets --project path/to/app.uvprojx
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --list-targets --project path/to/app.uvprojx
 
 # 编译默认目标
-python skills/operations/tool-build-keil/scripts/keil_builder.py --project path/to/app.uvprojx
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --project path/to/app.uvprojx
 
 # 编译指定目标
-python skills/operations/tool-build-keil/scripts/keil_builder.py --project path/to/app.uvprojx --target "Debug"
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --project path/to/app.uvprojx --target "Debug"
 
 # 重新编译（clean + build）
-python skills/operations/tool-build-keil/scripts/keil_builder.py --project path/to/app.uvprojx --rebuild
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --project path/to/app.uvprojx --rebuild
 
 # 一次完成探测 + 编译（推荐，省掉多次进程启动）
-python skills/operations/tool-build-keil/scripts/keil_builder.py --detect --project path/to/app.uvprojx --target "Debug"
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --detect --project path/to/app.uvprojx --target "Debug"
 ```
 
 ## 常见模式
@@ -39,7 +39,7 @@ python skills/operations/tool-build-keil/scripts/keil_builder.py --detect --proj
 ### 1. 环境探测
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py --detect
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --detect
 ```
 
 输出 Keil MDK 安装路径、UV4.exe 位置、ARMCC/ARMCLANG 编译器版本。
@@ -47,7 +47,7 @@ python skills/operations/tool-build-keil/scripts/keil_builder.py --detect
 ### 2. 扫描工作区工程文件
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py --scan /path/to/project
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py --scan /path/to/project
 ```
 
 在工作区中递归搜索 `.uvprojx` 和 `.uvproj` 文件。
@@ -55,7 +55,7 @@ python skills/operations/tool-build-keil/scripts/keil_builder.py --scan /path/to
 ### 3. 列出工程目标
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py \
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py \
   --list-targets \
   --project path/to/app.uvprojx
 ```
@@ -63,7 +63,7 @@ python skills/operations/tool-build-keil/scripts/keil_builder.py \
 ### 4. 编译指定目标
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py \
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py \
   --project path/to/app.uvprojx \
   --target "Release" \
   --verbose
@@ -72,7 +72,7 @@ python skills/operations/tool-build-keil/scripts/keil_builder.py \
 ### 5. 重新编译
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py \
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py \
   --project path/to/app.uvprojx \
   --target "Debug" \
   --rebuild
@@ -81,14 +81,14 @@ python skills/operations/tool-build-keil/scripts/keil_builder.py \
 ### 6. 仅扫描已有产物
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py \
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py \
   --scan-artifacts path/to/Objects
 ```
 
 ### 7. 指定 UV4 路径
 
 ```bash
-python skills/operations/tool-build-keil/scripts/keil_builder.py \
+python skills/tools/tools-build/references/capabilities/tool-build-keil/scripts/keil_builder.py \
   --project path/to/app.uvprojx \
   --uv4 "C:\Keil_v5\UV4\UV4.exe"
 ```
