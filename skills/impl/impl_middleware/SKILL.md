@@ -75,6 +75,46 @@ impl_elog_port.c              EasyLogger Port → SEGGER RTT/FreeRTOS/HAL
 - 必须说明资源所有权、初始化顺序、阻塞属性、ISR 限制、线程安全和可重入性；
 - 失败不得静默，必须返回可映射的 `platform_err_t`。
 
+## LVGL Adapter 规则
+
+LVGL 是 `platform_middleware` 的 GUI 固定后端，默认文件边界为：
+
+```text
+03_Platform/platform_middleware/platform_gui.h
+04_Impl/impl_middleware/lvgl/impl_lvgl_gui.c
+04_Impl/impl_middleware/lvgl/impl_lvgl_gui.h
+```
+
+`impl_lvgl_gui.c` 对 `platform_gui.h` 声明的 `platform_gui_*()` 提供唯一具体实现，
+负责调用目标工程锁定版本的 LVGL API、做参数/状态检查、完成错误映射，并维护 LVGL
+生命周期。`impl_lvgl_gui.h` 只作为 Platform→Impl 的内部边界，不得被 App、Service 或
+Platform 公共头 include。
+
+当显示传输、输入采样、Tick、锁或 Owner Task 需要编译/资源隔离时，才经 Review Gate
+拆出 Impl 私有 Port，例如：
+
+```text
+impl_lvgl_port.c/.h       显示 Flush、输入 Read、Tick、锁和具体资源绑定
+```
+
+拆分后仍只能由 `impl_lvgl_gui.c` 实现一套 `platform_gui_*()` 符号；Port 不得重新定义
+Platform API、引入第二套初始化路径或把 `lv_display_t`、`lv_indev_t`、HAL/RTOS 类型泄漏到
+`platform_gui.h`。LVGL v8/v9 的 API 差异只允许停留在 Adapter/Port，不能让 Platform 契约
+随 Vendor 版本漂移。
+
+最小职责映射如下：
+
+| Platform GUI 能力 | Impl LVGL 责任 | 关键边界 |
+| --- | --- | --- |
+| 生命周期 | `lv_init`、Display/Input 创建与反初始化 | 失败按初始化逆序释放，不静默降级 |
+| Tick/Process | Tick 注入与 Owner Task 驱动 Handler | 明确上下文、周期、阻塞上限和锁范围 |
+| Display Flush | 注册 Flush Callback，等待传输完成后报告 Ready | 缓冲区借用期限、DMA/Cache 和完成信号由 Impl 记录 |
+| Input Read | 注册 Read Callback，转换为 Vendor 输入数据 | 回调只采样/转换，不执行业务逻辑或阻塞式设备访问 |
+
+`impl_lvgl_gui.c` 不承载页面、控件、业务状态机或产品策略；UI 页面留在 App/Service。
+GUI Vendor API 只能在受控 Owner Task 或明确声明的同一调用上下文中执行，默认不允许 ISR
+直接调用。
+
 ## 固定链接边界
 
 构建系统将唯一的 Impl Adapter 与 Platform Middleware 一起链接，Platform `.c` 直接调用 Adapter 函数；Impl 不提供
@@ -89,6 +129,11 @@ Impl     → Vendor
 该 Platform→Impl 直接依赖只适用于 Middleware 固定后端，不扩展到 OS、BSP、MCU 或其他 Platform 子域。Board 只
 负责 BSP/Device 和板级资源，不负责 Middleware 注册；Service 或系统生命周期负责调用 Platform API。
 
+LVGL 的“单头、Impl 直实现”profile 是上述固定后端的受控变体：由于 Platform 侧只保留
+`platform_gui.h`，链接时由 `impl_lvgl_gui.c` 直接定义其中的 `platform_gui_*()` 符号，
+不再增加一个仅为转发而存在的 `platform_gui.c`。这不允许运行时 Backend 切换，也不改变
+Platform 公共头不得依赖 Vendor 的约束。
+
 ## Vendor、OS 与并发边界
 
 - 不复制或修改 Vendor 源码；版本、许可证、配置和编译单元由目标工程 `05_Vendor/` 管理；
@@ -100,12 +145,14 @@ Impl     → Vendor
 ## 生成前检查
 
 - [ ] Platform API 真实存在且 Vendor-neutral；
+- [ ] LVGL 只有一个 Platform 公共入口 `platform_gui.h`，并由 `impl_lvgl_gui.c` 唯一实现；
 - [ ] 当前文件被识别为固定后端 Adapter，Vendor 本体仍位于目标工程 `05_Vendor/vendor_middleware` 或 `vendor_algorithm`；
 - [ ] 默认只有一组 `impl_<domain>.c/.h` Adapter 文件；拆分职责已登记；
 - [ ] Adapter/Port 头没有泄漏 Vendor/OS/Platform 私有实现类型；
 - [ ] Vendor 源码未修改、未复制进 Impl，且 Service/App/Platform 公共头没有直接 include Vendor；
 - [ ] 初始化、反初始化、状态和错误映射完整；
 - [ ] 格式化、缓存、输出和资源释放路径有边界；
+- [ ] LVGL 版本差异、Display/Input/Tick/锁和 Owner Task 约束均隔离在 Impl/Port；
 - [ ] ISR、阻塞、线程安全、可重入性和内存所有权已声明；
 - [ ] Middleware 后端由构建系统固定链接，Board 不提供注册/注销入口；
 - [ ] 静态、主机、交叉构建、目标运行和实物观测验收层级已分开。

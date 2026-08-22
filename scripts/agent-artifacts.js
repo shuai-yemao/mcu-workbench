@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { PLUGIN_OUTPUT_DIRECTORIES } = require('../lib/project-output-paths');
 
 const RUN_FIELDS = [
   'run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files',
@@ -68,8 +69,7 @@ function projectPaths(projectRoot) {
 
 function ensureDirectories(root) {
   for (const relative of [
-    '.mcu-workbench/runs', 'docs/architecture', 'docs/verification',
-    'docs/devlog', 'docs/notes'
+    '.mcu-workbench/runs', ...Object.values(PLUGIN_OUTPUT_DIRECTORIES)
   ]) fs.mkdirSync(path.join(root, relative), { recursive: true });
 }
 
@@ -91,10 +91,7 @@ function initProject(options = {}) {
     active_agents: [],
     artifact_roots: {
       runs: '.mcu-workbench/runs',
-      architecture: 'docs/architecture',
-      verification: 'docs/verification',
-      devlog: 'docs/devlog',
-      notes: 'docs/notes'
+      ...PLUGIN_OUTPUT_DIRECTORIES
     }
   };
   fs.writeFileSync(paths.metadata, `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');

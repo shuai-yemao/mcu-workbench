@@ -149,6 +149,12 @@ Vendor 登记/编译单元（目标工程 05_Vendor）
 Middleware Vendor Port 是独立的第三方移植边界，不等同于 BSP Adapter；它可以在 Impl 边界
 使用经审查的 OS/HAL 资源，但不得把原生类型或后端状态泄漏到 Platform/Service。
 
+LVGL 采用单一 GUI 契约时，计划必须明确 `03_Platform/platform_middleware/platform_gui.h`
+是唯一 Platform 公共头，默认不增加 `platform_gui.c`；由
+`04_Impl/impl_middleware/lvgl/impl_lvgl_gui.c/.h` 唯一实现 `platform_gui_*()`，
+必要时再拆出 `impl_lvgl_port.c/.h` 承载 Display/Input/Tick/锁和具体资源。计划不得生成
+`platform_lvgl.h`、第二个配置公共头或第二套 GUI 符号，并须将 LVGL v8/v9 API 差异留在 Impl。
+
 ## plan.md 与交付计划最低产物
 
 `spec.md` 定义需求、工程约束、施工边界和验收要求；`plan.md` 记录用户选择并通过审查的实施路线及阶段级 Agent/Skill 基线；`task.md` 记录由 `plan.md` 拆出的有序、单一责任、可独立验证任务及任务级 Agent/Skill 分配。三者不得互相新增范围。`plan.md` 的固定路径为 `<project_root>/00_Docs/04_需求文档/plan.md`，模板见 [`plan-template.md`](references/plan-template.md)；`task.md` 由 [`workflow-task-breakdown`](../workflow-task-breakdown/SKILL.md) 生成，执行控制由 [`workflow-task-execution`](../workflow-task-execution/SKILL.md) 负责。

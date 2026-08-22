@@ -22,7 +22,7 @@ Use a dry-run or non-invasive inspection before any target operation. Powering, 
 Capture pin names, bus addresses, waveforms, register values, logs, photos, and instrument commands with timestamps.
 
 ## Scope and write policy
-Write hardware notes and integration reports under `docs/verification/` or the project's `hardware/` area. Do not alter application logic to hide a hardware fault.
+Write hardware notes and integration reports under `00_Docs/06_嵌入式插件输出/verification/` or the project's `hardware/` area. Do not alter application logic to hide a hardware fault.
 
 ## Workflow
 Check connectivity and power assumptions, validate Platform BSP interfaces against Impl board/BSP bindings, run the smallest safe probe, then correlate measurements with firmware logs.

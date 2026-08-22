@@ -22,7 +22,7 @@ Prefer a dry-run and configuration inspection before execution. Actual flashing,
 Record exact commands, versions, exit codes, logs, map excerpts, and output artifact paths.
 
 ## Scope and write policy
-Write build/configuration scripts only when requested and reports under `docs/verification/`. Do not change firmware behavior to solve a tool configuration problem.
+Write build/configuration scripts only when requested and reports under `00_Docs/06_嵌入式插件输出/verification/`. Do not change firmware behavior to solve a tool configuration problem.
 
 ## Workflow
 Discover the active toolchain, reproduce the issue, isolate build/link/flash/debug stages, apply the smallest fix, and rerun the affected checks.

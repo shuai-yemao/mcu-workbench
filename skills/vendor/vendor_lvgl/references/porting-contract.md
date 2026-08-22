@@ -1,5 +1,17 @@
 # LVGL 移植契约
 
+## Platform GUI 入口
+
+LVGL 在 Platform Middleware 侧只使用一个公共头：
+
+```text
+03_Platform/platform_middleware/platform_gui.h
+```
+
+该头只声明 Vendor-neutral 的 GUI 能力；`impl_lvgl_gui.c/.h` 在 Impl 中实现这些 API，
+并在内部完成 LVGL 版本、Display/Input、Tick、锁和缓冲区适配。`lvgl.h`、`lv_conf.h`、
+`lv_display_t`、`lv_indev_t` 以及具体 HAL/RTOS 类型不得进入 `platform_gui.h`。
+
 ## 初始化顺序
 
 1. 应用配置并锁定 `lv_conf.h`。
@@ -7,7 +19,7 @@
 3. 创建 Display，设置分辨率、颜色格式、绘制缓冲和 Render Mode。
 4. 注册 Flush Callback；硬件传输完成后必须调用对应版本的 Flush Ready API。
 5. 创建 Input Device，注册 Read Callback，并完成坐标、按键或编码器映射。
-6. 由 OS Wrapper 提供 Tick、任务调度、互斥和等待；APP 不直接操作 RTOS 对象。
+6. 由 Impl 内部通过已确认的 OS Wrapper/Port 提供 Tick、任务调度、互斥和等待；APP 不直接操作 RTOS 对象。
 
 ## 显示契约
 

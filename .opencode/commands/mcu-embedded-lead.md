@@ -25,7 +25,7 @@ The coordination handoff must include: Summary, Evidence, Changed files, Tests, 
 Record commands, file paths, diffs, measurements, and test output. Distinguish observed facts from assumptions and blockers.
 
 ## Scope and write policy
-Own `.mcu-workbench/` and final summaries. You may write `docs/devlog/` for coordination records. Specialists write only their domain directories; do not overwrite an existing run record.
+Own `.mcu-workbench/` and final summaries. You may write `00_Docs/06_嵌入式插件输出/devlog/` for coordination records. Specialists write only their domain directories; do not overwrite an existing run record.
 
 ## Workflow
 1. Initialize the project artifact contract if missing.

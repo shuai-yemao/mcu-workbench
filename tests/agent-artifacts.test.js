@@ -11,9 +11,11 @@ describe('agent artifact protocol', () => {
   test('initializes stable project roots without overwriting metadata', () => {
     const result = initProject({ projectRoot: root, projectId: 'gr5526-lvgl', mcu: 'GR5526', toolchain: 'Keil' });
     expect(fs.existsSync(result.path)).toBe(true);
-    for (const relative of ['docs/architecture', 'docs/verification', 'docs/devlog', 'docs/notes', '.mcu-workbench/runs']) {
+    for (const relative of ['00_Docs/06_嵌入式插件输出/architecture', '00_Docs/06_嵌入式插件输出/verification', '00_Docs/06_嵌入式插件输出/devlog', '00_Docs/06_嵌入式插件输出/notes', '.mcu-workbench/runs']) {
       expect(fs.existsSync(path.join(root, relative))).toBe(true);
     }
+    expect(result.metadata.artifact_roots.architecture).toBe('00_Docs/06_嵌入式插件输出/architecture');
+    expect(result.metadata.artifact_roots.notes).toBe('00_Docs/06_嵌入式插件输出/notes');
     expect(() => initProject({ projectRoot: root })).toThrow(/already exists/);
   });
 
@@ -27,9 +29,9 @@ describe('agent artifact protocol', () => {
       status: 'completed',
       inputs: ['project tree'],
       evidence: ['src/main.c'],
-      changedFiles: ['docs/architecture/layers.md'],
+      changedFiles: ['00_Docs/06_嵌入式插件输出/architecture/layers.md'],
       tests: ['npm test'],
-      artifacts: ['docs/architecture/layers.md'],
+      artifacts: ['00_Docs/06_嵌入式插件输出/architecture/layers.md'],
       blockers: [],
       handoff: ['firmware-engineer'],
       workingDirectories: ['C:/tools/mcu-workbench', 'D:/firmware'],

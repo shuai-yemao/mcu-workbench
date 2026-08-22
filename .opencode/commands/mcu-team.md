@@ -7,13 +7,13 @@ You are using the MCU-Workbench embedded development agent team. Here is the tea
 
 | Agent | 领域 | 写入范围 | 命令 |
 |---|---|---|---|
-| embedded-lead | 项目协调 | .mcu-workbench/, docs/devlog/ | /mcu-embedded-lead |
+| embedded-lead | 项目协调 | .mcu-workbench/, 00_Docs/06_嵌入式插件输出/devlog/ | /mcu-embedded-lead |
 | firmware-engineer | 固件实现 | 项目固件目录与配置 | /mcu-firmware-engineer |
-| hardware-integration | 硬件集成 | hardware/, docs/verification/ | /mcu-hardware-integration |
-| knowledge-engineer | 知识沉淀 | docs/devlog/, docs/notes/ | /mcu-knowledge-engineer |
-| system-architect | 分层架构 | docs/architecture/ | /mcu-system-architect |
-| toolchain-engineer | 工具链 | 工具配置, docs/verification/ | /mcu-toolchain-engineer |
-| verification-engineer | 验证质量 | 测试目录, docs/verification/ | /mcu-verification-engineer |
+| hardware-integration | 硬件集成 | hardware/, 00_Docs/06_嵌入式插件输出/verification/ | /mcu-hardware-integration |
+| knowledge-engineer | 知识沉淀 | 00_Docs/06_嵌入式插件输出/devlog/, 00_Docs/06_嵌入式插件输出/notes/ | /mcu-knowledge-engineer |
+| system-architect | 分层架构 | 00_Docs/06_嵌入式插件输出/architecture/ | /mcu-system-architect |
+| toolchain-engineer | 工具链 | 工具配置, 00_Docs/06_嵌入式插件输出/verification/ | /mcu-toolchain-engineer |
+| verification-engineer | 验证质量 | 测试目录, 00_Docs/06_嵌入式插件输出/verification/ | /mcu-verification-engineer |
 
 推荐工作流：
 1. embedded-lead 分析需求和项目状态

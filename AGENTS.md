@@ -6,13 +6,13 @@
 
 | Agent | 领域 | 工具 ID | 写入范围 |
 |---|---|---|---|
-| `embedded-lead` | 项目协调 | `mcu_agent_embedded_lead` | `.mcu-workbench/`、`docs/devlog/` |
-| `system-architect` | 分层架构 | `mcu_agent_system_architect` | `docs/architecture/` |
+| `embedded-lead` | 项目协调 | `mcu_agent_embedded_lead` | `.mcu-workbench/`、`00_Docs/06_嵌入式插件输出/devlog/` |
+| `system-architect` | 分层架构 | `mcu_agent_system_architect` | `00_Docs/06_嵌入式插件输出/architecture/` |
 | `firmware-engineer` | 固件实现 | `mcu_agent_firmware_engineer` | 项目固件目录与配置 |
-| `hardware-integration` | 硬件集成 | `mcu_agent_hardware_integration` | `hardware/`、`docs/verification/` |
-| `toolchain-engineer` | 工具链 | `mcu_agent_toolchain_engineer` | 工具配置、`docs/verification/` |
-| `verification-engineer` | 验证质量 | `mcu_agent_verification_engineer` | 测试目录、`docs/verification/` |
-| `knowledge-engineer` | 知识沉淀 | `mcu_agent_knowledge_engineer` | `docs/devlog/`、`docs/notes/` |
+| `hardware-integration` | 硬件集成 | `mcu_agent_hardware_integration` | `hardware/`、`00_Docs/06_嵌入式插件输出/verification/` |
+| `toolchain-engineer` | 工具链 | `mcu_agent_toolchain_engineer` | 工具配置、`00_Docs/06_嵌入式插件输出/verification/` |
+| `verification-engineer` | 验证质量 | `mcu_agent_verification_engineer` | 测试目录、`00_Docs/06_嵌入式插件输出/verification/` |
+| `knowledge-engineer` | 知识沉淀 | `mcu_agent_knowledge_engineer` | `00_Docs/06_嵌入式插件输出/devlog/`、`00_Docs/06_嵌入式插件输出/notes/` |
 
 ## 在 OpenCode 中使用
 
@@ -61,4 +61,4 @@ node scripts/agent-artifacts.js init --project . --project-id <name> --mcu <chip
 node scripts/agent-artifacts.js record --project . --agent <name> --task "<desc>" --status completed --evidence <path> --artifact <path>
 ```
 
-协议目录：`.mcu-workbench/project.json`、`.mcu-workbench/runs/*.json`、`docs/architecture/`、`docs/verification/`、`docs/devlog/`、`docs/notes/`
+协议目录：`.mcu-workbench/project.json`、`.mcu-workbench/runs/*.json`、`00_Docs/06_嵌入式插件输出/architecture/`、`00_Docs/06_嵌入式插件输出/verification/`、`00_Docs/06_嵌入式插件输出/devlog/`、`00_Docs/06_嵌入式插件输出/notes/`

@@ -1,0 +1,70 @@
+{
+  "request_id": "REQ-HTML-DASHBOARD-20260820",
+  "state_version": 1,
+  "project_root": "D:\\zhuomian\\embedded_framework",
+  "project_branch": "platform_common",
+  "project_commit": "9201618",
+  "spec_version": "v0.1",
+  "plan_version": "v0.1",
+  "task_version": "v0.1",
+  "current_stage": "final_review",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": ["versioned"],
+  "requirements": [
+    "一个项目只生成一个自包含 workflow-dashboard.html",
+    "MVP 包含项目总览、功能进度、软件架构与启动、Git 与项目调整、AI 工作流与问题、调试日志、构建与验证、资源与硬件状态 8 个页面",
+    "功能分类以 00_Docs/04_需求文档/项目功能清单.md 为唯一来源，一个功能可以关联多个 REQ",
+    "调试页只读 00_Docs/05_日志，不执行编译、烧录或调试命令",
+    "只有输入内容稳定摘要变化时才重写 HTML"
+  ],
+  "constraints": [
+    "不覆盖目标工程已有 spec.md、plan.md、task.md 或其他用户变更",
+    "不修改固件、HAL、RTOS、BSP、Vendor、CubeMX 和目标工程业务源码",
+    "架构/启动/构建/硬件结论必须保留证据等级，不能从源码或目录名称猜测",
+    "目标项目正式文档使用 REQ-HTML-DASHBOARD-20260820-Spec.md 等独立平铺文件"
+  ],
+  "evidence": [
+    {"level":"confirmed","artifact":"D:\\zhuomian\\embedded_framework","detail":"platform_common @ 9201618；目标工作区已有大量用户修改，必须保留"},
+    {"level":"confirmed","artifact":"D:\\zhuomian\\embedded_framework\\00_Docs\\02_架构设计","detail":"已有 README、五层职责、依赖方向等架构资料"},
+    {"level":"confirmed","artifact":"D:\\zhuomian\\embedded_framework\\00_Docs\\04_需求文档","detail":"已有 REQ 平铺文档、构建/验证记录和当前 spec.md，不能覆盖"},
+    {"level":"confirmed","artifact":"D:\\zhuomian\\embedded_framework\\build; D:\\zhuomian\\embedded_framework\\06_Toolchain\\cubemx\\stm32f411ceu6\\build\\Debug","detail":"已有 BIN、HEX、ELF、MAP 和 RTT 日志等静态证据"},
+    {"level":"user-confirmed","artifact":"当前会话","detail":"确认 8 页面、独立功能清单、功能可关联多个 REQ、调试页只读和独立 Spec 文件名"}
+  ],
+  "decisions": [
+    {"decision":"eight_page_mvp","status":"user-confirmed"},
+    {"decision":"feature_catalog_is_source_of_truth","status":"user-confirmed"},
+    {"decision":"many_requests_to_one_feature","status":"user-confirmed"},
+    {"decision":"read_only_debug_page","status":"user-confirmed"},
+    {"decision":"independent_flat_spec_files","status":"user-confirmed"},
+    {"decision":"implementation_option_a_extend_existing_generator","status":"user-confirmed"}
+  ],
+  "challenge_summary": {
+    "purpose_conclusion":"user-confirmed",
+    "feasibility_conclusion":"有条件可行",
+    "scope_conclusion":"MVP 页面、功能清单、日志目录和只读证据边界已明确；构建/烧录主动控制明确排除",
+    "acceptance_gaps":["浏览器 file:// 自动重新加载","外部工具是否持续写入 RTT/串口/HardFault/寄存器日志","不同 Map/日志格式的解析覆盖"],
+    "unresolved_risks":["目标工程脏工作区","功能清单尚不存在","05_日志目录尚不存在"],
+    "required_review_gate_checks":["输出文件不覆盖已有需求文档","8 页面数据源和状态边界","功能清单多 REQ 聚合规则","只读日志和构建证据安全渲染","摘要去重和监听范围","静态/主机/构建/目标证据分级"],
+    "handoff_status":"可交接"
+  },
+  "review_package": {
+    "status":"approved-for-execution",
+    "engineering_facts":"confirmed/user-confirmed",
+    "engineering_state":["目标工程路径/分支/提交","架构资料","平铺需求文档","已有构建产物和 RTT 日志","脏工作区"],
+    "file_scope":["生成器 dashboard 核心/CLI/测试","目标工程独立 Spec 文件","目标工程项目功能清单","目标工程 05_日志","目标工程 workflow-dashboard.html"],
+    "generation_constraints":["单一职责：数据采集、状态汇总、安全渲染和文件监听分离","不执行原始 HTML/脚本","不执行编译烧录","保留证据等级","不修改目标固件分层"],
+    "acceptance_tests":["8 页面静态检查","功能清单多 REQ 聚合主机测试","日志目录读取和缺失降级测试","内容摘要无变化跳过写入","HTML 安全边界检查"],
+    "solid_status":"pass",
+    "blockers":[],
+    "selected_option":"A"
+  },
+  "user_gates": {
+    "spec":"approved",
+    "plan":"approved",
+    "hard_blocker":"none"
+  },
+  "verify_summary":{"status":"passed","evidence_level":"host/static","details":"49 suites/301 tests、插件校验、目标 render 和 HTML 静态检查通过"},
+  "final_review_summary":{"status":"passed","unverified":["file:// 浏览器自动加载","目标板运行与实物调试","外部工具持续写入 05_日志"]},
+  "updated_at":"2026-08-20T14:10:00+08:00"
+}

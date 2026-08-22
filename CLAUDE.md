@@ -17,7 +17,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 |------|------|------|
 | **Canonical Skills** | `skills/` | 46 catalog / 44 canonical；命名规律：分层技能 snake_case（platform_*/impl_*/vendor_*/service_*）、工程流程 kebab-case（tools-*/workflow-*/hardware-*/app-architecture）；数据源 `skills/catalog.js` + `skills/catalog-metadata.js` |
 | **Agent 团队** | `agents/` | 7 个嵌入式开发角色，附带 `AGENTS.override.md` 作为 Codex 兼容桥 |
-| **目标工程产物** | `docs/architecture/`、`docs/verification/`、`docs/devlog/`、`docs/notes/` | Agent 运行时写入的项目报告目录；仓库不维护静态文档站点 |
+| **目标工程产物** | `00_Docs/06_嵌入式插件输出/architecture/`、`00_Docs/06_嵌入式插件输出/verification/`、`00_Docs/06_嵌入式插件输出/devlog/`、`00_Docs/06_嵌入式插件输出/notes/` | Agent 运行时写入的项目报告目录；仓库不维护静态文档站点 |
 | **脚本/API** | `scripts/` + `lib/` | 分层扫描(`scripts/claude-layer-api.js`)与校验 |
 | **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约 |
 | **测试套件** | `tests/` | 35 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
@@ -127,13 +127,13 @@ OpenCode 适配通过 `@opencode-ai/plugin` 暴露工具；Codex 适配入口为
 
 | Agent | 领域（domain） | 写入范围（scope） |
 |-------|------|----------|
-| `embedded-lead` | 项目协调 | `.mcu-workbench/`、`docs/devlog/` |
-| `system-architect` | 分层架构 | `docs/architecture/` |
+| `embedded-lead` | 项目协调 | `.mcu-workbench/`、`00_Docs/06_嵌入式插件输出/devlog/` |
+| `system-architect` | 分层架构 | `00_Docs/06_嵌入式插件输出/architecture/` |
 | `firmware-engineer` | 固件实现 | 项目固件目录与配置 |
-| `hardware-integration` | 硬件集成 | `hardware/`、`docs/verification/` |
-| `toolchain-engineer` | 工具链 | 工具配置、`docs/verification/` |
-| `verification-engineer` | 验证质量 | 测试目录、`docs/verification/` |
-| `knowledge-engineer` | 知识沉淀 | `docs/devlog/`、`docs/notes/` |
+| `hardware-integration` | 硬件集成 | `hardware/`、`00_Docs/06_嵌入式插件输出/verification/` |
+| `toolchain-engineer` | 工具链 | 工具配置、`00_Docs/06_嵌入式插件输出/verification/` |
+| `verification-engineer` | 验证质量 | 测试目录、`00_Docs/06_嵌入式插件输出/verification/` |
+| `knowledge-engineer` | 知识沉淀 | `00_Docs/06_嵌入式插件输出/devlog/`、`00_Docs/06_嵌入式插件输出/notes/` |
 
 Agent 遵循分域写入和显式交接协议。运行记录写入 `.mcu-workbench/runs/`。
 

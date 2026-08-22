@@ -405,7 +405,7 @@ describe('Claude layering', () => {
     expect(scan.layers.vendor.files.map((item) => item.path)).toContain('ThirdParty/lib.c');
   }));
 
-  test('migrates legacy split management directories into .mcu-workbench', () => withFixture((root) => {
+  test('writes the report to the canonical plugin output directory and preserves legacy reports', () => withFixture((root) => {
     const legacyRules = path.join(root, '.claude', 'rules', 'mcu-workbench');
     const legacyReport = path.join(root, 'docs', 'architecture');
     fs.mkdirSync(legacyRules, { recursive: true });
@@ -421,7 +421,7 @@ describe('Claude layering', () => {
     expect(JSON.parse(fs.readFileSync(path.join(root, '.mcu-workbench', 'claude-layer.json'), 'utf8')).managed)
       .toMatchObject({ rulesDirectory: RULES_RELATIVE_DIRECTORY, report: REPORT_RELATIVE_PATH });
     expect(fs.existsSync(path.join(root, '.claude', 'rules', 'mcu-workbench'))).toBe(false);
-    expect(fs.existsSync(path.join(root, 'docs', 'architecture', 'claude-layer-map.md'))).toBe(false);
+    expect(fs.existsSync(path.join(root, 'docs', 'architecture', 'claude-layer-map.md'))).toBe(true);
   }));
 
   test('removes stale managed rule files on sync and keeps user files', () => withFixture((root) => {

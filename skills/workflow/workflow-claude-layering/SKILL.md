@@ -46,10 +46,10 @@ README 管理范围、受管区块、配置和状态由 `workflow-document-conte
 | `.mcu-workbench/rules/mcu-workbench/` | 本 Skill | 生成通用五层规则；使用 profile 的标准层路径，不写入项目扫描证据。 |
 | `.claude/rules/` 的其他文件 | 用户/项目 | 不读取后重写，不删除。 |
 | `.mcu-workbench/claude-layer*.json` | 本 Skill | `architecture.profile` 与 `rulesConfirmed` 记录创建前规则决策，state 由扫描器生成；旧版 `claude-layering*.json` 只读兼容；旧 layout 键（middleware/os/bsp/core/driver）读取时自动归一化到五层键。 |
-| `.mcu-workbench/architecture/claude-layer-map.md` | 本 Skill | 记录静态扫描事实与未确认项。 |
+| `00_Docs/06_嵌入式插件输出/architecture/claude-layer-map.md` | 本 Skill | 记录静态扫描事实与未确认项。 |
 
-从旧版本迁移时，`sync --write` 只删除旧 `.claude/rules/mcu-workbench/` 下的插件受管规则和旧
-`docs/architecture/claude-layer-map.md`；不会删除 `.claude/rules/` 的其他规则或 `docs/architecture/` 的其他文档。
+从旧版本迁移时，`sync --write` 只删除旧 `.claude/rules/mcu-workbench/` 下的插件受管规则；旧
+`docs/architecture/` 仅作为兼容读取来源，不会删除其中的用户文档。
 
 若工程已有 `AGENTS.md`，受管区块引用 `@AGENTS.md`，不复制其内容。
 
@@ -68,7 +68,7 @@ design（只读规则方案）
 
 `bootstrap` 生成的 Claude 文件和五层规则必须是通用模板，不得把当前项目专属的目录、源码、include、芯片和 RTOS
 写入规则。项目骨架完成后 `sync` 才能建立实际目录和 include 快照，但快照只进入
-`.mcu-workbench/architecture/claude-layer-map.md` 和状态；目录 README 由 `workflow-document-context` 独立生成和校验。
+`00_Docs/06_嵌入式插件输出/architecture/claude-layer-map.md` 和状态；目录 README 由 `workflow-document-context` 独立生成和校验。
 
 ### 存量工程接入链
 

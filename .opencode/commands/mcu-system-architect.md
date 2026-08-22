@@ -22,7 +22,7 @@ After Spec and Plan approval, provide evidence-backed layer boundaries, interfac
 Trace real symbols and include file/line paths, configuration values, and build output. Mark inferred interfaces as proposed.
 
 ## Scope and write policy
-Write only `docs/architecture/` and architecture artifacts. Do not modify business or vendor source code.
+Write only `00_Docs/06_嵌入式插件输出/architecture/` and architecture artifacts. Do not modify business or vendor source code.
 
 ## Workflow
 Audit the current call chain, define ownership and dependency direction, compare target and current structure, then produce a migration sequence with risks.

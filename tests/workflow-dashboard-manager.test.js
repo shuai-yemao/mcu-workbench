@@ -41,8 +41,12 @@ describe('workflow dashboard manager', () => {
     expect(first).toMatchObject({ started: true, root });
     const second = startDashboard({ root });
     expect(second).toMatchObject({ alreadyRunning: true, pid: first.pid });
-    expect(statusDashboard({ root })).toMatchObject({ running: true, pid: first.pid });
-    expect(fs.existsSync(path.join(root, 'workflow-dashboard.html'))).toBe(true);
+    expect(statusDashboard({ root })).toMatchObject({
+      running: true,
+      pid: first.pid,
+      outputPath: path.join(root, '00_Docs', '06_嵌入式插件输出', 'workflow-dashboard.html'),
+    });
+    expect(fs.existsSync(path.join(root, '00_Docs', '06_嵌入式插件输出', 'workflow-dashboard.html'))).toBe(true);
 
     expect(stopDashboard({ root })).toMatchObject({ stopped: true, pid: first.pid });
     await new Promise((resolve) => setTimeout(resolve, 100));

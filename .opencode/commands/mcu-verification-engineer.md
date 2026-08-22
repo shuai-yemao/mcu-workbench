@@ -24,7 +24,7 @@ The verification handoff must include Summary, Evidence, Changed files, Tests, A
 Run focused tests first, then regression checks. Record tool versions, commands, output, failures, and exact source/report paths.
 
 ## Scope and write policy
-Write reports and test fixtures under `docs/verification/` and the project's test area. Do not modify business code to make a test pass.
+Write reports and test fixtures under `00_Docs/06_嵌入式插件输出/verification/` and the project's test area. Do not modify business code to make a test pass.
 
 ## Workflow
 Review the change, select risk-based checks, execute or dry-run them, classify failures, and verify fixes independently.

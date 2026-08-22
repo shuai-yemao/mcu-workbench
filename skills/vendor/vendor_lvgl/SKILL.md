@@ -9,8 +9,12 @@ description: Vendor 底座登记：按项目锁定的 LVGL 版本维护 GUI 源�
 
 ## 职责边界
 
-负责 LVGL 公共 API、对象树、控件、样式、布局、事件、动画、显示刷新和输入分发。上层调用必须经过 `platform_middleware` → `impl_middleware`，不得让 Service、App 或 Platform 公共头直接 include LVGL。
-显示、触摸、按键、背光、DMA 与缓存由 `impl_middleware`/`impl_board` 通过 `platform_bsp` 提供（其内部适配角色为 BSP Wrapper/Port）；Tick、任务、锁和等待由 `impl_os` 通过 `platform_os` 提供（其内部适配角色为 OS Wrapper/Port）。
+负责 LVGL 公共 API、对象树、控件、样式、布局、事件、动画、显示刷新和输入分发。上层调用必须经过唯一的
+`platform_middleware/platform_gui.h` → `impl_middleware/lvgl/impl_lvgl_gui.c`，不得让 Service、App 或
+Platform 公共头直接 include LVGL。
+显示、触摸、按键、背光、DMA 与缓存由 `impl_middleware`/`impl_board` 通过已确认的 `platform_bsp` 能力提供
+（其内部适配角色为 BSP Wrapper/Port）；Tick、任务、锁和等待由 Impl 通过已确认的 `platform_os` 能力提供
+（其内部适配角色为 OS Wrapper/Port）。这些依赖只出现在 Impl/Port，不改变 `platform_gui.h` 的 Vendor-neutral 契约。
 LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务规则仍由 `app-architecture` 负责。
 
 设备回调只发布拥有明确生命周期的快照或事件，不能直接操作 LVGL；UI 所有者任务在自己的上下文读取公共服务状态后刷新页面。
@@ -39,8 +43,9 @@ LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务
 
 ## 交接与验收
 
+- Platform GUI 公共面只交付 `platform_gui.h`；具体 LVGL API、版本差异和资源生命周期由 [`impl_middleware`](../../impl/impl_middleware/SKILL.md) 的 `impl_lvgl_gui.c/.h` 实现。
 - 设备能力由 Impl 通过 [`platform_bsp`](../../platform/platform_bsp/SKILL.md) 接入；器件协议交给 [`impl_bsp`](../../impl/impl_bsp/SKILL.md)。
-- 任务、Tick、互斥和等待由 [`impl_os`](../../impl/impl_os/SKILL.md) 实现 [`platform_os`](../../platform/platform_os/SKILL.md)（legacy Skill alias：`os-adapter`）。
+- 任务、Tick、互斥和等待由 Impl 通过 [`platform_os`](../../platform/platform_os/SKILL.md) 接入（legacy Skill alias：`os-adapter`），不得把原生 RTOS 类型放进 `platform_gui.h`。
 - 业务页面和业务状态交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
 - 构建、日志、性能和回归证据交给 [`tools-quality`](../../tools/tools-quality/SKILL.md) 或 [`tools-observability`](../../tools/tools-observability/SKILL.md)。
 

@@ -28,19 +28,22 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    APP["APP UI / 业务页面"] --> API["LVGL Public API"]
+    SERVICE["Service GUI 能力"] --> GUI["platform_gui.h"]
+    GUI --> IMPL["impl_lvgl_gui.c"]
+    IMPL --> API["LVGL Public API"]
     API --> CORE["Core: object / event / style / refresh"]
     CORE --> DISPLAY["Display + Draw"]
     CORE --> INPUT["Input + Group"]
     DISPLAY --> FLUSH["Flush Callback"]
-    FLUSH --> BW["BSP Wrapper"]
+    FLUSH --> PORT["Impl LVGL Port"]
+    PORT --> BW["platform_bsp / BSP Wrapper"]
     BW --> BP["BSP Port"]
     BP --> HAL["BSP hal_driver"]
     HAL --> MCU["Core → Driver"]
     INPUT --> READ["Input Read Callback"]
     READ --> BW
     CORE --> TICK["Tick / Timer / Lock"]
-    TICK --> OW["OS Wrapper"]
+    TICK --> OW["platform_os / OS Wrapper"]
     OW --> OP["OS Port → FreeRTOS/RT-Thread/裸机"]
 ```
 
@@ -51,6 +54,8 @@ flowchart TD
 - `display` 管理显示对象、分辨率、缓冲和 Flush；`draw` 管理软件或硬件绘制后端。
 - `indev` 管理触摸、鼠标、键盘、编码器和手势输入。
 - `osal`、`tick` 提供系统协作；Widgets、Themes、Fonts、Images、FS 和第三方库按配置启用。
-- LVGL 的具体接入由 Impl 通过 `platform_bsp`/`platform_os` 完成；BSP Wrapper/Port 与 OS Wrapper/Port 只是其中的内部适配角色，App 仍只能通过 Service 使用业务能力。
+- LVGL 的具体实现由 `impl_lvgl_gui.c` 从唯一 `platform_gui.h` 契约落地；显示/输入与 Tick/锁
+  通过 Impl 内部使用 `platform_bsp`/`platform_os`，BSP Wrapper/Port 与 OS Wrapper/Port 只是内部适配角色，
+  App 仍只能通过 Service 使用业务能力。
 
 JSON 机器可读版本见 [`lvgl-knowledge-graph.json`](lvgl-knowledge-graph.json)。
