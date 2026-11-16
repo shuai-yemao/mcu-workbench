@@ -152,20 +152,23 @@ MCP 工具只读取 catalog 中的 active skills：
 npm run cursor:install
 ```
 
-脚本写入三个用户级位置，Windows 上把 `~` 换成 `%USERPROFILE%`：
+脚本写入用户级位置，Windows 上把 `~` 换成 `%USERPROFILE%`：
 
 ```text
 ~/.cursor/plugins/local/mcu-workbench
-~/.cursor/skills/mcu-workbench
+~/.cursor/plugins/installed.json
+~/.cursor/skills/<skill-id>
 ~/.cursor/mcp.json
 ```
 
-已有的全局 MCP 服务器会保留，并新增或更新名为 `mcu-workbench` 的服务器。执行 Developer: Reload Window 后，在任意工程的 Customize 里按 User 作用域查看 Skills 和 MCP。
+插件在 IDE 中的名称是 **MCU-Workbench**。公开 Marketplace 里搜不到它，因为还没有提交到 Cursor Marketplace。执行 Developer: Reload Window 后，到 Customize 的 Installed / User 里查看，不要在 Marketplace 搜索 `mcuworkbench`。
 
-从 GitHub 导入时也选择 User scope：
+已有的全局 MCP 服务器会保留，并新增或更新名为 `mcu-workbench` 的服务器。在 Agent 输入框用 `/workflow-router` 这类名称调用 skill。
+
+从 GitHub 导入时，仓库地址使用这个分支，并选择 User scope：
 
 ```text
-https://github.com/shuai-yemao/mcu-workbench
+https://github.com/shuai-yemao/mcu-workbench/tree/cursor/cursor-plugin-skills-mcp-f272
 ```
 
 ## 开发与发布检查

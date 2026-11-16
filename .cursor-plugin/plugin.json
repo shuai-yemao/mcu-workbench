@@ -16,18 +16,11 @@
     "stm32",
     "gr5526",
     "esp32",
-    "firmware"
+    "firmware",
+    "mcuworkbench"
   ],
   "category": "developer-tools",
-  "skills": [
-    "./skills/workflow/",
-    "./skills/rtos/",
-    "./skills/bsp/",
-    "./skills/platform/",
-    "./skills/middleware/",
-    "./skills/system/",
-    "./skills/tools/",
-    "./skills/hardware/"
-  ],
-  "agents": "./agents/"
+  "skills": "./cursor-skills/",
+  "agents": "./agents/",
+  "mcpServers": "./mcp.json"
 }

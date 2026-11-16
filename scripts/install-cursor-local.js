@@ -7,7 +7,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { CURSOR_SKILL_LAYERS } = require('./validators/manifest');
+const { listCursorSkills } = require('./validators/manifest');
 
 const ROOT = path.resolve(__dirname, '..');
 const SKIP = new Set(['.git', 'node_modules', 'coverage', 'integration-test', 'test-project']);
@@ -53,43 +53,66 @@ function writeGlobalMcp(mcpPath, pluginDir) {
   fs.writeFileSync(mcpPath, `${JSON.stringify(config, null, 2)}\n`);
 }
 
-function linkGlobalSkills(skillsDir, pluginDir) {
-  fs.rmSync(skillsDir, { recursive: true, force: true });
-  fs.mkdirSync(skillsDir, { recursive: true });
-  for (const layer of CURSOR_SKILL_LAYERS) {
-    const source = path.join(pluginDir, 'skills', layer);
-    if (!fs.existsSync(source)) throw new Error(`缺少 skill 层 ${source}`);
-    fs.symlinkSync(path.relative(skillsDir, source), path.join(skillsDir, layer));
+function ensureCursorSkillLinks(root) {
+  const dest = path.join(root, 'cursor-skills');
+  fs.rmSync(dest, { recursive: true, force: true });
+  fs.mkdirSync(dest, { recursive: true });
+  for (const skill of listCursorSkills()) {
+    const source = path.join(root, skill.path);
+    if (!fs.existsSync(path.join(source, 'SKILL.md'))) throw new Error(`缺少 ${skill.path}/SKILL.md`);
+    fs.symlinkSync(path.relative(dest, source), path.join(dest, skill.id));
   }
 }
 
-function disableBundledSkillAndMcpDiscovery(pluginDir) {
-  fs.rmSync(path.join(pluginDir, 'mcp.json'), { force: true });
-  fs.rmSync(path.join(pluginDir, '.cursor'), { recursive: true, force: true });
-  const manifestPath = path.join(pluginDir, '.cursor-plugin', 'plugin.json');
-  const manifest = readJsonObject(manifestPath);
-  manifest.skills = [];
-  fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+function linkGlobalSkills(skillsRoot, pluginDir) {
+  fs.rmSync(path.join(skillsRoot, 'mcu-workbench'), { recursive: true, force: true });
+  fs.mkdirSync(skillsRoot, { recursive: true });
+  for (const skill of listCursorSkills()) {
+    const source = path.join(pluginDir, 'cursor-skills', skill.id);
+    if (!fs.existsSync(source)) throw new Error(`缺少 cursor skill ${skill.id}`);
+    const link = path.join(skillsRoot, skill.id);
+    fs.rmSync(link, { recursive: true, force: true });
+    fs.symlinkSync(path.relative(skillsRoot, source), link);
+  }
+}
+
+function registerInstalledPlugin(pluginsDir, pluginDir) {
+  const file = path.join(pluginsDir, 'installed.json');
+  const config = fs.existsSync(file) ? readJsonObject(file) : {};
+  const local = config.local && typeof config.local === 'object' && !Array.isArray(config.local)
+    ? config.local
+    : {};
+  local[GLOBAL_MCP_NAME] = pluginDir;
+  config.local = local;
+  const user = Array.isArray(config.user) ? config.user.filter((name) => name !== GLOBAL_MCP_NAME) : [];
+  user.push(GLOBAL_MCP_NAME);
+  config.user = user;
+  fs.mkdirSync(pluginsDir, { recursive: true });
+  fs.writeFileSync(file, `${JSON.stringify(config, null, 2)}\n`);
+  return file;
 }
 
 function installCursorPlugin(options = {}) {
   const home = options.home || os.homedir();
   const pluginDir = options.pluginDir || path.join(home, '.cursor', 'plugins', 'local', 'mcu-workbench');
   const mcpPath = options.mcpPath || path.join(home, '.cursor', 'mcp.json');
-  const skillsDir = options.skillsDir || path.join(home, '.cursor', 'skills', 'mcu-workbench');
+  const skillsDir = options.skillsDir || path.join(home, '.cursor', 'skills');
 
   fs.rmSync(pluginDir, { recursive: true, force: true });
   fs.mkdirSync(path.dirname(pluginDir), { recursive: true });
   copyEntry(ROOT, pluginDir);
-  disableBundledSkillAndMcpDiscovery(pluginDir);
+  ensureCursorSkillLinks(pluginDir);
+  fs.rmSync(path.join(pluginDir, '.cursor'), { recursive: true, force: true });
   writeGlobalMcp(mcpPath, pluginDir);
   linkGlobalSkills(skillsDir, pluginDir);
+  const installedJson = registerInstalledPlugin(path.join(home, '.cursor', 'plugins'), pluginDir);
 
   return {
     scope: 'user',
     pluginDir,
     mcpPath,
-    skillsDir
+    skillsDir,
+    installedJson
   };
 }
 
@@ -104,5 +127,6 @@ if (require.main === module) {
 
 module.exports = {
   GLOBAL_MCP_NAME,
+  ensureCursorSkillLinks,
   installCursorPlugin
 };

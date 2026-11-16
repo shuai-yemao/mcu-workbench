@@ -3,7 +3,7 @@ const os = require('os');
 const path = require('path');
 const { spawn } = require('child_process');
 const { CANONICAL_SKILLS } = require('../skills/catalog');
-const { validateCursorManifest, CURSOR_SKILL_LAYERS } = require('../scripts/validators/manifest');
+const { validateCursorManifest, listCursorSkills } = require('../scripts/validators/manifest');
 const { dispatch, getSkill, listSkills, routeRequest } = require('../mcp/server');
 const { installCursorPlugin } = require('../scripts/install-cursor-local');
 
@@ -21,9 +21,10 @@ describe('Cursor plugin adapter', () => {
     const codex = readJson('.codex-plugin/plugin.json');
 
     expect(manifest.name).toBe('mcu-workbench');
-    expect(manifest.skills).toEqual(CURSOR_SKILL_LAYERS.map((layer) => `./skills/${layer}/`));
+    expect(manifest.displayName).toBe('MCU-Workbench');
+    expect(manifest.skills).toBe('./cursor-skills/');
+    expect(manifest.mcpServers).toBe('./mcp.json');
     expect(manifest.agents).toBe('./agents/');
-    expect(manifest).not.toHaveProperty('mcpServers');
     expect(manifest).not.toHaveProperty('hooks');
     expect(marketplace.plugins).toEqual([
       expect.objectContaining({ name: 'mcu-workbench', source: '.' })
@@ -151,10 +152,13 @@ describe('Cursor plugin adapter', () => {
       expect(installed.scope).toBe('user');
       expect(fs.existsSync(path.join(installed.pluginDir, 'skills', 'workflow', 'workflow-router', 'SKILL.md'))).toBe(true);
       expect(fs.existsSync(path.join(installed.pluginDir, 'mcp', 'server.js'))).toBe(true);
-      expect(fs.existsSync(path.join(installed.pluginDir, 'mcp.json'))).toBe(false);
+      expect(fs.existsSync(path.join(installed.pluginDir, 'mcp.json'))).toBe(true);
       expect(fs.existsSync(path.join(installed.pluginDir, '.cursor'))).toBe(false);
       expect(fs.existsSync(path.join(installed.pluginDir, '.git'))).toBe(false);
-      expect(JSON.parse(fs.readFileSync(path.join(installed.pluginDir, '.cursor-plugin', 'plugin.json'), 'utf8')).skills).toEqual([]);
+      expect(JSON.parse(fs.readFileSync(path.join(installed.pluginDir, '.cursor-plugin', 'plugin.json'), 'utf8')).skills).toBe('./cursor-skills/');
+      const installedRecord = JSON.parse(fs.readFileSync(installed.installedJson, 'utf8'));
+      expect(installedRecord.user).toContain('mcu-workbench');
+      expect(installedRecord.local['mcu-workbench']).toBe(installed.pluginDir);
 
       const mcp = JSON.parse(fs.readFileSync(installed.mcpPath, 'utf8'));
       expect(mcp.mcpServers.other.command).toBe('echo');
@@ -163,12 +167,14 @@ describe('Cursor plugin adapter', () => {
         args: [path.join(installed.pluginDir, 'mcp', 'server.js')]
       });
 
-      for (const layer of CURSOR_SKILL_LAYERS) {
-        const linkPath = path.join(installed.skillsDir, layer);
+      for (const skill of listCursorSkills()) {
+        const linkPath = path.join(installed.skillsDir, skill.id);
         expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
-        expect(fs.realpathSync(linkPath)).toBe(path.join(installed.pluginDir, 'skills', layer));
+        expect(fs.realpathSync(linkPath)).toBe(path.join(installed.pluginDir, skill.path));
+        expect(fs.existsSync(path.join(linkPath, 'SKILL.md'))).toBe(true);
       }
       expect(fs.existsSync(path.join(installed.skillsDir, 'embedded'))).toBe(false);
+      expect(fs.existsSync(path.join(installed.skillsDir, 'mcu-workbench'))).toBe(false);
     } finally {
       fs.rmSync(home, { recursive: true, force: true });
     }

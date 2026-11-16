@@ -1,11 +1,19 @@
 const fs = require('fs');
 const path = require('path');
+const { CANONICAL_SKILLS, SKILL_BY_ID } = require('../../skills/catalog');
 const { ROOT, readJson } = require('./common');
 
 const FORBIDDEN_CODEX_KEYS = new Set(['agents', 'hooks', 'mcpServers']);
-const CURSOR_SKILL_LAYERS = [
-  'workflow', 'rtos', 'bsp', 'platform', 'middleware', 'system', 'tools', 'hardware'
-];
+
+function listCursorSkills() {
+  const skills = [...CANONICAL_SKILLS];
+  for (const skill of Object.values(SKILL_BY_ID)) {
+    if (skill.layer === 'hardware' && !skill.archived && !skills.some((item) => item.id === skill.id)) {
+      skills.push(skill);
+    }
+  }
+  return skills;
+}
 
 function validateCodexManifest(errors) {
   const manifestPath = path.join(ROOT, '.codex-plugin', 'plugin.json');
@@ -54,18 +62,27 @@ function validateCursorManifest(errors) {
   if (manifest.name !== 'mcu-workbench') errors.push('cursor manifest: name 必须为 mcu-workbench');
   if (manifest.agents !== './agents/') errors.push('cursor manifest: agents 必须为 ./agents/');
   if (Object.prototype.hasOwnProperty.call(manifest, 'hooks')) errors.push('cursor manifest: 不启用 hooks');
-  if (Object.prototype.hasOwnProperty.call(manifest, 'mcpServers')) errors.push('cursor manifest: MCP 由根目录 mcp.json 声明');
+  if (manifest.skills !== './cursor-skills/') errors.push('cursor manifest: skills 必须为 ./cursor-skills/');
+  if (manifest.mcpServers !== './mcp.json') errors.push('cursor manifest: mcpServers 必须为 ./mcp.json');
+  if (manifest.displayName !== 'MCU-Workbench') errors.push('cursor manifest: displayName 必须为 MCU-Workbench');
 
-  const expected = CURSOR_SKILL_LAYERS.map((layer) => `./skills/${layer}/`);
-  const actual = Array.isArray(manifest.skills) ? manifest.skills : [];
-  if (!Array.isArray(manifest.skills)) errors.push('cursor manifest: skills 必须为数组');
-  for (const skillPath of expected) {
-    if (!actual.includes(skillPath)) errors.push(`cursor manifest: 缺少 skills 路径 ${skillPath}`);
-    const directory = path.join(ROOT, 'skills', skillPath.split('/')[2]);
-    if (!fs.existsSync(directory)) errors.push(`cursor manifest: skills 路径不存在 ${skillPath}`);
-  }
-  for (const skillPath of actual) {
-    if (!expected.includes(skillPath)) errors.push(`cursor manifest: 未登记 skills 路径 ${skillPath}`);
+  for (const skill of listCursorSkills()) {
+    const linkPath = path.join(ROOT, 'cursor-skills', skill.id);
+    if (!fs.existsSync(linkPath)) {
+      errors.push(`cursor skills: 缺少 cursor-skills/${skill.id}`);
+      continue;
+    }
+    if (!fs.lstatSync(linkPath).isSymbolicLink()) {
+      errors.push(`cursor skills: cursor-skills/${skill.id} 必须是符号链接`);
+      continue;
+    }
+    const resolved = fs.realpathSync(linkPath);
+    if (resolved !== path.join(ROOT, skill.path)) {
+      errors.push(`cursor skills: cursor-skills/${skill.id} 必须指向 ${skill.path}`);
+    }
+    if (!fs.existsSync(path.join(resolved, 'SKILL.md'))) {
+      errors.push(`cursor skills: ${skill.id} 缺少 SKILL.md`);
+    }
   }
 
   const mcp = readJson('mcp.json', errors);
@@ -83,7 +100,7 @@ function validateCursorManifest(errors) {
     errors.push('cursor scope: 禁止项目级 .cursor/mcp.json，安装脚本写入用户全局 ~/.cursor/mcp.json');
   }
   if (fs.existsSync(path.join(ROOT, '.cursor', 'skills'))) {
-    errors.push('cursor scope: 禁止项目级 .cursor/skills，安装脚本写入用户全局 ~/.cursor/skills/mcu-workbench');
+    errors.push('cursor scope: 禁止项目级 .cursor/skills，安装脚本写入用户全局 ~/.cursor/skills/<skill-id>');
   }
 
   const marketplace = readJson('.cursor-plugin/marketplace.json', errors);
@@ -101,7 +118,7 @@ function validateCursorManifest(errors) {
 
 module.exports = {
   FORBIDDEN_CODEX_KEYS,
-  CURSOR_SKILL_LAYERS,
+  listCursorSkills,
   validateCodexManifest,
   validateClaudeManifestSkillPaths,
   validateCursorManifest
