@@ -83,7 +83,7 @@ Core、Middleware、Driver 不设置 Adapter。
 3. “架构文档已输出”不代表代码已经满足层间依赖规则。
 4. “工具分析通过”不代表目标硬件已完成板级验证。
 5. “归档入口可解析”不代表归档内容仍属于 active plugin。
-6. Cursor MCP 只存在于根目录 `mcp.json` 和 `.cursor/mcp.json`。Claude 与 Codex manifest 不声明 MCP、hooks 或 agents。
+6. Cursor 的安装作用域是用户全局：`~/.cursor/mcp.json` 与 `~/.cursor/skills/mcu-workbench`。仓库内只保留插件包的 `mcp.json`，不提交项目级 `.cursor/mcp.json`。Claude 与 Codex manifest 不声明 MCP、hooks 或 agents。
 
 ## 7. Workflow 生命周期
 

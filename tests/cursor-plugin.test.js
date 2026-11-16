@@ -33,24 +33,15 @@ describe('Cursor plugin adapter', () => {
     expect(codex.skills).toBe('./skills/');
   });
 
-  test('points project and plugin MCP configs at the local skill server', () => {
+  test('keeps the packaged MCP global and does not commit a project scope', () => {
     const pluginMcp = readJson('mcp.json');
-    const projectMcp = readJson('.cursor/mcp.json');
     expect(pluginMcp.mcpServers.skills).toEqual({
       command: 'node',
       args: ['mcp/server.js'],
       cwd: '${CURSOR_PLUGIN_ROOT}'
     });
-    expect(projectMcp.mcpServers['mcu-workbench'].args).toEqual(['mcp/server.js']);
-  });
-
-  test('links active skill layers into .cursor/skills and skips unregistered embedded copies', () => {
-    for (const layer of CURSOR_SKILL_LAYERS) {
-      const linkPath = path.join(ROOT, '.cursor', 'skills', layer);
-      expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
-      expect(fs.realpathSync(linkPath)).toBe(path.join(ROOT, 'skills', layer));
-    }
-    expect(fs.existsSync(path.join(ROOT, '.cursor', 'skills', 'embedded'))).toBe(false);
+    expect(fs.existsSync(path.join(ROOT, '.cursor', 'mcp.json'))).toBe(false);
+    expect(fs.existsSync(path.join(ROOT, '.cursor', 'skills'))).toBe(false);
   });
 
   test('cursor manifest validation accepts the adapter', () => {
@@ -150,17 +141,36 @@ describe('Cursor plugin adapter', () => {
     }).isError).toBeUndefined();
   });
 
-  test('installs a local Cursor plugin copy that does not follow outside symlinks', () => {
-    const target = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-workbench-cursor-'));
+  test('installs skills and MCP at user scope for every project', () => {
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-workbench-cursor-'));
+    const mcpPath = path.join(home, '.cursor', 'mcp.json');
+    fs.mkdirSync(path.dirname(mcpPath), { recursive: true });
+    fs.writeFileSync(mcpPath, JSON.stringify({ mcpServers: { other: { command: 'echo' } } }));
     try {
-      installCursorPlugin(target);
-      expect(fs.existsSync(path.join(target, '.cursor-plugin', 'plugin.json'))).toBe(true);
-      expect(fs.existsSync(path.join(target, 'skills', 'workflow', 'workflow-router', 'SKILL.md'))).toBe(true);
-      expect(fs.existsSync(path.join(target, 'mcp', 'server.js'))).toBe(true);
-      expect(fs.lstatSync(path.join(target, '.cursor', 'skills', 'tools')).isSymbolicLink()).toBe(true);
-      expect(fs.existsSync(path.join(target, '.git'))).toBe(false);
+      const installed = installCursorPlugin({ home });
+      expect(installed.scope).toBe('user');
+      expect(fs.existsSync(path.join(installed.pluginDir, 'skills', 'workflow', 'workflow-router', 'SKILL.md'))).toBe(true);
+      expect(fs.existsSync(path.join(installed.pluginDir, 'mcp', 'server.js'))).toBe(true);
+      expect(fs.existsSync(path.join(installed.pluginDir, 'mcp.json'))).toBe(false);
+      expect(fs.existsSync(path.join(installed.pluginDir, '.cursor'))).toBe(false);
+      expect(fs.existsSync(path.join(installed.pluginDir, '.git'))).toBe(false);
+      expect(JSON.parse(fs.readFileSync(path.join(installed.pluginDir, '.cursor-plugin', 'plugin.json'), 'utf8')).skills).toEqual([]);
+
+      const mcp = JSON.parse(fs.readFileSync(installed.mcpPath, 'utf8'));
+      expect(mcp.mcpServers.other.command).toBe('echo');
+      expect(mcp.mcpServers['mcu-workbench']).toEqual({
+        command: 'node',
+        args: [path.join(installed.pluginDir, 'mcp', 'server.js')]
+      });
+
+      for (const layer of CURSOR_SKILL_LAYERS) {
+        const linkPath = path.join(installed.skillsDir, layer);
+        expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
+        expect(fs.realpathSync(linkPath)).toBe(path.join(installed.pluginDir, 'skills', layer));
+      }
+      expect(fs.existsSync(path.join(installed.skillsDir, 'embedded'))).toBe(false);
     } finally {
-      fs.rmSync(target, { recursive: true, force: true });
+      fs.rmSync(home, { recursive: true, force: true });
     }
   });
 });

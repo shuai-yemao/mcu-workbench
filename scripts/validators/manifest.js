@@ -79,11 +79,11 @@ function validateCursorManifest(errors) {
     if (server.cwd !== '${CURSOR_PLUGIN_ROOT}') errors.push('mcp.json: cwd 必须为 ${CURSOR_PLUGIN_ROOT}');
   }
 
-  const projectMcp = readJson('.cursor/mcp.json', errors);
-  const projectServer = projectMcp && projectMcp.mcpServers && projectMcp.mcpServers['mcu-workbench'];
-  if (!projectServer) errors.push('.cursor/mcp.json: 缺少 mcu-workbench 服务器');
-  else if (!Array.isArray(projectServer.args) || projectServer.args.length !== 1 || projectServer.args[0] !== 'mcp/server.js') {
-    errors.push('.cursor/mcp.json: args 必须为 ["mcp/server.js"]');
+  if (fs.existsSync(path.join(ROOT, '.cursor', 'mcp.json'))) {
+    errors.push('cursor scope: 禁止项目级 .cursor/mcp.json，安装脚本写入用户全局 ~/.cursor/mcp.json');
+  }
+  if (fs.existsSync(path.join(ROOT, '.cursor', 'skills'))) {
+    errors.push('cursor scope: 禁止项目级 .cursor/skills，安装脚本写入用户全局 ~/.cursor/skills/mcu-workbench');
   }
 
   const marketplace = readJson('.cursor-plugin/marketplace.json', errors);
@@ -93,21 +93,6 @@ function validateCursorManifest(errors) {
     const entry = plugins.find((plugin) => plugin && plugin.name === 'mcu-workbench');
     if (!entry) errors.push('cursor marketplace: 缺少 mcu-workbench');
     else if (entry.source !== '.') errors.push('cursor marketplace: source 必须为 .');
-  }
-
-  for (const layer of CURSOR_SKILL_LAYERS) {
-    const linkPath = path.join(ROOT, '.cursor', 'skills', layer);
-    if (!fs.existsSync(linkPath)) {
-      errors.push(`cursor skills: 缺少 .cursor/skills/${layer}`);
-      continue;
-    }
-    if (!fs.lstatSync(linkPath).isSymbolicLink()) {
-      errors.push(`cursor skills: .cursor/skills/${layer} 必须是符号链接`);
-      continue;
-    }
-    if (fs.realpathSync(linkPath) !== path.join(ROOT, 'skills', layer)) {
-      errors.push(`cursor skills: .cursor/skills/${layer} 必须指向 skills/${layer}`);
-    }
   }
 
   if (!fs.existsSync(path.join(ROOT, 'mcp', 'server.js'))) errors.push('mcp/server.js 不存在');

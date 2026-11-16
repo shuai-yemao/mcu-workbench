@@ -132,12 +132,11 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 ## Cursor 适配
 
-Cursor 使用独立入口，不改 Claude Code 和 Codex 的 manifest：
+Cursor 使用独立入口，作用域是用户全局，对所有工程生效。仓库不提交项目级 `.cursor/mcp.json` 或 `.cursor/skills`。
 
 - `.cursor-plugin/plugin.json` 声明 active skill 层和 `agents/`
 - `.cursor-plugin/marketplace.json` 供 Customize 从 GitHub 仓库导入
-- `mcp.json` 在插件安装后启动 stdio MCP
-- `.cursor/skills` 与 `.cursor/mcp.json` 在直接打开本仓库时提供同一套 skills 和 MCP
+- `mcp.json` 是插件包内的 MCP 定义
 
 MCP 工具只读取 catalog 中的 active skills：
 
@@ -147,17 +146,23 @@ MCP 工具只读取 catalog 中的 active skills：
 
 `skills/embedded/` 下的未登记副本不会加载，避免和 canonical `tools-quality` 等同名 skill 冲突。
 
-### 安装到本机 Cursor
+### 安装为用户全局插件
 
 ```powershell
 npm run cursor:install
 ```
 
-脚本把仓库复制到 `~/.cursor/plugins/local/mcu-workbench`。Windows 对应 `%USERPROFILE%\.cursor\plugins\local\mcu-workbench`。Cursor 不会跟随指向该目录之外的符号链接，所以这里使用复制而不是链接仓库。
+脚本写入三个用户级位置，Windows 上把 `~` 换成 `%USERPROFILE%`：
 
-执行后在 Cursor 里运行 Developer: Reload Window。到 Customize 确认 Skills，以及名为 `skills` 的插件 MCP。直接打开本仓库时，项目 MCP 名称是 `mcu-workbench`。
+```text
+~/.cursor/plugins/local/mcu-workbench
+~/.cursor/skills/mcu-workbench
+~/.cursor/mcp.json
+```
 
-也可以在 Customize 中选择从 GitHub 仓库导入：
+已有的全局 MCP 服务器会保留，并新增或更新名为 `mcu-workbench` 的服务器。执行 Developer: Reload Window 后，在任意工程的 Customize 里按 User 作用域查看 Skills 和 MCP。
+
+从 GitHub 导入时也选择 User scope：
 
 ```text
 https://github.com/shuai-yemao/mcu-workbench

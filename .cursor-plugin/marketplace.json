@@ -10,7 +10,7 @@
     {
       "name": "mcu-workbench",
       "source": ".",
-      "description": "嵌入式 MCU 开发 Skills、Agents 与 MCP。",
+      "description": "用户全局作用域的嵌入式 MCU 开发 Skills、Agents 与 MCP。",
       "category": "developer-tools",
       "keywords": [
         "embedded",
