@@ -1,0 +1,24 @@
+{
+  "name": "mcu-workbench",
+  "owner": {
+    "name": "MCU-Workbench Team"
+  },
+  "metadata": {
+    "description": "面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发插件。"
+  },
+  "plugins": [
+    {
+      "name": "mcu-workbench",
+      "source": ".",
+      "description": "嵌入式 MCU 开发 Skills、Agents 与 MCP。",
+      "category": "developer-tools",
+      "keywords": [
+        "embedded",
+        "mcu",
+        "stm32",
+        "esp32",
+        "firmware"
+      ]
+    }
+  ]
+}

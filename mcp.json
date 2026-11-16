@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "skills": {
+      "command": "node",
+      "args": [
+        "mcp/server.js"
+      ],
+      "cwd": "${CURSOR_PLUGIN_ROOT}"
+    }
+  }
+}
