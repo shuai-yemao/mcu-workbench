@@ -130,6 +130,47 @@ opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
 
 安装启用后可在 Codex Composer 中使用 `@mcu-workbench` 快捷触发插件。
 
+## Cursor 适配
+
+Cursor 使用独立入口，作用域是用户全局，对所有工程生效。仓库不提交项目级 `.cursor/mcp.json` 或 `.cursor/skills`。
+
+- `.cursor-plugin/plugin.json` 声明 active skill 层和 `agents/`
+- `.cursor-plugin/marketplace.json` 供 Customize 从 GitHub 仓库导入
+- `mcp.json` 是插件包内的 MCP 定义
+
+MCP 工具只读取 catalog 中的 active skills：
+
+- `list_skills`：列出 23 个 canonical skills 和 hardware skills
+- `route_request`：为一个请求选择一个主 skill
+- `get_skill`：读取 `SKILL.md`，或用 `reference` 读取该 skill 目录内的参考文献
+
+`skills/embedded/` 下的未登记副本不会加载，避免和 canonical `tools-quality` 等同名 skill 冲突。
+
+### 安装为用户全局插件
+
+```powershell
+npm run cursor:install
+```
+
+脚本写入用户级位置，Windows 上把 `~` 换成 `%USERPROFILE%`：
+
+```text
+~/.cursor/plugins/local/mcu-workbench
+~/.cursor/plugins/installed.json
+~/.cursor/skills/<skill-id>
+~/.cursor/mcp.json
+```
+
+插件在 IDE 中的名称是 **MCU-Workbench**。公开 Marketplace 里搜不到它，因为还没有提交到 Cursor Marketplace。执行 Developer: Reload Window 后，到 Customize 的 Installed / User 里查看，不要在 Marketplace 搜索 `mcuworkbench`。
+
+已有的全局 MCP 服务器会保留，并新增或更新名为 `mcu-workbench` 的服务器。在 Agent 输入框用 `/workflow-router` 这类名称调用 skill。
+
+从 GitHub 导入时，仓库地址使用这个分支，并选择 User scope：
+
+```text
+https://github.com/shuai-yemao/mcu-workbench/tree/cursor/cursor-plugin-skills-mcp-f272
+```
+
 ## 开发与发布检查
 
 ```powershell
@@ -139,4 +180,4 @@ claude plugin validate .
 git diff --check
 ```
 
-插件根目录的 `agents/` 由 Claude Code 自动发现；不在 `plugin.json` 中添加 `agents` 字段，也不默认启用 hooks、MCP 或主 Agent。插件边界见 [docs/plugin-boundaries.md](docs/plugin-boundaries.md)，整体执行流见 [docs/plugin-execution-flow.md](docs/plugin-execution-flow.md)。
+插件根目录的 `agents/` 由 Claude Code 自动发现；不在 Claude 或 Codex 的 `plugin.json` 中添加 `agents` 字段，这两个 manifest 也不启用 hooks 或 MCP。Cursor 的 MCP 只写在 `mcp.json`。插件边界见 [docs/plugin-boundaries.md](docs/plugin-boundaries.md)，整体执行流见 [docs/plugin-execution-flow.md](docs/plugin-execution-flow.md)。

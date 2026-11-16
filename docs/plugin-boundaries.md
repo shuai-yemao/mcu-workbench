@@ -8,7 +8,7 @@
 
 | 区域 | 负责内容 | 不负责内容 | 当前入口 |
 |---|---|---|---|
-| Plugin manifest | 声明 active skill 层级 | 不实现业务逻辑 | `.claude-plugin/plugin.json` |
+| Plugin manifest | 声明 active skill 层级 | 不实现业务逻辑 | `.claude-plugin/plugin.json`、`.codex-plugin/plugin.json`、`.cursor-plugin/plugin.json` |
 | Canonical Skills | AI 指令、选择流程、领域约束 | 不充当通用 Node CLI | `skills/<layer>/<skill>/SKILL.md` |
 | References | 技术变体、案例、厂商差异 | 不替代主 Skill 的核心流程 | `references/` |
 | Scripts | 可重复的检查、分析、生成或采集 | 不隐藏关键决策和权限 | 各 Skill 的 `scripts/` |
@@ -83,6 +83,7 @@ Core、Middleware、Driver 不设置 Adapter。
 3. “架构文档已输出”不代表代码已经满足层间依赖规则。
 4. “工具分析通过”不代表目标硬件已完成板级验证。
 5. “归档入口可解析”不代表归档内容仍属于 active plugin。
+6. Cursor 的安装作用域是用户全局：`~/.cursor/plugins/local/mcu-workbench`、`~/.cursor/skills/<skill-id>` 与 `~/.cursor/mcp.json`。仓库内的 `cursor-skills/` 是 Cursor 可直接发现的一层 skill 目录。Claude 与 Codex manifest 不声明 MCP、hooks 或 agents。
 
 ## 7. Workflow 生命周期
 
