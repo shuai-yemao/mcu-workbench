@@ -1,0 +1,4 @@
+interface:
+  display_name: "嵌入式工程脚手架"
+  short_description: "基于厂商手册和示例创建最小嵌入式工程。"
+  default_prompt: "使用 $embedded-project-scaffold 基于这些厂商手册、示例源码和板级约束生成最小可编译嵌入式工程。"

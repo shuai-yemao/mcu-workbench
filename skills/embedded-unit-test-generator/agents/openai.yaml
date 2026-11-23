@@ -1,0 +1,7 @@
+interface:
+  display_name: "嵌入式单元测试生成器"
+  short_description: "生成嵌入式单元测试计划"
+  default_prompt: "使用 $embedded-unit-test-generator 为这个模块生成可追溯的嵌入式单元测试计划、测试矩阵和合适的测试骨架。"
+
+policy:
+  allow_implicit_invocation: true

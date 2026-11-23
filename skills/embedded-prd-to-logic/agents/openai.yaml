@@ -1,0 +1,4 @@
+interface:
+  display_name: "Embedded PRD To Dev Handoff"
+  short_description: "Convert an embedded PRD into a saved development handoff document"
+  default_prompt: "Use $embedded-prd-to-logic to convert this PRD into a saved firmware development handoff document for the current embedded project."

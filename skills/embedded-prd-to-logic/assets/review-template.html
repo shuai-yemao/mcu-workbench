@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<!--
+  ============================================================================
+   review-template.html — 可选的人读评审视图模板
+  ============================================================================
+   用途：每次产出 AI 编程用的 logic .md 后，再用本模板产出一份给人评审的
+         自包含 HTML（内联 CSS，浏览器直开，可打印 PDF）。
+   使用：保留 <style> 主题不变；按评审渲染指南的"章节↔源"映射，
+         用 logic 文档的同一份内容填充各 <!-- FILL --> 处。不要把 .md 表格原样
+         粘进来——要转译成卡片/图/白话摘要。
+   命名：与 .md 同目录，<slug>-review.html（如 logic doc = foo-application-logic.md
+         → foo-review.html）。
+  ============================================================================
+-->
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><!-- FILL: 特性名 · 应用逻辑评审视图 --></title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#ffffff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --blue:#2563eb; --bluebg:#eff6ff; --green:#16a34a; --greenbg:#f0fdf4;
+    --amber:#d97706; --amberbg:#fffbeb; --purple:#7c3aed; --purplebg:#f5f3ff;
+    --teal:#0d9488; --tealbg:#f0fdfa; --gray:#6b7280; --graybg:#f3f4f6;
+    --red:#dc2626; --redbg:#fef2f2;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.6;font-size:15px;}
+  .layout{display:grid;grid-template-columns:230px 1fr;max-width:1180px;margin:0 auto;gap:0;}
+  .toc{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:24px 16px;
+    border-right:1px solid var(--line);background:#fff;font-size:13.5px;}
+  .toc h2{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:18px 0 8px;}
+  .toc a{display:block;color:var(--ink);text-decoration:none;padding:4px 8px;border-radius:6px;}
+  .toc a:hover{background:var(--bluebg);color:var(--blue);}
+  .toc .brand{font-weight:700;font-size:15px;color:var(--blue);margin-bottom:6px;}
+  main{padding:32px 40px 80px;min-width:0;}
+  h1{font-size:27px;margin:0 0 6px;}
+  h2{font-size:21px;margin:38px 0 14px;padding-bottom:8px;border-bottom:2px solid var(--line);}
+  h3{font-size:16.5px;margin:26px 0 10px;}
+  .subtitle{color:var(--muted);margin:0 0 6px;font-size:14.5px;}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px;}
+  .pill{padding:4px 11px;border-radius:999px;font-size:12.5px;font-weight:600;}
+  .pill.ok{background:var(--greenbg);color:var(--green);border:1px solid #bbf7d0;}
+  .pill.mode{background:var(--purplebg);color:var(--purple);border:1px solid #ddd6fe;}
+  .pill.stat{background:var(--bluebg);color:var(--blue);border:1px solid #bfdbfe;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:12px 0;
+    box-shadow:0 1px 2px rgba(0,0,0,.03);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr;}.layout{grid-template-columns:1fr;}.toc{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);}main{padding:20px;}}
+  .q{font-size:13px;color:var(--muted);margin-bottom:4px;}
+  .choice{font-weight:600;color:var(--green);}
+  .why{font-size:13px;color:var(--muted);margin-top:6px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:5px;vertical-align:middle;}
+  .b-req{background:var(--bluebg);color:var(--blue);}
+  .b-user{background:var(--greenbg);color:var(--green);}
+  .b-src{background:var(--tealbg);color:var(--teal);}
+  .b-inf{background:var(--amberbg);color:var(--amber);}
+  .b-cand{background:var(--graybg);color:var(--gray);}
+  .b-def{background:var(--purplebg);color:var(--purple);}
+  .flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0;justify-content:center;}
+  .node{background:#fff;border:2px solid var(--blue);color:var(--blue);border-radius:10px;padding:10px 16px;
+    font-weight:700;text-align:center;min-width:96px;}
+  .node.entry{background:var(--blue);color:#fff;}
+  .arr{color:var(--muted);font-size:12px;text-align:center;display:flex;flex-direction:column;align-items:center;min-width:54px;}
+  .arr .line{font-size:20px;line-height:1;color:var(--blue);}
+  .arr .lbl{font-size:11px;}
+  .returns{margin-top:14px;font-size:13.5px;}
+  .returns .r{padding:5px 0;border-bottom:1px dashed var(--line);}
+  .returns .r:last-child{border-bottom:none;}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:10px 0;}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;}
+  th{background:var(--graybg);font-size:12.5px;color:var(--muted);font-weight:600;}
+  tr:hover td{background:#fafbfc;}
+  .callout{background:var(--redbg);border-left:4px solid var(--red);border-radius:8px;padding:14px 18px;margin:14px 0;}
+  .callout.green{background:var(--greenbg);border-color:var(--green);}
+  .callout.amber{background:var(--amberbg);border-color:var(--amber);}
+  .callout h3{margin-top:0;color:var(--red);}
+  .callout.green h3{color:var(--green);}
+  .callout.amber h3{color:var(--amber);}
+  ul.clean{margin:6px 0;padding-left:20px;} ul.clean li{margin:4px 0;}
+  .step{display:flex;gap:12px;margin:8px 0;}
+  .step .n{flex:0 0 26px;height:26px;width:26px;border-radius:50%;background:var(--purple);color:#fff;
+    font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;}
+  .step .t{padding-top:3px;}
+  details{margin:8px 0;}
+  details summary{cursor:pointer;font-weight:600;padding:8px 0;color:var(--blue);}
+  .page-card{border-top:3px solid var(--blue);}
+  .page-card .ttl{font-weight:700;font-size:14px;}
+  .page-card .act{font-size:12px;color:var(--muted);margin-top:6px;}
+  .kbd{font-family:ui-monospace,Menlo,Consolas,monospace;background:var(--graybg);padding:1px 5px;border-radius:4px;font-size:12.5px;}
+  .footer{color:var(--muted);font-size:12px;margin-top:50px;padding-top:16px;border-top:1px solid var(--line);}
+  @media print{.toc{display:none;}.layout{grid-template-columns:1fr;}main{padding:0;}.card,.callout{box-shadow:none;break-inside:avoid;}}
+
+  /* ===== OLED / 显示屏仿真器（有屏幕的产品用；无屏幕特性可删此节） ===== */
+  .oled-sim input{display:none;}
+  .oled-tabs{display:flex;gap:4px;margin:14px 0 0;}
+  .oled-tabs label{padding:7px 16px;background:#e9eef5;border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);user-select:none;}
+  .oled-sim input:checked + label{background:var(--oled-bg,#08111e);color:var(--oled-on,#5eead4);border-color:var(--oled-bg,#08111e);}
+  .oled-tabs label:hover{color:var(--ink);}
+  .oled{background:var(--oled-bg,#08111e);border:2px solid var(--oled-bg,#08111e);border-radius:0 14px 14px 14px;}
+  .oled-screen{display:none;background:var(--oled-bg,#08111e);
+    background-image:linear-gradient(rgba(94,234,212,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(94,234,212,.05) 1px,transparent 1px);
+    background-size:8px 8px;color:var(--oled-on,#5eead4);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.62;
+    padding:18px 12px;min-height:188px;white-space:pre;letter-spacing:.5px;}
+  .oled-screen .inv{background:var(--oled-on,#5eead4);color:var(--oled-bg,#08111e);padding:0 1px;}   /* 反白选中 */
+  .bar{display:inline-block;height:11px;background:var(--oled-on,#5eead4);border-radius:2px;vertical-align:middle;animation:fill 2.2s linear infinite;}
+  .bartrack{display:inline-block;height:11px;width:130px;border:1px solid var(--oled-on,#5eead4);border-radius:2px;vertical-align:middle;overflow:hidden;}
+  @keyframes fill{0%{width:0}100%{width:100%}}
+  .oled-note{color:var(--muted);font-size:12px;margin:8px 2px;}
+  /* 标签切换：每个 #tab-X:checked ~ .oled .panel-X{display:block} —— 与下方 tab/panel id 一一对应，按需增删 */
+  #tab-1:checked ~ .oled .panel-1{display:block;}
+  #tab-2:checked ~ .oled .panel-2{display:block;}
+  #tab-3:checked ~ .oled .panel-3{display:block;}
+  #tab-4:checked ~ .oled .panel-4{display:block;}
+  @media print{.oled-screen{display:block!important;}}
+
+  /* ===== 开发流程可视化（泳道/时间轴） ===== */
+  .tl{display:grid;grid-template-columns:96px repeat(4,1fr);gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:12.5px;margin-top:8px;}
+  .tl .h{background:var(--graybg);font-weight:700;color:var(--muted);text-align:center;padding:8px 4px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);}
+  .tl .lane{background:#fafbfc;font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);display:flex;align-items:center;}
+  .tl .cell{border-bottom:1px solid var(--line);border-right:1px solid var(--line);min-height:38px;display:flex;align-items:center;padding:4px;}
+  .tl-bar{width:100%;border-radius:6px;color:#fff;font-size:11px;font-weight:600;padding:5px 8px;text-align:center;}
+  .b-freeze{background:var(--gray);} .b-t1{background:var(--teal);} .b-t2{background:#0891b2;} .b-t3{background:#0369a1;}
+  .b-int{background:var(--purple);} .b-flash{background:var(--green);}
+  .tl-legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;margin-top:10px;color:var(--muted);}
+  .tl-legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:middle;margin-right:4px;}
+</style>
+</head>
+<body>
+<div class="layout">
+  <!-- ====== 侧边导航（FILL：按实际章节填锚点） ====== -->
+  <nav class="toc">
+    <div class="brand">📋 <!-- FILL: 特性短名 --></div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;">人类评审视图 · 基于 <!-- FILL: logic 文件名 --></div>
+    <h2>总览</h2>
+    <a href="#summary">执行摘要</a>
+    <a href="#screens">🖥️ 屏幕仿真</a>   <!-- 仅带屏幕的产品；无屏特性删此行 + #screens 节 + 相关 CSS -->
+    <a href="#glance">一图看懂</a>
+    <h2>设计</h2>
+    <a href="#decisions">关键决策</a>
+    <a href="#pages"><!-- FILL: 页面/功能列表标题 --></a>
+    <a href="#safety">安全规则</a>
+    <h2>怎么开发</h2>
+    <a href="#flow">开发流程</a>
+    <a href="#tasks">任务与验证</a>
+    <h2>风险</h2>
+    <a href="#risks">待确认 / 风险</a>
+    <h2>帮助</h2>
+    <a href="#glossary">术语表</a>
+    <a href="#legend">标签图例</a>
+  </nav>
+
+  <main>
+    <!-- ====== 标题 + 状态药丸 (源: §0 元数据) ====== -->
+    <h1><!-- FILL: 特性全名 --></h1>
+    <p class="subtitle"><!-- FILL: 一句话说清这是什么、这份文档给谁看（评审版，原始 logic .md 给 AI）--></p>
+    <div class="pillrow">
+      <!-- FILL: 状态药丸：实现状态 / 开发模式 / 资源占用等。例： -->
+      <!-- <span class="pill ok">✓ 已实现</span> <span class="pill mode">模式：parallel_implementation</span> -->
+    </div>
+
+    <!-- ====== 📌 执行摘要 (源: §0 + §3) — 白话、一分钟读完，不要表格 ====== -->
+    <h2 id="summary">📌 执行摘要（一分钟读完）</h2>
+    <div class="card">
+      <!-- FILL: 3-5 段白话：这是什么 / 用户怎么用 / 关键保障 / 当前状态 -->
+    </div>
+
+    <!-- ====== 🖥️ 屏幕仿真器 (源: §3.3 页面行为 + 实际 UI 布局) — 仅带屏幕的产品；无屏特性整节删除 ====== -->
+    <h2 id="screens">🖥️ 屏幕仿真（点标签切换）</h2>
+    <p class="subtitle"><!-- FILL: 一句话说明仿真能看到什么（如：按 128×64 等比还原各屏布局）--></p>
+    <div class="oled-sim">
+      <!-- FILL: 每屏一组 radio+label+panel。radio id 与 <style> 里 #tab-N:checked 对应；panel 类名 panel-N。按屏数增删 -->
+      <input type="radio" name="oled" id="tab-1" checked>
+      <label for="tab-1"><!-- FILL: 屏名 --></label>
+      <input type="radio" name="oled" id="tab-2">
+      <label for="tab-2"><!-- FILL: 屏名 --></label>
+      <input type="radio" name="oled" id="tab-3">
+      <label for="tab-3"><!-- FILL: 屏名 --></label>
+      <input type="radio" name="oled" id="tab-4">
+      <label for="tab-4"><!-- FILL: 屏名 --></label>
+      <div class="oled">
+        <!-- FILL: 每屏一个 .oled-screen.panel-N。white-space:pre + 等宽字体直接排像素级布局；
+             反白选中用 <span class="inv">…</span>；动画进度条用 <span class="bartrack"><span class="bar"></span></span>。
+             尽量贴近实物比例（标题行/内容/动作栏的 y 位置）。 -->
+        <div class="oled-screen panel-1"><!-- FILL: 屏 1 像素级布局（多行 pre 文本）--></div>
+        <div class="oled-screen panel-2"><!-- FILL: 屏 2 --></div>
+        <div class="oled-screen panel-3"><!-- FILL: 屏 3 --></div>
+        <div class="oled-screen panel-4"><!-- FILL: 屏 4 --></div>
+      </div>
+    </div>
+    <div class="oled-note"><!-- FILL: 说明，如"进度条为 CSS 动画自动循环；反白=当前选中项" --></div>
+
+    <!-- ====== 🎯 一图看懂 (源: §6 状态机) — 用 .flow/.node/.arr 画，不要文字图 ====== -->
+    <h2 id="glance">🎯 一图看懂</h2>
+    <h3>主流程 / 状态流转</h3>
+    <div class="card">
+      <!-- FILL: 主流程
+      <div class="flow">
+        <div class="node entry">状态A</div>
+        <div class="arr"><span class="line">→</span><span class="lbl">触发</span></div>
+        <div class="node">状态B</div>
+      </div>
+      <div class="returns">
+        <div class="r">↩ 返回/超时路径...</div>
+      </div>
+      -->
+    </div>
+    <h3><!-- FILL: 功能/页面一览标题 --></h3>
+    <div class="grid3">
+      <!-- FILL: 每项一张 .card.page-card：<div class="ttl">名</div><div class="act">动作</div> -->
+    </div>
+
+    <!-- ====== ✅ 关键决策 (源: §1 已决问题) — 评审重点，每条带来源徽章 ====== -->
+    <h2 id="decisions">✅ 关键设计决策（评审重点）</h2>
+    <p class="subtitle">这些是需要人拍板、已拍板的决策。每条标了"依据来源"（见<a href="#legend">图例</a>）。</p>
+    <div class="grid2">
+      <!-- FILL: 每决策一张 .card：
+        <div class="q">问题？</div>
+        <div class="choice">选择</div>
+        <div class="why">理由 <span class="badge b-user">用户定</span></div>
+      -->
+    </div>
+
+    <!-- ====== 🔧 开发流程可视化 (源: §2 + 可选 §2.1) ====== -->
+    <h2 id="flow">🔧 开发流程（<!-- FILL: 开发方式名称 -->）</h2>
+    <p class="subtitle"><!-- FILL: 一句话白话说明这个模式怎么组织工作 --></p>
+    <!-- FILL 按模式选泳道(.tl)形态：
+         parallel_implementation → 多轨并行行 + 冻结相/集成相（每轨一条 lane，活动相放 .tl-bar）
+         serial_pipeline        → 单行 lane（label=main agent）一条 .tl-bar 跨全部实现相；或用 .step 线性链
+         parallel_exploration   → 两相（探查 | 写）：探查相多 explorer 行、写相单 writer 行
+         review_gate            → 评审门相（reviewer）→ 后续实现相
+         详见评审渲染指南的"开发流程可视化"。 -->
+    <div class="tl">
+      <div class="h" style="grid-column:1"></div>
+      <div class="h"><!-- FILL: 相 1 名 --></div><div class="h"><!-- 相 2 --></div><div class="h"><!-- 相 3 --></div><div class="h"><!-- 相 4 --></div>
+      <!-- FILL: 每条 lane 一行 = .lane 标签 + 每相一个 .cell；活动相的 .cell 内放 .tl-bar，空相留空 .cell -->
+      <div class="lane"><!-- FILL: lane 名 --></div>
+      <div class="cell"><div class="tl-bar b-freeze"><!-- FILL: 活动描述 --></div></div>
+      <div class="cell"></div><div class="cell"></div><div class="cell"></div>
+      <!-- …更多 lane… -->
+    </div>
+    <div class="tl-legend"><!-- FILL: <span><i style="background:var(--teal)"></i>图例</span> … --></div>
+
+    <!-- ====== ⚠️ 安全规则 (源: §7) — 红色 callout 硬规则 + 绿色已排查 ====== -->
+    <h2 id="safety">⚠️ 安全规则（实现必须遵守）</h2>
+    <div class="callout">
+      <h3>不能违反的硬规则</h3>
+      <ul class="clean"><!-- FILL: §7 安全规则要点 --></ul>
+    </div>
+    <div class="callout green">
+      <h3>已排查的高风险点</h3>
+      <ul class="clean"><!-- FILL: §7 高风险关注（死锁/竞争/残留等） --></ul>
+    </div>
+
+    <!-- ====== 📝 任务与验证 (源: §9) ====== -->
+    <h2 id="tasks">📝 任务与验证</h2>
+    <p class="subtitle"><!-- FILL: 特性状态说明 --></p>
+    <table>
+      <thead><tr><th>优先级/流</th><th>任务</th><th>怎么验证</th></tr></thead>
+      <tbody><!-- FILL: §9.1 任务行 --></tbody>
+    </table>
+    <div class="callout amber">
+      <h3>已执行的验证</h3>
+      <ul class="clean"><!-- FILL: §9.2 构建命令/烧录/手测 --></ul>
+    </div>
+
+    <!-- ====== 🔍 待确认 / 风险 (源: §8) ====== -->
+    <h2 id="risks">🔍 待确认 / 风险</h2>
+    <div class="grid2">
+      <!-- FILL: §8.3 待决 + §8.2 冲突，每项一张 .card，带徽章 -->
+    </div>
+    <details>
+      <summary>转交给其它技能处理的事项（deferred）</summary>
+      <table>
+        <thead><tr><th>事项</th><th>转给</th></tr></thead>
+        <tbody><!-- FILL: §8.1 deferred 项 --></tbody>
+      </table>
+    </details>
+
+    <!-- ====== 📖 术语表 (源: 本文档用到的领域/技能术语) ====== -->
+    <h2 id="glossary">📖 术语表</h2>
+    <div class="card">
+      <table>
+        <!-- FILL: 特性领域术语；不要放技能内部术语 -->
+      </table>
+    </div>
+
+    <!-- ====== 🏷 标签图例（固定，几乎不需改） ====== -->
+    <h2 id="legend">🏷 标签图例（依据来源）</h2>
+    <div class="card">
+      <p class="subtitle" style="margin-top:0">每个决策/结论旁边的小标签表示"这条依据从哪来"：</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;">
+        <span><span class="badge b-req">需求</span> PRD 明确写的</span>
+        <span><span class="badge b-user">用户定</span> 用户拍板</span>
+        <span><span class="badge b-src">源码确认</span> 读代码确认</span>
+        <span><span class="badge b-inf">推断</span> 工程推断</span>
+        <span><span class="badge b-cand">待核</span> 扫描命中未深查</span>
+        <span><span class="badge b-def">转交</span> 转其它技能</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      评审视图 · <!-- FILL: 日期 --><br>
+      原始逻辑文档给 AI 编程用；本页面给人快速评审用。
+    </div>
+  </main>
+</div>
+</body>
+</html>

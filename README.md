@@ -20,7 +20,7 @@ skills/
 
 ## Canonical skills
 
-当前目录为 **51 catalog / 49 canonical**；下列为当前入口（旧名只经兼容映射解析）：
+当前目录保留 **51 catalog / 49 canonical** 核心入口（旧名只经兼容映射解析）。此外，`skills/` 根目录还提供从外部技能包导入的 **46 个扩展 skills**；它们按独立 `SKILL.md` 目录直接供 Codex 加载，不改变核心 catalog 的架构分层。
 
 ```text
 workflow-requirements-router workflow-requirements-challenge workflow-review-gate workflow-integration-plan workflow-task-breakdown workflow-task-execution workflow-final-review workflow-claude-layering workflow-document-context
@@ -36,6 +36,8 @@ tools-quality tools-verification tools-git tools-release tools-learning-tutor
 ```
 
 `vendor_stm32` 和 `vendor_dsp` 保留为兼容别名，分别解析到 `vendor_mcu` 和 `vendor_algorithm`。目标工程的 Vendor 物理目录统一为 `05_Vendor/`：MCU/RTOS 完整保留，中间件/算法按需保留，并由目标工程 Git 管理整个目录。Service、App 和 Platform 公共头只能经 Platform/Impl 访问 Vendor。
+
+扩展 skills 包含芯片资料与资源检索、嵌入式架构与缺陷分析、构建/烧录/调试、生产测试、需求与硬件方案、单元测试、供应商最小固件以及 MRD/PRD 工具链。完整目录以 `skills/` 下各扩展目录中的 `SKILL.md` 为准；其中 `embed-ai-tool` 还携带按构建、烧录、调试、串口、逻辑分析仪和静态分析划分的子技能。
 
 ## 工具方向
 
@@ -222,6 +224,21 @@ Codex 的插件 Skill 主要提供工作流指导，不能替代宿主级强制�
 用户审查固定从详细 `spec.md` 开始，随后审查并批准 `plan.md`/方案选择；RCP、Review-Package 和 Final Review 不单独设置 Markdown 审查闸门。Plan 放行后，Task 生成、逐项实现与测试、最终 Verify 和内部 Final Review 自动连续推进；最终通知只报告结果，不等同于提交、推送、烧录或发布授权。
 
 目标工程接入规则和 Gate 记录字段见 [`codex/embedded-workflow-entry.md`](codex/embedded-workflow-entry.md)。接入时保留目标工程已有规则，不修改 `embedded_framework` 或其他宿主适配；缺失或未放行的流程产物应标记为 `blocked`，不能仅凭插件安装、缓存一致或模型自述放行。
+
+## Cursor 适配
+
+Cursor 插件入口是 `.cursor-plugin/plugin.json`。连字符技能从 `skills/<layer>/` 的下一层加载；`platform`、`impl`、`service` 和 `vendor` 的下划线 canonical id 由 `cursor-skills/<连字符名>/SKILL.md` 转接到原技能，不改 catalog。输入输出规则在 `rules/mcu-workflow-io.mdc`，命令入口是 `/mcu-workflow`。
+
+用户正式文档仍只有目标项目 `00_Docs/04_需求文档/` 下的 `spec.md`、`plan.md` 和 `task.md`。RCP、Review-Package 和 Final Review 保持内部状态。
+
+本地加载会复制插件表面到 `%USERPROFILE%\\.cursor\\plugins\\local\\mcu-workbench`。Cursor 不跟随指向仓库外部的符号链接。
+
+```powershell
+npm run cursor:check
+npm run cursor:install
+```
+
+安装后执行 `Developer: Reload Window`，再到 Customize 确认 `mcu-workbench` 的 skills、rules、agents 和 commands。
 
 ## 开发与发布检查
 

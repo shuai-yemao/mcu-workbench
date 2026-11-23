@@ -8,12 +8,14 @@
   "license": "MIT",
   "skills": [
     "./skills/workflow/",
-    "./skills/app/",
-    "./skills/service/",
+    "./skills/rtos/",
+    "./skills/bsp/",
     "./skills/platform/",
-    "./skills/impl/",
-    "./skills/vendor/",
+    "./skills/middleware/",
+    "./skills/system/",
+    "./skills/interface/",
     "./skills/tools/",
+    "./skills/security/",
     "./skills/hardware/"
   ]
 }

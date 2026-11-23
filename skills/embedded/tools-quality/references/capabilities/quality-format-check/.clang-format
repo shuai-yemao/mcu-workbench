@@ -1,0 +1,50 @@
+# clang-format for embedded C (STM32F4)
+# Matches embedded-ai-coding-standard v1.0
+
+Language: Cpp
+BasedOnStyle: WebKit
+
+# Indentation
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never                     # 禁止 TAB，只用空格
+IndentCaseLabels: true            # switch-case 缩进
+IndentPPDirectives: None          # #ifdef 等不缩进
+
+# Line width
+ColumnLimit: 80
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+
+# Brace style
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterFunction: true              # 函数大括号换行
+  AfterControlStatement: false    # if/for/while 大括号同行
+  AfterEnum: true                  # 枚举/结构体大括号换行
+  AfterStruct: true
+  BeforeElse: false
+
+# Spacing
+SpaceBeforeParens: ControlStatements  # if ( 加空格，func( 不加
+SpaceAfterCStyleCast: true
+SpaceBeforeAssignmentOperators: true
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false        # 括号内不加空格
+SpaceAfterLogicalNot: false
+SpacesInAngles: false
+
+# Pointer alignment
+PointerAlignment: Right            # uint8_t *p_data
+
+# Blank lines
+MaxEmptyLinesToKeep: 1
+SeparateDefinitionBlocks: Leave  # 函数间空一行
+
+# Misc
+AlignConsecutiveMacros: false
+AlignConsecutiveAssignments: false
+SortIncludes: false               # 不自动排序 include
+ReflowComments: false             # 不自动回绕注释

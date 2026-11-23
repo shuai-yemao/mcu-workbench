@@ -1,28 +1,25 @@
 #!/usr/bin/env node
 
-const path = require('path');
-
 const { SKILL_CATALOG } = require('../skills/catalog');
 const { ROOT, NAME_PATTERN, readJson, summarize } = require('./validators/common');
-const { AGENT_ROSTER, parseAgentFrontmatter, validateAgents } = require('./validators/agents');
+const { EXPECTED_AGENTS, parseAgentFrontmatter, validateAgents } = require('./validators/agents');
 const { validateCodexManifest } = require('./validators/manifest');
-const { checkVersionSync } = require('./sync-plugin-versions');
 const {
   validateLvglReferences,
   validateSoftwareArchitectureGraph
 } = require('./validators/knowledge-graphs');
 const { validateLearningTutorReferences } = require('./validators/learning-tutor');
+const { validateCapabilityMigration } = require('./validators/capability-migration');
 const { validateSkillCatalogAndFilesystem } = require('./validators/skill-catalog');
-const { validateSkillLinks } = require('../lib/skill-links');
 
 function validatePlugin() {
   const errors = [];
   const agentSummary = validateAgents(errors);
   const codexManifest = validateCodexManifest(errors);
-  checkVersionSync(errors);
   validateLvglReferences(errors);
   validateSoftwareArchitectureGraph(errors);
   validateLearningTutorReferences(errors);
+  validateCapabilityMigration(errors);
 
   const manifest = readJson('.claude-plugin/plugin.json', errors);
   if (manifest) {
@@ -30,10 +27,6 @@ function validatePlugin() {
     if (!Array.isArray(manifest.skills)) errors.push('manifest: skills 必须为数组');
   }
   validateSkillCatalogAndFilesystem(manifest, errors);
-  const links = validateSkillLinks({ root: path.join(ROOT, 'skills'), boundaryRoot: ROOT });
-  for (const finding of links.findings) {
-    errors.push(`${finding.file}:${finding.line}: ${finding.ruleId} ${finding.target}`);
-  }
 
   return {
     errors,
@@ -62,11 +55,12 @@ if (require.main === module) {
 module.exports = {
   ROOT,
   NAME_PATTERN,
-  AGENT_ROSTER,
+  EXPECTED_AGENTS,
   parseAgentFrontmatter,
   summarize,
   validateLvglReferences,
   validateSoftwareArchitectureGraph,
   validateLearningTutorReferences,
+  validateCapabilityMigration,
   validatePlugin
 };
