@@ -1,7 +1,0 @@
-.venv/
-.pycache_root/
-build/
-dist/
-logs/
-__pycache__/
-*.pyc
