@@ -1,0 +1,3 @@
+# Python bytecode cache (runtime artifact, do not ship)
+__pycache__/
+*.pyc

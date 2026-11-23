@@ -1,0 +1,3 @@
+display_name: 原理图功能引脚分析
+short_description: 将原理图 PDF/图片分析为嵌入式功能引脚表和驱动建议。
+default_prompt: 使用该 skill 分析我上传的原理图 PDF 或图片，输出嵌入式开发用功能引脚文件，包含电源、主控、IO 分配、驱动逻辑和用户待补充事项。

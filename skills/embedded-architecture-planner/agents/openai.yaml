@@ -1,0 +1,4 @@
+interface:
+  display_name: "Embedded Architecture Planner"
+  short_description: "Design MCU firmware architecture from requirements and code"
+  default_prompt: "Use $embedded-architecture-planner to analyze my MCU firmware project and propose a practical architecture plan."

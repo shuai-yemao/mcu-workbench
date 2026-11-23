@@ -1,0 +1,4 @@
+interface:
+  display_name: "嵌入式变更报告"
+  short_description: "生成可追溯的嵌入式固件变更报告。"
+  default_prompt: "使用 $embedded-change-report 基于当前项目证据生成可追溯的嵌入式固件变更报告。"
