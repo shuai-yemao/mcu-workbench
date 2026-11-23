@@ -28,8 +28,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、工程扫描、列出配置，还是执行编译。
-2. 若不确定环境是否就绪，先运行自带脚本 [scripts/iar_builder.py](scripts/iar_builder.py) 的 `--detect` 模式确认。
+1. 先阅读 [usage.md](../capabilities/tool-build-iar/references/usage.md)，确认本次是环境探测、工程扫描、列出配置，还是执行编译。
+2. 若不确定环境是否就绪，先运行自带脚本 [iar_builder.py](../capabilities/tool-build-iar/scripts/iar_builder.py) 的 `--detect` 模式确认。
 3. 若不确定工程文件位置，使用 `--scan` 搜索工作区。
 4. 使用 `--list-configs --project X.ewp` 确认可用配置，再用 `--project` + `--config` 执行编译。
 5. 读取脚本输出的构建结果和产物扫描报告，重点关注首选产物（.out/ELF > HEX > BIN）、错误/警告统计和失败分类。

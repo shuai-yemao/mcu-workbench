@@ -1,0 +1,112 @@
+{
+  "request_id": "REQ-PLUGIN-OUTPUT-00DOCS-20260821",
+  "state_version": 1,
+  "project_root": "C:\\Users\\zhang\\Documents\\mcu-workbench",
+  "spec_version": "v1.0",
+  "plan_version": "v1.0",
+  "task_version": "v1.0",
+  "current_stage": "final_review",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": ["human_review", "versioned"],
+  "requirements": [
+    {
+      "id": "R-001",
+      "text": "目标工程的插件生成文档和 HTML 看板统一写入 00_Docs/06_嵌入式插件输出/。",
+      "confidence": "user-confirmed",
+      "evidence": "用户确认采用 00_Docs/06_嵌入式插件输出/"
+    },
+    {
+      "id": "R-002",
+      "text": "输出子目录为 architecture、verification、devlog、notes，并包含 workflow-dashboard.html。",
+      "confidence": "user-confirmed",
+      "evidence": "用户确认将此前四个目录和 HTML 文件集中放置"
+    }
+  ],
+  "constraints": [
+    {
+      "id": "C-001",
+      "text": "00_Docs/04_需求文档、00_Docs/05_日志、.mcu-workbench/workflows 和 .mcu-workbench/runs 不属于本次迁移范围。",
+      "confidence": "inferred",
+      "evidence": "现有 dashboard、workflow-state 和需求文档路径实现"
+    },
+    {
+      "id": "C-002",
+      "text": "旧 docs/architecture、docs/verification、docs/devlog、docs/notes 作为读取兼容保留，不删除既有用户文件。",
+      "confidence": "inferred",
+      "evidence": "仓库文件修改规则和现有目标工程兼容要求"
+    }
+  ],
+  "evidence": [
+    {
+      "source": "lib/workflow-dashboard.js:78-90",
+      "finding": "dashboard 默认输出到项目根目录，且当前证据扫描包含 docs/ 和 00_Docs/。",
+      "confidence": "confirmed"
+    },
+    {
+      "source": "scripts/agent-artifacts.js:65-100",
+      "finding": "Agent 产物初始化和 artifact_roots 当前使用 docs/*。",
+      "confidence": "confirmed"
+    },
+    {
+      "source": "lib/claude-layer.js:25-26,656-661",
+      "finding": "Claude 分层报告当前有 docs/architecture 旧路径。",
+      "confidence": "confirmed"
+    },
+    {
+      "source": "tests/workflow-dashboard-manager.test.js:21-45",
+      "finding": "现有测试断言看板位于项目根目录，需要随接口变更更新。",
+      "confidence": "confirmed"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-001",
+      "text": "采用独立目录 00_Docs/06_嵌入式插件输出/，避免与需求文档和运行日志混淆。",
+      "confidence": "user-confirmed"
+    },
+    {
+      "id": "D-002",
+      "text": "采用新路径写入、旧路径只读兼容的迁移策略。",
+      "confidence": "inferred",
+      "requires_spec_review": true
+    }
+  ],
+  "open_questions": [],
+  "user_gates": {
+    "spec": "approved",
+    "plan": "approved",
+    "hard_blocker": "none"
+  },
+  "task_summary": {
+    "total": 5,
+    "completed": 5,
+    "current_task": null,
+    "blocked": 0,
+    "pending": 0
+  },
+  "verify_summary": {
+    "status": "passed",
+    "evidence_level": ["host", "static"],
+    "commands": [
+      "npm test -- --runInBand",
+      "npm run validate:plugin",
+      "npm run validate:links",
+      "git diff --check",
+      "node --check <modified JavaScript files>"
+    ],
+    "result": "50 suites / 315 tests passed; plugin and links validation passed; diff and syntax checks passed.",
+    "deviations": [
+      "未执行目标板运行、浏览器 file:// 自动刷新和真实宿主 Router 强制行为验证。"
+    ]
+  },
+  "final_review_summary": {
+    "status": "passed",
+    "findings": [
+      "已清理无效路径常量引用并修正文档中的过期默认路径描述。",
+      "保留工作区中与本请求无关的既有用户修改，未执行回退、提交或推送。"
+    ]
+  },
+  "blockers": [],
+  "updated_at": "2026-08-21T22:17:47+08:00"
+}

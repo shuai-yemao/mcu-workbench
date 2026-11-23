@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "mcu-workbench",
+  "description": "嵌入式开发生命周期全覆盖的 Claude Code 插件 — 支持 STM32/ESP32/GD32/AT32, FreeRTOS/RT-Thread, 构建/烧录/调试/驱动生成",
+  "owner": {
+    "name": "shuai-yemao",
+    "url": "https://github.com/shuai-yemao"
+  },
+  "plugins": [
+    {
+      "name": "mcu-workbench",
+      "description": "嵌入式开发生命周期全覆盖的 Claude Code 插件 — 支持 STM32/ESP32/GD32/AT32, FreeRTOS/RT-Thread, 构建/烧录/调试/驱动生成",
+      "category": "embedded",
+      "source": ".",
+      "homepage": "https://github.com/shuai-yemao/mcu-workbench"
+    }
+  ]
+}

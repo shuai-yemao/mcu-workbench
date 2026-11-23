@@ -1,0 +1,64 @@
+---
+name: impl_board
+description: Impl 落地：板级组合根——构造实例、注入 Ops、资源绑定（board_resource_config + board_bsp_register）。
+---
+
+# Impl Board（平台适配 · 组合根）
+
+先遵循全项目 [`软件层契约`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，
+再读取 [`BSP 专项实现契约`](../../bsp/references/bsp-architecture-contract.md)。本层是**组合根**：为具体板卡构造
+Driver/Handle 实例、调用 Platform Model 构造函数、绑定 Platform 接口、注册设备对象。软件依赖仍遵循
+`App → Service → Platform 接口 ← Impl → Vendor`；BSP 运行时装配链为
+`Platform Device → Handle 函数 → Driver → Platform MCU Bus`。启动时由本层把 Handle 的公开函数绑定到
+`platform_<type>_ops_t` 并注册到 Platform BSP。Platform Model 构造只建立公共对象契约，实际硬件生命周期仍由 Impl 后端驱动。
+当前 `platform_common` 的设备/服务表是全局注册 API：板级代码调用 `device_manager_register()`、
+`service_manager_register()`，不构造旧的 `platform_board_manager_t`，板级 `board_manager` 本身仍属于
+`04_Impl/impl_board`。
+
+## 组合根职责
+
+为每个抽象函数建立"抽象函数 → Platform 能力 → 参数/状态转换 → 阻塞与 ISR 限制"映射表。Board/Port 不直接调用 HAL/LL；MCU 资源初始化和总线绑定由 `impl_mcu` 完成。对于 `platform_mcu` 的 `flat-logical-resource` profile，Board/Driver 可以调用真实存在的 `plat_*` 公共函数；对于 `object-ops` profile，才通过资源对象注入 Ops。
+
+- 允许：持有具体 Driver/Handle/平台对象，调用 Platform 公共构造函数，从 resource 获取并选择 MCU/Core 实例，注入 Driver，再把同一类别 Driver 集合注入 Handle，并创建后注入 Handle 所需 OSAL 任务、队列或同步资源。
+- 禁止：放置设备命令、寄存器语义、协议状态机、软件 IIC/SPI 位时序，或在 Impl 定义 Handle 的任务入口、业务循环、重试、缓存更新和回调逻辑。
+- Handle 的业务缓存只能保留在 Handle 实例；组合根不得维护重复的 `latest`/`cache` 数据副本。
+- 先从目标工程公开 `platform_os.h` 确认 profile 声明的 mutex、queue、task 或时基 API；组合根创建资源、注入 Handle、在装配失败时回收。缺少该证据时只能输出带 `UNRESOLVED_PLATFORM_OS_API` 的预览，不能虚构可编译 Platform OS 名称。
+- 对 `object-ops` 的 context-first Ops，直接复制 `pf_*` 与 `p_context` 到下一层函数表；禁止函数指针强转和仅为签名转换而存在的桥接函数。`flat-logical-resource` 不得为了模拟 Ops 增加空的 Adapter。
+- 若真实 Platform/OS API 的参数顺序或返回类型无法直接匹配，允许在 Port 保留最薄的签名适配函数；
+  适配函数只能转换参数、上下文和错误码，不能执行协议、重试、缓存、线程循环或业务回调，且必须在
+  manifest 中记录原因。禁止通过函数指针强转绕过类型检查。
+- 生产组合根与 Fake 组合根必须注册同形函数表。生产实现绑定具体芯片/平台/OSAL，Fake 实现绑定 Fake Bus/时基/OSAL，接口不因测试而分叉。
+- GPIO 输出实现必须以 platform_mcu 公开头和板级 pin/极性证据构造上下文；裸 `extern` 回调或无说明的 `NULL` context 只能是带 `UNRESOLVED_GPIO_BINDING` 的预览。按阶段装配，任一步失败必须恢复先前注册状态。
+
+## Middleware 组合根（板级唯一注册点）
+
+当工程接入日志、文件系统、网络或其他第三方中间件时，所有中间件的注册/注销集中在
+`impl_board_<board>_middleware.c`（必要时配套同名公共头）中。该文件是板级组合根的唯一
+Middleware 入口，负责：
+
+- 按依赖顺序调用各中间件公开的 `*_register()`；
+- 任一步失败时按已成功步骤的逆序注销并恢复状态；
+- 在 Service 使用前完成绑定，在 Service 停止并完成 backend deinit 后再注销；
+- 只装配 Ops/context 和板级资源，不复制 Vendor 状态、业务策略或 Service 缓存。
+
+`impl_board_<board>_mcu.c` 只负责 MCU/HAL、时钟、Tick 和板级硬件资源，不得 include
+`platform_log.h`、Elog、SEGGER RTT 等中间件头，也不得注册或注销中间件。顶层启动代码只
+调用 Board middleware 的公开入口，禁止手写跨文件 `extern`。缺少公共头或注册顺序证据时，
+应标记为 `UNRESOLVED_BOARD_MIDDLEWARE_API`，不能宣称已完成接入。
+
+## 与 platform_bsp 的关系
+
+platform_bsp 只包含标准类型头和自身公共声明，不能包含本层、HAL、RTOS 或具体 Driver/Handle。它定义设备模型与 typed Ops；不持有平台句柄或具体实例。
+
+`User_Task/*/Platform/*_port/` 不是 Impl，而是 APP Facade/Task Adapter：只能转发到平台公共 API，不得包含 HAL、Driver、Handle 或 OSAL。
+
+## 生成契约
+
+目录和名称固定为 `04_Impl/impl_bsp/impl_bsp_port/Inc|Src/impl_<type>_handle_port.c/.h` 与 `03_Platform/platform_bsp/<type>/Inc|Src/platform_<type>.c/.h`。板级组合根保留在 `04_Impl/impl_board`，只负责调用 Port 注册入口；Port 只导出一个与文件基名对应的注册函数。私有装配区可以调用 Platform 设备契约构造函数并绑定 Driver、Handle，运行时转发只能调用 Handle 的公开函数。新生成代码不得创建 Wrapper 文件。生成实现不直接调用 HAL，硬件生命周期和平台 Ops 应通过 resource 与 platform_mcu Impl 后端注入。生成前先输出 manifest，列明设备 profile、同类 Driver 数量、Ops 映射、OSAL 资源、阻塞/ISR 限制、`style-profile.md` 适用范围与未验证项。
+
+器件协议交给 [`impl_bsp`](../impl_bsp/SKILL.md)，资源/并发交给 [`impl_bsp`](../impl_bsp/SKILL.md)（Handle 机制子层）。实现证据见 [`bsp-layer-evidence.md`](references/bsp-layer-evidence.md)，器件适配和 Fake 样例见 [`capability-index.md`](references/capability-index.md)。
+共享温湿度案例见 [`bsp-aht21-case.md`](../../bsp/references/bsp-aht21-case.md)。
+GPIO 输出外设的绑定、回滚和 Fake 最小集见 [`gpio-output-peripheral-checklist.md`](../../bsp/references/gpio-output-peripheral-checklist.md)。
+跨 skill 通用错误模式与调试教训见 [`common-error-patterns.md`](../../bsp/references/common-error-patterns.md)。
+
+全局分层见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)。

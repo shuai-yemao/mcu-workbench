@@ -1,0 +1,14 @@
+{"event":"task_execution_completed","task_id":"T-009","status":"pass","recorded_at":"2026-08-19T14:09:08.861Z"}
+{"event":"final_verify_started","task_id":"T-010","status":"pending","recorded_at":"2026-08-19T14:09:08.863Z"}
+{"event":"task_test_passed","task_id":"T-001","status":"pass","evidence_level":"static","recorded_at":"2026-08-19T14:10:24.066Z"}
+{"event":"task_test_passed","task_id":"T-002","status":"pass","evidence_level":"host","recorded_at":"2026-08-19T14:10:24.073Z"}
+{"event":"task_test_passed","task_id":"T-003","status":"pass","evidence_level":"static","recorded_at":"2026-08-19T14:10:24.074Z"}
+{"event":"task_test_passed","task_id":"T-004","status":"pass","evidence_level":"host","recorded_at":"2026-08-19T14:10:24.076Z"}
+{"event":"task_test_passed","task_id":"T-005","status":"pass","evidence_level":"static","recorded_at":"2026-08-19T14:10:24.077Z"}
+{"event":"task_test_passed","task_id":"T-006","status":"pass","evidence_level":"static","recorded_at":"2026-08-19T14:10:24.079Z"}
+{"event":"task_test_passed","task_id":"T-007","status":"pass","evidence_level":"static","recorded_at":"2026-08-19T14:10:24.080Z"}
+{"event":"task_test_passed","task_id":"T-008","status":"pass","evidence_level":"host","recorded_at":"2026-08-19T14:10:24.081Z"}
+{"event":"task_test_passed","task_id":"T-009","status":"pass","evidence_level":"host","recorded_at":"2026-08-19T14:10:24.082Z"}
+{"event":"task_test_passed","task_id":"T-010","status":"pass","evidence_level":"host_and_static","recorded_at":"2026-08-19T14:11:14.816Z"}
+{"event":"final_verify_passed","status":"pass","acceptance_ids":["V-01","V-02","V-03","V-04","V-05","V-06","V-07","V-08","V-09","V-10","V-11","V-12"],"recorded_at":"2026-08-19T14:11:14.818Z"}
+{"event":"final_review_passed","status":"pass","evidence_level":"host_and_static","recorded_at":"2026-08-19T14:11:46.361Z"}

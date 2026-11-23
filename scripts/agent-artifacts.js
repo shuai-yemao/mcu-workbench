@@ -2,10 +2,12 @@
 
 const fs = require('fs');
 const path = require('path');
+const { PLUGIN_OUTPUT_DIRECTORIES } = require('../lib/project-output-paths');
 
 const RUN_FIELDS = [
   'run_id', 'agent', 'task', 'status', 'inputs', 'evidence', 'changed_files',
-  'tests', 'artifacts', 'blockers', 'handoff'
+  'tests', 'artifacts', 'blockers', 'handoff', 'working_directories',
+  'commands', 'attempts'
 ];
 const STATUSES = new Set(['planned', 'in_progress', 'completed', 'blocked']);
 
@@ -67,8 +69,7 @@ function projectPaths(projectRoot) {
 
 function ensureDirectories(root) {
   for (const relative of [
-    '.mcu-workbench/runs', 'docs/architecture', 'docs/verification',
-    'docs/devlog', 'docs/notes'
+    '.mcu-workbench/runs', ...Object.values(PLUGIN_OUTPUT_DIRECTORIES)
   ]) fs.mkdirSync(path.join(root, relative), { recursive: true });
 }
 
@@ -90,10 +91,7 @@ function initProject(options = {}) {
     active_agents: [],
     artifact_roots: {
       runs: '.mcu-workbench/runs',
-      architecture: 'docs/architecture',
-      verification: 'docs/verification',
-      devlog: 'docs/devlog',
-      notes: 'docs/notes'
+      ...PLUGIN_OUTPUT_DIRECTORIES
     }
   };
   fs.writeFileSync(paths.metadata, `${JSON.stringify(metadata, null, 2)}\n`, 'utf8');
@@ -126,6 +124,9 @@ function writeRunRecord(options = {}) {
     artifacts: values(options, 'artifacts'),
     blockers: values(options, 'blockers'),
     handoff: values(options, 'handoff'),
+    working_directories: values(options, 'workingDirectories'),
+    commands: values(options, 'commands'),
+    attempts: values(options, 'attempts'),
     created_at: new Date().toISOString()
   };
   fs.writeFileSync(runPath, `${JSON.stringify(record, null, 2)}\n`, 'utf8');
@@ -167,7 +168,10 @@ function main(argv = process.argv.slice(2)) {
     tests: values(args, 'test'),
     artifacts: values(args, 'artifact'),
     blockers: values(args, 'blocker'),
-    handoff: values(args, 'handoff')
+    handoff: values(args, 'handoff'),
+    workingDirectories: values(args, 'working-directory'),
+    commands: values(args, 'command'),
+    attempts: values(args, 'attempt')
   });
   console.log(`recorded ${path.relative(projectRoot, result.path)}`);
   return result;

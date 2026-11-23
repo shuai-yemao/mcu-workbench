@@ -28,8 +28,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是列表、抓取、等待字符串、持续监视，还是“先监听后复位”。
-2. 运行自带脚本 [scripts/serial_monitor.py](scripts/serial_monitor.py)。列出串口时使用 `--list`，自动选择端口时使用 `--auto`。
+1. 先阅读 [usage.md](../capabilities/observability-serial-monitor/references/usage.md)，确认本次是列表、抓取、等待字符串、持续监视，还是“先监听后复位”。
+2. 运行自带脚本 [serial_monitor.py](../capabilities/observability-serial-monitor/scripts/serial_monitor.py)。列出串口时使用 `--list`，自动选择端口时使用 `--auto`。
 3. 普通抓取使用 `--duration`，等待特定输出使用 `--wait`，持续监视使用 `--monitor --timestamp`。
 4. 若担心错过早期启动日志，使用 `--wait-reset`；只有在 OpenOCD 配置已经明确时，才启用 `--auto-reset`。
 5. 读取脚本输出的分析结果，而不是只转述原始串口文本；重点关注错误、警告、启动标记和关键外设关键词。

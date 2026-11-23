@@ -1,0 +1,151 @@
+{
+  "request_id": "REQ-AGENT-PROMPT-GATES-20260819",
+  "state_version": 1,
+  "project_root": "C:\\Users\\zhang\\Documents\\mcu-workbench",
+  "spec_version": "v0.3",
+  "plan_version": "v0.3",
+  "task_version": "v0.3",
+  "current_stage": "final_review",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": [
+    "human_review",
+    "versioned"
+  ],
+  "requirements": [
+    "同步七个 Agent 的 Router-first、Spec、Plan、Task 和 Final Review 门禁提示",
+    "保持 Agent 名册、domain 派生和 Skill catalog 不变",
+    "在不修改固件、宿主运行时和其他宿主适配的前提下增强提示词契约",
+    "同步由 Agent 正文派生的七个 OpenCode 命令文件，不修改生成器或宿主运行时"
+  ],
+  "constraints": [
+    "Spec 未批准不得生成正式 Plan",
+    "Plan 未批准不得进入 Task 生成或实现分发",
+    "需求变化、范围越界和关键事实缺失必须回传 Router/Review Gate",
+    "静态、主机、构建、目标运行和实物证据必须分开表述",
+    "不新增 Agent，不修改 AGENT_ROSTER、DOMAINS、catalog、Manifest 或宿主 Hook",
+    "不修改固件、HAL、RTOS、BSP、Vendor 和其他宿主运行时",
+    "OpenCode 派生产物只通过既有生成器同步，不修改生成器、Manifest、Hook 或宿主运行时"
+  ],
+  "evidence": [
+    {
+      "level": "confirmed",
+      "artifact": "agents/*.md",
+      "detail": "当前有七个 Agent，均声明 name、description、domain、scope，并通过统一协议章节校验"
+    },
+    {
+      "level": "confirmed",
+      "artifact": "lib/agent-domains.js",
+      "detail": "Agent 技能从 domain 和 skills/catalog.js 派生，不在 Agent frontmatter 中手写技能清单"
+    },
+    {
+      "level": "confirmed",
+      "artifact": "codex/AGENTS.md:16-33",
+      "detail": "Router-first、证据等级、Spec/Plan/Task 门禁和验证边界已经是 Codex 宿主规则"
+    },
+    {
+      "level": "confirmed",
+      "artifact": "skills/workflow/workflow-requirements-router/SKILL.md",
+      "detail": "Router 负责初步 RCP，Challenge 和 Review Gate 负责补证与放行，不能直接进入实现"
+    },
+    {
+      "level": "confirmed",
+      "artifact": "skills/workflow/workflow-integration-plan/SKILL.md",
+      "detail": "Plan 必须来自已批准 Spec，并记录阶段级 Agent/Skill 基线"
+    },
+    {
+      "level": "confirmed",
+      "artifact": "tests/agents.test.js, tests/agent-domains.test.js",
+      "detail": "当前已验证 Agent 名册、领域、统一协议章节和技能派生关系"
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "spec_review",
+      "status": "user-confirmed",
+      "detail": "用户回复开始生成方案，进入 Integration Plan 方案比较阶段"
+    },
+    {
+      "decision": "plan_option",
+      "status": "user-confirmed",
+      "detail": "用户选择方案 A：内嵌式门禁同步"
+    },
+    {
+      "decision": "plan_review",
+      "status": "user-confirmed",
+      "detail": "用户批准方案 A 的正式 Plan，允许进入 Task Breakdown"
+    },
+    {
+      "decision": "scope_amendment_opencode_artifacts",
+      "status": "user-confirmed",
+      "detail": "用户允许将七个 .opencode/commands/mcu-*.md 派生产物纳入同步范围；不扩大到生成器或宿主运行时"
+    },
+    {
+      "decision": "dashboard_html_regression_exception",
+      "status": "user-confirmed",
+      "detail": "Dashboard HTML 功能正在开发；T-005 暂时跳过 tests/workflow-dashboard.test.js，不修改或删除该测试"
+    }
+  ],
+  "open_questions": [],
+  "challenge_summary": {
+    "purpose_conclusion": "user-confirmed",
+    "feasibility_conclusion": "有条件可行",
+    "scope_conclusion": "第一版仅同步七个 Agent 的提示词契约和对应静态测试，不改变运行时路由",
+    "acceptance_gaps": [
+      "真实 Claude/OpenCode/Codex 宿主是否按提示执行门禁仍不能由仓库静态测试证明"
+    ],
+    "unresolved_risks": [
+      "Agent 提示词与 Workflow Skill 未来可能再次漂移"
+    ],
+    "required_review_gate_checks": [
+      "七个 Agent 是否都区分 Spec 前只读分析、Spec/Plan 审查和 Task 执行阶段",
+      "是否明确 owner_agent、primary implementation skill 和单 Task 边界",
+      "是否禁止把 Task 状态或主机测试写成最终目标验证",
+      "是否保留硬阻塞回传和需求变化回 Spec 的规则"
+    ],
+    "handoff_status": "可交接"
+  },
+  "user_gates": {
+    "spec": "approved",
+    "plan": "approved",
+    "hard_blocker": "none"
+  },
+  "task_summary": {
+    "total": 6,
+    "completed": 6,
+    "current_task": null,
+    "last_completed_task": "T-005",
+    "last_allocation_id": "T-006-20260820T000900+0800-toolchain-engineer",
+    "last_allocation_commit": "b03b0be2cc50909cff00983e61b986f671d709b6",
+    "next_task": null,
+    "blocked_task": null,
+    "reopened_task": "T-005"
+  },
+  "verify_summary": {
+    "status": "pass_with_known_exception",
+    "deviations": [
+      "tests/workflow-dashboard.test.js is an approved known-development-exception for this regression"
+    ]
+  },
+  "final_review_summary": {
+    "status": "passed_with_known_exception",
+    "findings": [
+      "Dashboard HTML test remains a user-confirmed known-development-exception",
+      "Real Claude/OpenCode/Codex host enforcement remains unverified"
+    ],
+    "evidence_level": "host_static_build",
+    "quality_gate": "passed",
+    "commands": [
+      "npm test -- --runInBand --testPathIgnorePatterns=tests/workflow-dashboard.test.js: exit 0; 43 suites, 274 tests",
+      "npm run build: exit 0",
+      "npm run validate:plugin: exit 0",
+      "npm run validate:links: exit 0",
+      "npm run check:versions: exit 0",
+      "repository-root npm run validate:workflow-gate -- --root . --strict: exit 0; root-level request only, not a substitute for this nested request trace",
+      "git diff --check: exit 0",
+      "node --check and scoped trailing-whitespace check: exit 0"
+    ]
+  },
+  "blockers": [],
+  "updated_at": "2026-08-20T00:50:00+08:00"
+}

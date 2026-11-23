@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "total": 2,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "descriptor-contract",
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "name": "report-contract",
+      "passed": true,
+      "durationMs": 0
+    }
+  ],
+  "evidence": {
+    "cwd": "C:\\Users\\shuaitan2\\Downloads\\mcu-workbench-host_ai\\mcu-workbench-host_ai",
+    "command": "node scripts/verification-pilot.js",
+    "evidenceLevel": "host"
+  }
+}

@@ -92,19 +92,34 @@ STYLE (可选) — 12 项
 总计: 22 项问题  |  ERROR: 3  WARNING: 7  STYLE: 12
 ```
 
-### Step 5 MISRA C 检查（可选）
-当用户指定 `--misra` 时，追加运行以下命令：
+### Step 5 统一 Cppcheck 门禁与 MISRA checker
+MISRA 是 Cppcheck 统一扫描中的一个 checker，不是第二套独立分析工具。启用
+`--misra` 后，原生 Cppcheck checker 与 MISRA addon 在同一次扫描中运行，结果
+共同进入同一份 XML、JSON 或 HTML 报告，并使用同一个退出码。
 
 ```bash
-cppcheck --addon=misra \
-  --suppress=misra-c2012-1.1 \
-  --std=c11 ./Src
+python static_analysis.py --src ./Src --misra
 ```
 
-MISRA 规则分为三级，输出时分级显示：
+统一门禁判定：
+
+- Cppcheck `ERROR`：阻断；
+- MISRA `Mandatory`、`Required`、`UNMAPPED`：阻断；
+- MISRA `Advisory`：报告但不阻断；
+- MISRA 元数据缺失、addon 执行失败、报告解析失败或扫描超时：阻断。
+
+Cppcheck 的 `style`/`warning` severity 不能覆盖 MISRA 等级。例如 MISRA
+Required 即使在 XML 中表现为 `style`，仍然阻断统一门禁。
+
+### MISRA 规则元数据
+
+MISRA 规则元数据位于 [`misra-rule-metadata.json`](misra-rule-metadata.json)，当前覆盖
+MISRA C:2012 + Amendment 1 + Amendment 2 的规则/指令分类，不复制规则正文。
+规则分为三级，输出时分级显示：
 - **Mandatory**：强制要求，不可偏离
 - **Required**：必须遵守，除非有正式偏差记录
 - **Advisory**：建议遵守，可在项目层面豁免
+- **UNMAPPED**：工具报告的规则 ID 未出现在已确认元数据中，禁止自动归入 `Required`。
 
 ### Step 6 修复建议
 对每个 ERROR 级别问题，给出具体修复代码示例。
@@ -159,7 +174,7 @@ nullPointer  // 此处已通过断言保证非空
 | `missingInclude` | HAL 驱动头文件 | 系统头文件路径未配置 |
 | `unusedFunction` | ISR 中断服务函数 | 由硬件向量表调用，工具无法感知 |
 | `nullPointer` | 断言保护后的指针 | 已通过 assert 确保非空 |
-| `misra-c2012-1.1` | 编译器扩展语法 | 使用了 GCC 特定扩展 |
+MISRA 抑制项不得默认添加。每个抑制项必须由项目显式提供，并记录规则、文件/范围、原因和复审依据。
 
 ## 错误处理
 | 情况 | 处理 |
@@ -167,7 +182,7 @@ nullPointer  // 此处已通过断言保证非空
 | cppcheck 未找到 | 提示安装命令 |
 | 头文件找不到 | 自动从 CMakeLists.txt 提取 include 路径重试 |
 | 报告为空 | 检查 src_dir 是否包含 .c/.cpp 文件 |
-| `addon misra not found` | 下载 misra.py addon：`pip install cppcheck-misra` 或从 cppcheck 官网获取 misra.py |
+| `addon misra not found` | 配置 Cppcheck 官方 `misra.py` addon，并通过 `MCU_QUALITY_CPPCHECK_MISRA_ADDON` 指向 addon JSON |
 | `Too many errors` | 首次扫描建议先用 `--enable=error` 只看最严重的错误，逐步修复后再开启全量检查 |
 | `Scanning takes too long` | 加 `-j 4` 并行扫描，或用 `--suppress=` 排除第三方库目录（如 Drivers/） |
 
@@ -194,7 +209,7 @@ nullPointer  // 此处已通过断言保证非空
 ## 输出约定
 - 按严重程度分组的问题列表
 - ERROR 级别问题的修复建议（含通用代码模板）
-- MISRA 问题按 Mandatory / Required / Advisory 分级展示（启用时）
+- MISRA 问题按 Mandatory / Required / Advisory / UNMAPPED 分级展示（启用时）
 - 汇总统计（文件数、问题总数、各级别数量、扫描耗时）
 - 可选导出：HTML 报告 / JSON 文件 / XML 文件
 

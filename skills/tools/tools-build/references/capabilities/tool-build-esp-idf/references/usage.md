@@ -15,19 +15,19 @@
 
 ```bash
 # 探测 ESP-IDF 构建环境
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --detect
 
 # 设置目标芯片
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --set-target esp32s3 --project /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --set-target esp32s3 --project /path/to/project
 
 # 构建工程
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --build --project /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --build --project /path/to/project
 
 # 仅扫描构建产物
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --scan-artifacts /path/to/project/build
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --scan-artifacts /path/to/project/build
 
 # 清理构建目录
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --clean --project /path/to/project
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --clean --project /path/to/project
 ```
 
 ## 常见模式
@@ -35,7 +35,7 @@ python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --clean --pr
 ### 1. 环境探测
 
 ```bash
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --detect
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --detect
 ```
 
 输出 `idf.py` 路径、IDF 版本、支持的目标芯片列表。
@@ -44,23 +44,23 @@ python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --detect
 
 ```bash
 # 设置目标芯片
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --set-target esp32 --project /repo/fw
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --set-target esp32 --project /repo/fw
 
 # 构建
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
 ```
 
 ### 3. 重新构建
 
 ```bash
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
 ```
 
 ### 4. 清理后重建
 
 ```bash
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --clean --project /repo/fw
-python3 skills/operations/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --clean --project /repo/fw
+python3 skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py --build --project /repo/fw
 ```
 
 ## 参数说明

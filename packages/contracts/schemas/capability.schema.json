@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mcu-workbench/capability/1.0.0",
+  "type": "object",
+  "required": ["id", "ownerPlugin", "version", "permissions"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "ownerPlugin": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "version": { "type": "string" },
+    "permissions": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

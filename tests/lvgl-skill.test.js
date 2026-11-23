@@ -1,19 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-const { CANONICAL_SKILLS } = require('../skills/catalog');
+const { CANONICAL_SKILLS, resolveSkillId } = require('../skills/catalog');
 const { getSkillContent } = require('../skills/loader');
 const { validateLvglReferences } = require('../scripts/validate-plugin');
 
 const ROOT = path.resolve(__dirname, '..');
-const SKILL_ROOT = path.join(ROOT, 'skills', 'middleware', 'middleware-lvgl');
+const SKILL_ROOT = path.join(ROOT, 'skills', 'vendor', 'vendor_lvgl');
 const GRAPH_PATH = path.join(SKILL_ROOT, 'references', 'lvgl-knowledge-graph.json');
 
 describe('LVGL skill knowledge graph and boundaries', () => {
-  const content = getSkillContent('middleware-lvgl');
+  const content = getSkillContent('vendor_lvgl');
   const graph = JSON.parse(fs.readFileSync(GRAPH_PATH, 'utf8'));
 
   test('keeps one canonical LVGL skill and all references', () => {
-    expect(CANONICAL_SKILLS.filter((skill) => skill.id === 'middleware-lvgl')).toHaveLength(1);
+    expect(CANONICAL_SKILLS.filter((skill) => skill.id === 'vendor_lvgl')).toHaveLength(1);
+    expect(resolveSkillId('middleware-lvgl')).toBe('vendor_lvgl');
     expect(content).toContain('references/lvgl-knowledge-graph.md');
     expect(content).toContain('references/version-compatibility.md');
     expect(content).toContain('references/porting-contract.md');
@@ -46,8 +47,8 @@ describe('LVGL skill knowledge graph and boundaries', () => {
     expect(content).toMatch(/OS Wrapper/);
     expect(content).toMatch(/不直接调用 FreeRTOS、Core、Driver/);
     expect(content).not.toMatch(/Adapter/);
-    expect(content).toMatch(/bsp-adapter/);
-    expect(content).toMatch(/os-abstraction/);
+    expect(content).toMatch(/platform_bsp|bsp-wrapper/);
+    expect(content).toMatch(/os-adapter/);
     expect(content).toMatch(/app-architecture/);
   });
 
