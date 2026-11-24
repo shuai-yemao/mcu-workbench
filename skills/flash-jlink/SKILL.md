@@ -29,8 +29,8 @@ description: 当需要使用 SEGGER J-Link 探针烧录固件，或启动 RTT �
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、配置扫描，还是执行烧录。
-2. 若不确定 J-Link 环境状态，先运行自带脚本 [scripts/jlink_flasher.py](scripts/jlink_flasher.py) 的 `--detect` 模式确认。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次是环境探测、配置扫描，还是执行烧录。
+2. 若不确定 J-Link 环境状态，先运行自带脚本 [./scripts/jlink_flasher.py](scripts/jlink_flasher.py) 的 `--detect` 模式确认。
 3. 若不确定设备型号或接口配置，使用 `--scan-configs` 扫描工作区线索。
 4. 使用 `--artifact` + `--device` 执行烧录，可选 `--interface` 和 `--speed`。
 5. 对 BIN 文件，必须同时提供 `--base-address`。

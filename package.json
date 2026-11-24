@@ -9,6 +9,8 @@
   "scripts": {
     "test": "node node_modules/jest-cli/bin/jest.js --runInBand",
     "verification:pilot": "node scripts/verification-pilot.js",
+    "validate:devops": "node plugins/mcu-workbench-devops/scripts/validate.js",
+    "sync:devops-skills": "node plugins/mcu-workbench-devops/scripts/sync-skills.js",
     "build": "echo 'Build complete'",
     "agent:artifacts": "node scripts/agent-artifacts.js",
     "workflow:dashboard": "node scripts/workflow-dashboard.js",

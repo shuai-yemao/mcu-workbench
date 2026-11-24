@@ -29,8 +29,8 @@ description: 当需要编译基于裸 Makefile 的嵌入式固件工程（无 CM
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、解析 Makefile、列出目标、执行构建，还是仅扫描产物。
-2. 若不确定环境是否就绪，先运行自带脚本 [scripts/makefile_builder.py](scripts/makefile_builder.py) 的 `--detect` 模式确认。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次是环境探测、解析 Makefile、列出目标、执行构建，还是仅扫描产物。
+2. 若不确定环境是否就绪，先运行自带脚本 [./scripts/makefile_builder.py](scripts/makefile_builder.py) 的 `--detect` 模式确认。
 3. 运行 `--parse-makefile` 检查解析出的变量和工具链信息，确认目标芯片和编译器。
 4. 若需查看可用目标，运行 `--list-targets`。
 5. 使用 `--source` 运行构建，按需指定 `--target`、`--clean`、`--extra-args` 和 `-j`。

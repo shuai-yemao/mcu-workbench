@@ -4,5 +4,5 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| OTA 固件打包 | [完整流程与资源](capabilities/release-ota-package/GUIDE.md) |
-| OTA 更新系统 | [完整流程与资源](capabilities/release-ota-update/GUIDE.md) |
+| OTA 固件打包 | [完整流程与资源](./capabilities/release-ota-package/GUIDE.md) |
+| OTA 更新系统 | [完整流程与资源](./capabilities/release-ota-update/GUIDE.md) |

@@ -18,7 +18,7 @@ description: 负责嵌入式项目的 Git 仓库识别、分支、精准暂存�
 3. 读取项目既有的保护分支、分支模型、命名规范和贡献说明。若其与本 Skill 的约定冲突，报告差异并等待用户选择，绝不擅自迁移模型或改写规则。
 4. 任何会改变 Git 状态的动作之前，先给出目标、预期文件范围、命令、影响和可恢复性，等待明确确认。
 
-执行安全与确认细节时读取 [`安全操作契约`](references/git-safety-contract.md)。分支、提交与生命周期决策读取 [`Git 生命周期工作流`](references/git-lifecycle-workflow.md)。需要判断嵌入式工程验证交接时读取 [`嵌入式验证交接`](references/git-embedded-handoff.md)。
+执行安全与确认细节时读取 [`安全操作契约`](./references/git-safety-contract.md)。分支、提交与生命周期决策读取 [`Git 生命周期工作流`](./references/git-lifecycle-workflow.md)。需要判断嵌入式工程验证交接时读取 [`嵌入式验证交接`](./references/git-embedded-handoff.md)。
 
 ## 提交关卡
 

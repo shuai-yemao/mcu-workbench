@@ -1,0 +1,522 @@
+FAIL tests/sync-codex-skills.test.js (36.683 s)
+  ● Codex skill synchronization › migrates legacy directories, installs the complete catalog and creates a backup
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 22
+    Received length: 23
+    Received array:  [{"column": 91, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 33, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 332, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 45, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 48, "file": "academic-paper/references/abstract_writing_guide.md", "line": 15, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 74, "file": "academic-paper/references/abstract_writing_guide.md", "line": 30, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 36, "file": "academic-paper/references/abstract_writing_guide.md", "line": 59, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 208, "file": "academic-paper/references/anti_leakage_protocol.md", "line": 61, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/compliance_checkpoint_protocol.md#canonical-gap-tag-vocabulary"}, {"column": 643, "file": "academic-paper/SKILL.md", "line": 650, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../shared/output_language_pair.md"}, {"column": 65, "file": "academic-paper/templates/bilingual_abstract_template.md", "line": 14, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 69, "file": "academic-pipeline/references/adapters/overview.md", "line": 6, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/literature_corpus_entry.schema.json"}, {"column": 59, "file": "academic-pipeline/references/adapters/overview.md", "line": 7, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/rejection_log.schema.json"}, …]
+
+      59 |
+      60 |     const links = validateSkillLinks({ root: target, boundaryRoot: target });
+    > 61 |     expect(links.findings).toHaveLength(22);
+         |                            ^
+      62 |     expect(links.findings.filter((finding) => (
+      63 |       finding.file.startsWith('academic-paper/') || finding.file.startsWith('academic-pipeline/')
+      64 |     ))).toHaveLength(22);
+
+      at Object.toHaveLength (tests/sync-codex-skills.test.js:61:28)
+
+FAIL tests/layer-contract.test.js (172.696 s)
+  ● generated layer contract validator › rejects a generated file whose version tag is removed instead of skipping validation
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      46 |   });
+      47 |
+    > 48 |   test('rejects a generated file whose version tag is removed instead of skipping validation', async () => {
+         |   ^
+      49 |     const root = await createSlice();
+      50 |     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
+      51 |       content.replace(/^ \* @version[^\n]*\n/m, '')
+
+      at test (tests/layer-contract.test.js:48:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a generated function when its Doxygen block is removed
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      79 |   });
+      80 |
+    > 81 |   test('rejects a generated function when its Doxygen block is removed', async () => {
+         |   ^
+      82 |     const root = await createSlice();
+      83 |     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => content
+      84 |       .replace(/\/\*\*\n \* @brief (?:执行带超时约束的同步数据传输。|以毫秒超时执行同步事务。)[\s\S]*?\*\//, ''));
+
+      at test (tests/layer-contract.test.js:81:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects generated sources that retain injected Ops but never call them
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      230 |   });
+      231 |
+    > 232 |   test('rejects generated sources that retain injected Ops but never call them', async () => {
+          |   ^
+      233 |     const root = await createSlice();
+      234 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Src/impl_w25q64_driver.c', (content) => content
+      235 |       .replace('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)', 'driver_core_ops_not_used'));
+
+      at test (tests/layer-contract.test.js:232:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits the resource operation binding
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      246 |   });
+      247 |
+    > 248 |   test('rejects a Port that omits the resource operation binding', async () => {
+          |   ^
+      249 |     const root = await createSlice();
+      250 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      251 |       .replace('externflash_resource_get_ops()', 'externflash_resource_get_ops_not_used()'));
+
+      at test (tests/layer-contract.test.js:248:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › does not require a legacy Port callback bridge
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      256 |   });
+      257 |
+    > 258 |   test('does not require a legacy Port callback bridge', async () => {
+          |   ^
+      259 |     const root = await createSlice();
+      260 |     const port = await fs.readFile(path.join(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c'), 'utf8');
+      261 |     expect(port).not.toMatch(/static\s+platform_err_t\s+externflash_port_/);
+
+      at test (tests/layer-contract.test.js:258:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits direct Handle binding
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      263 |   });
+      264 |
+    > 265 |   test('rejects a Port that omits direct Handle binding', async () => {
+          |   ^
+      266 |     const root = await createSlice();
+      267 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      268 |       .replace(/=\s*impl_externflash_handle_[a-z0-9_]+/g, '= NULL'));
+
+      at test (tests/layer-contract.test.js:265:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits Platform Model registration
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      273 |   });
+      274 |
+    > 275 |   test('rejects a Port that omits Platform Model registration', async () => {
+          |   ^
+      276 |     const root = await createSlice();
+      277 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      278 |       .replace('platform_externflash_register_default', 'platform_externflash_register_default_not_used'));
+
+      at test (tests/layer-contract.test.js:275:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits Driver construction
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      283 |   });
+      284 |
+    > 285 |   test('rejects a Port that omits Driver construction', async () => {
+          |   ^
+      286 |     const root = await createSlice();
+      287 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      288 |       .replace('impl_w25q64_driver_construct', 'impl_w25q64_driver_build_not_used'));
+
+      at test (tests/layer-contract.test.js:285:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › reports a Core vendor leak, extra Port export, and forbidden Model include
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      293 |   });
+      294 |
+    > 295 |   test('reports a Core vendor leak, extra Port export, and forbidden Model include', async () => {
+          |   ^
+      296 |     const root = await createSlice();
+      297 |     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => `${content}\n#include "stm32f4xx_hal.h"\n`);
+      298 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
+
+      at test (tests/layer-contract.test.js:295:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › accepts a pure-forward wrapper slice with --slice wrapper and style profile documentation
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      401 | #endif`;
+      402 |
+    > 403 |   test('accepts a pure-forward wrapper slice with --slice wrapper and style profile documentation', async () => {
+          |   ^
+      404 |     const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
+      405 |     const result = validateLayerContract({
+      406 |       root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+
+      at test (tests/layer-contract.test.js:403:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a device-object wrapper that omits a four-tuple slot
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      410 |   });
+      411 |
+    > 412 |   test('rejects a device-object wrapper that omits a four-tuple slot', async () => {
+          |   ^
+      413 |     const root = await createWrapperSlice(fourTupleBrokenWrapperHeader, wrapperSourceFullProfile);
+      414 |     const result = validateLayerContract({
+      415 |       root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+
+      at test (tests/layer-contract.test.js:412:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a generated file whose comments are written in English
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      530 |   });
+      531 |
+    > 532 |   test('rejects a generated file whose comments are written in English', async () => {
+          |   ^
+      533 |     const root = await createSlice();
+      534 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h', (content) => content
+      535 |       .replace('生成的 Platform、Impl 或公共接口', 'generated Platform, Impl, or public interfaces')
+
+      at test (tests/layer-contract.test.js:532:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+PASS tests/codex-plugin.test.js (16.52 s)
+PASS tests/workflow-dashboard.test.js (5.454 s)
+PASS tests/workflow-gate.test.js
+PASS tests/codegen.test.js (9.928 s)
+PASS tests/generator.test.js (10.913 s)
+PASS tests/agents.test.js (21.348 s)
+PASS tests/skills.test.js (10.598 s)
+PASS tests/learning-tutor-skill.test.js (11.229 s)
+PASS tests/claude-layering.test.js (6.048 s)
+PASS tests/builder.test.js
+PASS tests/document-context-context.test.js
+PASS tests/embedded-architecture-skills.test.js
+PASS tests/cursor-plugin.test.js
+PASS tests/plugin-refresh.test.js
+PASS tests/validate-architecture.test.js
+FAIL tests/workflow-dashboard-manager.test.js
+  ● workflow dashboard manager › starts only one watcher and supports status and stop lifecycle
+
+    EPERM, Permission denied: 'C:\Users\SHUAIT~1\AppData\Local\Temp\mcu-workbench-dashboard-manager-XZlnKW'
+
+      27 |     stopDashboard({ root });
+      28 |     fs.rmSync(paths.directory, { recursive: true, force: true });
+    > 29 |     fs.rmSync(root, { recursive: true, force: true });
+         |        ^
+      30 |   });
+      31 |
+      32 |   test('recognizes an embedded project root without creating dashboard metadata in the project', () => {
+
+      at Object.rmSync (tests/workflow-dashboard-manager.test.js:29:8)
+
+PASS tests/verification-catalog.test.js
+PASS tests/agent-domains.test.js
+PASS tests/plugin-runtime.test.js
+PASS tests/observability-manifest.test.js
+PASS tests/workflow-final-review-contract.test.js
+PASS tests/document-context-lifecycle.test.js
+PASS tests/document-context.test.js
+PASS tests/version-sync.test.js
+PASS tests/capability-resolver.test.js
+PASS tests/document-context-store.test.js
+PASS tests/devops-projection.test.js
+PASS tests/document-context-readme.test.js
+PASS tests/codex-compat.test.js
+PASS tests/debugger.test.js
+PASS tests/verification-plugin.test.js
+PASS tests/document-context-cli.test.js
+PASS tests/workflow-state.test.js
+PASS tests/agent-artifacts.test.js
+PASS tests/devops-external-skills.test.js
+PASS tests/monitor.test.js
+PASS tests/devops-plugin.test.js
+PASS tests/plugin-contracts.test.js
+PASS tests/lvgl-skill.test.js
+PASS tests/validate-architecture-cli.test.js
+PASS tests/flash-algorithm-profile.test.js
+PASS tests/quality-style-onboarding.test.js
+PASS tests/verification-skill-projection.test.js
+PASS tests/software-architecture-graph.test.js
+PASS tests/validate-bsp-contract.test.js
+PASS tests/verification-pilot.test.js
+PASS tests/codex-local-dev.test.js
+PASS tests/skill-links.test.js
+PASS tests/platform.test.js
+PASS tests/workflow-execution-contract.test.js
+PASS tests/codegen-runtime.test.js
+PASS tests/devops-catalog.test.js
+PASS tests/observability-plugin.test.js
+PASS tests/quality-format-profile.test.js
+PASS tests/ai-collab-skills.test.js
+PASS tests/verification-external-skills.test.js
+PASS tests/devops-skills.test.js
+PASS tests/session-runner.test.js
+PASS tests/workflows.test.js
+PASS tests/flasher.test.js
+PASS tests/tools-git-skill.test.js
+PASS tests/workflow-output-contract.test.js
+
+Summary of all failing tests
+FAIL tests/sync-codex-skills.test.js (36.683 s)
+  ● Codex skill synchronization › migrates legacy directories, installs the complete catalog and creates a backup
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 22
+    Received length: 23
+    Received array:  [{"column": 91, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 33, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 332, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 45, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 48, "file": "academic-paper/references/abstract_writing_guide.md", "line": 15, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 74, "file": "academic-paper/references/abstract_writing_guide.md", "line": 30, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 36, "file": "academic-paper/references/abstract_writing_guide.md", "line": 59, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 208, "file": "academic-paper/references/anti_leakage_protocol.md", "line": 61, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/compliance_checkpoint_protocol.md#canonical-gap-tag-vocabulary"}, {"column": 643, "file": "academic-paper/SKILL.md", "line": 650, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../shared/output_language_pair.md"}, {"column": 65, "file": "academic-paper/templates/bilingual_abstract_template.md", "line": 14, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 69, "file": "academic-pipeline/references/adapters/overview.md", "line": 6, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/literature_corpus_entry.schema.json"}, {"column": 59, "file": "academic-pipeline/references/adapters/overview.md", "line": 7, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/rejection_log.schema.json"}, …]
+
+      59 |
+      60 |     const links = validateSkillLinks({ root: target, boundaryRoot: target });
+    > 61 |     expect(links.findings).toHaveLength(22);
+         |                            ^
+      62 |     expect(links.findings.filter((finding) => (
+      63 |       finding.file.startsWith('academic-paper/') || finding.file.startsWith('academic-pipeline/')
+      64 |     ))).toHaveLength(22);
+
+      at Object.toHaveLength (tests/sync-codex-skills.test.js:61:28)
+
+FAIL tests/layer-contract.test.js (172.696 s)
+  ● generated layer contract validator › rejects a generated file whose version tag is removed instead of skipping validation
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      46 |   });
+      47 |
+    > 48 |   test('rejects a generated file whose version tag is removed instead of skipping validation', async () => {
+         |   ^
+      49 |     const root = await createSlice();
+      50 |     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => (
+      51 |       content.replace(/^ \* @version[^\n]*\n/m, '')
+
+      at test (tests/layer-contract.test.js:48:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a generated function when its Doxygen block is removed
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      79 |   });
+      80 |
+    > 81 |   test('rejects a generated function when its Doxygen block is removed', async () => {
+         |   ^
+      82 |     const root = await createSlice();
+      83 |     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => content
+      84 |       .replace(/\/\*\*\n \* @brief (?:执行带超时约束的同步数据传输。|以毫秒超时执行同步事务。)[\s\S]*?\*\//, ''));
+
+      at test (tests/layer-contract.test.js:81:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects generated sources that retain injected Ops but never call them
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      230 |   });
+      231 |
+    > 232 |   test('rejects generated sources that retain injected Ops but never call them', async () => {
+          |   ^
+      233 |     const root = await createSlice();
+      234 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Src/impl_w25q64_driver.c', (content) => content
+      235 |       .replace('p_driver->ctx.pf_transaction(p_driver->ctx.p_context)', 'driver_core_ops_not_used'));
+
+      at test (tests/layer-contract.test.js:232:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits the resource operation binding
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      246 |   });
+      247 |
+    > 248 |   test('rejects a Port that omits the resource operation binding', async () => {
+          |   ^
+      249 |     const root = await createSlice();
+      250 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      251 |       .replace('externflash_resource_get_ops()', 'externflash_resource_get_ops_not_used()'));
+
+      at test (tests/layer-contract.test.js:248:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › does not require a legacy Port callback bridge
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      256 |   });
+      257 |
+    > 258 |   test('does not require a legacy Port callback bridge', async () => {
+          |   ^
+      259 |     const root = await createSlice();
+      260 |     const port = await fs.readFile(path.join(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c'), 'utf8');
+      261 |     expect(port).not.toMatch(/static\s+platform_err_t\s+externflash_port_/);
+
+      at test (tests/layer-contract.test.js:258:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits direct Handle binding
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      263 |   });
+      264 |
+    > 265 |   test('rejects a Port that omits direct Handle binding', async () => {
+          |   ^
+      266 |     const root = await createSlice();
+      267 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      268 |       .replace(/=\s*impl_externflash_handle_[a-z0-9_]+/g, '= NULL'));
+
+      at test (tests/layer-contract.test.js:265:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits Platform Model registration
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      273 |   });
+      274 |
+    > 275 |   test('rejects a Port that omits Platform Model registration', async () => {
+          |   ^
+      276 |     const root = await createSlice();
+      277 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      278 |       .replace('platform_externflash_register_default', 'platform_externflash_register_default_not_used'));
+
+      at test (tests/layer-contract.test.js:275:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a Port that omits Driver construction
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      283 |   });
+      284 |
+    > 285 |   test('rejects a Port that omits Driver construction', async () => {
+          |   ^
+      286 |     const root = await createSlice();
+      287 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => content
+      288 |       .replace('impl_w25q64_driver_construct', 'impl_w25q64_driver_build_not_used'));
+
+      at test (tests/layer-contract.test.js:285:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › reports a Core vendor leak, extra Port export, and forbidden Model include
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      293 |   });
+      294 |
+    > 295 |   test('reports a Core vendor leak, extra Port export, and forbidden Model include', async () => {
+          |   ^
+      296 |     const root = await createSlice();
+      297 |     await mutate(root, '03_Platform/platform_mcu/Inc/platform_spi.h', (content) => `${content}\n#include "stm32f4xx_hal.h"\n`);
+      298 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_port/Src/impl_externflash_handle_port.c', (content) => `${content}\nint32_t extra_port_export(void) { return 0; }\n`);
+
+      at test (tests/layer-contract.test.js:295:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › accepts a pure-forward wrapper slice with --slice wrapper and style profile documentation
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      401 | #endif`;
+      402 |
+    > 403 |   test('accepts a pure-forward wrapper slice with --slice wrapper and style profile documentation', async () => {
+          |   ^
+      404 |     const root = await createWrapperSlice(pureForwardWrapperHeader, wrapperSourceFullProfile);
+      405 |     const result = validateLayerContract({
+      406 |       root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+
+      at test (tests/layer-contract.test.js:403:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a device-object wrapper that omits a four-tuple slot
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      410 |   });
+      411 |
+    > 412 |   test('rejects a device-object wrapper that omits a four-tuple slot', async () => {
+          |   ^
+      413 |     const root = await createWrapperSlice(fourTupleBrokenWrapperHeader, wrapperSourceFullProfile);
+      414 |     const result = validateLayerContract({
+      415 |       root, core: 'spi', deviceType: 'externflash', device: 'W25Q64', slice: 'wrapper',
+
+      at test (tests/layer-contract.test.js:412:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+  ● generated layer contract validator › rejects a generated file whose comments are written in English
+
+    thrown: "Exceeded timeout of 5000 ms for a test.
+    Add a timeout value to this test to increase the timeout, if this is a long-running test. See https://jestjs.io/docs/api#testname-fn-timeout."
+
+      530 |   });
+      531 |
+    > 532 |   test('rejects a generated file whose comments are written in English', async () => {
+          |   ^
+      533 |     const root = await createSlice();
+      534 |     await mutate(root, '04_Impl/impl_bsp/impl_bsp_hal_driver/W25Q64/Inc/impl_w25q64_config.h', (content) => content
+      535 |       .replace('生成的 Platform、Impl 或公共接口', 'generated Platform, Impl, or public interfaces')
+
+      at test (tests/layer-contract.test.js:532:3)
+      at Object.describe (tests/layer-contract.test.js:38:1)
+
+FAIL tests/workflow-dashboard-manager.test.js
+  ● workflow dashboard manager › starts only one watcher and supports status and stop lifecycle
+
+    EPERM, Permission denied: 'C:\Users\SHUAIT~1\AppData\Local\Temp\mcu-workbench-dashboard-manager-XZlnKW'
+
+      27 |     stopDashboard({ root });
+      28 |     fs.rmSync(paths.directory, { recursive: true, force: true });
+    > 29 |     fs.rmSync(root, { recursive: true, force: true });
+         |        ^
+      30 |   });
+      31 |
+      32 |   test('recognizes an embedded project root without creating dashboard metadata in the project', () => {
+
+      at Object.rmSync (tests/workflow-dashboard-manager.test.js:29:8)
+
+
+Test Suites: 3 failed, 61 passed, 64 total
+Tests:       14 failed, 362 passed, 376 total
+Snapshots:   0 total
+Time:        382.815 s

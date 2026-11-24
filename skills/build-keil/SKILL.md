@@ -28,7 +28,7 @@ description: 当需要通过 Keil MDK 命令行编译嵌入式工程，调用自
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、工程扫描、列出目标，还是执行编译。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次是环境探测、工程扫描、列出目标，还是执行编译。
 2. 对于单工程、单目标的常见场景，优先使用一次调用完成探测+编译：
    ```bash
    python scripts/keil_builder.py --detect --project <工程文件> --target <目标名>

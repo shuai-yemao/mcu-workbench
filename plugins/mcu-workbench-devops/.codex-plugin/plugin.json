@@ -1,0 +1,6 @@
+{
+  "name": "mcu-workbench-devops",
+  "version": "1.0.0",
+  "description": "MCU Workbench DevOps Skills：构建、链接、烧录、Git 与发布。",
+  "skills": "./skills/"
+}

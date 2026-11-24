@@ -11,17 +11,17 @@ description: 负责 MCU 固件烧录、批量烧录、探针连接和烧录后�
 
 ## 变体
 
-- ESP-IDF：[`tool-flash-esp-idf`](references/tool-flash-esp-idf/GUIDE.md)
-- 批量烧录：[`tool-flash-gang`](references/tool-flash-gang/GUIDE.md)
-- J-Link：[`tool-flash-jlink`](references/tool-flash-jlink/GUIDE.md)
-- Keil：[`tool-flash-keil`](references/tool-flash-keil/GUIDE.md)
-- Flash 下载算法制作：[`tool-flash-algorithm`](references/capabilities/tool-flash-algorithm/GUIDE.md)
-- OpenOCD：[`tool-flash-openocd`](references/tool-flash-openocd/GUIDE.md)
-- PlatformIO：[`tool-flash-platformio`](references/tool-flash-platformio/GUIDE.md)
+- ESP-IDF：[`tool-flash-esp-idf`](./references/tool-flash-esp-idf/GUIDE.md)
+- 批量烧录：[`tool-flash-gang`](./references/tool-flash-gang/GUIDE.md)
+- J-Link：[`tool-flash-jlink`](./references/tool-flash-jlink/GUIDE.md)
+- Keil：[`tool-flash-keil`](./references/tool-flash-keil/GUIDE.md)
+- Flash 下载算法制作：[`tool-flash-algorithm`](./references/capabilities/tool-flash-algorithm/GUIDE.md)
+- OpenOCD：[`tool-flash-openocd`](./references/tool-flash-openocd/GUIDE.md)
+- PlatformIO：[`tool-flash-platformio`](./references/tool-flash-platformio/GUIDE.md)
 
-J-Link 的工具版本、探针安全边界和源码关联见 [`jlink-evidence.md`](references/jlink-evidence.md)。
-烧录、批量烧录、探针脚本和失败分流的完整资料见 [`capability-index.md`](references/capability-index.md)。
+J-Link 的工具版本、探针安全边界和源码关联见 [`jlink-evidence.md`](./references/jlink-evidence.md)。
+烧录、批量烧录、探针脚本和失败分流的完整资料见 [`capability-index.md`](./references/capability-index.md)。
 
 ## 输出
 
-给出探针/端口配置、完整烧录命令、校验方式和失败后的最小复现信息。构建问题交接 [`tools-build`](../tools-build/SKILL.md)，在线调试交接 [`tools-debug`](../tools-debug/SKILL.md)。
+给出探针/端口配置、完整烧录命令、校验方式和失败后的最小复现信息。构建问题交接 [`tools-build`](../tools-build/SKILL.md)，在线调试交接 [`tools-debug`](../../../plugins/mcu-workbench-observability/skills/tools-debug/SKILL.md)。

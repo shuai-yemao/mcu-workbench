@@ -251,6 +251,34 @@ function resolveSkillId(id) {
 }
 
 const PLUGIN_SKILL_IDS = {
+  'mcu-workbench-devops': [
+    'tools-build',
+    'tools-linker',
+    'tools-flash',
+    'tools-git',
+    'tools-release',
+    'build-cmake',
+    'build-iar',
+    'build-idf',
+    'build-keil',
+    'build-makefile',
+    'build-platformio',
+    'flash-idf',
+    'flash-jlink',
+    'flash-keil',
+    'flash-openocd',
+    'flash-platformio'
+  ],
+  'mcu-workbench-verification': [
+    'tools-verification',
+    'tools-quality',
+    'academic-paper',
+    'academic-paper-reviewer',
+    'academic-pipeline',
+    'embedded-unit-test-generator',
+    'sr-screener',
+    'static-analysis'
+  ],
   'mcu-workbench-observability': [
     'tools-debug',
     'tools-observability',

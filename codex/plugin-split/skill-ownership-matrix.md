@@ -2,9 +2,9 @@
 
 | Skill | Target plugin | Evidence | Status |
 |---|---|---|---|
-| `academic-paper` | `mcu-workbench-verification` | directory/name semantics only | blocked: provenance metadata missing |
-| `academic-paper-reviewer` | `mcu-workbench-verification` | directory/name semantics only | blocked: provenance metadata missing |
-| `academic-pipeline` | `mcu-workbench-verification` | directory/name semantics only | blocked: provenance metadata missing |
+| `academic-paper` | Codex Agent Skills (`~/.agents/skills`) | user-confirmed scope; registry entry `codex/native-skills.json` | registered; provenance metadata remains unknown |
+| `academic-paper-reviewer` | Codex Agent Skills (`~/.agents/skills`) | user-confirmed scope; registry entry `codex/native-skills.json` | registered; provenance metadata remains unknown |
+| `academic-pipeline` | Codex Agent Skills (`~/.agents/skills`) | user-confirmed scope; registry entry `codex/native-skills.json` | registered; provenance metadata remains unknown |
 | `build-cmake` | `mcu-workbench-devops` | directory/name semantics only | blocked: provenance metadata missing |
 | `build-iar` | `mcu-workbench-devops` | directory/name semantics only | blocked: provenance metadata missing |
 | `build-idf` | `mcu-workbench-devops` | directory/name semantics only | blocked: provenance metadata missing |
@@ -50,7 +50,7 @@
 | `serial-monitor` | `mcu-workbench-observability` | directory/name semantics only | blocked: provenance metadata missing |
 | `serial-shell` | `mcu-workbench-observability` | directory/name semantics only | blocked: provenance metadata missing |
 | `skill-template` | `mcu-workbench-workflow` | directory/name semantics only | blocked: provenance metadata missing |
-| `sr-screener` | `mcu-workbench-verification` | directory/name semantics only | blocked: provenance metadata missing |
+| `sr-screener` | Codex Agent Skills (`~/.agents/skills`) | user-confirmed scope; registry entry `codex/native-skills.json` | registered; provenance metadata remains unknown |
 | `static-analysis` | `mcu-workbench-verification` | directory/name semantics only | blocked: provenance metadata missing |
 | `vendor-minimal-firmware` | `mcu-workbench-workflow` | directory/name semantics only | blocked: provenance metadata missing |
 | `visa-debug` | `unknown` | no safe ownership evidence | blocked: provenance metadata missing |
@@ -60,5 +60,5 @@
 - Entries scanned: 52.
 - Source attribution: 23 inventory entries have the public `https://github.com/LeoKemp223/embed-ai-tool` repository as source evidence; the remaining 29 entries are marked `LeoKemp223 (user-confirmed; unpublished/private source)` without inventing a repository URL.
 - Each scanned directory has at most one target plugin assignment; `unknown` is retained where ownership is not safe to infer.
-- No entry is migration-ready until source, version, license, dependency, and ownership evidence are confirmed.
-- This matrix is static evidence only; it does not modify or migrate any Skill.
+- The four academic/research Skills have a user-confirmed Codex Agent Skills target; source version, license, and dependencies remain unknown.
+- This matrix records ownership and does not assert that unknown provenance metadata has been resolved.

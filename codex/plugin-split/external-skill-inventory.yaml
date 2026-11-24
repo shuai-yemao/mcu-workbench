@@ -1,5 +1,5 @@
 # Generated inventory for REQ-PLUGIN-SPLIT-20261123
-# Evidence rule: missing source/version/license/dependency metadata remains blocked; no migration is authorized.
+# Evidence rule: provenance metadata remains tracked as unknown unless independently confirmed; target ownership follows the approved Spec.
 request_id: REQ-PLUGIN-SPLIT-20261123
 generated_at: 2026-11-23T00:00:00+08:00
 source_root: skills/
@@ -7,39 +7,40 @@ status: blocked
 entries:
   - skill_id: academic-paper
     source_path: skills/academic-paper
+    codex_skill_path: skills/academic-paper
     source: LeoKemp223 (user-confirmed; unpublished/private source)
     source_evidence: user-confirmed; author attribution supplied in current task
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-verification
-    confidence: inferred
-    status: blocked
-    blocker: external provenance metadata is not registered in the repository
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
   - skill_id: academic-paper-reviewer
     source_path: skills/academic-paper-reviewer
+    codex_skill_path: skills/academic-paper-reviewer
     source: LeoKemp223 (user-confirmed; unpublished/private source)
     source_evidence: user-confirmed; author attribution supplied in current task
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-verification
-    confidence: inferred
-    status: blocked
-    blocker: external provenance metadata is not registered in the repository
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
   - skill_id: academic-pipeline
     source_path: skills/academic-pipeline
+    codex_skill_path: skills/academic-pipeline
     source: LeoKemp223 (user-confirmed; unpublished/private source)
     source_evidence: user-confirmed; author attribution supplied in current task
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-verification
-    confidence: inferred
-    status: blocked
-    blocker: external provenance metadata is not registered in the repository
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
   - skill_id: build-cmake
-    source_path: skills/build-cmake
+    source_path: plugins/mcu-workbench-devops/skills/build-cmake
+    migrated_from: skills/build-cmake
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -50,7 +51,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: build-iar
-    source_path: skills/build-iar
+    source_path: plugins/mcu-workbench-devops/skills/build-iar
+    migrated_from: skills/build-iar
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -61,7 +63,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: build-idf
-    source_path: skills/build-idf
+    source_path: plugins/mcu-workbench-devops/skills/build-idf
+    migrated_from: skills/build-idf
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -72,7 +75,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: build-keil
-    source_path: skills/build-keil
+    source_path: plugins/mcu-workbench-devops/skills/build-keil
+    migrated_from: skills/build-keil
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -83,7 +87,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: build-makefile
-    source_path: skills/build-makefile
+    source_path: plugins/mcu-workbench-devops/skills/build-makefile
+    migrated_from: skills/build-makefile
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -94,7 +99,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: build-platformio
-    source_path: skills/build-platformio
+    source_path: plugins/mcu-workbench-devops/skills/build-platformio
+    migrated_from: skills/build-platformio
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -326,6 +332,7 @@ entries:
     blocker: external provenance metadata is not registered in the repository
   - skill_id: embedded-unit-test-generator
     source_path: skills/embedded-unit-test-generator
+    migrated_path: plugins/mcu-workbench-verification/skills/embedded-unit-test-generator
     source: LeoKemp223 (user-confirmed; unpublished/private source)
     source_evidence: user-confirmed; author attribution supplied in current task
     version: unknown
@@ -336,7 +343,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: flash-idf
-    source_path: skills/flash-idf
+    source_path: plugins/mcu-workbench-devops/skills/flash-idf
+    migrated_from: skills/flash-idf
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -347,7 +355,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: flash-jlink
-    source_path: skills/flash-jlink
+    source_path: plugins/mcu-workbench-devops/skills/flash-jlink
+    migrated_from: skills/flash-jlink
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -358,7 +367,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: flash-keil
-    source_path: skills/flash-keil
+    source_path: plugins/mcu-workbench-devops/skills/flash-keil
+    migrated_from: skills/flash-keil
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -369,7 +379,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: flash-openocd
-    source_path: skills/flash-openocd
+    source_path: plugins/mcu-workbench-devops/skills/flash-openocd
+    migrated_from: skills/flash-openocd
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -380,7 +391,8 @@ entries:
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: flash-platformio
-    source_path: skills/flash-platformio
+    source_path: plugins/mcu-workbench-devops/skills/flash-platformio
+    migrated_from: skills/flash-platformio
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown; no release/version evidence found
@@ -535,17 +547,18 @@ entries:
     blocker: external provenance metadata is not registered in the repository
   - skill_id: sr-screener
     source_path: skills/sr-screener
+    codex_skill_path: skills/sr-screener
     source: LeoKemp223 (user-confirmed; unpublished/private source)
     source_evidence: user-confirmed; author attribution supplied in current task
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-verification
-    confidence: inferred
-    status: blocked
-    blocker: external provenance metadata is not registered in the repository
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
   - skill_id: static-analysis
     source_path: skills/static-analysis
+    migrated_path: plugins/mcu-workbench-verification/skills/static-analysis
     source: https://github.com/LeoKemp223/embed-ai-tool
     source_evidence: user-confirmed; repository README lists this Skill
     version: unknown

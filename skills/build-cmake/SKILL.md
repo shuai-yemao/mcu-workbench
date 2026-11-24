@@ -28,7 +28,7 @@ description: 当需要配置或构建基于 CMake 的嵌入式固件工程，调
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是执行构建、环境探测、列出预设，还是仅扫描产物。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次是执行构建、环境探测、列出预设，还是仅扫描产物。
 2. 直接运行目标动作即可——脚本启动时会自动复用工程根目录 `.em_skill.json` 中上次成功构建的源码目录、构建目录、预设、目标和产物信息（显式参数优先）。仅当需要断言缓存必须存在时才加 `--resume --profile default`。
 3. 若无缓存或用户要求重新探测，脚本自动回退到 `--detect`、`--list-presets` 或手动参数探索。
 4. 若存在 CMakePresets.json，使用 `--list-presets` 列出预设，再用 `--preset <name>` 构建。

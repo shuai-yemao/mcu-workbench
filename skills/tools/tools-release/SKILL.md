@@ -11,9 +11,9 @@ description: 负责 OTA 固件打包、升级流程、回滚和发布验证；�
 
 ## 变体
 
-- 打包与测试工具：[`release-ota-package`](references/release-ota-package/GUIDE.md)
-- OTA 系统架构与策略：[`release-ota-update`](references/release-ota-update/GUIDE.md)
-- [OTA 打包、状态机和回滚资料](references/capability-index.md)
+- 打包与测试工具：[`release-ota-package`](./references/release-ota-package/GUIDE.md)
+- OTA 系统架构与策略：[`release-ota-update`](./references/release-ota-update/GUIDE.md)
+- [OTA 打包、状态机和回滚资料](./references/capability-index.md)
 
 ## 输出
 

@@ -25,7 +25,7 @@ description: 当需要通过 Keil MDK 内置调试器烧录固件到目标板时
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次操作。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次操作。
 2. 对于常见场景，直接一次调用完成探测+烧录：
    ```bash
    python scripts/keil_flasher.py --detect --flash --project <工程文件> --target <目标名>

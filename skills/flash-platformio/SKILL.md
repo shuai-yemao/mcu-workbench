@@ -26,7 +26,7 @@ description: 当需要通过 PlatformIO 烧录固件到目标板时使用，利�
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次操作。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次操作。
 2. 对于常见场景，直接一次调用完成烧录：
    ```bash
    python scripts/pio_flasher.py --flash --project-dir <工程目录> --env <环境名>
