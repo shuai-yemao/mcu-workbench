@@ -1,7 +1,7 @@
 {
   "name": "mcu-workbench",
   "version": "0.1.0",
-  "description": "嵌入式开发生命周期全覆盖的 Claude Code / OpenCode 插件",
+  "description": "嵌入式开发生命周期全覆盖的 Claude Code / OpenCode / Cursor 插件",
   "main": "index.js",
   "exports": {
     ".": {
@@ -21,10 +21,12 @@
     "sync:codex": "node scripts/sync-codex-skills.js",
     "migrate:capabilities": "node scripts/materialize-skill-capabilities.js --check",
     "validate:plugin": "node scripts/validate-plugin.js",
+    "cursor:install": "node scripts/install-cursor-local.js",
     "report:skills": "node scripts/report-skills.js"
   },
   "keywords": [
     "claude-code",
+    "cursor",
     "opencode",
     "opencode-plugin",
     "embedded",

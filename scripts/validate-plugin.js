@@ -3,7 +3,7 @@
 const { SKILL_CATALOG } = require('../skills/catalog');
 const { ROOT, NAME_PATTERN, readJson, summarize } = require('./validators/common');
 const { EXPECTED_AGENTS, parseAgentFrontmatter, validateAgents } = require('./validators/agents');
-const { validateCodexManifest } = require('./validators/manifest');
+const { validateCodexManifest, validateCursorManifest } = require('./validators/manifest');
 const {
   validateLvglReferences,
   validateSoftwareArchitectureGraph
@@ -16,6 +16,7 @@ function validatePlugin() {
   const errors = [];
   const agentSummary = validateAgents(errors);
   const codexManifest = validateCodexManifest(errors);
+  const cursorManifest = validateCursorManifest(errors);
   validateLvglReferences(errors);
   validateSoftwareArchitectureGraph(errors);
   validateLearningTutorReferences(errors);
@@ -34,7 +35,8 @@ function validatePlugin() {
       ...summarize(SKILL_CATALOG),
       agents: agentSummary.count,
       agentNames: agentSummary.names,
-      codexManifest
+      codexManifest,
+      cursorManifest
     }
   };
 }

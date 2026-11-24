@@ -1,0 +1,26 @@
+{
+  "name": "mcu-workbench",
+  "displayName": "MCU-Workbench",
+  "version": "1.0.0",
+  "description": "面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills、Agents 与 MCP。",
+  "author": {
+    "name": "MCU-Workbench Team"
+  },
+  "homepage": "https://github.com/shuai-yemao/mcu-workbench",
+  "repository": "https://github.com/shuai-yemao/mcu-workbench",
+  "license": "MIT",
+  "keywords": [
+    "cursor-plugin",
+    "embedded",
+    "mcu",
+    "stm32",
+    "gr5526",
+    "esp32",
+    "firmware",
+    "mcuworkbench"
+  ],
+  "category": "developer-tools",
+  "skills": "./cursor-skills/",
+  "agents": "./agents/",
+  "mcpServers": "./mcp.json"
+}
