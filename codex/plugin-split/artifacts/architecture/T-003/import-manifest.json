@@ -1,0 +1,318 @@
+{
+  "skillCount": 39,
+  "totalFiles": 249,
+  "skills": [
+    {
+      "id": "app-architecture",
+      "kind": "canonical",
+      "source": "skills/app/app-architecture",
+      "destination": "plugins/mcu-workbench-architecture/skills/app-architecture",
+      "fileCount": 2,
+      "aggregateSha256": "6d8beacfc03009c0ad11e2b276ab9b40f9ae1fac4cba96c476c58ee544a96989"
+    },
+    {
+      "id": "platform_mcu",
+      "kind": "canonical",
+      "source": "skills/platform/platform_mcu",
+      "destination": "plugins/mcu-workbench-architecture/skills/platform_mcu",
+      "fileCount": 41,
+      "aggregateSha256": "731126d4a3d88faa6eaaed332b95d0ae525b21486bebebe3da4089ab663bd970"
+    },
+    {
+      "id": "platform_os",
+      "kind": "canonical",
+      "source": "skills/platform/platform_os",
+      "destination": "plugins/mcu-workbench-architecture/skills/platform_os",
+      "fileCount": 3,
+      "aggregateSha256": "127c79e2aa32ef9572f4e3bb8228ef94368b19050076b1db956811c18c8ab36e"
+    },
+    {
+      "id": "platform_bsp",
+      "kind": "canonical",
+      "source": "skills/platform/platform_bsp",
+      "destination": "plugins/mcu-workbench-architecture/skills/platform_bsp",
+      "fileCount": 2,
+      "aggregateSha256": "cbf2bbda9b1e5d39b1e7323a8e762d37ce66c8834b83a10cfa76ea38deb094cc"
+    },
+    {
+      "id": "platform_common",
+      "kind": "canonical",
+      "source": "skills/platform/platform_common",
+      "destination": "plugins/mcu-workbench-architecture/skills/platform_common",
+      "fileCount": 3,
+      "aggregateSha256": "2a30d08921d5e340f4def13b1575446e9ced0cd81f51ccab4e2cd0aa7d435b8d"
+    },
+    {
+      "id": "platform_middleware",
+      "kind": "canonical",
+      "source": "skills/platform/platform_middleware",
+      "destination": "plugins/mcu-workbench-architecture/skills/platform_middleware",
+      "fileCount": 1,
+      "aggregateSha256": "be05fa5226bd050e499cd60e66c5513443546415997896d127b8eebf97af8bbd"
+    },
+    {
+      "id": "impl_os",
+      "kind": "canonical",
+      "source": "skills/impl/impl_os",
+      "destination": "plugins/mcu-workbench-architecture/skills/impl_os",
+      "fileCount": 3,
+      "aggregateSha256": "c319d06264ec10dfc44a11a101d2d634cbdeecbc5b987ee71aa6c5f8dfa7e4e8"
+    },
+    {
+      "id": "impl_mcu",
+      "kind": "canonical",
+      "source": "skills/impl/impl_mcu",
+      "destination": "plugins/mcu-workbench-architecture/skills/impl_mcu",
+      "fileCount": 1,
+      "aggregateSha256": "43fc9928f82b216114811bbe560cdda2b5c44109960b4272b4c6fa306b7f8f63"
+    },
+    {
+      "id": "impl_board",
+      "kind": "canonical",
+      "source": "skills/impl/impl_board",
+      "destination": "plugins/mcu-workbench-architecture/skills/impl_board",
+      "fileCount": 15,
+      "aggregateSha256": "baa62d198da5a3467bc11691bdacd4ee63ec3988394985715d3725d1cfc89fe7"
+    },
+    {
+      "id": "impl_bsp",
+      "kind": "canonical",
+      "source": "skills/impl/impl_bsp",
+      "destination": "plugins/mcu-workbench-architecture/skills/impl_bsp",
+      "fileCount": 15,
+      "aggregateSha256": "3cf83903ecec6055fdd62444ad896e1916d193c064fae5fb6809801dd078968b"
+    },
+    {
+      "id": "impl_middleware",
+      "kind": "canonical",
+      "source": "skills/impl/impl_middleware",
+      "destination": "plugins/mcu-workbench-architecture/skills/impl_middleware",
+      "fileCount": 1,
+      "aggregateSha256": "774c800b5fcca4ccfc209e917c49bc116ccd67c073f5da7f4b8d182bdac1a9d1"
+    },
+    {
+      "id": "service_system",
+      "kind": "canonical",
+      "source": "skills/service/service_system",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_system",
+      "fileCount": 11,
+      "aggregateSha256": "9bea8703914d1995f4b17c016a448e131c0b49b1667fa41b9fd87cf4e0c909d7"
+    },
+    {
+      "id": "service_battery",
+      "kind": "canonical",
+      "source": "skills/service/service_battery",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_battery",
+      "fileCount": 1,
+      "aggregateSha256": "1c2db1636ca8ea88e2eca8a8e1751f24cc4323e51fdd281e93fde7d60eb6e252"
+    },
+    {
+      "id": "service_backlight",
+      "kind": "canonical",
+      "source": "skills/service/service_backlight",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_backlight",
+      "fileCount": 1,
+      "aggregateSha256": "5127295cf90fa0eaaa50a54040720649ce1be92b0b2f7f1309530d5e19884975"
+    },
+    {
+      "id": "service_calendar",
+      "kind": "canonical",
+      "source": "skills/service/service_calendar",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_calendar",
+      "fileCount": 1,
+      "aggregateSha256": "ec1fea714ed99f621d9ff47a257bfa742e50862148193450c68dd092138cd2c6"
+    },
+    {
+      "id": "service_diagnosis",
+      "kind": "canonical",
+      "source": "skills/service/service_diagnosis",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_diagnosis",
+      "fileCount": 1,
+      "aggregateSha256": "4abac967aa1ba70b879cc7d9928c65d8634a9f2d6243d45170e0dc3534ac542e"
+    },
+    {
+      "id": "service_log",
+      "kind": "canonical",
+      "source": "skills/service/service_log",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_log",
+      "fileCount": 1,
+      "aggregateSha256": "2df99b8e41b50f4c32d44427a2dc5e392ea224fe737a4ba0997bb585d5aa79ed"
+    },
+    {
+      "id": "service_ota",
+      "kind": "canonical",
+      "source": "skills/service/service_ota",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_ota",
+      "fileCount": 1,
+      "aggregateSha256": "abfdfd2be31d24868deb1a022fb5e38551ae16385e46427cf962dccb232eb91f"
+    },
+    {
+      "id": "service_power",
+      "kind": "canonical",
+      "source": "skills/service/service_power",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_power",
+      "fileCount": 1,
+      "aggregateSha256": "ec1c874729beb776b4d97ce2402eecf16715bd89af03155a433996c7820b454d"
+    },
+    {
+      "id": "service_sensor",
+      "kind": "canonical",
+      "source": "skills/service/service_sensor",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_sensor",
+      "fileCount": 1,
+      "aggregateSha256": "7f1196c5bf1e410f2c7eabf4a310c8ec694625b3034eddaf2b39083d67b8d1ab"
+    },
+    {
+      "id": "service_storage",
+      "kind": "canonical",
+      "source": "skills/service/service_storage",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_storage",
+      "fileCount": 1,
+      "aggregateSha256": "17857d80a8a9c2eb36d004dbdd5ca01999c5d2734a2180a008a62d8ff00c4367"
+    },
+    {
+      "id": "service_watchdog",
+      "kind": "canonical",
+      "source": "skills/service/service_watchdog",
+      "destination": "plugins/mcu-workbench-architecture/skills/service_watchdog",
+      "fileCount": 1,
+      "aggregateSha256": "865d722dd424fb22ffb83f1c2fc11759acf0f26899b8814489b184200c31c195"
+    },
+    {
+      "id": "vendor_mcu",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_mcu",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_mcu",
+      "fileCount": 14,
+      "aggregateSha256": "8abaae3cfc755476537d061e20b20defea5c255b44b22a45afd743149180c372"
+    },
+    {
+      "id": "vendor_rtos",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_rtos",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_rtos",
+      "fileCount": 1,
+      "aggregateSha256": "c27081aa7fb785edd57556e53f12341cf5be25d5b67fa57d7e9b9676ae9e1425"
+    },
+    {
+      "id": "vendor_lvgl",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_lvgl",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_lvgl",
+      "fileCount": 7,
+      "aggregateSha256": "5c8109ec563aa53fb0c4be1c62511d05b201a370aabb248056a2323991b76e48"
+    },
+    {
+      "id": "vendor_stack",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_stack",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_stack",
+      "fileCount": 20,
+      "aggregateSha256": "4cd814a2bd28fab23c291da932c517d5937e271159f0fdde8c9ec08429a786fa"
+    },
+    {
+      "id": "vendor_fatfs",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_fatfs",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_fatfs",
+      "fileCount": 7,
+      "aggregateSha256": "7415b00ead76e8ab0086944a5f085ca28533f591a689730903305bddd384a9dd"
+    },
+    {
+      "id": "vendor_fal",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_fal",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_fal",
+      "fileCount": 2,
+      "aggregateSha256": "14cfa039bde2a15a64352320842e3183de8d0323b2723532b7a4f425ce964bbf"
+    },
+    {
+      "id": "vendor_flashdb",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_flashdb",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_flashdb",
+      "fileCount": 2,
+      "aggregateSha256": "6c2d38c1270c475ba9f5bd0aa70904a6ef4e27e60cdb4090a5bbf92247f60cf8"
+    },
+    {
+      "id": "vendor_letter_shell",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_letter_shell",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_letter_shell",
+      "fileCount": 2,
+      "aggregateSha256": "c0c8ef1df2345902ab3a0e1e1cd13f6bda3c864a3099711f027e97f68538ff5d"
+    },
+    {
+      "id": "vendor_algorithm",
+      "kind": "canonical",
+      "source": "skills/vendor/vendor_algorithm",
+      "destination": "plugins/mcu-workbench-architecture/skills/vendor_algorithm",
+      "fileCount": 5,
+      "aggregateSha256": "44037af8c1f37b0e3c4cdba022c54324ebe7e4502ceada9b31f30dbb58547af9"
+    },
+    {
+      "id": "chip-driver-manual",
+      "kind": "external",
+      "source": "skills/chip-driver-manual",
+      "destination": "plugins/mcu-workbench-architecture/skills/chip-driver-manual",
+      "fileCount": 22,
+      "aggregateSha256": "05c5ff1179076c70a99c5886f72113a44d5fc10d246e6742b432ccfcd6dc79bc"
+    },
+    {
+      "id": "chip-resource-finder",
+      "kind": "external",
+      "source": "skills/chip-resource-finder",
+      "destination": "plugins/mcu-workbench-architecture/skills/chip-resource-finder",
+      "fileCount": 4,
+      "aggregateSha256": "833ac1abb5e5236fa5b362dacb7115b4b9256c0650db880cc10b7081945f2fdd"
+    },
+    {
+      "id": "embedded-architecture-planner",
+      "kind": "external",
+      "source": "skills/embedded-architecture-planner",
+      "destination": "plugins/mcu-workbench-architecture/skills/embedded-architecture-planner",
+      "fileCount": 12,
+      "aggregateSha256": "f54bb72d1a57b60b9b7a24f7cd46ef6f67e0ec9fc04c420dd73ddddfd909f853"
+    },
+    {
+      "id": "embedded-coding-standard",
+      "kind": "external",
+      "source": "skills/embedded-coding-standard",
+      "destination": "plugins/mcu-workbench-architecture/skills/embedded-coding-standard",
+      "fileCount": 16,
+      "aggregateSha256": "c4caf40771854089463f35c2d939afcd1c5d6dac73feabcdc0556f016860f73a"
+    },
+    {
+      "id": "embedded-minimal-project-builder",
+      "kind": "external",
+      "source": "skills/embedded-minimal-project-builder",
+      "destination": "plugins/mcu-workbench-architecture/skills/embedded-minimal-project-builder",
+      "fileCount": 3,
+      "aggregateSha256": "26cda15b8eb1eb6b916d1a48d342d8b7492e1ad80b7f3865484c9da1555dbbea"
+    },
+    {
+      "id": "embedded-prd-to-logic",
+      "kind": "external",
+      "source": "skills/embedded-prd-to-logic",
+      "destination": "plugins/mcu-workbench-architecture/skills/embedded-prd-to-logic",
+      "fileCount": 13,
+      "aggregateSha256": "77b537a45f644685203ddd25b673788a75c95de1842807b2a45cfa7362122556"
+    },
+    {
+      "id": "prd-to-hardware-solution",
+      "kind": "external",
+      "source": "skills/prd-to-hardware-solution",
+      "destination": "plugins/mcu-workbench-architecture/skills/prd-to-hardware-solution",
+      "fileCount": 7,
+      "aggregateSha256": "4aab35b9774780cedaeac898c8762e51669c51b9b90a8e683cbb06391e8581c3"
+    },
+    {
+      "id": "schematic-pinmap-analyzer",
+      "kind": "external",
+      "source": "skills/schematic-pinmap-analyzer",
+      "destination": "plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer",
+      "fileCount": 4,
+      "aggregateSha256": "4ff820eb150054e20293adb79733fd09a351a0612e19194fdbe0776d2b1149d9"
+    }
+  ]
+}

@@ -30,6 +30,8 @@
     "plugin:check-refresh": "node scripts/check-codex-plugin-refresh.js",
     "validate:workflow-gate": "node scripts/validate-workflow-gate.js",
     "validate:architecture": "node scripts/validate-architecture.js",
+    "validate:architecture-plugin": "node plugins/mcu-workbench-architecture/scripts/validate.js",
+    "sync:architecture-skills": "node plugins/mcu-workbench-architecture/scripts/sync-skills.js",
     "validate:layer": "node scripts/validate-layer-contract.js --self-check",
     "validate:links": "node scripts/validate-skill-links.js",
     "validate:plugin": "node scripts/validate-plugin.js",

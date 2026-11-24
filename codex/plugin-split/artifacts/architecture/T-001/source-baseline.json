@@ -1,0 +1,1290 @@
+{
+  "head": "6cd4fadc93ddaff5b03efbf7b32fa6a72b97883b",
+  "branch": "host_ai",
+  "skillCount": 39,
+  "skills": [
+    {
+      "id": "app-architecture",
+      "path": "skills/app/app-architecture",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/app/app-architecture/references/app-architecture-evidence.md",
+          "sha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275"
+        },
+        {
+          "path": "skills/app/app-architecture/SKILL.md",
+          "sha256": "ad74f8b43d59753c970bda49efd92c03e3a6bec80eccdb1782fc8f4359a7e3b3"
+        }
+      ]
+    },
+    {
+      "id": "platform_mcu",
+      "path": "skills/platform/platform_mcu",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-i2c/GUIDE.md",
+          "sha256": "2f15fdcef17c77da1b5d77e2de4d7765bc4ef4929b5f11bfe076ae167ca68a4d"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-i2c/references/i2c-errata-workarounds.md",
+          "sha256": "6eec4b69222877c9bf955fd3f1a4533d9e8967239fec550db3c696bbe4007ab3"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-i2c/references/i2c-hal-state-machine.md",
+          "sha256": "501bd3cce967480cee340cd310d0fc1a8826f18d87b7227015a1e55c2940693d"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-spi/GUIDE.md",
+          "sha256": "663c47b3d6c0865092594111933c3adb5b9fe803148e5e0f405c9abe481189bb"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-spi/references/spi-errata-workarounds.md",
+          "sha256": "817c0bb85ea1b57b84a8b98486de773c18dd5e4a6c8b0fe59b5140d8fae95f3c"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-spi/references/spi-nss-management.md",
+          "sha256": "6593d8b422ff7d934c375f3fd8ec4d06cc3d48ecc0948f67e199929485dd38b4"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-uart/GUIDE.md",
+          "sha256": "f6f07f44a8bf07b16a1bdfbb7ed603598d483dee8d5bc7dfa15a71ad46e71a48"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-uart/references/uart-advanced-modes.md",
+          "sha256": "9fa705172833d1b120fde3df4f5edfbe6ceb95f8b8fe1d0db88c8a433f75a44f"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/bus-uart/references/uart-baudrate-config.md",
+          "sha256": "ada08ed9d556274cc2f707e779efe17e74144ab69fd48c91073c321682ef62a3"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-adc/GUIDE.md",
+          "sha256": "ab1a0c4b37d4763fcf6198441075880bfac4a77b77a28df353e7f271c8e067b9"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-adc/references/adc-calibration-guide.md",
+          "sha256": "9b6c25594a80b237d2b0aa7d832983dc767181c8c826984c403e2859a5f10cbb"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-adc/references/adc-timing-config.md",
+          "sha256": "230b046c3e139be0e76ad0e419ad0acff9a6767bb796765e5541c7bc694d9a60"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-dma/GUIDE.md",
+          "sha256": "9836cb3f21c6bd98316c4915b0e2d8a4b5f0506bd27199812c5c11f6c31c9836"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-dma/references/dma-config-guide.md",
+          "sha256": "9b16bc2bdb8486f26793f365a0888225c519bff2a530b6ec83a439229ddd34eb"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-dma/references/dma-request-mapping.md",
+          "sha256": "41fed3dfbc88f616a71086852f27cbda36ac72825eaf9833c9c7eba45300345b"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-motor-control/GUIDE.md",
+          "sha256": "d1aab73803816cf074fbeaf68b279ae4636b87602633de2e2b53fb4117fb1d4d"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-motor-control/references/pid-tuning-guide.md",
+          "sha256": "e399bd72ac8491ae9470fd5e5ae52f0e88a990ab9fe13e3dadf0164fa4fea294"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-motor-control/references/_fix_fact.py",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-timer/GUIDE.md",
+          "sha256": "a90645b62b4ae8ca5a3de13b738417a6c5735bd95bfd9e89000f84b057546d80"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-timer/references/timer-advanced-modes.md",
+          "sha256": "f51f988d7dbb737aaedba2626382c80075c9e2bb976386cc7d20366f5ad2eff6"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/peripheral-timer/references/timer-clock-config.md",
+          "sha256": "62ab46710f482342f6a552b3b94f0d7f7562a8d1e7562bd107ddcbb53d004c00"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-cortex-interrupts/GUIDE.md",
+          "sha256": "890321db30f31a9e5fcacca9e241addb9925c483e7970a9852c5108181b7bb3a"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-cortex-memory/GUIDE.md",
+          "sha256": "35fba00a221122764694cd9f06e397d4ec82a2758aa7193063de7290f7d6a695"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-cortex-registers/GUIDE.md",
+          "sha256": "bd774522041f18670e35f13d0872cb59fcbce494cae63e65493f0acbf6cd6536"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-cortex-registers/references/hardfault-diagnosis.md",
+          "sha256": "27e35010944a869a3bd4b7a849a4030e370ab45fdefa25f490197b9cd8e7f68c"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-internal-flash/GUIDE.md",
+          "sha256": "2b567bc7ee97780f80f05eabdcbfe495e01feefa4a21d07f5ccf5f28d1e8595c"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-internal-flash/references/flash-programming-guide.md",
+          "sha256": "05eef8172e03927e300f596a6dd26f550070a7efc42126a53522c4ba1edfe394"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-internal-flash/references/flash-sector-map.md",
+          "sha256": "6fd7a8af3dfef80795248b0a0e01db76f77ce8a2b6c4de7280c2d66401534de3"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-mcu-architecture/GUIDE.md",
+          "sha256": "1cb1b2d9985bf75f6c150f9df864422e80f758bce6e0e8eadf4d02d66e6ea325"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-option-bytes/GUIDE.md",
+          "sha256": "05ea4f6599430f0560ca967abcf2053fb257f468224887afb2bcf97e25648c76"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-option-bytes/option_bytes.py",
+          "sha256": "9e1347323d53f06af1b723883e8b64e1aa9ad96774c5b16484c88e9d6fcda6c3"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-peripheral-registers/GUIDE.md",
+          "sha256": "b329103b7c811f6816aa46ebcc0f822bd322b9dedc41c48fb2ecd262c953371c"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-peripheral-registers/references/memory-map-quickref.md",
+          "sha256": "501c67b19d33b9ce0a2cd1f530d005996adb0f8451d2b581a46043f914ea22fe"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-sram/GUIDE.md",
+          "sha256": "0c69883bc73360bfe0acbfb7114b91e54b1e911022f348cfb2811a1d778a9d0a"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-sram/references/sram-config-guide.md",
+          "sha256": "470cb956a845c5e1d20034048a45e9ee250e86f5768de1e5933894aeefbcae28"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capabilities/platform-sram/references/sram-memory-map.md",
+          "sha256": "909dc316b593e3a1c351bb0ccb31554036e4692680ccb516c9463164dbe8edf1"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/capability-index.md",
+          "sha256": "36872b127c6426915360f43f8498fd70bcb0d0f7e2a5ef9720fb010465ed04a4"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/cmsis-core-map.md",
+          "sha256": "ad5f0ad955dec2f3a1a4e223de166d341bb31e92d2c4d4b583c7c3fbf3e59ec4"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/core-iic-backends-case.md",
+          "sha256": "27e45278fb2f36c0de65e970c34e12cc56dd2769184b0ad83879091072463da0"
+        },
+        {
+          "path": "skills/platform/platform_mcu/references/platform-mcu-interface-contract.md",
+          "sha256": "030e1da475ac1e30f4fd8debfca253bfc2023ab2861d7e7809e1cced97be6a5f"
+        },
+        {
+          "path": "skills/platform/platform_mcu/SKILL.md",
+          "sha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641"
+        }
+      ]
+    },
+    {
+      "id": "platform_os",
+      "path": "skills/platform/platform_os",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/platform/platform_os/references/platform-os-contract.md",
+          "sha256": "6c5243619c4e5cf894b3d95acd600c7981fdd2e4454827411f24c8e5636ee0ad"
+        },
+        {
+          "path": "skills/platform/platform_os/references/platform-os-freertos-case.md",
+          "sha256": "ab7e098a76b7d65c3c2a9354341dacb92133fb42ce7bd9e301dbdf636ef26fd9"
+        },
+        {
+          "path": "skills/platform/platform_os/SKILL.md",
+          "sha256": "1acc4404547d618bee64f5089f2559ec86e930ce71724504d8e4a58dce41bb02"
+        }
+      ]
+    },
+    {
+      "id": "platform_bsp",
+      "path": "skills/platform/platform_bsp",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/platform/platform_bsp/references/device-model-example.md",
+          "sha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948"
+        },
+        {
+          "path": "skills/platform/platform_bsp/SKILL.md",
+          "sha256": "580e0593dcaac36af6891201f4913f75108680a72d51e7051ca6e08649567abc"
+        }
+      ]
+    },
+    {
+      "id": "platform_common",
+      "path": "skills/platform/platform_common",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/platform/platform_common/references/diag-log-flow.md",
+          "sha256": "0fd1ee79c634eef1a215db91a716fc615cb408fa2307954c76bb4bc0b5751523"
+        },
+        {
+          "path": "skills/platform/platform_common/references/object-four-tuple-template.md",
+          "sha256": "25b6b4a81f57fe60db8b2d8dd325d7a4d44feab2b92eb1d1fac941e38f66a771"
+        },
+        {
+          "path": "skills/platform/platform_common/SKILL.md",
+          "sha256": "ffaf00ff8cb22addc3984fb60b0afe27a1bf0bf0cd4f28ace4e981525c259376"
+        }
+      ]
+    },
+    {
+      "id": "platform_middleware",
+      "path": "skills/platform/platform_middleware",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/platform/platform_middleware/SKILL.md",
+          "sha256": "2336f24a152a0f8a751898978c316bb0dcdda45be2cf91f62093d43f119e8d94"
+        }
+      ]
+    },
+    {
+      "id": "impl_os",
+      "path": "skills/impl/impl_os",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/impl/impl_os/references/freertos-api-quickref.md",
+          "sha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873"
+        },
+        {
+          "path": "skills/impl/impl_os/references/freertos-source-map.md",
+          "sha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9"
+        },
+        {
+          "path": "skills/impl/impl_os/SKILL.md",
+          "sha256": "6dbf403dc2c31090de295785c0c2d896053dfaa7a269fd07ae11a422442aa99c"
+        }
+      ]
+    },
+    {
+      "id": "impl_mcu",
+      "path": "skills/impl/impl_mcu",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/impl/impl_mcu/SKILL.md",
+          "sha256": "c08adda043f018e7218e44950835f64a6f33cfeb93450c041011095a3856808b"
+        }
+      ]
+    },
+    {
+      "id": "impl_board",
+      "path": "skills/impl/impl_board",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/impl/impl_board/references/bsp-layer-evidence.md",
+          "sha256": "18121527d317e11175fc556f8961659cf8cc86dbca74a2c6b1b34c38f35930a6"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/GUIDE.md",
+          "sha256": "0c7a6653bd9345fb54e8d320a59d37d4e161d6dd025ef805f9c3c4636684281d"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/device-adaptation.md",
+          "sha256": "bc96362ccf1f9a9859d525f623710830ab1e078c22c96cd7f987bfd90728b680"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/oop-patterns-in-c.md",
+          "sha256": "f4540142e658735cdf60f3c05c785a1888de15be1e51c9944f6452ff8980df66"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/oop-usage-guide.md",
+          "sha256": "d11eb017aa79d6004c7bd86bb567bff59cea847ea0da5fde859dd31a0770dcca"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/search-and-evaluate.md",
+          "sha256": "2da1320fa02bb3680a14340542c5babaf2fc7378a90a0dd0986d8710c6c11c1c"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/references/usage.md",
+          "sha256": "3efdcf62323a272f2690c4b7e93d2350e4e7dafad979ed793b0280c757e3e2b3"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/scripts/bsp_adapter.py",
+          "sha256": "4abdb73e9c8798b038f565340084e10d2c2dd69711f2be365099cf7921ad6ff1"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/agents/openai.yaml",
+          "sha256": "bf00cd1a0efeddb212b6a7b3ef0fffbaa17788fdd599c69c9f3200f35dc8881c"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md",
+          "sha256": "2bcf8280ca7048539e72d3d2ffd0755d3f3e61925f7596cc1865bef5a00fb964"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/aht21-adapter-pattern.md",
+          "sha256": "bd4ef3528a32d5114f78fbef5afe1775485fed8bbb519ac48c84f7aff4ea0f39"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/mpu6050-adapter-pattern.md",
+          "sha256": "7616b01947f75047a97bea5e4cba5705ab0b674855217ceeec80cbb489237ea8"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/w25qxx-adapter-pattern.md",
+          "sha256": "f662cbc85cc6c205084f1de3c5a2904dd2ac37f4571a0f82c2b75d63c6adce34"
+        },
+        {
+          "path": "skills/impl/impl_board/references/capability-index.md",
+          "sha256": "db8a94ffee27c85decd58de4444431bd04b91ec7bce383b1fe3028cbcac39aaa"
+        },
+        {
+          "path": "skills/impl/impl_board/SKILL.md",
+          "sha256": "9ae8942ad0de718a5caf8e05f80723c83b6ca87924dce142d4830b32e07165a5"
+        }
+      ]
+    },
+    {
+      "id": "impl_bsp",
+      "path": "skills/impl/impl_bsp",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/impl/impl_bsp/references/api-policy.md",
+          "sha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/agents/openai.yaml",
+          "sha256": "0f7e2a89b026eb95cf49d39b90ed916917d3c638f21d8e1727e599980351c631"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md",
+          "sha256": "4df1b4944eee89f63b1fa51786dd46d15b2f4b3952da4e9d4bd5edc9409ff14f"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/aht21-driver-pattern.md",
+          "sha256": "f86fd5814bdee1da7b938235341bb0f242395c526fe87db144841efa97d1278c"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md",
+          "sha256": "23bddb282fcac30e5a3137f8addcf969592bd3b083c6e75fbb35ea51933c2e34"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md",
+          "sha256": "cbf4762bf76272d9ead8651ec4e61fac332edf031ae6f3c63375b8e23e3a1526"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/agents/openai.yaml",
+          "sha256": "d6bd74b825292c18d09f4f320a9354cd0636644902d93872609583dc56b311ee"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md",
+          "sha256": "44932d2d03c22cfb9b68ebb5cef00d805743cebe05e8fce0c1488e29096d60b6"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/aht21-handler-pattern.md",
+          "sha256": "953be8b6cb485ea38bce600827fa08432a34a8849e3d3b9d4dbc15b9cb49520a"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/mpu6050-handler-pattern.md",
+          "sha256": "857765bc532426166f642aca32cbc5de9578648d2cfea91839f7f92f75e7e49d"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/w25qxx-handler-pattern.md",
+          "sha256": "c90f7a1e4c0fa9908b0a590a98e4209b2c51551757a303f6c4f3e84e81043637"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/capability-index.md",
+          "sha256": "b13522a8011c914049d4a7c773d0ae154b19538af3d255c1d741499fa8f1ee7d"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/hal-driver-evidence.md",
+          "sha256": "22b05e3d0ed8bc4bde2c85fece6c83be2bd8adefafa5098e6ce079f5ff486ebc"
+        },
+        {
+          "path": "skills/impl/impl_bsp/references/handler-evidence.md",
+          "sha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36"
+        },
+        {
+          "path": "skills/impl/impl_bsp/SKILL.md",
+          "sha256": "1831bbe7bd9dccf5af1b7a5fea6a5b3bfff8baf51ff211df401a5bf4da6be1a3"
+        }
+      ]
+    },
+    {
+      "id": "impl_middleware",
+      "path": "skills/impl/impl_middleware",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/impl/impl_middleware/SKILL.md",
+          "sha256": "45af4d881d8c631f33e46bb7a827677e57ef9c8fcdff2c8a0834a7376aa5df47"
+        }
+      ]
+    },
+    {
+      "id": "service_system",
+      "path": "skills/service/service_system",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_system/references/capabilities/security-aes/GUIDE.md",
+          "sha256": "ceafe7d15fcf23e1fe978c9c4640fb31cd545f585badf10cb45ad43cc6718571"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/security-crc/GUIDE.md",
+          "sha256": "f5215a2e1ddfce6d4a97aef3157ef6148c676b62e8f66bb5c2356d0153da73e4"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/security-firmware-signing/firmware_sign.py",
+          "sha256": "894bf6148faf08b7b55e29c64ae3779a7efcaf6e6af4620f24325e179dd226f6"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/security-firmware-signing/GUIDE.md",
+          "sha256": "ac56cd182e9e8512d270ee754aa43d0e337b9b5293248f2a769121245a25b059"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/security-rsa/GUIDE.md",
+          "sha256": "c93361cfe0db25f6f92e3b1760a6f19207ced19ef2e495983f4d426bf246a0e6"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/system-bootloader/GUIDE.md",
+          "sha256": "35d58c23651dd76c627fdb98e02f75ea7b7c276918bc425cbda6b92cfa62b334"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/system-low-power/GUIDE.md",
+          "sha256": "b8dba7edc2cf7ee9ac2d778006b60f5ba6380ab91c8c54186313056b89150238"
+        },
+        {
+          "path": "skills/service/service_system/references/capabilities/system-watchdog/GUIDE.md",
+          "sha256": "dd9ccacaecbf7dff08989919093e091caf217d5542eed3e45814c08ae3e4f4c1"
+        },
+        {
+          "path": "skills/service/service_system/references/capability-index.md",
+          "sha256": "26af8034a0ba55811ceb6aae9a013f0c807518ea518e9858e60fccfd3bdeda4a"
+        },
+        {
+          "path": "skills/service/service_system/references/crypto-source-baseline.md",
+          "sha256": "7cdcbccf3760f158ce71a1f7b0ca144ff52f72bf7493adaa697109ae404e9fb8"
+        },
+        {
+          "path": "skills/service/service_system/SKILL.md",
+          "sha256": "9b58b730f8e205c13edd3b9d4e393af62c4171dca3248cdcfe3a571a1e8fda76"
+        }
+      ]
+    },
+    {
+      "id": "service_battery",
+      "path": "skills/service/service_battery",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_battery/SKILL.md",
+          "sha256": "ac857b5000bc1cb85e4c97b27cb885a799b287ddc5f88a6144f63954b0574c8a"
+        }
+      ]
+    },
+    {
+      "id": "service_backlight",
+      "path": "skills/service/service_backlight",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_backlight/SKILL.md",
+          "sha256": "9decf3725bfc5e491e8ccb27dfbf5ca6f6f4196a200ec68c70ddd272f47ff3e4"
+        }
+      ]
+    },
+    {
+      "id": "service_calendar",
+      "path": "skills/service/service_calendar",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_calendar/SKILL.md",
+          "sha256": "69ce500e697fc896e397b61d7f489c06343ca551c9959f222d2a73ff5604c6dd"
+        }
+      ]
+    },
+    {
+      "id": "service_diagnosis",
+      "path": "skills/service/service_diagnosis",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_diagnosis/SKILL.md",
+          "sha256": "e2e8a08b5cefc877b270c994a6f364e1a013618862816d1203e968462b97873c"
+        }
+      ]
+    },
+    {
+      "id": "service_log",
+      "path": "skills/service/service_log",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_log/SKILL.md",
+          "sha256": "f2cb77de934996aaf7829ee8a424dc364063d828dabbb5d25ab60adb21ef513a"
+        }
+      ]
+    },
+    {
+      "id": "service_ota",
+      "path": "skills/service/service_ota",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_ota/SKILL.md",
+          "sha256": "8dff6fac68acd1ebccf36414f42851e27505e6abd08dd5538e57af652d507572"
+        }
+      ]
+    },
+    {
+      "id": "service_power",
+      "path": "skills/service/service_power",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_power/SKILL.md",
+          "sha256": "aba6df6101492d63895f8a42b4433c4d0b6eb1577312ca1dbbb231454d2a2384"
+        }
+      ]
+    },
+    {
+      "id": "service_sensor",
+      "path": "skills/service/service_sensor",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_sensor/SKILL.md",
+          "sha256": "c8ebdc138af5d82ed479c9c72e43b496bbdf2875e77ba71bbb140aa78b88cdcc"
+        }
+      ]
+    },
+    {
+      "id": "service_storage",
+      "path": "skills/service/service_storage",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_storage/SKILL.md",
+          "sha256": "3fda3f97db92a8e004ab08c58a53eb88501cbca60c9a05d6686a5c9b23cdff9c"
+        }
+      ]
+    },
+    {
+      "id": "service_watchdog",
+      "path": "skills/service/service_watchdog",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/service/service_watchdog/SKILL.md",
+          "sha256": "29ac63f760f2544f5e8bed76dcb94e1e92e7b664097e192bfda30811e765d56d"
+        }
+      ]
+    },
+    {
+      "id": "vendor_mcu",
+      "path": "skills/vendor/vendor_mcu",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/agents/openai.yaml",
+          "sha256": "2c52bf8698977ff67f3d6bf4e2b1c93c7eeecd45924cdf96aa59012ffda0c64e"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.c",
+          "sha256": "b231a52ea2abc621551ddaa7314e5fe1f603daf7f98431661295e613077beb67"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.h",
+          "sha256": "6c25f5d99b56f0ff608e030aece6ed49bb20cffa04575bcc10919267324011b7"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md",
+          "sha256": "80198e8ae935a0173b3d5845126f40c49375684dc85cfd3f4fef0d166d8b5b64"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/core-guidelines.md",
+          "sha256": "5b927f5a51ba534db4f0c12a2210a579138c2441fb553bcfdf20a9b09c3308de"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/hal-quick-reference.md",
+          "sha256": "6498e314c70d273e7d6430db7ef3a3e2da7702afdf020f68ac7877eec94f157b"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/overview.md",
+          "sha256": "9d600a8d2b7f52e966c3f84a37918dffc03d09ee55dbb7861d7d89e62c5523da"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/peripheral-driver-guide.md",
+          "sha256": "1b6d94a4af2b2ff065d1039991ac1167583196031d3fe311d1ad26b1ac720695"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/troubleshooting-guide.md",
+          "sha256": "780a4511ddf9f3e62ee1cd71f28102e2b116b53a7ec78c51a1061d20bff284e0"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/usage-examples.md",
+          "sha256": "41294ea9918cb8c4606c8c00b0934b862326a4eb4fc003331e0d14fab1a6e9a8"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-spl/GUIDE.md",
+          "sha256": "c6b3b931925da32d64b511706a30c4114a01f76fd0d5823be04d3e828e3df668"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/capability-index.md",
+          "sha256": "1e01f8e701fc8da5e0ad5d7f90b0a876ab667512fdb74ce4d8d328b6426be7ba"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/references/vendor-source-matrix.md",
+          "sha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b"
+        },
+        {
+          "path": "skills/vendor/vendor_mcu/SKILL.md",
+          "sha256": "51b45c990f45864620562266fd6864b5e28e97433a924f76453b0827fa3e92cf"
+        }
+      ]
+    },
+    {
+      "id": "vendor_rtos",
+      "path": "skills/vendor/vendor_rtos",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_rtos/SKILL.md",
+          "sha256": "2ad650684e43f30289a6d5658697277325f952048d699b387b64c3b557ccb3fa"
+        }
+      ]
+    },
+    {
+      "id": "vendor_lvgl",
+      "path": "skills/vendor/vendor_lvgl",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_lvgl/references/config-build-validation.md",
+          "sha256": "975e6c94cf27f5212f920aff5a5c48354f5c42ad7a498ed23f5d6624a5db52fa"
+        },
+        {
+          "path": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.json",
+          "sha256": "a353188a1427708d3289582c31ed6371702f5da9f4fc4358d7a1a37c0174f964"
+        },
+        {
+          "path": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.md",
+          "sha256": "ce769c7455326b2dae1d2cc164c76ba5602eb5c8dd32a27fd504b44fb68f04e8"
+        },
+        {
+          "path": "skills/vendor/vendor_lvgl/references/porting-contract.md",
+          "sha256": "60424c71377b2b82599e267e932b696e91fcfa2d9e78332a0f84813815f95ca6"
+        },
+        {
+          "path": "skills/vendor/vendor_lvgl/references/ui-runtime-performance.md",
+          "sha256": "5ddac69ee7feccc5122ccf6c537cdeb0e4b1ae6489af14314cda695f6073269d"
+        },
+        {
+          "path": "skills/vendor/vendor_lvgl/references/version-compatibility.md",
+          "sha256": "1d26c940cdad9abc50767f327223b2f7c73a60d58bbf53949f29a4300d16d6e4"
+        },
+        {
+          "path": "skills/vendor/vendor_lvgl/SKILL.md",
+          "sha256": "dfc7a20076d62df904b263e47b86326de6d03603b3d6f716ef4cd7015c0d8fa9"
+        }
+      ]
+    },
+    {
+      "id": "vendor_stack",
+      "path": "skills/vendor/vendor_stack",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-ble/GUIDE.md",
+          "sha256": "4778664748f9baef95e082bac68b7f5273e4d56529403f8117d4b8fbf12f80b1"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-can/agents/openai.yaml",
+          "sha256": "33ce36527ef9cfea8fef652e644db1179dd70b686eb0a743ab03f0ef732191b2"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-can/GUIDE.md",
+          "sha256": "9e4c7d7cbb37bc894622a32ace927b09b6b6b1fb81c452e6e64fba4f215766c1"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-can/references/usage.md",
+          "sha256": "bc09dd93230b3411f94d050810d67f7ee76e1131e239dbf264d8a46a351718b5"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-can/scripts/can_tool.py",
+          "sha256": "9abdc7fcb4d3e38979ca3a38101575c8890ea140fd8b7aa67873f715de601c57"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-cellular/GUIDE.md",
+          "sha256": "c93fbf4a0fca4344a1e285690c15f34ed89ad6e4b32c0b512eed72c7aeb15a96"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-gps/GUIDE.md",
+          "sha256": "edb92bdf1303de392ea3b172281b63f40039c056e1a3a77530ed9fc662c5e7eb"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-lora/GUIDE.md",
+          "sha256": "9922a666bc89b103970c50a243086ba794a0df5df28111dc4c6105a3e0dbd553"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-modbus/agents/openai.yaml",
+          "sha256": "3ba4bc9782b54028424987ed6ef6c43c848ae604b112deb4ee556f5802ec27b1"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-modbus/GUIDE.md",
+          "sha256": "71877e2f4859ac0d415ebceb8a321db3cab67185080b6b29123ec9b2b67f08f8"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-modbus/references/usage.md",
+          "sha256": "4c7c0f5793555f16e94259209bfe16727cb491301d5a13665c71e0239290a970"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-modbus/scripts/modbus_tool.py",
+          "sha256": "bad1e9f98aa59241a2a7c54eaa9468840fca84cbeae713d0e3cfa9333b63e2bc"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-mqtt/GUIDE.md",
+          "sha256": "2e718859f6dce9b61e2ef4a6c7eab1444b593dc24b1afdd2da779c07a0e3eb41"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-usb/GUIDE.md",
+          "sha256": "0c3eb725af441faace9c913c65e11d657e65d5c6f545187be712cc467a41ba16"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-usb/references/usb-descriptor-guide.md",
+          "sha256": "1d3f7d6cf672b13b60c330a474e2bed565cab098be8f6e4987a78067d449e19b"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-wifi/GUIDE.md",
+          "sha256": "96daf34a44cc4f63605851d70e2372936bf275da85282c166f296342e930846e"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capabilities/protocol-ymodem/GUIDE.md",
+          "sha256": "5e24fd4d25aac92a73c6002ab733acfe27e730a0c3fbf0b72f7bfe01c5b3062b"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/capability-index.md",
+          "sha256": "7da4c5bd8cc8526b92d6600afe98fa7f304a3ae265ccf202350e1dd6b2a85023"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/references/mqtt-coremqtt.md",
+          "sha256": "a4f618ec033a0338a7c1513a4734d4e7e5f0b3eb477ded4f62d84677499af06b"
+        },
+        {
+          "path": "skills/vendor/vendor_stack/SKILL.md",
+          "sha256": "ff67147d0d12cf45743363cfa70083e15dd47c59ef8d990b61bce91cb2db47f7"
+        }
+      ]
+    },
+    {
+      "id": "vendor_fatfs",
+      "path": "skills/vendor/vendor_fatfs",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_fatfs/references/capabilities/middleware-fatfs/GUIDE.md",
+          "sha256": "17e13e9a40c702bd00009318b85bfea9700095ad02d0b2f67b586cd9980d86a6"
+        },
+        {
+          "path": "skills/vendor/vendor_fatfs/references/capabilities/middleware-fatfs/references/fatfs-return-code.md",
+          "sha256": "9fedb3509de7a13ca416598e06165d2fdd67bd9eb77ac7ac4c55d714038d03a3"
+        },
+        {
+          "path": "skills/vendor/vendor_fatfs/references/capabilities/middleware-sfud/GUIDE.md",
+          "sha256": "427f7d440fc1516ac6d8aaa371bad300ad0725cbcedce11a28a2e8aeffc079f5"
+        },
+        {
+          "path": "skills/vendor/vendor_fatfs/references/capabilities/middleware-sfud/references/stm32-sfud-porting-guide.md",
+          "sha256": "c9c968dc9d3e4076f5307045c58fc9f6954270aeab76388042824cb3e0f96c56"
+        },
+        {
+          "path": "skills/vendor/vendor_fatfs/references/capability-index.md",
+          "sha256": "4878ebe2e917bf3978b7434130700b0fcac99d845cef2d3129e1f0f99075ad84"
+        },
+        {
+          "path": "skills/vendor/vendor_fatfs/references/flash-storage-sources.md",
+          "sha256": "cf9fb2d471b46ff4ad092e904d38ca1277a454d6d79984f1c19fdd78831adb09"
+        },
+        {
+          "path": "skills/vendor/vendor_fatfs/SKILL.md",
+          "sha256": "cdca71b436471a4e0b8ea95c3ccd9f853799a45974f2269cffc2a2459b13c3e5"
+        }
+      ]
+    },
+    {
+      "id": "vendor_fal",
+      "path": "skills/vendor/vendor_fal",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_fal/references/fal-partition-porting.md",
+          "sha256": "2ae2a7906f97aa0cc6bd5ebee795de6539fd9f13c650f00d346b19efe954653b"
+        },
+        {
+          "path": "skills/vendor/vendor_fal/SKILL.md",
+          "sha256": "535f6524ee06535ff59a8eba9ce8b870c3e87db70d0ac2b34b1545281279b3a3"
+        }
+      ]
+    },
+    {
+      "id": "vendor_flashdb",
+      "path": "skills/vendor/vendor_flashdb",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_flashdb/references/kvdb-usage.md",
+          "sha256": "8f4a8c2b0cf42ead445f6753f83628a8434f3364134c21a0b85e59e5618ed181"
+        },
+        {
+          "path": "skills/vendor/vendor_flashdb/SKILL.md",
+          "sha256": "be8660cb251e2ccd8953fd2253f57766a2bbc93d65b4b4a1a92ecf7e1514482e"
+        }
+      ]
+    },
+    {
+      "id": "vendor_letter_shell",
+      "path": "skills/vendor/vendor_letter_shell",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_letter_shell/references/command-export-and-porting.md",
+          "sha256": "eb246919d2744a79fde6b2da8996f6bbf863e573a21e426719e1210f6703577e"
+        },
+        {
+          "path": "skills/vendor/vendor_letter_shell/SKILL.md",
+          "sha256": "3885b98bb20ddac1ce531c5b95e655d2ea0769c9c1304378b812951757035a88"
+        }
+      ]
+    },
+    {
+      "id": "vendor_algorithm",
+      "path": "skills/vendor/vendor_algorithm",
+      "kind": "canonical",
+      "files": [
+        {
+          "path": "skills/vendor/vendor_algorithm/references/capabilities/middleware-dsp/GUIDE.md",
+          "sha256": "0fe683a602881569b0a834603f4aa92411ee23bc936b0a4f2fd1ffd5c5495284"
+        },
+        {
+          "path": "skills/vendor/vendor_algorithm/references/capabilities/middleware-fft/GUIDE.md",
+          "sha256": "52e30f36fe951e5fdbb24890e2c96a3e21e5420d0d33174789c26a08607ba4bc"
+        },
+        {
+          "path": "skills/vendor/vendor_algorithm/references/capability-index.md",
+          "sha256": "700e54c12965894cea3b3fa8b282215e433c2b813a67782f3dd0997a404251e0"
+        },
+        {
+          "path": "skills/vendor/vendor_algorithm/references/cmsis-dsp.md",
+          "sha256": "496468ea19037716ca5954d055bb0b114ec212b0963a27db973b5ea922ae73ee"
+        },
+        {
+          "path": "skills/vendor/vendor_algorithm/SKILL.md",
+          "sha256": "8e2ac338aeff1bf79c27bf6c495ac46be74587d57f7dafae4d474db0a2273d12"
+        }
+      ]
+    },
+    {
+      "id": "chip-driver-manual",
+      "path": "skills/chip-driver-manual",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/chip-driver-manual/agents/openai.yaml",
+          "sha256": "9a603018915f1ccc8a17cdf19488dac56e483d88a8509210bb7339de5b207586"
+        },
+        {
+          "path": "skills/chip-driver-manual/README.md",
+          "sha256": "a926c32947eafdd1d1cfc3f45efe86a76d7416d7d9873cf4b59bd90749aac3cc"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/analog-mixed-signal.md",
+          "sha256": "da51f68c0f78d233f665051a37d5bacfcd62a5890300467d4a338440e73fad61"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/bus-protocols.md",
+          "sha256": "dbefe8e34a1e69a101e476d3de826f41cf1b1d0040a1b2249f8d7a62d6768a6f"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/chip-summary.md",
+          "sha256": "09baea14db4b89cfc780bedf30ae586d12308724e5f0a6a07aa580380d9fa57b"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/common-peripherals.md",
+          "sha256": "080ebfb701b2ba8089b7030eeba0c9f08e1620ef82ef9fd5b9e014e344dfb7f6"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/datasheet-triage.md",
+          "sha256": "9635e5fe3e2394823656829528d024f96f46b9adbbff847b98e756d3618c7372"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/display-touch-audio.md",
+          "sha256": "fbd2e1ea2a32efd0561506e26befce9e7d3a9309d068279d4e9a61a2cd70cfac"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/document-quality.md",
+          "sha256": "ab5c0fd7bf3091c48a494039f74336cdc36cc3c0e42dc082d746924526707364"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/driver-checklist.md",
+          "sha256": "f55fdcb1eca046e0a27571f76ff8d3ed2b3e0ca250f5b98b467807ab47583e13"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/external-memory.md",
+          "sha256": "5fcd094231cd40ebbff5828738204f7eb93340fc18f5bb8c8e72f0bbe3a4511e"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/extraction-schema.md",
+          "sha256": "35dc7b84d7ce21185a21fa7fdb620074dff533bc653c57584f12f2689f9c2e01"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/interface-ics.md",
+          "sha256": "4146baa36355260ad17cd8e67bf74d52a2c4a5b610e4d9aa47565f4d26191ebd"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/mcu-peripherals.md",
+          "sha256": "c4e7dcfa864768499f41371939bb8e006f0e2dd9420354fd69357b769cbd1bd9"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/power-ics.md",
+          "sha256": "621d55077807a0fafe4dcc028eed8b5e2dd01b3c85ab6ee3a93d4ed30c8a6772"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/register-model.md",
+          "sha256": "62773654bcda3b36fcc5719d211e29cf66925daeaec11c50f3301906ab9c5e5b"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/sensors.md",
+          "sha256": "05cba3618606ea2b07c4b7a343fe222906711d78b8b533aff1be2203a72f2607"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/source-crosscheck.md",
+          "sha256": "64ee2a29cf082fdf64962278a28c51fcead104c1db8538dec6d45af294e61381"
+        },
+        {
+          "path": "skills/chip-driver-manual/references/wireless-rf.md",
+          "sha256": "7d947e23f0ae45bc1e01caf0b7c6cf0b25b2e6daa5d8f74946558680ba24a709"
+        },
+        {
+          "path": "skills/chip-driver-manual/scripts/detect_document_quality.mjs",
+          "sha256": "1975bfcf2285370f32123ef4f26ee04d16e9325d970ec5518c9195ddaf5c808e"
+        },
+        {
+          "path": "skills/chip-driver-manual/scripts/extract_pdf_text_node.mjs",
+          "sha256": "4c0c3058dcaad0b9b2e6ede2699c21746e112b8f90bc26ae13d07f3dca6a8322"
+        },
+        {
+          "path": "skills/chip-driver-manual/SKILL.md",
+          "sha256": "e7a633b185a68c627d52cac74dfa04a1316b5065fc79e64db9f9093459cff18c"
+        }
+      ]
+    },
+    {
+      "id": "chip-resource-finder",
+      "path": "skills/chip-resource-finder",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/chip-resource-finder/agents/openai.yaml",
+          "sha256": "83dc45969f377ced3c0ae5a489cc531ed2466b3c1229e1c31eda114e1f0e07ae"
+        },
+        {
+          "path": "skills/chip-resource-finder/references/resource-checklist.md",
+          "sha256": "17eafb75cdadb0bfa3388762ddbfc5e6ed3fe240d9a5c0939fb038c4e0a0a09f"
+        },
+        {
+          "path": "skills/chip-resource-finder/references/source-priority.md",
+          "sha256": "4726015db16a0e47eb4e15fa3bf4cc1730cd8de7ab5c4d17895f546961a42b82"
+        },
+        {
+          "path": "skills/chip-resource-finder/SKILL.md",
+          "sha256": "bbdc2877c856c1d0659ac63467f07c33e738bce8422009912b2f3cc78375102e"
+        }
+      ]
+    },
+    {
+      "id": "embedded-architecture-planner",
+      "path": "skills/embedded-architecture-planner",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/embedded-architecture-planner/agents/openai.yaml",
+          "sha256": "2c6ade1abbe9b1306a609e382e134f1cb70f4ff8f8f7f09593c389d6f6f1e019"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/architecture-patterns.md",
+          "sha256": "925c96094d5a8557ce4790edf0d89cb484fcfad82b947fa0ac5277320f7bf252"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/dependency-contract.md",
+          "sha256": "e3c9a417bfe0f5a7ff23e3fbdbeefdc36db9e9efbfcc2d5038ab515d8a6fc2d3"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/embedded-layering.md",
+          "sha256": "fabcd33300060fc808c88b05ad0097b976f54aec40f03735477074b4e8449572"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/event-driven-design.md",
+          "sha256": "79b319f9e43c404cd789560d736a08f90007187915287164ca4912966f2a5430"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/migration-playbook.md",
+          "sha256": "5eeae5eef8691590f5716967b7f5539a62fb3540f770cb0d67ab67bf76711ce2"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/output-templates.md",
+          "sha256": "96e6ecbf0a47b97a1500062699e5c6205304bc4207dfbba4410a395bf2fd310a"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/rtos-task-design.md",
+          "sha256": "c7633de9402bf6e238509f9b3126d930fc7d125ce6c11ec2779dd0506de1d493"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/skeleton-generation.md",
+          "sha256": "dae8c2c3d7d321a5b2309f30e1d3c8e596098905e32ce2dd660b5f97263d5ab2"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/references/state-machine-design.md",
+          "sha256": "437896f6bf9c7c3b8db3de82d32b1f2cf1d5926e8e4a09c0a621554f8c5aa1d6"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/scripts/scan_project_structure.py",
+          "sha256": "ef937a7276ce9009e8967dc8becd6a93735cc5434746b1cd39ce2e536c578ae2"
+        },
+        {
+          "path": "skills/embedded-architecture-planner/SKILL.md",
+          "sha256": "13d8d4f6a632ca56c26f87f9526618038b511d7cf978c63e04234da00deae3b7"
+        }
+      ]
+    },
+    {
+      "id": "embedded-coding-standard",
+      "path": "skills/embedded-coding-standard",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/embedded-coding-standard/agents/openai.yaml",
+          "sha256": "8c2c6e92d0d2229a01b0d3f889280c516dc9c4783e4b969eaa3a9c15a97d89f3"
+        },
+        {
+          "path": "skills/embedded-coding-standard/README.md",
+          "sha256": "1976e77eef2784fb5f1d3f353250dda75ea57ce64b02b42d3680d99f92a94944"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/barr-c-rules.md",
+          "sha256": "28b60aefb64c5d3d0a9b175e4f82d66b5e7d465ee2764c4e0d41cecee4088b49"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/c-pitfalls-rules.md",
+          "sha256": "cbac92b5fc4449fc4e87a3547289cb2893512d88568e31fc9a2ec87e3c8122e0"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/cert-c-rules.md",
+          "sha256": "9f10ede22e53a7c62086b4bf4dabd35c7111c08aa871a998772ffd120c368abc"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/checklists.md",
+          "sha256": "c3dbd364539ae4cd5b4432e437823d737fb972e4b807ab7878be3002a0224974"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/coding-standard.md",
+          "sha256": "ffdbd0c71b3703e86b45ca4a28628472e2d2f26bda059f41597e337b4207e20c"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/freertos-rules.md",
+          "sha256": "b03e1d3ca6c3d80085e2271758b82712f0dca3009b78d9f34411f0204e349eb5"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/huawei-c-rules.md",
+          "sha256": "0812c03a8cf757dc5d503211185a56b747f18e1ca4e19bfbc26a680f3ae7dbd7"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/misra-c-rules.md",
+          "sha256": "b25836c0752bdc5e04a8bfc049431322449661c942d5d3368a0738d185366dde"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/prompt-examples.md",
+          "sha256": "03b4073ef9dde26f68c4073c4368614281c81ba58dea0917ebf8f0dccfdcc9c3"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/security-rules.md",
+          "sha256": "ab68df8650c0faf1623997ef5ecf9a5a4e25f17cb08fd1c38063cda50501e0a0"
+        },
+        {
+          "path": "skills/embedded-coding-standard/references/third-party-code-review.md",
+          "sha256": "d50994d1b7011811c2377d91c5e93ae9b58da1f4f8447f94180dd71b50b28b9e"
+        },
+        {
+          "path": "skills/embedded-coding-standard/scripts/init-standard.sh",
+          "sha256": "067fa48fdc5da56c360eb5abed8307774453dc3f20ba175cec62569e481422f4"
+        },
+        {
+          "path": "skills/embedded-coding-standard/scripts/prepare-diff.sh",
+          "sha256": "d60daaf2ee2ceef1fe120348b75b5e784e387448a86f63be440957cc11066851"
+        },
+        {
+          "path": "skills/embedded-coding-standard/SKILL.md",
+          "sha256": "d378504eaa134749649a9502dd6a17e6e7064c4f2070829c91fb70119d693de9"
+        }
+      ]
+    },
+    {
+      "id": "embedded-minimal-project-builder",
+      "path": "skills/embedded-minimal-project-builder",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/embedded-minimal-project-builder/agents/openai.yaml",
+          "sha256": "4850a6fd211de481e4bb3f852b0908c1f355047ba395d200527c78390ccb1b80"
+        },
+        {
+          "path": "skills/embedded-minimal-project-builder/references/project-doc-contract.md",
+          "sha256": "2d385921593915fbae0fc78e226ff7756163044f629816b793d7489b694eb3bf"
+        },
+        {
+          "path": "skills/embedded-minimal-project-builder/SKILL.md",
+          "sha256": "c9ee0b8f4222f2c6d88fb70006bddd84d3e9f5d65ac701fb0eabf74299c0ff43"
+        }
+      ]
+    },
+    {
+      "id": "embedded-prd-to-logic",
+      "path": "skills/embedded-prd-to-logic",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/embedded-prd-to-logic/.gitignore",
+          "sha256": "9e2541bd8cc3e75e2e34fa74318bf277fa3eddfa6b9030a0d84ca90526d2480b"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/agents/openai.yaml",
+          "sha256": "39271fcda0d88bcebfa97c8342bdb0c2b3e13835cbdc8206e0fd461311118f1d"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/assets/implementation-logic-template.md",
+          "sha256": "64481cb8aa4749cb201338ad7019c81bccd495b562dd7264c22a5c9dd38d6301"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/assets/review-template.html",
+          "sha256": "9eae2b752d230009fce08a106159fd561deff43ac4f9210930a3023d7afc7e26"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/README.md",
+          "sha256": "36ab8ab16ef27e850d3ae826f553f8a259ac9c31197eb219a0a965328648f519"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/references/clarification-patterns.md",
+          "sha256": "d9ca106b86614d632d60a49dec5322c224c59e7913bc295864e3fe2b978f59e2"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/references/core-workflow.md",
+          "sha256": "e7a77d00d4cc0fdc88ba2ba7096bf1c7f6e381b6c7112d07a3d7f66cc4e6b219"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/references/dev-modes.md",
+          "sha256": "d3436a6958f728cbc1f335dc53a91a261e2a6920a58980c3b35953fb141ecb71"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/references/embedded-risk-rules.md",
+          "sha256": "2845361d04daca8207270d4f63eb4ac29bfa98c6fca21ebbf9e6c855f13c558c"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/references/render-review.md",
+          "sha256": "8afc3a01af878c226c51433931b5ffeb9198817e94f4a2730104a7a8d6b06a06"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/scripts/collect_project_context.py",
+          "sha256": "717790ea4f92e78692e4617b324e4007c7f9f796706b88bf8a4b9acee4979411"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/scripts/__pycache__/collect_project_context.cpython-311.pyc",
+          "sha256": "f8a9132525dfdd3adb5d3c7eac71bdeb38991fc033fe07afbc01b8dee4a8c295"
+        },
+        {
+          "path": "skills/embedded-prd-to-logic/SKILL.md",
+          "sha256": "0c6a1cbb9a2bc34ff3a5d9a8e8034d7c70c0ecb666c3e067d6b3947c780e2a34"
+        }
+      ]
+    },
+    {
+      "id": "prd-to-hardware-solution",
+      "path": "skills/prd-to-hardware-solution",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/prd-to-hardware-solution/agents/openai.yaml",
+          "sha256": "f6d3d7bf3f7f782e69e435056138a59f9a8c782d79bcaac32b92a9541920a3f8"
+        },
+        {
+          "path": "skills/prd-to-hardware-solution/README.md",
+          "sha256": "aab645413bdc2f33edd4d27f403f1ce91255e1e1a54529d4a6aecf7a1701eb1d"
+        },
+        {
+          "path": "skills/prd-to-hardware-solution/references/category-checklists.md",
+          "sha256": "77b5880bf1d7734acf67d82cd6a09c3acc35aeb0fd8479e582baf099ba1c2978"
+        },
+        {
+          "path": "skills/prd-to-hardware-solution/references/evidence-rules.md",
+          "sha256": "81d1ba84a54ca06586dce057bc84c02d85ae2b341bba2a4f92f469e9bb4052b5"
+        },
+        {
+          "path": "skills/prd-to-hardware-solution/references/output-template.md",
+          "sha256": "2665ac0baf86e2f66c1ca991f7b3929ab37704466504f76ec9f97a0444f451c2"
+        },
+        {
+          "path": "skills/prd-to-hardware-solution/references/workflow.md",
+          "sha256": "5d3c3d8dc6ea76dc5a367e3de65bb811fc29e0557fce8f4f9077561fc465ec7a"
+        },
+        {
+          "path": "skills/prd-to-hardware-solution/SKILL.md",
+          "sha256": "a7e349d8e6b45ad66ed684768ff8d486c293e6d80111bff91fdaedc772bc2c35"
+        }
+      ]
+    },
+    {
+      "id": "schematic-pinmap-analyzer",
+      "path": "skills/schematic-pinmap-analyzer",
+      "kind": "external",
+      "files": [
+        {
+          "path": "skills/schematic-pinmap-analyzer/agents/openai.yaml",
+          "sha256": "48f5082427cc8a56050acdda2aa10924f509c1966ce3072818623f6a25359d23"
+        },
+        {
+          "path": "skills/schematic-pinmap-analyzer/README.md",
+          "sha256": "de2ef5d024e80f291610bd006f7259b9370a84f7f169acfc82f29b8a8d646f51"
+        },
+        {
+          "path": "skills/schematic-pinmap-analyzer/references/output-format.md",
+          "sha256": "f1a023fc62fc8876b09c15a711d28e0295b2aa2bb1d27a9c08e9b8d4da73917e"
+        },
+        {
+          "path": "skills/schematic-pinmap-analyzer/SKILL.md",
+          "sha256": "1f900bd5a1079e3f0f7abac0d884a2f48b97d79623ae62a89f38399269ca2fb5"
+        }
+      ]
+    }
+  ],
+  "dirtyOwnerComparisons": [
+    {
+      "id": "tools-quality",
+      "rootSha256": "80f4a6bd5d9f5edd8900fa3949a37bd78fb0301f3fa1ce9e184ab7d752474c0e",
+      "pluginSha256": "d4c4a3225468b9966dceb0f9b925209e833bc434880bad93a3883ed60c2b4bb6",
+      "modifiedWorkingTree": true
+    },
+    {
+      "id": "tools-verification",
+      "rootSha256": "073ab708da4b9fe46f5de2abf735dbbbc0e0fdc1b5ac5150eabba3f0b9eee3c6",
+      "pluginSha256": "70a554b38adfe072088593eaccb63faf3c735f6674f6638e9defe1d2a8ae399a",
+      "modifiedWorkingTree": true
+    }
+  ]
+}

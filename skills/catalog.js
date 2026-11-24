@@ -289,6 +289,16 @@ const PLUGIN_SKILL_IDS = {
     'rtos-debug',
     'serial-monitor',
     'serial-shell'
+  ],
+  'mcu-workbench-architecture': [
+    'app-architecture', 'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware',
+    'impl_os', 'impl_mcu', 'impl_board', 'impl_bsp', 'impl_middleware',
+    'service_system', 'service_battery', 'service_backlight', 'service_calendar', 'service_diagnosis', 'service_log',
+    'service_ota', 'service_power', 'service_sensor', 'service_storage', 'service_watchdog',
+    'vendor_mcu', 'vendor_rtos', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb',
+    'vendor_letter_shell', 'vendor_algorithm', 'chip-driver-manual', 'chip-resource-finder',
+    'embedded-architecture-planner', 'embedded-coding-standard', 'embedded-minimal-project-builder',
+    'embedded-prd-to-logic', 'prd-to-hardware-solution', 'schematic-pinmap-analyzer'
   ]
 };
 

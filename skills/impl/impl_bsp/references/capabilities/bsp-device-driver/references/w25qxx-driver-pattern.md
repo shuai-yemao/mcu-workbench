@@ -23,7 +23,7 @@ typedef struct {
 | 接口 | 用途 |
 |------|------|
 | SPI | 收发 + 片选控制 |
-| Timebase | tick、毫秒延时 |  
+| Timebase | tick、毫秒延时 |
 
 W25Qxx 没有中断引脚，所有操作都是主机主动发起，因此不需要 IRQ/DMA/Yield 接口。
 

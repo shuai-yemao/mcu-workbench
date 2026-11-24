@@ -7,13 +7,13 @@
 | request_id | `REQ-PLUGIN-SPLIT-20261123` |
 | 生成时间 | `2026-11-24T14:28:43+08:00` |
 | 项目路径 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai` |
-| 分支/提交 | `host_ai`；`969398e6f5aea785da143ca4535d76ebf6b86188` |
+| 分支/提交 | `host_ai`；`6cd4fadc93ddaff5b03efbf7b32fa6a72b97883b`（工作区含预存未提交改动） |
 | Spec 力度 | `full` |
 | Spec 叠加门禁 | `[versioned]` |
-| Spec 版本 | `v0.7-devops-third-plugin` |
+| Spec 版本 | `v0.8-architecture-fourth-plugin` |
 | 审查状态 | `review-gate-approved / pending-user-approval` |
-| 用户审查状态 | `pending`（等待 v0.7 审阅） |
-| 当前判定 | `pending-user-approval`：本阶段目标为第三个 `mcu-workbench-devops` 插件；本 Spec 获用户批准前不得更新实施 Plan/Task 或开始拆分 |
+| 用户审查状态 | `approved`（用户于 2026-11-24 批准 v0.8） |
+| 当前判定 | `approved / plan-approved`：Spec 和 architecture Plan 均获用户批准；按已批准 Task 进入拆分施工 |
 | 2026-11-23 变更 | 用户确认修复既有 catalog/link 基线；正式 Skill 必须可登记，链接必须指向仓库内真实目标或显式记录为外部依赖，Jest/插件/链接校验目标为零失败 |
 | 2026-11-24 变更 | 用户确认沿用上一轮边界，按拆分难度选择第二个插件；选定 `mcu-workbench-observability`，并允许已登记外部 Skill 作为该插件的迁移对象；宿主验收范围固定为 Codex + Cursor MVP |
 | 2026-11-24 变更 | 用户明确要求清理插件中的 OpenCode 部分；移除旧聚合插件活动 OpenCode 宿主入口、运行时、配置、专属依赖/脚本/Hook、命令生成器和派生产物；保留历史审计记录中的 OpenCode 事实性文字 |
@@ -21,6 +21,137 @@
 | 2026-11-24 变更 | 用户追加要求迁移外部导入的 Skills；依据本轮目标插件归属矩阵，按默认窄范围纳入全部 6 个 verification 归属项；其他插件归属和 `unknown` 项不迁移。Spec v0.5 放行并已执行 |
 | 2026-11-24 变更 | 用户确认将 `academic-paper`、`academic-paper-reviewer`、`academic-pipeline`、`sr-screener` 从 verification 插件移出，转为 Codex Agent Skills；`embedded-unit-test-generator`、`static-analysis` 留在 verification 插件。Codex 现有同步器的安装目标为 `~/.agents/skills`。Spec 升至 v0.6，并经 Review Gate 及用户批准；v0.5 Plan/Task 不再适用于新范围 |
 | 2026-11-24 变更 | 用户确认第三阶段拆分 `mcu-workbench-devops`：纳入五项 canonical Skills 与归属矩阵内全部 DevOps 外部 Skills；建立完整独立包，Codex + Cursor MVP 验收。Spec 升至 v0.7；v0.6 verification Plan/Task 不适用于本阶段，等待本 Spec 用户审阅后再重制 |
+| 2026-11-24 变更 | 用户确认第四阶段沿用架构 Skill 归属矩阵，项目管理与工作流能力继续归 workflow；Spec 升至 v0.8，等待用户审阅后重制 Plan/Task |
+
+## 2026-11-24 当前阶段补充：Architecture 第四个插件拆分（v0.8）
+
+本节为当前有效阶段范围，优先于 v0.7 DevOps 交接。此前 Verification、Observability、DevOps 的范围和验收记录保留为历史审计，不作为本阶段施工输入。
+
+### RCP 与确认项
+
+| 字段 | 内容 | 可信等级 |
+|---|---|---|
+| 项目路径 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai` | confirmed |
+| 分支/提交 | `host_ai`；本轮只读观察 HEAD `6cd4fadc93ddaff5b03efbf7b32fa6a72b97883b`，实施前重新确认 | confirmed |
+| 目标插件 | `mcu-workbench-architecture`，五插件定义中的第四个插件 | user-confirmed |
+| 目标结果 | 将嵌入式软件架构能力形成独立插件边界，可独立发现、校验并由旧聚合入口兼容调用 | user-confirmed |
+| 归属规则 | 严格沿用 `codex/plugin-split/skill-ownership-matrix.md`，仅纳入目标为 architecture 的内容 | user-confirmed |
+| 项目管理边界 | 项目需求/规划/任务执行/团队协同继续归 `mcu-workbench-workflow`，不迁入 architecture | user-confirmed |
+| 宿主范围 | Codex + Cursor MVP；Claude 延期 | user-confirmed（沿用既有范围） |
+| 风险/力度 | 跨层内容、引用、外部 Skills、catalog/aliases、双宿主 manifest 和聚合兼容同时影响；`full + versioned` | inferred from confirmed scope |
+
+目的质疑结论：形成独立的嵌入式架构能力包；项目治理与工作流编排继续由 workflow 承担，保持单一职责。可行性质疑结论：已有三个独立插件可作为包形态参考；canonical 唯一事实源、链接迁移和回滚路径须由 Plan 依据当前实现确定。范围结论：纳入 architecture canonical Skills 及矩阵明确归属 architecture 的外部 Skills；其他插件和 `unknown` 项不迁移。验收缺口：需依据当前 catalog、manifest、sync 机制形成文件级施工与回滚方案；外部 provenance 的未知状态保持不变。
+
+### 目标范围与非目标
+
+**本阶段范围**
+
+1. 建立 `plugins/mcu-workbench-architecture/` 独立包，包含 descriptor/package 元数据、Codex/Cursor manifests、Skill 发现入口和独立校验入口。
+2. 纳入 canonical 架构 Skills：`app-architecture`、`service_*`、`platform_*`、`impl_*`、`vendor_*`；以当前 catalog canonical 分类为准，保留 references、脚本及必要随附内容，不改变 Skill 语义。
+3. 纳入归属矩阵明确指向 architecture 的 8 个外部 Skills：`chip-driver-manual`、`chip-resource-finder`、`embedded-architecture-planner`、`embedded-coding-standard`、`embedded-minimal-project-builder`、`embedded-prd-to-logic`、`prd-to-hardware-solution`、`schematic-pinmap-analyzer`。来源/版本/许可证/依赖按 inventory 原状态记录；未知项不得伪称审计完成。
+4. 保留旧聚合入口、canonical Skill IDs 和 aliases，以唯一事实源或受保护生成投影维持兼容；源目录、生成边界和回滚顺序由获批 Plan 明确。
+5. 分别验证 Codex 与 Cursor 的 manifest、Skill roots、独立发现/加载；静态和主机测试不得替代真实宿主证据。
+6. 保持 App → Service → Platform ← Impl → Vendor 契约不变；Plan/Task 必须为 SRP/OCP/LSP/ISP/DIP 逐项记录适用性和证据。
+
+**明确非目标**
+
+- 不迁移 workflow、verification、devops、observability、hardware 或 `unknown` 项。
+- 不把需求路由、项目 intake/scaffold、集成规划、任务执行、团队同步等项目管理能力并入 architecture。
+- 不修改固件、HAL、RTOS、BSP、Vendor 实现源码；不把插件主机验证写成目标固件构建、烧录或实物验收。
+- 不改变既有 Skill 业务语义或分层契约；不新增 Claude/OpenCode 适配、热加载或动态卸载承诺。
+- 本 Spec 获用户批准前，不更新实施 Plan/Task，不移动/复制 Skills，不改 manifest/catalog，不开始施工。
+
+### 现状证据与可信边界
+
+| ID | 事实 | 证据 | 等级 |
+|---|---|---|---|
+| ARC-E01 | 已有 verification、observability、devops 三个独立插件目录；尚无 architecture 插件目录 | 本轮 `plugins/` 目录清单 | confirmed |
+| ARC-E02 | canonical Skills 的定义、分类与路径由 catalog metadata/catalog 派生 | `skills/catalog-metadata.js`、`skills/catalog.js` | confirmed |
+| ARC-E03 | ownership matrix 将 8 个外部 Skill 指向 architecture；provenance 依 inventory 状态 | `codex/plugin-split/skill-ownership-matrix.md`、`external-skill-inventory.yaml` | confirmed（归属）；元数据按条目状态 |
+| ARC-E04 | 项目 intake/scaffold/team-sync、需求与计划任务管理仍归 workflow | ownership matrix、canonical catalog | confirmed |
+| ARC-E05 | 本阶段开始前工作区已有用户未提交改动 | `git status --short --branch` | confirmed |
+| ARC-E06 | manifest 静态检查不能证明真实 Codex/Cursor 发现和加载 | 宿主观察要求 | confirmed（验证边界） |
+
+### 1. 工程现状表
+
+| ID | 工程事实/约束 | 证据 | 等级 | 审查结论 |
+|---|---|---|---|---|
+| ARC-R01 | canonical 架构内容由 App、Service、Platform、Impl、Vendor 分类组成 | catalog 源文件 | confirmed | 逐项清点完整目录树，不能只迁移 SKILL.md |
+| ARC-R02 | 外部 architecture 集合为矩阵中的 8 项 | ownership matrix | confirmed（归属）；provenance 按 inventory | 纳入迁移审计并保留来源未知状态 |
+| ARC-R03 | 项目治理和流程编排属于 workflow | 五插件定义、ownership matrix | confirmed | 不并入 architecture |
+| ARC-R04 | catalog、aliases 和聚合入口需协调迁移 | catalog 与既有插件实现 | confirmed | Plan 明确唯一事实源、生成边界、兼容及回滚 |
+| ARC-R05 | Codex + Cursor 为 MVP 宿主范围 | 前序确认及本轮沿用 | user-confirmed | 两宿主分别验收；Claude 不作本轮通过条件 |
+
+### 2. 文件施工清单
+
+| ID | 目标范围 | 职责归属 | 施工约束/交付 |
+|---|---|---|---|
+| ARC-F01 | `plugins/mcu-workbench-architecture/` | 独立插件包 | descriptor、package metadata、Codex/Cursor manifests、Skill roots、validate/test 入口 |
+| ARC-F02 | 插件 `skills/` 中 App/Service/Platform/Impl/Vendor canonical Skills | architecture | 完整保留必要 references/脚本；唯一事实源/投影由 Plan 决定 |
+| ARC-F03 | 插件 `skills/` 中 8 项 architecture 外部 Skills | 外部迁移审计 | 与 inventory/matrix 一致，不升级 provenance 状态 |
+| ARC-F04 | catalog、resolver、聚合 manifests/入口和 aliases | 共享注册/兼容 | 唯一注册、旧 ID/alias 兼容；仅改 Plan 指定源文件 |
+| ARC-F05 | ownership matrix、external inventory | 迁移审计 | 插件范围与唯一归属一致，未知元数据状态保留 |
+| ARC-F06 | 插件级/根聚合验证入口与相关测试 | 验证/兼容 | 覆盖 manifests、链接、catalog、aliases、回滚和失败路径 |
+
+### 3. 代码生成约束清单
+
+| ID | 必须遵守 | 禁止事项 |
+|---|---|---|
+| ARC-G01 | 每项 canonical Skill 只有一个可编辑事实源；projection 标明源和重建方式 | 独立双写或静默复制造成漂移 |
+| ARC-G02 | descriptor、package、Codex/Cursor manifests 与 Skill registry 的 ID/version 一致 | 以目录存在或静态检查冒充宿主加载通过 |
+| ARC-G03 | 严格按 ownership matrix 迁移；workflow 项目治理维持原归属 | 因名称或目录相邻而扩大范围 |
+| ARC-G04 | 外部 Skills provenance 按证据记录 | 推测许可证/版本、静默删引用或用空壳替代缺失内容 |
+| ARC-G05 | 保留旧聚合入口和 aliases，提供可重复回滚步骤 | 新宿主入口及兼容路径验证前删除旧入口 |
+| ARC-G06 | App → Service → Platform ← Impl → Vendor 边界不变 | 复制 DevOps、Verification 或 Observability 实现 |
+| ARC-G07 | SRP/OCP/LSP/ISP/DIP 分项记录适用性及验证证据 | 以原则名称代替证据 |
+| ARC-G08 | 保护任务开始前已有未提交改动 | 清理、覆盖或整体暂存无关工作 |
+
+### 4. 验收测试清单
+
+| ID | 等级 | 验收项 | 通过条件 |
+|---|---|---|---|
+| ARC-T01 | 静态 | descriptor、package metadata、Codex/Cursor manifests | schema、ID、版本及 Skill roots 一致 |
+| ARC-T02 | 静态/主机 | canonical 架构 Skill 清单/随附文件 | App/Service/Platform/Impl/Vendor 内容完整，无重复 ID |
+| ARC-T03 | 静态/主机 | 8 项外部 Skill 与归属/provenance | 包边界与 matrix 一致，未知来源仍标未验证 |
+| ARC-T04 | 静态/主机 | Markdown links、scripts、references、唯一事实源 | 包内链接有效，外部边界显式，内容无漂移 |
+| ARC-T05 | 主机 | 独立校验与根聚合兼容入口 | 正常通过；坏 manifest、缺 Skill、重复 ID、失效链接负例明确失败 |
+| ARC-T06 | 兼容 | 旧入口、canonical IDs、aliases、resolver | 旧调用映射至唯一新来源或明确迁移提示，无静默失败 |
+| ARC-T07 | 宿主 | Codex 独立发现/加载 | 记录真实 Codex 证据；否则标记未验证 |
+| ARC-T08 | 宿主 | Cursor 独立发现/加载 | 单独记录真实 Cursor 证据，不以 Codex 替代 |
+| ARC-T09 | 回滚 | 聚合路由/投影回滚 | 可重复恢复，不丢失用户文件 |
+| ARC-T10 | 审计 | 项目管理边界与 SOLID | workflow 项目管理未迁入；五项原则逐项有判断和证据/阻塞 |
+
+### 验收标准
+
+| ID | 等级 | 通过条件 |
+|---|---|---|
+| ARC-A01 | 静态 | architecture 形成完整独立包，descriptor、package 与宿主 manifests 一致 |
+| ARC-A02 | 静态/主机 | canonical 架构 Skills 与 8 个外部 Skills 完整可发现，inventory/matrix 与包范围一致 |
+| ARC-A03 | 主机 | 包级校验覆盖 manifests、roots、链接、catalog/aliases 和失败路径；根兼容入口行为确定 |
+| ARC-A04 | 宿主 | Codex/Cursor 分别记录插件发现/加载结果及证据等级 |
+| ARC-A05 | 兼容/回滚 | 旧入口和 aliases 行为确定，回滚可重复且不丢数据 |
+| ARC-A06 | 边界 | workflow 项目治理未并入 architecture，软件分层契约不变 |
+| ARC-A07 | 审计 | 外部 provenance 未知项仍标记 blocked/unverified，不伪称审计或硬件验证通过 |
+| ARC-A08 | 记录 | 验证记录命令、绝对 cwd、退出码、产物路径/SHA-256、证据等级、重试及新增基线差异 |
+
+### Review Gate 与实现闸门
+
+- RCP/Challenge 结论：用户已确认沿用归属矩阵；architecture 外部集合为 8 项；workflow 项目治理保持原归属。
+- 目的质疑：独立提供嵌入式架构能力；workflow 继续承担项目治理，保持单一职责。
+- 可行性质疑：已有三个插件可供包形态对照；目录迁移、链接、注册和回滚需在 Plan 中按实际源文件确定。
+- SOLID 审查：
+
+| 原则 | 适用性 | Spec 约束 | 下游所需证据 |
+|---|---|---|---|
+| SRP | 适用 | architecture 仅承载 App/Service/Platform/Impl/Vendor 与矩阵归属的架构辅助 Skills；项目治理留在 workflow | 插件 Skill inventory 与 workflow 排除项测试 |
+| OCP | 适用 | 新增架构 Skill 应通过插件清单/descriptor 扩展，不修改非 architecture 插件核心 | 插件 validator 与新增 Skill fixture |
+| LSP | 适用 | Codex/Cursor manifests 和共享 descriptor 遵循同一插件契约 | 两宿主 manifest schema 校验与包契约测试 |
+| ISP | 适用 | 每个宿主 manifest 只声明该插件实际提供的 Skill roots/入口 | manifest 最小范围及无越界 Skill roots 检查 |
+| DIP | 适用 | 插件依赖共享 contracts 和 Skill registry 契约，不依赖聚合入口实现细节 | import/dependency 检查与聚合适配回归 |
+
+- Review Gate 结论：`spec_rigor=full`、`spec_overlays=[versioned]` 与跨层内容、共享注册和双宿主影响匹配；四个审计章节已形成。Plan 前如发现影响施工的事实缺证，须补证并阻塞相关项。
+- 用户闸门 H-04：用户于 2026-11-24 明确批准 v0.8；Plan 亦于 2026-11-24 获批准。按 architecture Task 进入施工。
+- 用户批准后交接：`workflow-integration-plan` 制定 architecture 专属 Plan，明确唯一事实源、生成投影、任务依赖、回滚及逐项 SOLID 证据；随后 `workflow-task-breakdown` 重制 Task。当前 DevOps Plan/Task 不适用于本阶段。
 
 ## 需求与范围
 

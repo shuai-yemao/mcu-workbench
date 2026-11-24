@@ -1,0 +1,85 @@
+# BSP 专项实现契约（全项目架构的补充）
+
+> 本文件不再定义项目顶层架构，也不作为 App、Service、Platform、Impl、Vendor 的总规则。
+> 项目顶层唯一架构来源是 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，
+> 代码格式、注释和通用审查唯一来源是 [`style-profile.md`](../../tools/tools-quality/references/style-profile.md)
+> 与 [`review-gates.md`](../../tools/tools-quality/references/review-gates.md)。本文件只补充 BSP/Impl 内部的器件装配和运行机制约束。
+
+## 当前边界
+
+全项目依赖方向固定为：
+
+```text
+App → Service → Platform 接口 ← Impl → Vendor
+```
+
+在该顶层契约内部，BSP 的当前实现关系为：
+
+```text
+Platform BSP Model ← impl_bsp/impl_bsp_port（组合与注入）
+                                  ├─→ impl_bsp Driver（器件协议）
+                                  └─→ impl_bsp Handle（同类实例机制）
+                                         └─→ Platform Device Ops
+```
+
+`platform_*.c/.h` 是 Platform Device Model；`impl_*_handle_port.c/.h` 是 BSP Port；
+`User_Task/*/Platform/*_port/` 是 APP Facade/Task Adapter，不能当作 BSP Port。
+历史 Wrapper 命名文件只作为迁移输入，不是当前 BSP 的默认产物。
+
+```text
+Service → Platform Device Model → typed Platform Ops
+                                  ↑ bind/register
+impl_bsp/impl_bsp_port Port ── inject MCU/Core Ops ──→ Driver
+    └──────────────────── inject same-class Drivers ──→ Handle
+                                      └──────→ Platform Device Ops
+```
+
+## BSP 内部角色
+
+| 角色 | 只能负责 | 只能依赖 |
+|---|---|---|
+| Platform Device Model | 设备身份、`cfg/ctx/data/ops` 契约和 typed Ops | Platform 公共类型 |
+| Port | 唯一组合根；创建实例、注入 Ops、把 Handle 函数绑定到 Platform Device Ops | 资源、构造接口、Platform Model |
+| Handle | 同一设备类别 Driver 集合的生命周期、选择/遍历、缓存、重试、回调和请求串行化 | 同类 Driver 与后续 OS 同步接口 |
+| Driver | 器件协议和事务级错误映射 | 注入的 Core Ops 与 MCU Ops |
+
+非 Port BSP 角色不得包含或依赖其他角色的具体实现。Platform Model 不保存 Driver/Handle；Handle 只通过 Driver 的公开实例 API 或内部 Driver Ops 使用 Driver，不复制协议状态；HAL Driver 不直接包含 HAL、RTOS、OS Wrapper、Port 或 Handle。Core/MCU 的具体对象只由资源系统提供、由 Port 选择并通过 Ops/context 注入。
+
+## 设备类别、实例和 context-first Ops
+
+Driver 是一个具体物理设备实例；Handle 只组合一个设备类别的多个 Driver，不得混入不同类别或不同协议族的 Driver。Driver 与 Handle 均使用标准 `cfg / ctx / data / ops` 四元组；`ops` 是其内部行为表，不作为 Platform 公共 API 暴露。Handle 的 Platform-facing API 使用独立函数声明，Port 再将这些函数绑定到 `platform_<type>_ops_t`。
+
+Driver 的 `cfg` 保存型号/实例静态配置，`ctx` 保存已注入的 MCU/Core 资源，`data` 保存运行状态；Handle 的 `cfg` 保存同类 Driver 集合及策略，`ctx` 保存选择/并发/事件上下文，`data` 保存聚合结果、缓存和状态。Handle 不保存不同类型 Driver，也不让 Service 直接遍历 Driver。
+
+所有跨层可注入函数以 `void *context` 为首参，Port 直接传递函数表和上下文，禁止为签名转换新增桥接函数或函数指针强转。
+
+Handle 的 OS/并发资源由 Port 按 profile 注入；本架构阶段不改变 OS 抽象。跨设备共享总线锁仍归 Core Bus。Port 必须按 profile 创建、注入并在装配失败时回收声明资源。IRQ/DMA 由 Driver 通过注入的 platform_mcu 能力完成；ISR 只完成事件确认和有界投递，Handle 在任务/调用者上下文完成协议后处理和回调。
+
+## Port 的固定装配责任
+
+1. 从 resource 获取 MCU/Core 实例，构造一个或多个同类 Driver，注入事务级 Core Ops；若有 Core 无法表达的芯片特性，再注入 MCU Ops。
+2. 构造同类 Handle，注入 Driver 指针集合及必要 OS/并发资源；Handle 不构造 Driver，也不复制 Driver 协议状态。
+3. 建立 `platform_<type>_ops_t`，将 Handle 的公开函数声明绑定到 Platform Device Model，并注册 Platform Device；生产与 Fake Port 的函数表形状相同。
+
+Port 可以创建 Handle 所需任务、队列或同步资源，但不得定义工作入口、循环、缓存更新、重试或回调。Port 不实现设备命令、寄存器语义、状态机和软件 IIC/SPI 位时序，也不直接调用 HAL 或原生 RTOS。
+
+## GPIO 输出设备
+
+LED、继电器和使能脚等同步 GPIO 输出设备可省略队列、线程、DMA/IRQ 和不适用的 MCU Ops；但不得省略 GPIO 实例/引脚/极性证据、失败状态回滚、deinit、错误码语义、Fake Port 和板级电平验证。完整要求见 [`gpio-output-peripheral-checklist.md`](gpio-output-peripheral-checklist.md)。
+
+## 验收
+
+静态检查应阻止新产物依赖历史 Wrapper、Port 漏注入、Handle 混入异类 Driver 和 HAL Driver 的 HAL/RTOS 依赖。它不替代交叉编译、烧录、运行日志或板上验证。
+
+## 扩展与示例边界
+
+新增 Platform/Impl 能力必须先提交设备 profile，至少说明：公共能力、设备类别、Driver 数量、
+Resource 来源、Platform Ops 映射、OS/并发资源、阻塞/ISR/DMA 限制、内存所有权、错误恢复和未验证项。
+只有跨设备、跨板卡且可稳定观察的能力才能上升到 Platform；具体型号协议和业务策略留在 Impl/Service。
+
+W25Qxx 的页编程、状态轮询、4 KB 缓冲、OTA/日志分区和掉电策略属于示例特例，不是通用 Handle 或
+Platform Storage 规则。验证器必须同时覆盖 Model-first 正例、同类多实例 Handle 正例、异类 Driver
+负例、Port 协议泄漏负例和历史 Wrapper 兼容输入。
+
+SPI Bus 的共享锁、CS 边界和 DMA/IRQ 事件属于 Platform MCU/Impl MCU；单设备请求串行化、重试、
+取消和回调属于 Handle。三者不得在 Port 中重复实现。

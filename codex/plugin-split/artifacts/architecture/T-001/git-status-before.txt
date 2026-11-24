@@ -1,0 +1,39 @@
+## host_ai...origin/host_ai
+ M codex/plugin-split/plan.md
+ M codex/plugin-split/spec.md
+ M codex/plugin-split/task.md
+ M package.json
+ M plugins/verification/index.js
+ M scripts/sync-codex-skills.js
+ M scripts/verification-pilot.js
+ M skills/academic-paper/SKILL.md
+ M skills/academic-paper/references/disclosure_mode_protocol.md
+ M skills/academic-paper/references/workflow_phase_details.md
+ M skills/academic-pipeline/SKILL.md
+ M skills/academic-pipeline/references/adapters/overview.md
+ M skills/academic-pipeline/references/passport_as_reset_boundary.md
+ M skills/academic-pipeline/references/pipeline_state_machine.md
+ M skills/static-analysis/SKILL.md
+ M skills/tools/tools-quality/SKILL.md
+ M skills/tools/tools-quality/references/capabilities/quality-static-analysis/GUIDE.md
+ M skills/tools/tools-quality/references/capabilities/quality-unity-testing/GUIDE.md
+ M skills/tools/tools-quality/references/capability-index.md
+ M skills/tools/tools-quality/references/review-gates.md
+ M skills/tools/tools-quality/references/style-profile.md
+ M skills/tools/tools-verification/SKILL.md
+ M tests/sync-codex-skills.test.js
+?? .agents/
+?? .playwright-cli/
+?? .pnpm-store/
+?? artifacts/
+?? codex/native-skills.json
+?? codex/plugin-split/artifacts/verification/
+?? plugins/mcu-workbench-verification/
+?? skills/tools/.verification-projections.json
+?? tests/architecture-plugin.test.js
+?? tests/architecture-projection.test.js
+?? tests/architecture-skills.test.js
+?? tests/verification-catalog.test.js
+?? tests/verification-external-skills.test.js
+?? tests/verification-plugin.test.js
+?? tests/verification-skill-projection.test.js

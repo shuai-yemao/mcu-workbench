@@ -1,0 +1,7 @@
+interface:
+  display_name: "BSP 外设 Driver 设计"
+  short_description: "设计与验证嵌入式 BSP 外设 Driver 的接口、生命周期与依赖注入流程"
+  default_prompt: "使用 $bsp-device-driver 设计一个可移植、可测试的 BSP 外设 Driver。"
+
+policy:
+  allow_implicit_invocation: true
