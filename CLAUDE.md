@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目定位
 
-本仓库是 **mcu-workbench** — 面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 包与插件，作为 Claude Code / OpenCode / Codex 三宿主适配源，并附带宿主边界兼容桥。
+本仓库是 **mcu-workbench** — 面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 包与插件，提供 Claude Code、Codex 和 Cursor 宿主适配，并附带宿主边界兼容桥。
 
 - **GitHub**: `https://github.com/shuai-yemao/mcu-workbench`
 - **当前分支**: `host_ai`（三宿主适配 + Codex 宿主边界兼容桥）
@@ -22,7 +22,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | **验证脚本** | `scripts/` | 架构校验、分层契约、技能链接、BSP 契约 |
 | **测试套件** | `tests/` | 35 个 Jest 测试文件，覆盖所有 canonical skills、架构验证、CLI |
 | **Claude 插件** | `.claude-plugin/plugin.json` | Claude Code 插件清单 |
-| **OpenCode 适配** | `opencode.mjs` | OpenCode 插件入口，暴露 43 个 `mcu_workbench_<skill_id>` 技能工具 + `mcu_workbench_route`（共 54 个导出键） |
 | **Codex 适配** | `.codex-plugin/plugin.json` + `codex/AGENTS.md` | Codex CLI 插件 + 宿主运行约束 |
 | **Codex 兼容桥** | `AGENTS.override.md` | 从 `codex/AGENTS.md` 自动生成的兼容入口 |
 
@@ -41,7 +40,6 @@ npm run validate:layer          # 分层契约专项验证
 npm run validate:links          # SKILL.md 跨文件链接检查
 npm run validate:flash-algorithm # 烧录算法 profile 校验
 npm run build:codex-compat      # 生成 Codex 兼容桥（AGENTS.override.md）
-npm run build:opencode-commands # 生成 OpenCode 命令文件（.opencode/commands，由 agents 派生）
 npm run sync:versions           # 同步插件清单版本（package.json 为唯一版本源）
 npm run check:versions          # 检查版本一致性（只读）
 
@@ -109,17 +107,16 @@ node scripts/claude-layer-api.js validate --root <firmware-root> --strict
 | 宿主 | 入口 | 工具命名 | 注册方式 |
 |------|------|----------|----------|
 | Claude Code | `.claude-plugin/plugin.json` | `/mcu-workbench:<skill-name>` | 自动发现 |
-| OpenCode | `opencode.mjs` | `mcu_workbench_<skill_id>` + `mcu_workbench_route` | `opencode plugin <path>` |
 | Codex CLI | `.codex-plugin/plugin.json` + `codex/AGENTS.md` | `@mcu-workbench` | 自动注册 |
 
 **Codex 宿主边界兼容桥**：`codex/AGENTS.md` 是 Codex 宿主约束源，定义三域边界：
 - `common/` — 公共内容层，任何宿主不得修改
-- `claude/` / `opencode/` — 其他宿主适配层，Codex 不得修改
+- `claude/` — Claude 宿主适配层，Codex 不得修改
 - `codex/` — Codex 特化层，只在此增加或调整行为
 
 `AGENTS.override.md` 由 `scripts/build-codex-compat.js` 从 `codex/AGENTS.md` 自动生成，通过 Jest 测试保证同步。
 
-OpenCode 适配通过 `@opencode-ai/plugin` 暴露工具；Codex 适配入口为 `.codex-plugin/plugin.json`，同步和校验使用 `scripts/sync-codex-skills.js` 与 `scripts/validate-plugin.js`。
+Codex 适配入口为 `.codex-plugin/plugin.json`，同步和校验使用 `scripts/sync-codex-skills.js` 与 `scripts/validate-plugin.js`。
 
 ## Agent 团队
 

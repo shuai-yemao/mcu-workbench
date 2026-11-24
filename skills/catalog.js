@@ -250,6 +250,33 @@ function resolveSkillId(id) {
   return null;
 }
 
+const PLUGIN_SKILL_IDS = {
+  'mcu-workbench-observability': [
+    'tools-debug',
+    'tools-observability',
+    'debug-gdb-openocd',
+    'debug-jlink',
+    'debug-platformio',
+    'logic-analyzer',
+    'rtos-debug',
+    'serial-monitor',
+    'serial-shell'
+  ]
+};
+
+function pluginSkills(pluginId) {
+  const ids = PLUGIN_SKILL_IDS[pluginId] || [];
+  return ids.map((id) => {
+    const skill = SKILL_BY_ID[id] || SKILL_BY_LEGACY_ID[id];
+    if (!skill) return null;
+    return {
+      ...skill,
+      pluginId,
+      pluginPath: 'plugins/' + pluginId + '/skills/' + id
+    };
+  }).filter(Boolean);
+}
+
 // 职责边界：本文件只持有"事实"（目录、别名、迁移映射、ID 解析），不派生查询视图。
 // 查询视图（SKILLS、getAllSkills 等）在 registry.js 中基于本文件派生；
 // 磁盘加载（SKILL.md 内容、frontmatter）在 loader.js 中实现。
@@ -260,5 +287,7 @@ module.exports = {
   SKILL_BY_ID,
   SKILL_BY_CANONICAL_ID,
   SKILL_BY_LEGACY_ID,
-  resolveSkillId
+  resolveSkillId,
+  PLUGIN_SKILL_IDS,
+  pluginSkills
 };

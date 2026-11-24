@@ -27,8 +27,6 @@ const ROOT_FILES = [
   'AGENTS.md',
   'AGENTS.override.md',
   'index.js',
-  'opencode.json',
-  'opencode.mjs',
   'package.json'
 ];
 const DIRECTORY_ROOTS = ['agents', 'codex', 'skills'];

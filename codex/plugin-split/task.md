@@ -1,347 +1,215 @@
-# MCU Workbench 插件拆分实施任务
+# MCU Workbench Observability 插件实施任务清单
 
-> 本文件是基于已确认 Spec/Plan 生成的 Task 草案。外部 Skill inventory、宿主 capability probe 和上位机边界已拆为可执行前置 Task；前置 Task 通过前不得执行下游代码迁移。
+> 本文件依据 spec.md v0.3 和 plan.md 生成；observability 迁移已完成，本次追加旧聚合插件 OpenCode 活动宿主清理。
 
 ## 1. 元数据
 
 | 字段 | 内容 |
 |---|---|
-| request_id | `REQ-PLUGIN-SPLIT-20261123` |
-| 任务清单版本 | `v0.1` |
-| 状态 | `完成：T-010 Final Review 通过；外部 Skill 以显式 external catalog/inventory 边界登记，来源审计按 T-002 豁免延期` |
-| 项目路径与提交 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai @ host_ai` |
-| 输入 spec.md | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\spec.md` |
-| 输入 plan.md | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\plan.md` |
-| Spec 力度 | `full` |
-| 风险叠加门禁 | `[versioned]` |
-| 生成时间 | `2026-11-23T00:00:00+08:00` |
-| 下游执行 Skill | `workflow-task-execution` |
+| request_id | REQ-PLUGIN-SPLIT-20261123 |
+| 任务清单版本 | v0.3-opencode-host-removal |
+| 状态 | T-001～T-008 已完成 |
+| 项目路径与提交 | C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai @ host_ai |
+| 输入 spec.md | C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\spec.md |
+| 输入 plan.md | C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\plan.md |
+| Spec 力度 | full |
+| 风险叠加门禁 | versioned |
+| 生成时间 | 2026-11-24T00:00:00+08:00 |
+| 阶段级基线 | plan.md 第 8A 节 |
+| 下游执行 Skill | workflow-task-execution |
 
-可信等级：`confirmed`、`user-confirmed`、`inferred`、`unverified`。所有 `unverified` 且会改变范围、接口或验收的项均阻塞执行。
+可信等级：confirmed、user-confirmed、inferred、unverified。外部 Skill 来源/版本/许可证/依赖未知项保持 unverified，不得转写为完成审计。
 
 ## 2. 总体任务图
 
-```text
-T-001 基线与兼容边界
-   ├→ T-002 外部 Skill inventory
-   ├→ T-003 Contracts 与命名 schema
-   └→ T-004 宿主 capability / 上位机边界 probe
-          ↓
-       T-005 Plugin Runtime + Bridge Core
-          ↓
-       T-006 Spec capability resolver / Profile
-          ↓
-       T-007 Verification Pilot
-          ↓
-       T-008 DevOps CI/CD Adapter
-          ↓
-       T-009 Codex → Cursor → Claude 验证
-          ↓
-       T-010 兼容聚合入口与最终回归
-```
+T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008
 
-- 总体目标：以 MVP 方式建立可扩展插件契约、桥接层、Verification Pilot 和兼容交付链。
-- 非目标：不修改目标固件；不实现硬件第六插件；不新增 OpenCode 适配。T-010 已获用户确认可修改既有 Skill 的登记元数据、链接目标和文档路径测试，以关闭基线问题；不得修改业务语义或用排除规则掩盖缺失。
-- 关键串行链：`T-001 → T-003 → T-005 → T-006 → T-007 → T-008 → T-009 → T-010`。
-- 可并行组：`T-002`、`T-003`、`T-004` 在 T-001 后可并行；三项前置 Task 通过后才进入 T-005。
+- 总体目标：形成可由 Codex 和 Cursor MVP 宿主发现、加载、验证和回滚的 observability 独立插件。
+- 非目标：architecture、verification、devops、hardware、Claude、具体上位机协议、热加载/动态卸载。
+- 关键串行链：全部任务按顺序执行，因为迁移、catalog 和宿主 manifest 共享文件边界。
+- 可并行组：无；外部 Skill 迁移和 canonical 迁移都影响同一插件目录与链接校验。
 
 ## 3. 任务索引
 
-| 顺序 | task_id | 任务名称 | 前置任务 | 并行组 | 主 Agent | 主实现 Skill | 验证等级 | 状态 |
+| 顺序 | task_id | 任务名称 | 前置任务 | 主 Agent | 主实现 Skill | 辅助 Skill | 验证等级 | 状态 |
 |---:|---|---|---|---|---|---|---|---|
-| 1 | T-001 | 建立旧入口与新增范围基线 | none | none | embedded-lead | workflow-integration-plan | static | pass |
-| 2 | T-002 | 建立外部 Skill inventory 和唯一归属矩阵（前置） | T-001 | A | knowledge-engineer | workflow-document-context | static | waived |
-| 3 | T-003 | 建立统一 Contracts、命名和 schema（前置） | T-001 | A | system-architect | platform_common | host | pass |
-| 4 | T-004 | 探测宿主能力并冻结上位机 MVP 边界（前置） | T-001 | A | toolchain-engineer | tools-build | host | pass |
-| 5 | T-005 | 实现最小 Plugin Runtime 与 Bridge Core | T-003/T-004 | none | system-architect | platform_common | host | pass |
-| 6 | T-006 | 实现 Spec capability resolver 与 Profile | T-005 | none | embedded-lead | workflow-requirements-router | host | pass |
-| 7 | T-007 | 建立 Verification Pilot 和 MVP 测试报告 | T-005/T-006 | none | verification-engineer | tools-verification | host | pass |
-| 8 | T-008 | 接入 DevOps CI/CD 与报告 Artifact | T-007 | none | toolchain-engineer | tools-build | build | pass |
-| 9 | T-009 | 按 Codex → Cursor → Claude 做宿主验证 | T-007/T-008 | none | toolchain-engineer | tools-quality | host | pass |
-| 10 | T-010 | 保留旧聚合入口并执行全量回归 | T-002/T-009 | none | embedded-lead | workflow-final-review | host/build | pass |
+| 1 | T-001 | 建立 observability 插件骨架 | none | embedded-lead | workflow-integration-plan | tools-quality | static | pass |
+| 2 | T-002 | 迁移 canonical observability Skill | T-001 | embedded-lead | tools-observability | tools-quality | static | pass |
+| 3 | T-003 | 迁移并登记外部 observability Skill | T-001 | embedded-lead | tools-observability | tools-verification | static/host | pass |
+| 4 | T-004 | 接通 catalog、alias 与 Agent 路由 | T-002,T-003 | system-architect | workflow-integration-plan | tools-git | host | pass |
+| 5 | T-005 | 接通 Codex/Cursor manifest 与版本 | T-004 | toolchain-engineer | tools-build | tools-quality | host/build | pass |
+| 6 | T-006 | 执行插件回归与回滚验证 | T-005 | verification-engineer | tools-verification | tools-quality | static/host/build | pass-with-limitations |
+| 7 | T-007 | 最终 Verify 与质量门禁 | T-006 | embedded-lead | workflow-final-review | tools-quality | final | pass-with-limitations |
+| 8 | T-008 | 清理旧聚合插件 OpenCode 活动宿主集成 | T-007 | embedded-lead | workflow-task-execution | tools-quality | static | in-progress |
 
 ## 4. 任务详情
 
-### T-001：建立旧入口与新增范围基线
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-01,P-09` |
-| source_spec_ids | `E-01,E-02,E-07,G-01,G-03,G-07` |
-| owner_agent | `embedded-lead` |
-| support_agents | `system-architect` |
-| owner_skill | `workflow-integration-plan` |
-| supporting_skills | `tools-git` |
-| confidence | `confirmed` / `user-confirmed` |
-| status | `pass` |
-
-#### 目标
-
-形成现有目录、manifest、catalog、alias、Agent 和脚本的只读基线，明确旧入口保留范围。
-
-#### 验证
-
-`cwd=C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`; 执行 `npm run validate:plugin`、`npm run validate:links`、`npm run check:versions`；预期现有基线结果可记录，产物写入 `codex/plugin-split/artifacts/T-001/`。
-
-#### 回滚
-
-只读任务，无代码回滚；若发现工作区已有用户改动，保留并标记为基线差异。
-
-### T-002：建立外部 Skill inventory 和唯一归属矩阵
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-12,P-13` |
-| source_spec_ids | `E-13,F-14,F-15,V-13,V-14` |
-| owner_agent | `knowledge-engineer` |
-| support_agents | `system-architect` |
-| owner_skill | `workflow-document-context` |
-| supporting_skills | `workflow-review-gate` |
-| confidence | `unverified` |
-| status | `waived` |
-
-#### 用户豁免
-
-用户已明确批准跳过并忽略本轮 T-002 完成门槛。已有 inventory 与归属矩阵保留为未验证证据，不得表述为许可证/依赖审计通过；该任务不再阻塞 T-004 → T-005 链路，后续迁移审查仍需重新处理来源风险。
-
-#### 目标
-
-登记当前 `skills/` 中外部导入 Skill 的来源、版本、许可证、依赖、功能和唯一目标插件。
-
-#### 前置任务说明
-
-本 Task 正是用于关闭外部 Skill 来源、版本、许可证、依赖和唯一归属缺口；完成前，外部 Skill 不进入迁移。
-
-#### 验证
-
-预期生成 `codex/plugin-split/external-skill-inventory.yaml` 和归属矩阵；每个 Skill 恰好一个目标插件，未知项为 `blocked`。
-
-### T-003：建立统一 Contracts、命名和 schema
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-01` |
-| source_spec_ids | `G-03,G-04,G-05,G-10` |
-| owner_agent | `system-architect` |
-| support_agents | `knowledge-engineer` |
-| owner_skill | `platform_common` |
-| supporting_skills | `tools-quality` |
-| confidence | `user-confirmed` |
-| status | `pass` |
-
-#### 目标
-
-定义 Plugin Descriptor、Capability、Spec frontmatter、Skill、Agent、Rule、Hook、MCP、Evidence 和版本 schema。
-
-#### 范围
-
-只新增 `packages/contracts/` 和 schema 测试；不修改现有 Skill、Agent、Rule 或 Script。
-
-#### 验证
-
-主机测试校验合法/缺字段/重复 ID/版本不兼容样例；现有 `npm test -- --runInBand` 必须保持通过。
-
-### T-004：探测 Codex/Cursor/Claude 宿主能力
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-08` |
-| source_spec_ids | `E-12,G-05,V-04` |
-| owner_agent | `toolchain-engineer` |
-| support_agents | `verification-engineer` |
-| owner_skill | `tools-build` |
-| supporting_skills | `tools-quality` |
-| confidence | `unverified` |
-| status | `pass` |
-
-#### 目标
-
-记录本地 Codex 与 Cursor 对 manifest、Skill、Agent、Rule、Hook、Profile 和生命周期能力的实际支持边界；Claude 延期，并冻结上位机首期只做 descriptor/fake/contract test 的范围。
-
-#### 验证
-
-按 `Codex → Cursor` 执行本地 smoke observation；Claude 延期。分别记录命令、版本、退出码和发现结果。OpenCode 不进入目标验证。
-
-#### 本轮记录
-
-三份 manifest 已完成静态 JSON 检查，结果与宿主窗口观察记录在 `codex/plugin-split/artifacts/T-004/host-capability-matrix.md`；Codex/Cursor 本地 MVP 观察通过，Claude 和动态能力延期。
-
-本轮用户已将宿主范围收敛为本地 Codex + Cursor；Claude 延期。Codex 当前会话实际执行了本工作区的 Workflow Skill，Cursor Agents 观察到 `mcu-workbench-host_ai` 项目及已完成的 `Cursor plugin integration` 会话。MVP 验收边界冻结为静态组合、显式生命周期和重启加载；动态卸载/事件撤销为后续未验证项。
-
-### T-005：实现最小 Plugin Runtime 与 Bridge Core
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-02` |
-| source_spec_ids | `F-11,F-12,F-13,G-09,G-10,G-11,V-09,V-10` |
-| owner_agent | `system-architect` |
-| support_agents | `firmware-engineer` |
-| owner_skill | `platform_common` |
-| supporting_skills | `tools-verification` |
-| confidence | `inferred` |
-| status | `pass` |
-
-#### 目标
-
-实现最小 Registry、Dependency Resolver、Profile Loader、Lifecycle、Bridge Core 和证据转发。
-
-#### 约束
-
-有生命周期对象使用 `base + cfg + ctx + data + ops`；桥接层只做路由、转换、版本、事件、Artifact 和生命周期，不放业务逻辑。
-
-#### 验证
-
-注册、重复注册、依赖冲突、`dispose()` 幂等、失败回滚和四元组注入测试；宿主能力未确认前只允许显式生命周期/重启加载。
-
-### T-006：实现 Spec capability resolver 与 Profile
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-01,P-02` |
-| source_spec_ids | `G-03,G-04,V-02` |
-| owner_agent | `embedded-lead` |
-| support_agents | `system-architect` |
-| owner_skill | `workflow-requirements-router` |
-| supporting_skills | `workflow-review-gate` |
-| confidence | `user-confirmed` |
-| status | `pass` |
-
-#### 目标
-
-读取 `spec.md` YAML frontmatter 的 `requiredCapabilities` / `optionalCapabilities`，解析唯一 Capability 所属插件并执行 fail-closed 规则。
-
-#### 验证
-
-required 缺失、optional 缺失、版本不兼容、重复 owner、权限不足和合法 profile fixture 均有确定性结果。
-
-### T-007：建立 Verification Pilot 和 MVP 测试报告
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-05` |
-| source_spec_ids | `V-03,V-09,V-10,V-11` |
-| owner_agent | `verification-engineer` |
-| support_agents | `firmware-engineer` |
-| owner_skill | `tools-verification` |
-| supporting_skills | `tools-quality` |
-| confidence | `user-confirmed` |
-| status | `pass` |
-
-#### 目标
-
-以新 Verification 插件包装现有 `tools-quality` / `tools-verification`，不复制或重写现有 Skill，并生成最小单元测试报告。
-
-#### 验证
-
-Jest、负向测试、故障注入、报告生成、JSON/JUnit/Markdown 最小输出和证据字段检查；测试报告本地生成，CI 上传，Release 归档。
-
-### T-008：接入 DevOps CI/CD 与报告 Artifact
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-06` |
-| source_spec_ids | `V-03,G-04` |
-| owner_agent | `toolchain-engineer` |
-| support_agents | `verification-engineer` |
-| owner_skill | `tools-build` |
-| supporting_skills | `tools-release`、`tools-quality` |
-| confidence | `confirmed`（现有 CI 基线） |
-| status | `pass` |
-
-#### 目标
-
-让 DevOps 负责 GitHub Actions 编排、调用 Verification 标准命令、上传报告和阻断 CI；Verification 不直接依赖 GitHub。
-
-#### 验证
-
-本地 dry-run 加 GitHub Actions fixture；验证 Jest、插件校验、链接、版本、分层和 Workflow Gate 的 job 结果及 Artifact。
-
-### T-009：按 Codex → Cursor → Claude 做宿主验证
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-08` |
-| source_spec_ids | `V-04,G-05` |
-| owner_agent | `toolchain-engineer` |
-| support_agents | `verification-engineer` |
-| owner_skill | `tools-quality` |
-| supporting_skills | `tools-build` |
-| confidence | `unverified` |
-| status | `pass` |
-
-#### 本轮范围
-
-按用户批准的 MVP 范围验证本地 Codex 与 Cursor；Claude 延期。动态生命周期能力不作本轮通过条件，详见 `codex/plugin-split/artifacts/T-009/result.md`。
-
-#### 目标
-
-验证三宿主能发现并加载 MVP 插件表面，记录差异并回填 Host Capability Matrix。
-
-#### 验证
-
-每个宿主独立记录 manifest、Skill、Agent、Rule、Hook、Profile 和退出结果；一个宿主通过不能替代其他宿主。
-
-### T-010：保留旧聚合入口并执行全量回归
-
-| 字段 | 内容 |
-|---|---|
-| source_plan_ids | `P-09,P-10` |
-| source_spec_ids | `G-01,G-07,V-05,V-06,V-07` |
-| owner_agent | `embedded-lead` |
-| support_agents | `verification-engineer` |
-| owner_skill | `workflow-final-review` |
-| supporting_skills | `tools-quality`、`tools-verification` |
-| confidence | `user-confirmed` |
-| status | `pass` |
-
-#### 目标
-
-保留旧单插件聚合入口、旧 Skill alias 和迁移提示，并完成全量静态/主机/构建回归。
-
-#### 验证
-
-运行 `npm test -- --runInBand`、`npm run validate:plugin`、`npm run validate:links`、`npm run check:versions`、`npm run validate:layer` 和 Workflow Gate；结果必须可追溯到报告和 Artifact。
-
-#### 2026-11-23 环境补齐后的执行记录
-
-- 分配：`allocation_id=T-010-20261123T`; `primary_agent=embedded-lead`; `support_agents=verification-engineer`; `primary_implementation_skill=workflow-final-review`; `supporting_skills=tools-quality,tools-verification`。
-- 环境：Node.js `v26.13.1`、npm `11.20.0`、Jest `29.7.0`、clang-format `23.1.6`；Git 工作区已初始化并配置当前路径 `safe.directory`。
-- 修复：仅修正 `tests/plugin-runtime.test.js` 的测试 fixture 合并，使默认 `dispose` 不被局部 `ops.load` 覆盖；运行时逻辑未改动。
-- 主机测试：本轮新增 4 suites / 14 tests 全部通过；Verification Pilot 2/2 通过。
-- 全量回归：外部执行环境 `55 suites / 333 tests` 全部通过；`validate:plugin`、`validate:links`、`check:versions`、`validate:layer`、Workflow Gate 和 Verification Pilot 均通过。
-- 质量结论：`git diff --check` 退出码 0；Final Quality Gate `passed`。本轮无 C/C++ 变更，Cppcheck/MISRA 不适用；仓库尚无首个提交但 Git 状态可复现。
-- 证据：`codex/plugin-split/artifacts/T-010/result.md`、`codex/plugin-split/artifacts/T-010/report/`。
+### T-001：建立 observability 插件骨架
+
+目标：新增 observability 插件目录、descriptor、manifest 和版本声明，使其具备独立静态校验入口。
+
+- 来源：P-01；Spec F-06、F-07、G-01、G-04。
+- 主实现：embedded-lead / workflow-integration-plan；协作 system-architect；辅助 tools-quality。
+- 范围：plugins/mcu-workbench-observability/ 及其 manifest/descriptor。
+- 不包含：Skill 内容迁移、catalog 切换、旧入口删除。
+- 验证：仓库根目录运行 node --check 相关 JS、JSON 解析和插件结构校验。
+- 预期：descriptor 合法，版本符合 SemVer，旧入口未受影响。
+- 回滚：删除新增骨架文件，不触碰既有 skills 和未跟踪目录。
+- confidence/status：confirmed / pass。
+
+### T-002：迁移 canonical observability Skill
+
+目标：将 tools-debug 和 tools-observability 纳入 observability 插件物理目录，修复迁移后的内部链接和 descriptor。
+
+- 来源：P-02；Spec E-03、F-06、G-03。
+- 主实现：embedded-lead / tools-observability；协作 knowledge-engineer；辅助 tools-quality。
+- 前置：T-001。
+- 范围：canonical Skill 内容及相对引用。
+- 不包含：其他 tools Skill、固件源码、硬件工具实际连接。
+- 验证：仓库根目录运行 node scripts/validate-skill-links.js 和新目录静态扫描。
+- 预期：新目录引用可解析，Skill 语义未改变，旧路径有明确兼容映射。
+- 回滚：恢复迁移前路径映射，不删除原始内容。
+- confidence/status：confirmed / pass。
+
+### T-003：迁移并登记外部 observability Skill
+
+目标：筛选并迁移归属明确的外部调试、串口、RTT、逻辑分析和运行时观测 Skill，登记来源与未验证字段。
+
+- 来源：P-03；Spec E-04、F-14、F-15、V-13、V-14。
+- 候选：debug-gdb-openocd、debug-jlink、debug-platformio、logic-analyzer、rtos-debug、serial-monitor、serial-shell；visa-debug 等归属不明确条目保持 blocked，除非证据补齐。
+- 主实现：embedded-lead / tools-observability；协作 knowledge-engineer；辅助 tools-verification。
+- 前置：T-001。
+- 禁止：按目录名猜测归属、修改外部 Skill 语义、伪造来源/许可证/版本。
+- 验证：inventory 检查、链接检查和 descriptor/fake/contract test，不连接真实硬件。
+- 预期：每个迁移条目唯一指向 observability；未知元数据显式保留。
+- 回滚：移除新 adapter/迁移副本，恢复原 inventory 状态，不删除原始外部目录。
+- confidence/status：user-confirmed（允许迁移）；元数据逐条 confirmed/unverified / pass。
+
+### T-004：接通 catalog、alias 与 Agent 路由
+
+目标：使 observability Skill 在插件级 catalog 中可发现，同时保持旧 Skill ID 和聚合入口兼容。
+
+- 来源：P-04；Spec E-01、E-06、F-08、G-01、G-03。
+- 主实现：system-architect / workflow-integration-plan；协作 embedded-lead；辅助 tools-git。
+- 前置：T-002、T-003。
+- 范围：skills/catalog.js、skills/catalog-metadata.js、lib/agent-domains.js 及必要测试。
+- 不包含：修改 workflow/architecture/verification/devops 的核心语义。
+- 验证：主机测试覆盖 canonical ID、旧 alias、重复 ID、未知 external 条目和 Agent 派生结果。
+- 预期：新旧调用名解析稳定，无重复 canonical Skill，无孤儿 observability Skill。
+- 回滚：恢复 catalog projection 和 alias 映射，保留新目录以便重新审查。
+- confidence/status：confirmed / pass。
+
+### T-005：接通 Codex/Cursor manifest 与版本
+
+目标：为 Codex 和 Cursor 建立 observability 独立宿主表面，并保持旧聚合入口。
+
+- 来源：P-05；Spec E-02、E-05、F-07、G-04、V-04、V-07。
+- 主实现：toolchain-engineer / tools-build；协作 verification-engineer；辅助 tools-quality。
+- 前置：T-004。
+- 范围：Codex/Cursor manifest、版本同步脚本及对应测试。
+- 不包含：Claude/OpenCode manifest、真实宿主热加载/动态卸载。
+- 验证：仓库根目录运行 node scripts/sync-plugin-versions.js --check、manifest JSON 解析和 Codex/Cursor smoke。
+- 预期：两个宿主 manifest 静态合法、版本和能力声明一致；实际宿主加载仍待验证。
+- 回滚：恢复旧聚合 manifest，保留新插件文件和报告。
+- confidence/status：confirmed + user-confirmed / pass。
+
+### T-006：执行插件回归与回滚验证
+
+目标：验证 observability 迁移后的静态、主机、构建/脚本和回滚条件。
+
+- 来源：P-06；Spec V-01～V-07。
+- 主实现：verification-engineer / tools-verification；协作 toolchain-engineer；辅助 tools-quality。
+- 前置：T-005。
+- 验证：仓库根目录依次运行 npm test -- --runInBand、npm run validate:plugin、npm run validate:links、npm run check:versions；Codex/Cursor smoke 分别记录。
+- 输出：codex/plugin-split/artifacts/observability/ 下的命令记录、JUnit/JSON/Markdown 报告和产物 SHA-256。
+- 预期：无新增 catalog/link/version/manifest 回归；旧 alias 可恢复。
+- 失败处理：普通失败在当前 Task 内诊断修复并复测；若改变范围/接口/验收，停止并回到 Spec。
+- 回滚：按 T-005 和 T-004 的回滚路径恢复旧聚合入口。
+- confidence/status：confirmed / pass-with-limitations。
+
+### T-007：最终 Verify 与质量门禁
+
+目标：对照批准的 Spec 审查完整变更集，并完成最终格式、注释、质量和差异检查。
+
+- 来源：P-07；Spec V-08、G-01～G-05。
+- 主实现：embedded-lead / workflow-final-review；协作 verification-engineer；辅助 tools-quality。
+- 前置：T-006。
+- 验证：git diff --check、tools-quality final-gate、最终 Verify；记录绝对 cwd、退出码、范围和未验证项。
+- 预期：仅 observability 范围发生行为变化；无新增格式/链接/目录/版本问题；延期项不被误报为通过。
+- 回滚：发现范围外差异时停止并回退本次受限整改，将问题交回对应 Task。
+- confidence/status：confirmed / blocked。
+
+### T-008：清理旧聚合插件 OpenCode 活动宿主集成
+
+目标：按 Spec v0.3 和 Plan 第 16 节，移除仍参与运行、安装或发布的 OpenCode 宿主代码，保持其他宿主和共享能力不变。
+
+- 来源：用户 2026-11-24 明确要求；Spec v0.3 清理补充范围；Plan P-08。
+- 主实现：embedded-lead / workflow-task-execution；辅助质量复核 tools-quality。
+- 前置：T-007 已 pass-with-limitations；Spec/Plan 补充范围已 user-confirmed / approved。
+- 范围：`package.json`、`package-lock.json`、`opencode.json`、`opencode.mjs`、`scripts/build-opencode-commands.js`、`lib/opencode-quality-hook.js`、`.opencode/commands/`、`tests/opencode-commands.test.js`、`tests/opencode-quality-hook.test.js`、`scripts/check-codex-plugin-refresh.js` 的 OpenCode 路径；活动文档当前支持说明。
+- 保留：`.mcu-workbench/workflows/` 与 `codex/plugin-split/` 历史记录；Claude/Codex/Cursor 宿主适配；共享 catalog、Agent 路由和 Skill 内容。
+- 验证：活动源文件、包元数据、脚本和配置不再引用 OpenCode；package/package-lock 一致；Node/JSON 语法检查与 `git diff --check`。不运行 Jest，除非用户另行要求。
+- 回滚：只恢复 T-008 中 OpenCode 专属文件和包元数据，不回退其他宿主改动。
+- 结果：活动适配源码、依赖、导出、命令生成器、Hook、生成命令和专属测试已移除；活动文档及刷新指纹列表已更新。历史工作流/拆分审计记录保留。
+- 验证记录：cwd `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`；`npm install --package-lock-only --ignore-scripts --offline`（npm 11.20.0，退出码 0）；package JSON 解析（0）；`node --check scripts/check-codex-plugin-refresh.js`（0）；`node --check lib/agent-domains.js`（0）；活动引用扫描无匹配（rg 退出码 1，预期）；lockfile OpenCode 包扫描无匹配（rg 退出码 1，预期）；`git diff --check`（0）。未运行 Jest。
+- confidence/status：user-confirmed / completed-with-limitations（静态验证完成；未运行 Jest；无真实 OpenCode 宿主验收）。
 
 ## 5. 任务级验收汇总
 
 | task_id | 验收项 | 证据等级 | 预期结果 | 状态 |
 |---|---|---|---|---|
-| T-001 | 基线可复现 | static/host | 现有校验结果和差异已记录 | pass |
-| T-002 | 外部 Skill 清单 | static | 用户批准跳过本轮执行；保留未验证 inventory，不作为当前迁移阻塞 | waived |
-| T-003 | Contracts/schema | host | 合法与非法 fixture 结果确定 | pass |
-| T-004 | Host capability / 上位机边界 | host | Codex/Cursor/Claude 支持矩阵和首期 host 范围完成 | pass |
-| T-005 | Runtime/Bridge | host | 注册、依赖、撤销、回滚通过 | pass |
-| T-006 | Spec resolver | host | required/optional 行为符合约束 | pass |
-| T-007 | Verification | host | 测试和最小报告可复现 | pass |
-| T-008 | DevOps CI | build | CI job 和 Artifact 可追溯 | pass |
-| T-009 | Host smoke | host | 三宿主结果独立记录 | pass |
-| T-010 | Compatibility regression | static/host/build | 旧入口和全量回归通过 | pass |
+| T-001 | 插件骨架 | static | descriptor、manifest、版本合法 | pass |
+| T-002 | canonical Skill 迁移 | static | 新目录链接有效、语义不变 | pass |
+| T-003 | 外部 Skill 迁移 | static/host | 归属唯一，未知元数据显式保留 | pass |
+| T-004 | catalog/alias 路由 | host | 新旧 ID 和 Agent 路由稳定 | pass |
+| T-005 | Codex/Cursor 表面 | host/build | 两宿主 manifest 静态合法、版本一致；Codex enabled，Cursor 本地插件加载日志确认 | pass |
+| T-006 | 回归与回滚 | static/host/build | 静态检查和 Jest 57 suites / 338 tests 通过；实际宿主未验证 | pass-with-limitations |
+| T-007 | 最终 Verify | final | 本轮适用范围的 Spec 条目均有证据；来源审计/Claude/OpenCode/热卸载等延期项单列 | pass-with-limitations |
+| T-008 | OpenCode 活动宿主清理 | static | 活动集成/依赖/脚本/Hook/命令产物和专属测试移除；历史审计记录保留；package lock 一致 | pass-with-limitations |
 
 ## 6. 阻塞与未验证项
 
-| ID | 内容 | 影响任务 | 补证动作 | 状态 |
+| ID | 类型 | 内容 | 影响任务 | 补证动作 | 状态 |
+|---|---|---|---|---|---|
+| B-01 | 未验证 | 部分外部 Skill 来源、版本、许可证、依赖未知 | T-003、T-006 | 保留 inventory 字段并逐条记录 | open |
+| B-02 | 未验证 | Claude 宿主表面 | T-005、T-006 | Claude 本轮延期，不作为 MVP 通过条件 | deferred |
+| B-03 | 未验证 | 热加载、动态卸载、事件撤销 | T-005、T-006 | 本轮仅验证静态组合、显式生命周期、重启加载 | deferred |
+| B-04 | 已解决 | npm test 入口已改为仓库内 node_modules/jest-cli/bin/jest.js；全量 Jest 通过 | T-006、T-007 | 已修复 package.json 并完成全量 Jest | closed |
+| B-05 | 已解决 | 新 observability manifest 已在 Codex 安装为 enabled，并由 Cursor 本地插件日志确认加载 | T-005、T-006、T-007 | Codex CLI 插件清单 + Cursor Cursor Plugins.log | closed |
+
+## 8. 执行记录
+
+| task_id | allocation_id | 关键检查 | 结果 | 证据 |
 |---|---|---|---|---|
-| B-01 | 外部 Skill 来源、版本、许可证、依赖和唯一归属 | T-002 | 生成 inventory 并逐项确认 | task-required |
-| B-02 | Codex/Cursor/Claude Runtime/MCP/Hook 生命周期能力 | T-004 | 执行 capability probe | task-required |
-| B-03 | 上位机协议和工具范围 | T-004 | 冻结为 descriptor/fake/contract test 的 MVP 范围 | task-required |
-| B-04 | 当前仓库未具备新的 Plugin Runtime/Bridge 代码 | T-005 | 在 T-003/T-004 通过后实现 MVP foundation | downstream-task |
+| T-001 | T-001-20261124-observability | node --check；descriptor 生命周期断言 | pass | plugins/mcu-workbench-observability/ |
+| T-002 | T-002-20261124-observability | node scripts/validate-skill-links.js | pass；740 Markdown files | 绝对 cwd 为仓库根 |
+| T-003 | T-003-20261124-observability | inventory/ownership 检查；外部 registry 校验 | pass；元数据未知项保留 | plugins/mcu-workbench-observability/external-skills.json |
+| T-004 | T-004-20261124-observability | catalog projection；direct host assertions | pass | tests/observability-plugin.test.js |
+| T-005 | T-005-20261124-observability | validator/manifest/version 检查；Codex CLI install；Cursor User Local Plugin load | pass | Codex plugin ID 与 Cursor 日志详见 artifacts/observability/result.md |
+| T-006 | T-006-20261124-observability | validate-plugin、validate-links、check:versions、direct assertions、targeted/full Jest | pass-with-limitations | full Jest JSON: codex/plugin-split/artifacts/observability/jest-full.json |
+| T-007 | T-007-20261124-observability | Spec 追踪；全量测试、静态校验、构建、git diff --check；质量审查 | pass-with-limitations | final-gate 摘要和未验证项见 artifacts/observability/result.md |
+| T-008 | T-008-20261124-opencode-cleanup | 活动宿主清理；包/脚本/文件引用与 lockfile 一致性复核 | completed | 静态/JSON/语法/diff 检查通过；未运行 Jest |
+
+### 环境变量与新增验证
+
+- MCU_WORKBENCH_NPM_BIN（用户级）：C:\Program Files\nodejs\npm.cmd
+- MCU_WORKBENCH_JEST_BIN（用户级）：C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\node_modules\jest-cli\bin\jest.js
+- npm 版本：11.20.0；Jest 版本：29.7.0
+- observability targeted Jest：2 suites / 5 tests，pass
+- npm test -- --runInBand --json --outputFile=codex/plugin-split/artifacts/observability/jest-full.json：pass；57 suites / 57 passed，338 tests / 338 passed
+- npm 11.20.0；Jest 29.7.0；命令 cwd 为仓库根目录
+- 全量报告已检查 success=true；clang-format EPERM 未复现
+- Codex CLI：`mcu-workbench-observability@mcu-workbench-observability-local` 为 installed, enabled，版本 1.0.0
+- Cursor：`Cursor Plugins.log` 记录 `loadUserLocalPlugin mcu-workbench-observability loaded`（2026-11-24 10:19）；作为宿主加载证据
+- Cursor 原有聚合插件保持安装；新插件单独位于 `~/.cursor/plugins/local/mcu-workbench-observability`
+- 仍 unverified：7 个外部 Skill 的来源/版本/许可证/依赖；Claude/OpenCode、动态卸载和实际硬件观测均在本轮延期/非目标内
 
 ## 7. 下游交接
 
-- 需求/约束输入：`C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\spec.md`
-- 实施路线输入：`C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\plan.md`
-- 任务清单：`C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\task.md`
-- 执行规则：先执行 T-001；随后 T-002/T-003/T-004 可并行；三项前置 Task 通过后，按 T-005 → T-010 串行执行。
-- 禁止扩大：不得修改现有 Skills、Rules、Agents、Scripts；不得删除 OpenCode 文件；不得提前实现 hardware 第六插件。
-- 代码完成后：交接 `workflow-final-review`。
-- 新事实回传：改变范围/接口/验收时回到 `workflow-review-gate`；只改变实现细节时回到 `workflow-integration-plan`。
+- 需求/约束输入：C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex/plugin-split/spec.md
+- 实施路线输入：C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex/plugin-split/plan.md
+- 任务清单：本文件
+- 执行规则：workflow-task-execution 采用 auto_until_final_check，按 T-001 → T-007 串行执行。
+- 单项主实现：每个 Task 只有一个 owner_skill；辅助 Skill 不并行修改同一文件。
+- 代码完成后：交接 workflow-final-review。
+- 新事实回传：改变 Spec 范围/接口/验收时回到 workflow-review-gate；仅实现细节问题回到 workflow-integration-plan。

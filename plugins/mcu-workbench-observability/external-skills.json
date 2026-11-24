@@ -1,0 +1,47 @@
+{
+  "plugin": "mcu-workbench-observability",
+  "entries": [
+    {
+      "id": "debug-gdb-openocd",
+      "sourcePath": "skills/debug-gdb-openocd",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "debug-jlink",
+      "sourcePath": "skills/debug-jlink",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "debug-platformio",
+      "sourcePath": "skills/debug-platformio",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "logic-analyzer",
+      "sourcePath": "skills/logic-analyzer",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "rtos-debug",
+      "sourcePath": "skills/rtos-debug",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "serial-monitor",
+      "sourcePath": "skills/serial-monitor",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "serial-shell",
+      "sourcePath": "skills/serial-shell",
+      "status": "migrated",
+      "provenance": "unverified"
+    }
+  ]
+}

@@ -5,7 +5,7 @@
 
 ## 仓库是什么
 
-**mcu-workbench** — 面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 包与插件，作为 Claude Code / OpenCode / Codex 三宿主适配源。
+**mcu-workbench** — 面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 包与插件，提供 Claude Code、Codex 和 Cursor 宿主适配。
 
 - GitHub：`https://github.com/shuai-yemao/mcu-workbench`
 - 当前分支：`host_ai`
@@ -47,7 +47,7 @@ Platform 只有头文件（零 .c）；机制在 Impl/Handler，策略在 Servic
 - 技能目录唯一事实源：`skills/catalog-metadata.js` + `skills/catalog.js`（id = 调用名 = 目录名）
 - 查询视图：`skills/registry.js`（纯兼容 facade）；磁盘加载：`skills/loader.js`
 - 旧调用名经 `MIGRATION_MAP` / `resolveSkillId()` 自动解析
-- Agent 路由：`lib/agent-domains.js`（AGENT_ROSTER + DOMAINS）；暴露：`opencode.mjs`
+- Agent 路由：`lib/agent-domains.js`（AGENT_ROSTER + DOMAINS），由各宿主入口按需使用
 - Node CLI 已移除(2026-08-08)，交互统一走 Skill + lib Programmatic API；确定性入口：`scripts/claude-layer-api.js`、`lib/`
 - `claude-layer` 扫描/规则已对齐五层契约（`lib/claude-layer.js` LAYERS 与 `workflow-claude-layering` SKILL.md）；旧 6 层 layout 键读取时自动归一化
 

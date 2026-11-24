@@ -97,7 +97,7 @@ Agent 遵循分域写入和显式交接协议；Lead 维护最终汇总，写入
 
 ### 工作流实时 HTML 看板
 
-插件提供宿主无关的本地文件监听器，用于生成每个项目唯一的自包含 `workflow-dashboard.html`。它只读项目架构/启动资料、`.mcu-workbench/workflows/*`、Git 观测信息和当前 request 文档，不修改源文件、Git 状态或 workflow 状态，也不依赖 HTTP 服务、CDN 或 Claude/OpenCode/Codex 专有 Hook。
+插件提供宿主无关的本地文件监听器，用于生成每个项目唯一的自包含 `workflow-dashboard.html`。它只读项目架构/启动资料、`.mcu-workbench/workflows/*`、Git 观测信息和当前 request 文档，不修改源文件、Git 状态或 workflow 状态，也不依赖 HTTP 服务、CDN 或宿主专有 Hook。
 
 一次性生成：
 
@@ -157,31 +157,6 @@ node scripts/document-context-api.js archive --root <dir> --request-id REQ-001
 ```powershell
 npm run validate:layer
 npm run validate:flash-algorithm
-```
-
-## OpenCode 适配
-
-仓库提供 OpenCode 插件入口 `opencode.mjs`，通过 `@opencode-ai/plugin` 暴露 30 个 canonical Skill 工具和首阶段需求约束路由工具。
-
-### 本地安装
-
-```powershell
-opencode plugin C:\Users\zhang\.claude\plugins\marketplaces\mcu-workbench
-```
-
-安装后 `C:\Users\zhang\.opencode\opencode.json` 会新增 plugin 路径。重启 OpenCode 后，可用以下工具：
-
-- `mcu_workbench_requirements_router`：分配 Agent、补齐需求约束并生成下游 Skill 的 RCP（`mcu_workbench_route` 保留兼容）
-- `mcu_workbench_<skill_id>`：读取对应 SKILL.md 的内容摘要
-
-### 示例
-
-```text
-调用 mcu_workbench_requirements_router，请求 "STM32 HAL GPIO 初始化"
-```
-
-```text
-调用 mcu_workbench_core_mcu，question "Cortex-M4 中断优先级分组"
 ```
 
 ## Codex 适配
