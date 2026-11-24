@@ -6,7 +6,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 const ids = [
   'mcu-workbench-architecture', 'mcu-workbench-devops',
-  'mcu-workbench-observability', 'mcu-workbench-verification'
+  'mcu-workbench-observability', 'mcu-workbench-verification', 'mcu-workbench-workflow'
 ];
 
 describe('MCU Workbench host marketplace registration', () => {

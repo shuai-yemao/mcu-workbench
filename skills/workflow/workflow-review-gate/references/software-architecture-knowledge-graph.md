@@ -58,4 +58,4 @@ flowchart TD
 9. 静态门禁覆盖 Service/App 依赖、Platform 公共头纯度、profile 识别、Impl 同名符号/
    Ops 边界、Handle/Driver 具体依赖和 Vendor 路由；通过不等于构建、运行或实机成功。
 
-机器可读版本见 [`software-architecture-knowledge-graph.json`](software-architecture-knowledge-graph.json)。
+机器可读版本见 [`software-architecture-knowledge-graph.json`](./software-architecture-knowledge-graph.json)。

@@ -20,7 +20,7 @@ description: 放行后的集成规划与分发：读取按风险放行的 spec.m
 3. 画出调用链，确认上层只依赖下层公开契约，识别 APP、Middleware、OS、BSP、Core、Driver 归属。
 4. 按力度生成方案：`lightweight` 只生成一个紧凑方案，说明局部范围、文件、验收、风险和回滚；`full` 基于同一目标和同一 `spec.md` 约束生成两个真实可行、取舍明确的实施方案，然后暂停等待用户选择。此处是 H-03 用户审查闸门。任何模式都不能超出 Spec。
 5. `lightweight` 记录默认方案依据后进入 H-03 计划审查；`full` 在用户选择后记录选择理由和放弃方案。随后对方案执行分层、接口、文件范围、资源并发、生成边界和验收路径审查；发现事实缺口或越出 `spec.md` 时阻塞并回传对应 Skill。
-6. 审查通过后，按 [`plan-template.md`](references/plan-template.md) 生成 `<project_root>/00_Docs/04_需求文档/plan.md`，将 `spec.md` 作为需求约束来源，将 `plan.md` 作为实施顺序、阶段级 Agent/Skill 基线和交接依据。
+6. 审查通过后，按 [`plan-template.md`](./references/plan-template.md) 生成 `<project_root>/00_Docs/04_需求文档/plan.md`，将 `spec.md` 作为需求约束来源，将 `plan.md` 作为实施顺序、阶段级 Agent/Skill 基线和交接依据。
 7. 将 `spec.md` 和已审查通过的 `plan.md` 交给 `workflow-task-breakdown` 自动生成有序、可独立验证的 `task.md`；不再等待用户审查 `task.md`。
 8. 将 `task.md` 交给 `workflow-task-execution`，采用 `auto_until_final_check`：每项任务先补充必要的失败测试/检查，再实现当前 Task、测试当前 Task、完成 AI 审查，通过后自动进入下一个依赖任务；所有 Task 完成后统一执行最终 Verify。只有硬阻塞或需求变化才暂停。
 9. 全部任务完成且代码产物就绪后，先对照 `spec.md` 执行最终 Verify，再交给 `workflow-final-review`；Verify 偏差回到 Spec，Verify 通过后才执行最终格式、注释、质量和差异检查。通知不等于提交、推送、烧录或发布授权。
@@ -157,7 +157,7 @@ LVGL 采用单一 GUI 契约时，计划必须明确 `03_Platform/platform_middl
 
 ## plan.md 与交付计划最低产物
 
-`spec.md` 定义需求、工程约束、施工边界和验收要求；`plan.md` 记录用户选择并通过审查的实施路线及阶段级 Agent/Skill 基线；`task.md` 记录由 `plan.md` 拆出的有序、单一责任、可独立验证任务及任务级 Agent/Skill 分配。三者不得互相新增范围。`plan.md` 的固定路径为 `<project_root>/00_Docs/04_需求文档/plan.md`，模板见 [`plan-template.md`](references/plan-template.md)；`task.md` 由 [`workflow-task-breakdown`](../workflow-task-breakdown/SKILL.md) 生成，执行控制由 [`workflow-task-execution`](../workflow-task-execution/SKILL.md) 负责。
+`spec.md` 定义需求、工程约束、施工边界和验收要求；`plan.md` 记录用户选择并通过审查的实施路线及阶段级 Agent/Skill 基线；`task.md` 记录由 `plan.md` 拆出的有序、单一责任、可独立验证任务及任务级 Agent/Skill 分配。三者不得互相新增范围。`plan.md` 的固定路径为 `<project_root>/00_Docs/04_需求文档/plan.md`，模板见 [`plan-template.md`](./references/plan-template.md)；`task.md` 由 [`workflow-task-breakdown`](../workflow-task-breakdown/SKILL.md) 生成，执行控制由 [`workflow-task-execution`](../workflow-task-execution/SKILL.md) 负责。
 
 每个阶段的交接必须以 `spec.md` 为约束边界、以 `plan.md` 为实施路线、以 `task.md` 为执行顺序，并能回溯到 Review Gate 的四张清单和 Review-Package；阶段计划仍需明确现状表、边界表、文件修改表和验收表的对应关系，验收内容区分静态、主机、构建、目标运行和实物证据。执行交给下游 skill 后，由运行记录关联命令、绝对工作目录、产物哈希、重试和阻塞项；本 skill 只编排阶段与分发，不代替下游实现。
 
@@ -187,6 +187,6 @@ LVGL 采用单一 GUI 契约时，计划必须明确 `03_Platform/platform_middl
 
 ## 参考
 
-- [集成、移植与 AI 协作能力](references/capability-index.md)
+- [集成、移植与 AI 协作能力](./references/capability-index.md)
 - [分层证据图与软件层契约](../workflow-review-gate/references/software-architecture-knowledge-graph.md)
 - [软件层契约](../workflow-review-gate/references/software-layer-contract.md)

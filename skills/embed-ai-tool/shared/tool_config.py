@@ -122,11 +122,11 @@ def list_tools(
 
 def find_sdk_bundled_openocd_scripts() -> str | None:
     """探测嵌入式 SDK 自带的 OpenOCD scripts 目录。
-    
+
     部分 SDK（如 Raspberry Pi Pico SDK、PlatformIO 等）会安装
     自己的 OpenOCD，包含芯片特定目标配置文件（系统 OpenOCD 可能没有）。
     返回 scripts 目录路径，找不到返回 None。
-    
+
     跨平台：Windows 用 openocd.exe，macOS/Linux 用 bin/openocd。
     """
     import sys as _sys

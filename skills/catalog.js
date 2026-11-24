@@ -299,6 +299,12 @@ const PLUGIN_SKILL_IDS = {
     'vendor_letter_shell', 'vendor_algorithm', 'chip-driver-manual', 'chip-resource-finder',
     'embedded-architecture-planner', 'embedded-coding-standard', 'embedded-minimal-project-builder',
     'embedded-prd-to-logic', 'prd-to-hardware-solution', 'schematic-pinmap-analyzer'
+  ],
+  'mcu-workbench-workflow': [
+    'workflow-requirements-router', 'workflow-claude-layering', 'workflow-document-context',
+    'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-integration-plan',
+    'workflow-task-breakdown', 'workflow-task-execution', 'workflow-final-review',
+    'embed-ai-tool', 'embedded-change-report', 'embedded-project-intake', 'embedded-team-sync', 'mrd-to-prd'
   ]
 };
 

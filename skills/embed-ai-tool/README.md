@@ -288,7 +288,7 @@ python3 scripts/em_config.py path
 - **Command Outcome Schema** — 成功、失败或阻塞结果的统一格式
 - **Failure Taxonomy** — 标准失败分类及推荐后续动作
 
-详见 [shared/contracts.md](shared/contracts.md) 和 [shared/failure-taxonomy.md](shared/failure-taxonomy.md)。
+详见 [shared/contracts.md](./shared/contracts.md) 和 [shared/failure-taxonomy.md](./shared/failure-taxonomy.md)。
 
 ## 校验
 
@@ -302,7 +302,7 @@ python3 scripts/validate_repo.py
 
 ## 贡献
 
-参见 [CONTRIBUTING.md](CONTRIBUTING.md)。新 skill 请基于 [templates/skill-template/](templates/skill-template/) 模板创建。
+参见 [CONTRIBUTING.md](./CONTRIBUTING.md)。新 skill 请基于 [templates/skill-template/](external:templates/skill-template/) 模板创建。
 
 ## 后续扩展
 
@@ -311,5 +311,3 @@ python3 scripts/validate_repo.py
 
 感谢 LinuxDo 社区的支持！
 [![LinuxDo](https://img.shields.io/badge/LinuxDo-社区支持-blue)](https://linux.do/)
-
-

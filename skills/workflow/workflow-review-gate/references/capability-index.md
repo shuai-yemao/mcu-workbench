@@ -4,4 +4,4 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| 嵌入式项目集成审计与指导 — 五层模型 + 8步路线图 | [完整流程与资源](capabilities/project-integration/GUIDE.md) |
+| 嵌入式项目集成审计与指导 — 五层模型 + 8步路线图 | [完整流程与资源](./capabilities/project-integration/GUIDE.md) |

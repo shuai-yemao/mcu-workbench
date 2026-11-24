@@ -1,418 +1,775 @@
-# MCU Workbench Architecture 插件拆分任务
+# MCU Workbench Workflow 插件拆分任务清单
 
-> 本 Task 对应用户批准的 Spec v0.8 和 Plan `v0.1-architecture-plugin-owned-sources`。任务按依赖串行执行；每项先建立能证明现状缺失的测试/检查，再实现、复核并记录证据。
+> 本文件由 `workflow-task-breakdown` 根据已批准 Spec v0.9 与 Plan v0.1 生成。只定义可执行任务，不扩大范围。上游计划已获用户 2026-11-24“同意执行”批准。
 
 ## 1. 元数据
 
 | 字段 | 内容 |
 |---|---|
 | request_id | `REQ-PLUGIN-SPLIT-20261123` |
-| 任务清单版本 | `v0.1-architecture-plugin-owned-sources` |
-| 状态 | `完成（I/O 中途故障注入仍未验证）` |
-| 项目路径与提交 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai @ host_ai/6cd4fadc93ddaff5b03efbf7b32fa6a72b97883b` |
+| 任务清单版本 | `v0.1-workflow-fifth-plugin` |
+| 状态 | `完成` |
+| 项目路径与提交 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai @ host_ai/43eb4e731568b606451083b0e479a29a5722fb98`（生成时 HEAD；工作树含预存改动） |
 | 输入 spec.md | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\spec.md` |
-| 输入 plan.md | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\plan.md` |
+| 输入 plan.md | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\plan.md`（approved） |
 | Spec 力度 | `full` |
 | 风险叠加门禁 | `versioned` |
-| 生成时间 | `2026-11-24T16:14:04+08:00` |
-| 阶段级 Agent/Skill 基线 | `plan.md` 第 8A 节 |
+| 生成时间 | `2026-11-24` |
+| 阶段级 Agent/Skill 基线 | Plan §7：`embedded-lead` 协调；P-01 tools-git；P-02/P-04 tools-build；P-03/P-05 tools-git；P-06/P-07 tools-verification；各阶段协作见 Plan |
 | 下游执行 Skill | `workflow-task-execution` |
 
-可信等级：`confirmed`、`user-confirmed`、`inferred`、`unverified`。开始每个任务前重新检查 git status；`tools-quality`、`tools-verification`、academics、verification 插件及其他非本 Task 目录中的预存未提交改动均为保留对象。
+可信等级：`confirmed`、`user-confirmed`、`inferred`、`unverified`。本 Task 中关键的 Skill 清单、唯一源模式、排除边界和 Plan 批准均为 confirmed/user-confirmed；跨插件闭包细节按 T-001 实测。在解决前标为阻塞，不得猜测。
 
 ## 2. 总体任务图
 
 ```text
-T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008
+T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008 → T-009
 ```
 
-- 总体目标：建立独立 `mcu-workbench-architecture` 插件，以插件目录持有唯一 canonical source，并保留受保护的根聚合兼容投影。
-- 非目标：迁移 workflow/verification/devops/observability/hardware/unknown 内容；修改迁移 Skills 语义或固件源码；执行目标板构建、烧录或实物测试。
-- 关键串行链：T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008。
-- 可并行任务组：none。source、shared-reference closure、projection marker、catalog 和根入口相互依赖，须串行防止覆盖。
-- 唯一主实现 Skill 按 Task 指定；辅助 Skill/Agent 只能给审查或验证意见，不并行改同一代码。
+- 总体目标：建立独立的 `mcu-workbench-workflow` 插件，以插件目录为 14 项 Skill 的唯一源，安全生成兼容投影并分别验证 Codex/Cursor。
+- 非目标：8 项改归其他插件 Skill 的实体迁移、4 项 unknown、旧 ID `workflow` 的聚合 Skill/usage/runner、Agents、根 Rules、Claude/OpenCode、固件构建/烧录/硬件操作。
+- 关键串行链：`T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008 → T-009`。
+- 可并行组：无。每项任务共享插件目录、Skill registry 或投影边界；串行避免并发写入同一所有权资源。T-007 与 T-008 技术上可分别观察，但记录基线顺序执行以保持环境快照可追溯。
 
 ## 3. 任务索引
 
-| 顺序 | task_id | 任务名称 | 前置任务 | 主 Agent | 主实现 Skill | 辅助 Skill | 验证等级 | 初始状态 |
-|---:|---|---|---|---|---|---|---|---|
-| 1 | T-001 | 固化工作区基线并添加缺失行为测试 | none | embedded-lead | tools-verification | tools-quality | static/host | pass |
-| 2 | T-002 | 创建独立插件契约与包级 validator | T-001 | embedded-lead | tools-build | tools-verification | static/host | pass |
-| 3 | T-003 | 将 31 项 canonical 与 8 项外部 Skill 纳入插件源 | T-002 | embedded-lead | tools-git | tools-quality | static/host | pass |
-| 4 | T-004 | 生成 shared reference closure 并修复包内链接 | T-003 | embedded-lead | tools-build | tools-verification | static/host | pass |
-| 5 | T-005 | 实现安全的旧根目录投影、adoption 与 rollback | T-004 | embedded-lead | tools-build | tools-verification | host | pass |
-| 6 | T-006 | 注册 catalog/aliases 并保留聚合入口 | T-005 | embedded-lead | tools-git | workflow-review-gate | host | pass |
-| 7 | T-007 | 完成插件回归、负例和 Codex/Cursor 观察 | T-006 | embedded-lead | tools-verification | tools-quality | static/host | pass |
-| 8 | T-008 | 对照 Spec 执行统一最终 Verify | T-001..T-007 | embedded-lead | tools-verification | tools-quality | static/host | pass（保留 I/O 故障注入未验证项） |
+| 顺序 | task_id | 任务名称 | 前置任务 | 并行组 | 主 Agent | 主实现 Skill | 辅助 Skill | 验证等级 | 状态 |
+|---:|---|---|---|---|---|---|---|---|---|
+| 1 | T-001 | 冻结 Skill 源、投影与链接闭包基线 | none | none | `embedded-lead` | `tools-git` | `workflow-review-gate` | static | pass |
+| 2 | T-002 | 建立 Workflow 插件包骨架与 validator | T-001 | none | `embedded-lead` | `tools-build` | `tools-verification` | static/host | pass |
+| 3 | T-003 | 迁移 9 canonical 与 5 external Skill 源 | T-002 | none | `embedded-lead` | `tools-git` | `workflow-review-gate` | static | pass |
+| 4 | T-004 | 实现链接闭包与受保护根投影 | T-003 | none | `embedded-lead` | `tools-build` | `tools-verification` | static/host | pass |
+| 5 | T-005 | 接入 catalog、aliases 与聚合兼容 | T-004 | none | `embedded-lead` | `tools-git` | `workflow-review-gate` | host | pass |
+| 6 | T-006 | 完成包校验与同步失败路径测试 | T-005 | none | `embedded-lead` | `tools-verification` | `tools-quality` | host | pass |
+| 7 | T-007 | 验证 Codex 独立发现与代表性调用 | T-006 | none | `embedded-lead` | `tools-verification` | `tools-quality` | host | pass (`user-confirmed`) |
+| 8 | T-008 | 验证 Cursor 独立发现与代表性调用 | T-007 | none | `embedded-lead` | `tools-verification` | `tools-quality` | host | pass (`user-confirmed`) |
+| 9 | T-009 | 统一 Verify 与 Final Review | T-001..T-008 | none | `embedded-lead` | `tools-verification` | `workflow-final-review`、`tools-quality` | static/host | complete |
 
 ## 4. 任务详情
 
-### T-001：固化工作区基线并添加缺失行为测试
+### T-001：冻结 Skill 源、投影与链接闭包基线
 
 | 字段 | 内容 |
 |---|---|
-| order / parallel_group | 1 / none |
-| source_plan_ids | P-01 |
-| source_spec_ids | ARC-E01..E06, ARC-T01..T10 |
-| owner_agent / support_agents | `embedded-lead` / `system-architect`, `verification-engineer` |
-| owner_skill / supporting_skills | `tools-verification` / `tools-quality` |
-| allocation_evidence | Plan E-01..E-06；当前不存在 architecture 插件目录且可用 package fixtures 已有仓库模式 |
-| confidence / status | confirmed / pass |
-
-#### 执行记录
-
-- allocation_id：`T-001-20261124-ARCH-BASELINE`；primary_agent `embedded-lead`；support_agents `system-architect, verification-engineer`；owner_skill `tools-verification`；supporting_skills `tools-quality`。
-- 测试先行：新增三份架构插件缺失断言；`node node_modules/jest-cli/bin/jest.js --runInBand --forceExit tests/architecture-plugin.test.js tests/architecture-skills.test.js tests/architecture-projection.test.js`，绝对 cwd 为仓库根，exit 1（预期）；3 suites、4 failed/1 passed，失败均为 package/manifest、39-ID catalog 与 sync script 缺失，测试可正常加载。
-- 基线：分支 `host_ai`、HEAD `6cd4fadc93ddaff5b03efbf7b32fa6a72b97883b`；39 Skills、249 files 的 source/hash 清单见 `codex/plugin-split/artifacts/architecture/T-001/source-baseline.json`。
-- 预存源差异：tools-quality 与 tools-verification 根文件与 verification 插件源 hash 不一致。未改动；共享快照任务以根工作树当前版本为输入并记录两侧 hash。
-- 产物 hash：`source-baseline.json` SHA-256 `4BDBA3147EF81F3578653E76789E26C1B9DD3E338B8AB082D4D750293DDBDE02`；`result.md` SHA-256 `38C2F819A9072663D42ADC405BDB6FAD6A8133D221DF3D3B0BB34CCA577127BD`。
-- 重试：首次等待窗口未收齐摘要，使用同范围完整命令复跑 1 次；最终结果如上。
-- 验收：基线记录和预期失败测试通过；无业务/根目录源文件改动。T-001 状态 `pass`。
-
-#### 目标与范围
-
-- 包含：保存当前 branch/HEAD/status、39 项 Skill 路径与哈希、相关 root marker、8 个 external provenance 状态；新增断言插件包/manifest/39 IDs/shared links/兼容投影缺失时会失败。
-- 不包含：修改旧 Skill 源、修复既有 verification 状态或改变 ownership。
-- 文件范围：`tests/architecture-plugin.test.js`、`tests/architecture-skills.test.js`、`tests/architecture-projection.test.js`（如仓库测试分布要求可调整为等价文件）；`codex/plugin-split/artifacts/architecture/T-001/`。
-- 所属层：插件包/主机验证。
-
-#### 前置条件、步骤与输出
-
-1. 重跑 `git rev-parse HEAD`、`git status --short --branch`；将输出写入 T-001 记录，不暂存/清理任何已有修改。
-2. 记录 31 canonical + 8 external 的文件树和 SHA-256；记录 root vs owning-plugin 版本差异，尤其保存 `tools-quality` 和 `tools-verification` 两边 hash。
-3. 写测试断言 architecture descriptor、Codex/Cursor manifests、39 Skill roots、link closure、catalog ownership 与 projection sync 行为。
-4. 先运行新增测试，记录预期缺失失败；确保失败原因是目标能力不存在，而不是测试语法/依赖问题。
-
-#### 约束、验证、失败处理
-
-- 接口/依赖：不得登记测试 fixture 为真实 Skill；不改共享 catalog。
-- 资源/并发/ISR/DMA：不适用。
-- 生成边界：证据只写 `codex/plugin-split/artifacts/architecture/T-001/`；不生成/改写根 `AGENTS.override.md`。
-- 验证命令：cwd 仓库根，`node node_modules/jest-cli/bin/jest.js --runInBand tests/architecture-plugin.test.js tests/architecture-skills.test.js tests/architecture-projection.test.js`；预期因 package/skills/syncer 缺失而按断言失败，测试代码自身可加载。
-- 证据等级/产物：static/host；基线清单、hash、预期失败日志。
-- 失败/回滚：测试加载错误时只修测试；任务只新增本任务测试与证据，可移除本任务新增文件回滚。
-- SOLID：SRP/OCP/ISP 适用，测试逐项验证包职责/扩展/manifest roots；LSP/DIP 在后续 package contract task 验证。
-
-### T-002：创建独立插件契约与包级 validator
-
-| 字段 | 内容 |
-|---|---|
-| order / parallel_group | 2 / none |
-| source_plan_ids | P-01 |
-| source_spec_ids | ARC-F01, ARC-G01..G02, ARC-T01 |
-| owner_agent / support_agents | `embedded-lead` / `toolchain-engineer` |
-| owner_skill / supporting_skills | `tools-build` / `tools-verification` |
-| allocation_evidence | `plugins/mcu-workbench-devops/` 与 verification 的 descriptor/package/manifests/validator |
-| confidence / status | confirmed / pass |
-
-#### 执行记录
-
-- allocation_id：`T-002-20261124-ARCH-PACKAGE`；primary_agent `embedded-lead`；support_agents `toolchain-engineer`；owner_skill `tools-build`；supporting_skills `tools-verification`。
-- 测试先行：`tests/architecture-manifest.test.js` 在实现前以 exit 1 失败；包 descriptor 和独立 manifest validator 缺失，测试文件正常加载。
-- 实现：新增 architecture package、descriptor、aggregate plugin metadata、Codex/Cursor manifests、`index.js`、manifest validator 和 package validator；未迁移 Skills、未改 catalog/root Skill 文件。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand --forceExit tests/architecture-plugin.test.js tests/architecture-manifest.test.js`，仓库根 cwd，exit 0，2 suites/4 tests 通过；`node plugins/mcu-workbench-architecture/scripts/validate-manifests.js` exit 0。包总 validator 仍会按预期提示缺少 39 个登记 Skills，待 T-003/T-006 完成后转为全包通过。
-- 产物记录：`codex/plugin-split/artifacts/architecture/T-002/result.md`。
-- 产物 SHA-256：`F66B2C9CBB38E008F4CA81C1F83679AA1B992D3CCE09CFFCBA18925CB85C42D3`。
-- SOLID：SRP/OCP/LSP/ISP/DIP 约束在 descriptor、host manifest 和共享 contracts 校验中落地；该任务没有实现 Skill 路由或运行时业务。
-- 回滚：删除本任务新增的 architecture 包骨架及 manifest test；保留 T-001 的测试和产物。T-002 状态 `pass`。
-
-#### 目标与范围
-
-- 包含：先为 descriptor、版本、Codex/Cursor manifest 和 package validator 添加当前失败断言；创建 `plugins/mcu-workbench-architecture/{descriptor.json,package.json,plugin.json,index.js,.codex-plugin/plugin.json,.cursor-plugin/plugin.json,scripts/validate.js,scripts/validate-manifests.js}`。
-- 不包含：迁移 Skill 文件、编辑根 catalog 或同步旧目录。
-- 文件范围：仅上述新插件文件和 T-002 直接测试。
-- 所属层：插件包/宿主适配。
-
-#### 前置条件、步骤与输出
-
-1. 检查 T-001 pass 及文件范围；新增 metadata 缺失行为测试并先运行观察失败。
-2. 以共享 contracts 校验 descriptor；插件 ID 固定 `mcu-workbench-architecture`、版本 `1.0.0`；manifest `skills` root 为 `./skills/`；不声明未证实 capability 或 runtime lifecycle 特性。
-3. validator 检查 ID/version/schema、两个 manifests、Skill root、39 项登记数量/路径和重复 ID；包仅使用 Node 内置模块及仓库共享 contracts。
-4. 运行本任务测试，记录命令、绝对 cwd、退出码和报告。
-
-#### 约束、验证、失败处理
-
-- 资源/并发/ISR/DMA：无 runtime service，不适用。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand tests/architecture-plugin.test.js` 和 `node plugins/mcu-workbench-architecture/scripts/validate.js`；当前无 Skills 时 validator 可输出清晰的未完成结果，T-002 不得伪称 39 项已齐。
-- 产物：`codex/plugin-split/artifacts/architecture/T-002/`。
-- 回滚：删除仅本任务创建的插件骨架/测试；不得碰其它 plugin。
-- SOLID：SRP 单一 architecture 包；OCP 通过 Skill registry 添加；LSP 两 manifests 符合同一 contracts；ISP roots 最小；DIP validator 只依赖 contracts/catalog 公共接口。每项附测试证据。
-
-### T-003：将 31 项 canonical 与 8 项外部 Skill 纳入插件源
-
-| 字段 | 内容 |
-|---|---|
-| order / parallel_group | 3 / none |
-| source_plan_ids | P-02,P-03 |
-| source_spec_ids | ARC-F02..F03, ARC-G01,G03..G04, ARC-T02..T03 |
-| owner_agent / support_agents | `embedded-lead` / `system-architect`, `knowledge-engineer` |
-| owner_skill / supporting_skills | `tools-git` / `tools-quality` |
-| allocation_evidence | Plan 映射表和当前 catalog/inventory 文件存在性证据 |
-| confidence / status | confirmed / pass |
-
-#### 执行记录
-
-- allocation_id：`T-003-20261124-ARCH-SOURCES`；primary_agent `embedded-lead`；support_agents `system-architect, knowledge-engineer`；owner_skill `tools-git`；supporting_skills `tools-quality`。
-- 测试先行：`tests/architecture-skills.test.js` 先以 exit 1 证明 39 个源目录均缺失；写入包路径存在断言后再迁移。
-- 实现：由 T-001 baseline 精确复制 31 canonical + 8 external Skill 完整目录树至插件 `skills/<id>/`。迁移前校验 source hash，staging 完成后逐文件校验 destination hash，再原子 rename。旧 `skills/` 源文件保持不变。
-- source map：`plugins/mcu-workbench-architecture/skill-map.json` 明确 39 IDs、source/plugin paths 和原 root projection paths；SHA-256 `A125EBB5CE673A66D8009D8D3EB710BEBB1F5DA7AFA60E4EA2EA5E80A5FF6501`。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand --forceExit tests/architecture-skills.test.js -t "source map|stores all selected Skill sources"`，绝对 cwd 仓库根，exit 0；2 selected tests pass，2 skipped（catalog 登记由 T-006 负责）。39 个 Skill / 249 files 与 T-001 manifest 一致。
-- 产物：`codex/plugin-split/artifacts/architecture/T-003/import-manifest.json` SHA-256 `3A004AB88CB7910A085F5C8B8EFB4D42E165680912C7C7CCA78D3856DA7D1133`；`result.md` SHA-256 `BD7A4CAFF69B1312148A20A5CF6DC7D3A99650664581F96A05217E4985947959`。
-- 更新后的 `T-003/result.md`（含 source map 结果）SHA-256：`1039A984A088AD8F659709CE43A3797B9C8E6D75A13AD3DAF5304A386B7AF6AE`。
-- 未验证：插件内相对链接尚未迁移；交 T-004。
-- 回滚：仅删除本次新建的 plugin `skills/` 目录；旧 source/其他预存改动未动。T-003 状态 `pass`。
-
-#### 目标与范围
-
-- 包含：将 31 canonical 和 8 external 的完整目录树复制到 `plugins/mcu-workbench-architecture/skills/<id>/`；编写只读 source map，标明旧 root projection 和 provenance 状态；更新包 validator 所需的 ID 清单。
-- 不包含：删除或覆盖旧 `skills/` 路径；改变 Skill 正文语义；迁移其它 owner/unknown。
-- 文件范围：仅新 architecture plugin skills、source map、validator 清单和直接测试。
-- 所属层：插件 Skill 内容/迁移审计。
-
-#### 前置条件、步骤与输出
-
-1. 对 39 个源逐项复核 T-001 path/hash；若任一 hash 或状态变化，先查明并回填证据。
-2. 为“插件内 Skill 路径存在”测试先运行并记录失败。
-3. 完整复制每个源目录，包括 references/scripts/assets；旧 root 文件留在原处等待受保护 adoption。
-4. 检查 `embedded-coding-standard` 等外部项 metadata；保持 matrix/inventory 原 provenance，不补猜版本/许可证。
-5. 逐项对比源/目标文件数和 SHA-256；包 validator 计数应为 39，不能将 `_shared` 资源算作 Skill。
-
-#### 约束、验证、失败处理
-
-- 根文件只读：此 Task 不写 `skills/`。复制源包含已有未提交内容时照基线复制，不改源。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand tests/architecture-skills.test.js`；运行 architecture validator；对 39 个目录做 hash/文件数比较。
-- 产物：`codex/plugin-split/artifacts/architecture/T-003/` source manifest 和 compare log。
-- 回滚：仅删除本 Task 新增的 architecture Skill 目录；根旧源保留。
-- SOLID：SRP/OCP/ISP 验证内容归属和清单扩展；LSP 验证所有 Skills 满足 `SKILL.md` 最小契约；DIP 验证内容不反向依赖聚合实现。
-
-### T-004：生成 shared reference closure 并修复包内链接
-
-| 字段 | 内容 |
-|---|---|
-| order / parallel_group | 4 / none |
-| source_plan_ids | P-04 |
-| source_spec_ids | ARC-E06, ARC-F02, ARC-G03..G04, ARC-T04 |
-| owner_agent / support_agents | `embedded-lead` / `system-architect`, `verification-engineer` |
-| owner_skill / supporting_skills | `tools-build` / `tools-verification` |
-| allocation_evidence | 217 Markdown、37 个包外链接、13 个直接目标、88 文件递归闭包的只读扫描 |
-| confidence / status | confirmed / pass |
-
-#### 目标与范围
-
-- 包含：在 `plugins/mcu-workbench-architecture/references/shared/` 生成所需的 88 文件递归链接闭包；写 `shared-sources.json` 记录 source path、owner、hash、snapshot 生成时间；将插件内 Skill 链接改写到平铺 Skill roots 或该只读快照。
-- 不包含：将共享快照注册为 Skills；修改 owner 插件/root source；替换/重写其内容；自动跟随未来变化更新快照。
-- 文件范围：插件 shared references、转换/sync 工具及 `tests/architecture-links.test.js`。
-- 所属层：只读引用资源/链接适配。
-
-#### 前置条件、步骤与输出
-
-1. 重新生成当前引用闭包清单并对照 T-001；不一致时先确认新增/移除目标。
-2. 先增加 package link check 测试并确认当前迁移源存在对应错误/目标缺失。
-3. 从 T-001 记录的当前根工作树字节生成快照；owner plugin 与 root projection 不同的条目写入两边 hash，并以根工作树快照作为本版本绑定输入，不修改任一边。
-4. 对 plugin sources 中所有 Markdown 链接执行双向可逆映射：内部 Skill 指向 plugin `skills/<id>`；包外目标指向 `references/shared/`；后续 root projection 还原到原聚合目标路径。
-5. 递归验证 shared snapshot 的本地链接 closure、未解析目标、source manifest hash 与禁止复制 owner root。
-
-#### 约束、验证、失败处理
-
-- 生成边界：shared 只读 snapshots 在 plugin 外不得编辑；变动必须由 owner 源重新生成并显式审阅。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand tests/architecture-links.test.js`；`node scripts/validate-skill-links.js --root plugins/mcu-workbench-architecture --boundary-root plugins/mcu-workbench-architecture` 或 validator 等效入口。
-- 产物：`codex/plugin-split/artifacts/architecture/T-004/` closure manifest、link report、hash report。
-- 失败处理：缺失源或闭包循环无害但未收敛时阻塞；不得删链接/静默标外部。
-- SOLID：SRP 仅提供引用依赖；OCP 可新增登记资源；LSP shared link snapshot 与本地目标契约一致；ISP 只带最小 closure；DIP 快照源来自登记的 owner path。
-
-### T-005：实现安全的旧根目录投影、adoption 与 rollback
-
-| 字段 | 内容 |
-|---|---|
-| order / parallel_group | 5 / none |
-| source_plan_ids | P-05 |
-| source_spec_ids | ARC-F04, ARC-G01,G04..G05, ARC-T04..T05, ARC-T09 |
-| owner_agent / support_agents | `embedded-lead` / `toolchain-engineer`, `verification-engineer` |
-| owner_skill / supporting_skills | `tools-build` / `tools-verification` |
-| allocation_evidence | DevOps/verification projection patterns；旧路径由 39 项映射明确定位 |
-| confidence / status | confirmed / pass |
-
-#### 执行记录
-
-- 实现 `scripts/sync-skills.js`，由插件 `skill-map.json` 生成 39 个根路径投影，共 249 个文件；Markdown 相对链接反向映射到旧聚合路径或插件间共享文件。
-- 首次 adoption 前逐文件比较：只接受与生成投影相同的内容，或与 T-001 已记录源 hash 完全相同的原始根文件；逐 Skill 校验文件集合，不一致即整轮拒绝。成功后创建 `skills/.architecture-projections.json`，记录路径和 hash。
-- 同步会校验 marker ID/schema/hash/路径、拒绝未登记文件和漂移；采用 staging 与备份，已存在的旧内容只在预检通过后替换。成功重复执行返回 `unchanged`。
-- 验证：projection suite 通过；覆盖 39 Skill 注册、249 文件 marker、漂移拒绝且保留改动字节、未知 marker 拒绝。命令：`node node_modules/jest-cli/bin/jest.js --runInBand --forceExit tests/architecture-projection.test.js`，仓库根 cwd，exit 0。产物/实现证据见 `artifacts/architecture/T-005/result.md`。
-- 限制：没有独立 fixture 覆盖写入中途 I/O 故障注入；staging/backup 的恢复路径经代码检查，未声称完成该故障注入测试。T-005 状态 `pass`（已实现同步与漂移安全验收）。
-
-#### 目标与范围
-
-- 包含：`plugins/mcu-workbench-architecture/scripts/sync-skills.js`、`skills/.architecture-projections.json` marker、投影 fixtures/tests 和仅 architecture 的 root projections。
-- 不包含：重写/删除其它插件 marker、同步其它插件路径、无授权覆盖已有源文件。
-- 文件范围：同步器、指定 root projection paths、marker、`tests/architecture-projection.test.js`。
-- 所属层：生成/兼容适配。
-
-#### 前置条件、步骤与输出
-
-1. 新增负例：路径逃逸、未知 marker、hash 漂移、未标记且不匹配目录、写入中途失败、重复运行。
-2. 首次 adopt 仅在 39 个目标目录与生成后投影逐文件完全匹配时创建 marker；任一文件不匹配时拒绝整体 adoption，不逐项覆盖。
-3. 校验所有 source/target 均位于允许 root；先 staging 全部结果，备份既有目标，再替换；写 marker 后复核 hashes。
-4. 重复同步返回 unchanged；失败时恢复本 Task 变动的全部旧投影并保留不匹配目录。
-5. 测试正常 adopt/sync、改动后拒绝、marker 篡改拒绝和 rollback fixture。
-
-#### 约束、验证、失败处理
-
-- 接口/资源：只操作 plugin source、明确的 39 个 root projections、marker 和其自建临时 staging/backup。
-- 并发/ISR/DMA：不适用；同步单进程。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand tests/architecture-projection.test.js`；fixture 全部在 temp 目录；先确认现有生产路径内容 hash 与生成预期相同后才 adoption。
-- 产物：`codex/plugin-split/artifacts/architecture/T-005/` sync report/hash。
-- 回滚：按 marker 校验后恢复 T-005 之前目录与 marker 状态；若旧文件已被用户改动，拒绝回滚并保留原件。
-- SOLID：SRP syncer 只管理 architecture projection；OCP mapping 可扩展；LSP marker/adoption 遵守同步器 API；ISP options 最小；DIP syncer消费 source map，不读 catalog 私有状态。
-
-### T-006：注册 catalog/aliases 并保留聚合入口
-
-| 字段 | 内容 |
-|---|---|
-| order / parallel_group | 6 / none |
-| source_plan_ids | P-06 |
-| source_spec_ids | ARC-F04, ARC-G02,G05..G06, ARC-T06 |
-| owner_agent / support_agents | `embedded-lead` / `system-architect` |
+| order / parallel_group | `1` / `none` |
+| source_plan_ids | `P-01` |
+| source_spec_ids | `WF-E01..WF-E10`、`WF-A02`、`WF-A03`、`WF-A09` |
+| owner_agent / support_agents | `embedded-lead` / `knowledge-engineer` |
 | owner_skill / supporting_skills | `tools-git` / `workflow-review-gate` |
-| allocation_evidence | `skills/catalog.js` 的 `PLUGIN_SKILL_IDS`、`pluginSkills()` 和现有 aliases 定义 |
-| confidence / status | confirmed / pass |
+| allocation_evidence | Plan §6 P-01 与 §7；基线冻结和路径所有权以 Git/文件证据为主 |
+| confidence / status | `confirmed` / `pass` |
 
-#### 执行记录
+#### 目标
 
-- 在 `skills/catalog.js` 注册 31 项 canonical 与 8 项 external 到 `mcu-workbench-architecture`；保持既有 canonical path/IDs/aliases 和 resolver 行为，`pluginSkills()` 派生插件内路径。
-- 验证：`pluginSkills('mcu-workbench-architecture')` 返回 39 项且 ID 唯一；根 `scripts/validate-plugin.js` 通过，统计 105 Skills、7 Agents、9 架构层。结果记录于 `artifacts/architecture/T-006/result.md`。T-006 状态 `pass`。
+生成可复现的逐文件映射、hash、投影冲突表及完整链接闭包 ledger，供后续写入前判断目标路径安全性。
 
-#### 目标与范围
+#### 范围
 
-- 包含：architecture 的 39 个 ID 在唯一 catalog/registry 中唯一登记；`pluginSkills('mcu-workbench-architecture')` 返回正确平铺 pluginPath；根 package 增加架构包 validator/sync 的薄转发；必要 agent routes/aliases 保持兼容。
-- 不包含：调整其它插件路由、删除旧 IDs/aliases、重分类 workflow Skills。
-- 文件范围：`skills/catalog-metadata.js`、`skills/catalog.js` 或其事实源、直接 resolver tests、根 `package.json` scripts。
-- 所属层：共享 registry/兼容。
+- 包含：只读扫描 Plan 中 14 个当前源目录、排除项边界、manifest/catalog/aliases、existing projection markers、每棵树文件清单/哈希、递归相对链接与目标 owner/hash。
+- 不包含：迁移、修改 catalog、同步器、修 Skill 链接。
+- 文件范围：输出至 `codex/plugin-split/artifacts/workflow/baseline/`；如目标已有内容，先比较并保留，不覆盖未知文件。
+- 所属层：插件迁移审计。
 
-#### 前置条件、步骤与输出
+#### 前置条件与依赖
 
-1. 为 ownership/alias/路径断言先运行失败测试。
-2. 映射 31 canonical + 8 external IDs 到 architecture；不得从 `unknown` 自动推导归属。
-3. 保留原 legacy IDs/aliases 解析结果并确保没有两个 plugin owner。
-4. 根 scripts 仅作为 package 入口薄转发，不复制 validator 实现。
-5. 运行本任务测试与根 plugin validator。
+- 前置任务：无。
+- 外部前提：仓库可读；工作区基线和绝对根路径已确认。
+- 依赖证据：Plan §3 WF-E01..E10；Spec §当前 Workflow 补充。
 
-#### 约束、验证、失败处理
+#### 执行步骤
 
-- 生成边界：只改 catalog 的维护源与根 package 脚本，不手动改派生文件。
-- 验证：`node node_modules/jest-cli/bin/jest.js --runInBand tests/architecture-catalog.test.js tests/skills.test.js`；`node scripts/validate-plugin.js`。
-- 产物：`codex/plugin-split/artifacts/architecture/T-006/` alias/ownership report。
-- 回滚：仅恢复本 Task 的 catalog/route/package/script 差异；投影和其它插件保持原状。
-- SOLID：SRP registration owns only architecture IDs; OCP add Skill by one mapping; LSP pluginSkills honors catalog contract; ISP adapter exposes only required IDs; DIP aggregate relies on plugin/catalog contract.
+1. 重读 `git status --short --branch`、14 个源根和旧根目标路径，记录扫描时间、分支、HEAD 与预存 dirty 路径。
+2. 生成 14 个源树完整路径及 SHA-256 清单，并逐项核对 `SKILL.md` 存在；确认三个旧 `workflow` 排除文件未混入。
+3. 递归解析 Markdown 相对链接，分类为同 Skill、Workflow 内其他 Skill、其他 owner、外部绝对路径或缺失；登记 owner/版本/hash 证据。
+4. 特别逐项登记 5 个 `embed-ai-tool` 缺失链接；不把 unknown `skill-template` 内容带入。若解决方式将改变 Spec/Plan，停止并回传。
+5. 对照当前 markers、目标路径内容与 catalog 解析规则，输出冲突/adoption 表和只读审计报告。
 
-### T-007：完成插件回归、负例和 Codex/Cursor 观察
+#### 输出物
 
-| 字段 | 内容 |
-|---|---|
-| order / parallel_group | 7 / none |
-| source_plan_ids | P-07 |
-| source_spec_ids | ARC-T01..T10, ARC-A01..A07 |
-| owner_agent / support_agents | `embedded-lead` / `verification-engineer`, `toolchain-engineer` |
-| owner_skill / supporting_skills | `tools-verification` / `tools-quality` |
-| allocation_evidence | Spec 明确各级验收；Plan V-01..V-08；Codex/Cursor 范围独立 |
-| confidence / status | user-confirmed / pass |
+- 文件：`artifacts/workflow/baseline/skill-files.json`、`link-closure.json`、`projection-conflicts.json`、`baseline-report.md`。
+- 中间产物：14 项源/旧路径一对一映射及逐文件哈希。
 
-#### 执行记录
+#### 约束边界
 
-- 六个架构套件通过：`node node_modules/jest-cli/bin/jest.js --runInBand --forceExit tests/architecture-plugin.test.js tests/architecture-manifest.test.js tests/architecture-skills.test.js tests/architecture-projection.test.js tests/architecture-links.test.js tests/architecture-marketplace.test.js`，仓库根 cwd，6 suites/17 tests，exit 0。
-- `node plugins/mcu-workbench-architecture/scripts/validate-manifests.js`、`node plugins/mcu-workbench-architecture/scripts/validate.js`、`node scripts/validate-skill-links.js --root plugins/mcu-workbench-architecture --boundary-root plugins/mcu-workbench-architecture`、`node scripts/validate-plugin.js` 均通过；最后一个链接检查报告 296 Markdown 文件。
-- 上述命令绝对 cwd 均为 `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`。`git diff --check` exit 0；Git 输出的 CRLF 转换文字是工作区行尾提示。
-- Node 可执行但当前 PowerShell 会话未识别 `npm` 命令；根 package scripts 已解析通过，等价直接 Node validator 已通过。详细记录见 `artifacts/architecture/T-007/result.md`。
-- 缺陷定位：初版只有插件内 host manifest，没有仓库 marketplace 注册或本地安装，所以两个宿主均不会自动发现新插件。已增加 `.agents/plugins/marketplace.json` 与 `.cursor-plugin/marketplace.json`，列出四个独立插件；marketplace discovery 与安装行为分开验证。
-- Codex：`codex plugin add mcu-workbench-architecture@mcu-workbench-local` exit 0，安装到 `C:\Users\shuaitan2\.codex\plugins\cache\mcu-workbench-local\mcu-workbench-architecture\1.0.0`；随后 `codex plugin list` 显示 `installed, enabled`，来源为本仓库 architecture 插件目录。CLI 提示远端目录请求受网络限制，但本地 marketplace 解析和安装成功。
-- Cursor：复制插件至官方 user-local 路径 `C:\Users\shuaitan2\.cursor\plugins\local\mcu-workbench-architecture`，并核实 `.cursor-plugin/plugin.json` 与 39 个 Skill 目录存在。实际宿主日志 `C:\Users\shuaitan2\AppData\Roaming\Cursor\logs\20261122T130740\window8\exthost\anysphere.cursor-agent-host\Cursor Plugins.log` 和 `window12` 多次记录 `loadUserLocalPlugin mcu-workbench-architecture loaded`。T-007 Codex/Cursor 发现验收现为通过。
-- 报告 SHA-256：T-004 `0D175F3AC3C430E97104C72A0A43E8B7C68158C75ED05995815D3F91F1585A79`；T-005 `990E6AD351A25C8647651C67767FDC714D57A43146DDADC4D01CCA3E29126826`；T-006 `A00D3444CA21AF17BE475D21C9A67734BE76C55EBF7C196D660397373C91C9B3`；T-007 `74F4E76A577CB8304B6564DCDF269169CA01D593B7E339A7761AF54D40C95014`；Final Verify `61FD90A04D9C9A0693716D644165936E7F2B51D8D5EDD9EE3B5811DB4698E5E6`。
+- 接口和依赖：只读仓库；不得依赖外部网络下载补齐来源。
+- 资源与生命周期：无固件运行资源。
+- 并发、ISR、DMA：不适用。
+- 内存和生成边界：审计产物仅写 Workflow artifact 目录；不修改源 Skill。
 
-#### 目标与范围
-
-- 包含：补齐 architecture plugin integration tests；执行 package validator、link checks、投影 fixtures、catalog compatibility 和本任务相关根回归；分别观察 Codex/Cursor 真实发现。
-- 不包含：Claude/OpenCode；清理用户预存工作；硬件运行；修改任务外 Skill 内容解决无关问题。
-- 文件范围：直接相关测试、宿主发现记录及 `codex/plugin-split/artifacts/architecture/T-007/`。
-
-#### 前置条件、步骤与输出
-
-1. 重查 git status 与新增/修改文件范围。
-2. 对照负例断言，确认坏 manifest、缺 Skill、重复 ID、外部无来源声明、link break、marker drift 均失败且不破坏数据。
-3. 运行 package 专项 suites、包 validator、link validator、根 plugin/catalog 直接回归；记录绝对 cwd、工具版本、exit code、artifact path/hash 和重试。
-4. 分别在 Codex、Cursor 实际宿主观察插件/Skills 发现；不可用则记录 unverified，禁止从 manifest 推断。
-5. 对预存基线问题记录 baseline/current/new counts；不得把旧失败记成本阶段新增或隐去。
-
-#### 约束、验证、失败处理
-
-- 静态、host、Codex、Cursor 证据分开；无 firmware build/target/physical evidence。
-- 验证入口：本 Task 相关 architecture test suites、包 validator、`node scripts/validate-skill-links.js --root plugins/mcu-workbench-architecture --boundary-root plugins/mcu-workbench-architecture`、根 `node scripts/validate-plugin.js`、`git diff --check`；以实际 package scripts 为准记录。
-- 回滚：本任务只增加/改动本阶段测试和日志；发现实现缺陷回对应任务修复复测，需求偏差回 Review Gate。
-- SOLID：汇总并验证五项原则 evidence；任一不可验证或失败，Task blocked。
-
-### T-008：对照 Spec 执行统一最终 Verify
+#### 验证
 
 | 字段 | 内容 |
 |---|---|
-| order / parallel_group | 8 / none |
-| source_plan_ids | P-08 |
-| source_spec_ids | ARC-A01..ARC-A08 |
-| owner_agent / support_agents | `embedded-lead` / `verification-engineer` |
+| 证据等级 | `static` |
+| 命令或条件 | cwd `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`；执行清单生成/链接扫描入口并记录实际命令、Node 版本、退出码 |
+| 预期结果 | 14 项源各有完整清单；所有本地引用分类；缺失项与冲突明确，无未登记异常 |
+| 产物位置 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\artifacts\workflow\baseline\` |
+| 当前状态 | `pass` |
+
+#### 失败处理与回滚
+
+- 失败现象：源目录变化、目标冲突、无法分类链接或外部闭包归属不明。
+- 定位顺序：检查当前文件和 catalog，再核验 owner/inventory，最后对照 Plan/Spec。
+- 重试/降级：仅重跑只读扫描；不得跳过缺项。
+- 回滚：无源文件变更；移除本任务仅生成且确认无用户数据的审计临时文件。
+- 回传条件：范围/owner/验收发生变化回 workflow-review-gate；Plan 路径策略不足回 workflow-integration-plan。
+
+### T-002：建立 Workflow 插件包骨架与 validator
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `2` / `none` |
+| source_plan_ids | `P-02` |
+| source_spec_ids | `WF-A01`、`WF-A02` |
+| owner_agent / support_agents | `embedded-lead` / `toolchain-engineer`、`verification-engineer` |
+| owner_skill / supporting_skills | `tools-build` / `tools-verification` |
+| allocation_evidence | Plan §6 P-02、§7；复用已存在插件包契约 |
+| confidence / status | `confirmed` / `pass` |
+
+#### 目标
+
+创建仅包含合法包元数据、宿主 manifests、固定 Skill map 和可独立运行 validator 的 Workflow 插件骨架。
+
+#### 范围
+
+- 包含：`plugins/mcu-workbench-workflow/` 的 package/descriptor/plugin manifests、Codex/Cursor manifests、Skill map、validator 与最小负例测试。
+- 不包含：Skill 内容迁移、catalog 注册、根投影。
+- 文件范围：只写上述新插件目录及明确关联的 Workflow 定点测试；若既有目录出现，先审查并回传，不覆盖。
+- 所属层：独立插件包与校验入口。
+
+#### 前置条件与依赖
+
+- 前置任务：T-001；基线输出无未决的包目录冲突。
+- 外部前提：复核 `packages/contracts/schemas/plugin-descriptor.schema.json` 和 Architecture/DevOps 包字段。
+- 依赖证据：`plugins/mcu-workbench-architecture/`、`plugins/mcu-workbench-devops/`。
+
+#### 执行步骤
+
+1. 按当前共享 schema 和成熟插件格式设计最小文件，不复制无关 Agent/Rule。
+2. 声明 14 个准确 ID，暂缺 Skill 目录时 validator 可提供明确“源未迁移”状态；不把骨架校验误报为完整插件通过。
+3. validator 检查 descriptor/package/manifest ID/version 一致性、每项 `SKILL.md`、无额外注册项。
+4. 为坏 descriptor、重复 ID、缺失 Skill 和失效入口添加最小负例。
+
+#### 输出物
+
+- 文件：`plugins/mcu-workbench-workflow/{package.json,descriptor.json,plugin.json,.codex-plugin/,.cursor-plugin/,skill-map.json,scripts/validate.js}` 与定点测试。
+- 中间产物：包校验 JSON/控制台报告。
+
+#### 约束边界
+
+- 不新增共享 contract schema，不反向依赖根聚合实现。
+- 无固件资源/ISR/DMA/内存池。
+- 仅 validator/test skeleton 为本任务生成物。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `static/host` |
+| 命令或条件 | cwd 为仓库根；运行 `node plugins/mcu-workbench-workflow/scripts/validate.js` 与对应 Jest 定点文件（以实际新增文件名为准） |
+| 预期结果 | schema/manifest 结构正确；正常 skeleton 在迁移前如预期标 incomplete；负例均明确失败 |
+| 产物位置 | 插件目录和 Jest 报告；记录绝对路径、版本和退出码 |
+| 当前状态 | `pass` |
+
+#### 失败处理与回滚
+
+- 失败现象：共享 schema 与参考插件不一致或 Codex/Cursor 字段语义未确认。
+- 定位顺序：查看 schema、合同包和独立 manifest validator。
+- 重试/降级：不得假设未定义字段；将未支持能力标未验证。
+- 回滚：仅移除本 Task 新增且确认由本 Task 创建的文件。
+- 回传条件：需要修改共享 schema 或 Spec 宿主边界时停止上报。
+
+### T-003：迁移 9 canonical 与 5 external Skill 源
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `3` / `none` |
+| source_plan_ids | `P-03` |
+| source_spec_ids | `WF-A02`、`WF-A09` |
+| owner_agent / support_agents | `embedded-lead` / `knowledge-engineer`、`system-architect` |
+| owner_skill / supporting_skills | `tools-git` / `workflow-review-gate` |
+| allocation_evidence | Plan §6 P-03、§7；文件迁移及 ownership/语义保护 |
+| confidence / status | `user-confirmed` / `pass` |
+
+#### 目标
+
+把 T-001 锁定的 14 个完整 Skill 树放入插件源目录并验证逐文件内容一致，确保插件源成为唯一编辑源。
+
+#### 范围
+
+- 包含：9 个 `skills/workflow/<id>/` canonical 源与 5 个 `skills/<id>/` external 源的完整文件树。
+- 不包含：根投影删除/覆盖、链接改写、其他插件源、外部 provenance 补造。
+- 文件范围：`plugins/mcu-workbench-workflow/skills/<14 IDs>/`；迁移策略仅按获批 Plan 和 repo 模式选择。
+- 所属层：插件 Skill 内容。
+
+#### 前置条件与依赖
+
+- 前置任务：T-002；T-001 所有源/目标哈希已锁定；源与目标无未解决碰撞。
+- 外部前提：外部来源原样登记为 blocked/unverified。
+- 依赖证据：T-001 `skill-files.json` 和冲突表。
+
+#### 执行步骤
+
+1. 逐项按审计清单复制/迁入插件树，保留嵌套资源与文件字节；排除 3 个旧 `workflow` 文件。
+2. 不改 Skill 正文或外部来源元数据；如发现复制后链接需重写，留给 T-004。
+3. 逐文件比较源快照与插件目录 SHA-256，并核对每项 `SKILL.md` 与 14 项无多无少。
+4. 记录原根路径随后作为投影处理，不在本 Task 删除来源。
+
+#### 输出物
+
+- 文件：插件内 14 个 Skills 的完整树；更新 Workflow 专属迁移清单/来源状态。
+- 中间产物：逐文件迁移 hash diff。
+
+#### 约束边界
+
+- 禁止带入 Agents、Rules、旧聚合 `workflow` Skill。
+- 不改变脚本算法、示例、引用语义和 provenance。
+- 无运行时资源、ISR、DMA。
+- 根源到插件唯一源的交接只在迁移核验后生效，保护既有 dirty 文件。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `static` |
+| 命令或条件 | cwd 仓库根；按 T-001 manifest 比较每个相对文件 SHA-256，运行插件 Skill 数量/完整性 validator |
+| 预期结果 | 恰好 14 项、目录树和文件哈希对应；业务文件无未批准差异 |
+| 产物位置 | `plugins/mcu-workbench-workflow/skills/` 及迁移审计报告 |
+| 当前状态 | `pass` |
+
+#### 失败处理与回滚
+
+- 失败现象：源漂移、目标冲突、漏文件、哈希差异或迁移过程中断。
+- 定位顺序：对比 T-001 基线、当前源和目标；查明 dirty/owner 状态。
+- 重试/降级：仅恢复缺失的新目标文件；不覆盖已变化的源或目标。
+- 回滚：只移除 marker 尚未接管且确认由本 Task 新建的插件文件；保留源树和用户改动。
+- 回传条件：源字节不一致需用户决策或扩大范围时回传上游。
+
+### T-004：实现链接闭包与受保护根投影
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `4` / `none` |
+| source_plan_ids | `P-04` |
+| source_spec_ids | `WF-A03`、`WF-A04`、`WF-A06` |
+| owner_agent / support_agents | `embedded-lead` / `toolchain-engineer`、`verification-engineer` |
+| owner_skill / supporting_skills | `tools-build` / `tools-verification` |
+| allocation_evidence | Plan §5、§6 P-04、回滚序列和 §7；投影风险及文件事务处理 |
+| confidence / status | `confirmed` / `pass` |
+
+#### 目标
+
+提供幂等 Workflow 投影同步器和链接闭包 ledger，使源到根路径映射安全、漂移可检测、失败只回滚 Workflow 拥有路径。
+
+#### 范围
+
+- 包含：Workflow syncer/marker、source map、链接重写或显式依赖登记、必要只读 shared snapshot、测试 fixture。
+- 不包含：注册 catalog、编辑 other-owner 内容、导入未知 `skill-template`、全局替换链接检查规则。
+- 文件范围：插件 `scripts/`、`references/shared/`/来源 ledger、Workflow marker（按 Architecture/DevOps 现存目录位置实现）；旧路径仅 marker 所有路径。
+- 所属层：插件打包/根兼容投影。
+
+#### 前置条件与依赖
+
+- 前置任务：T-003；T-001 完整递归闭包分类完毕；五条缺失引用有可审计声明方案，若需改 Spec 则本任务阻塞。
+- 外部前提：绝对路径安全校验在当前平台（Windows）可复现。
+- 依赖证据：成熟同步器和 `lib/skill-links.js`；Plan §5。
+
+#### 执行步骤
+
+1. 实现路径映射、相对链接转换和 Workflow 自有 marker/hash；处理 Skill 名称与旧根路径不对称映射。
+2. 同步前检查来源、marker schema、目标所有权、哈希和路径逃逸；默认拒绝 unmarked/conflicting/drifted targets。
+3. 对确可安全采用的旧目标执行显式 adopt 并记录原始哈希；不碰 `skills/workflow/SKILL.md`、usage 或 runner。
+4. 通过 staging、backup、逐目标写入、写后核验和按 Workflow marker 回滚实现失败一致性。
+5. 针对其他 owner 链接采用 ledger 中批准的快照/映射；owner 文件只读，快照登记 owner/hash，不注册成 Skill。
+6. 对 5 个缺失 `embed-ai-tool` 链接保留来源内容及显式未解析/外部记录；如果 validator 无法以透明方式表示，停止并回传，不伪报链接完整。
+
+#### 输出物
+
+- 文件：Workflow `scripts/sync-skills.js`、专属 marker/map、引用闭包 ledger/shared snapshots、同步器测试。
+- 中间产物：同步预检和投影变更报告。
+
+#### 约束边界
+
+- 单一源是插件目录；根路径为生成投影。只管理本插件 marker 明确列出的路径。
+- 同步单进程离线；无需固件线程/ISR/DMA；使用临时文件时清理范围限本次操作。
+- 不以递归删除重建 `skills/workflow/`；不写入其他插件 marker 或 owner 内容。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `static/host` |
+| 命令或条件 | cwd 仓库根；运行 Workflow syncer 的 dry-run/同步和定点 Jest；对 source/dest/marker 哈希记录前后值 |
+| 预期结果 | 连续运行幂等；漂移、未知 marker、无标记冲突、路径逃逸拒绝；注入写失败后只恢复 Workflow 拥有文件 |
+| 产物位置 | 插件同步日志、测试报告和 marker hash |
+| 当前状态 | `pass` |
+
+#### 失败处理与回滚
+
+- 失败现象：链接解析遗漏、adoption 错误、部分写入、marker/hash 不一致。
+- 定位顺序：先只读检查 marker/backup，再比较源/目标/共享 owner hash，然后复现测试 fixture。
+- 重试/降级：只在源和目标仍符合本次快照时重跑；用户文件/漂移目标不降级覆盖。
+- 回滚：严格按 Plan §6 回滚序列，只恢复本 Workflow marker 声明所有且 hash 符合的投影。
+- 回传条件：需改变外部依赖语义、包外链接政策或 Spec 验收时回 Review Gate。
+
+### T-005：接入 catalog、aliases 与聚合兼容
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `5` / `none` |
+| source_plan_ids | `P-05` |
+| source_spec_ids | `WF-A05`、`WF-A09` |
+| owner_agent / support_agents | `embedded-lead` / `knowledge-engineer`、`system-architect` |
+| owner_skill / supporting_skills | `tools-git` / `workflow-review-gate` |
+| allocation_evidence | Plan §6 P-05、§7；catalog/alias 属共享入口且须单一登记 |
+| confidence / status | `confirmed` / `pass` |
+
+#### 目标
+
+将恰好 14 个批准 ID 注册到 Workflow 插件，同时保留旧 alias/聚合行为且旧 `workflow` Skill 仍在原所有者。
+
+#### 范围
+
+- 包含：`skills/catalog.js`、`skills/catalog-metadata.js` 或实际 canonical registry 来源、必要 Agent/Skill resolver 聚合引用及相关测试。
+- 不包含：其他插件 owner 内容迁移；排除 ID 注册；Agent/Rule 迁移。
+- 文件范围：仅 T-001 实际确认的共享 catalog/alias 源和相关定点测试。
+- 所属层：共享 registry/兼容入口。
+
+#### 前置条件与依赖
+
+- 前置任务：T-004 的安全投影校验通过。
+- 外部前提：当前 catalog/alias 文件未出现未审查改动；若 dirty，逐块保留并核验。
+- 依赖证据：`skills/catalog.js`、`skills/catalog-metadata.js`、T-001 registry report。
+
+#### 执行步骤
+
+1. 注册 14 个 ID 到 Workflow Plugin ID，确保 `pluginSkills()` 推导路径与插件源一致。
+2. 保留 `workflow-requirements-router` → `workflow-router` alias 原语义及其他既有兼容映射。
+3. 检查 resolver/aggregate 能解析旧 ID；`workflow` build/flash/monitor 仍使用旧路径且未列入 pluginSkills。
+4. 增加唯一性与兼容回归测试；不重排/重写非本任务 catalog 内容。
+
+#### 输出物
+
+- 文件：catalog/metadata/必要 resolver 与定点测试。
+- 中间产物：ID/alias 前后解析矩阵。
+
+#### 约束边界
+
+- 接口依赖方向：插件 source 可被 catalog 指向；插件不得依赖根聚合 resolver。
+- 不改其他 Plugin ID/aliases；无运行时资源约束。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `host` |
+| 命令或条件 | cwd 仓库根；运行 catalog 与 Cursor/Codex registry 定点测试，并调用 `pluginSkills('mcu-workbench-workflow')` 核对 ID/path |
+| 预期结果 | 精确 14 项；旧 alias 可解析；ID `workflow` 不属于 Workflow；无重复/孤儿注册 |
+| 产物位置 | Jest/验证报告及解析矩阵 |
+| 当前状态 | `pass` |
+
+#### 失败处理与回滚
+
+- 失败现象：重复 Skill、alias 指向改变、旧 resolver 断裂。
+- 定位顺序：比对 catalog metadata、alias map、aggregate resolver 测试。
+- 重试/降级：不得删除旧 alias 规避冲突。
+- 回滚：按本任务 diff 恢复 Workflow registry entry，保留其它 staged/dirty 行。
+- 回传条件：兼容目标在现有 resolver 中无法实现或要求改变旧 ID 语义时回 Spec/Plan。
+
+### T-006：完成包校验与同步失败路径测试
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `6` / `none` |
+| source_plan_ids | `P-06` |
+| source_spec_ids | `WF-A01..WF-A06`、`WF-A09`、`WF-A10` |
+| owner_agent / support_agents | `embedded-lead` / `verification-engineer`、`toolchain-engineer` |
 | owner_skill / supporting_skills | `tools-verification` / `tools-quality` |
-| allocation_evidence | Workflow contract 要求所有 Task 完成后统一 Verify；Plan V-09 |
-| confidence / status | confirmed / pass |
+| allocation_evidence | Plan §6 P-06、§7；任务级契约与失败路径验证 |
+| confidence / status | `confirmed` / `pass` |
 
-#### 执行记录
+#### 目标
 
-- ARC-A01..A08 均通过：Codex 已安装且启用，Cursor 本地插件日志已确认加载；唯一未验证项为同步器中途 I/O 故障注入 fixture（不改变 marketplace/Skill 发现结论）。
-- T-005 未执行写入中途故障注入 fixture；回滚/恢复分支已做静态审阅但不能升级为故障注入通过。无固件/硬件验收范围。
-- 最终映射与边界审查见 `artifacts/architecture/final-verify.md`。最终 Verify 状态：静态、主机与 Codex/Cursor 实际加载均通过；I/O 故障注入仍标 `unverified`。
+通过 Workflow 插件 validator 和自动化测试验证包清单、链接、投影、兼容 alias、失败恢复及 provenance 边界。
 
-#### 目标与范围
+#### 范围
 
-- 包含：只读映射每一项 ARC-A01..A08 到 Task 产物；检查 generated marker/hash、unique ownership、link closure、回滚证据和用户预存 diff 边界。
-- 不包含：在 Verify 中改代码/Spec/Plan/Task；不把宿主未验证项改写为通过。
-- 文件范围：`codex/plugin-split/artifacts/architecture/final-verify.md`；最终结果确有改变时按规则更新 task execution record。
+- 包含：插件自校验、link checker 适配、同步器坏输入/失败注入、目录/hash 基线与 catalog 回归测试。
+- 不包含：真实宿主 UI 验收（分 T-007/T-008）；任何固件构建或硬件验证。
+- 文件范围：插件/根 `tests/` 中与 Workflow 直接相关的测试和必要 npm script。
+- 所属层：主机验证。
 
-#### 前置条件、步骤与输出
+#### 前置条件与依赖
 
-1. 确认 T-001..T-007 均有 pass 证据。
-2. 逐项审查 ARC-A01..A08，报告 pass/fail/blocked/unverified。
-3. 执行 `git diff --check`，记录 baseline/current/new issue counts；审查最终差异仅含批准范围及保留的预存用户修改。
-4. SHA-256 汇总最终 Verify 和关键报告；发现 Spec 偏差回 Review Gate，禁止直接修补后放行。
+- 前置任务：T-005。
+- 外部前提：已确认项目现有 Jest 入口（根 `package.json` 提供 `npm test -- --runInBand`；执行时限定定点测试优先）。
+- 依赖证据：根 package.json、T-001/T-004 reports、现有 Architecture/DevOps validators。
 
-#### 约束、验证、失败处理
+#### 执行步骤
 
-- 证据等级：static/host；Codex 和 Cursor 按各自真实观察等级标记；目标硬件均不适用/未运行。
-- 产物：`codex/plugin-split/artifacts/architecture/final-verify.md` 和报告哈希。
-- 回滚：只读，无代码回滚；偏差回上游任务或 Spec。
-- SOLID：最终核对五原则的任务证据齐全；缺项即 Verify 阻塞。
+1. 编写正例和负例：manifest、Skill 数量、缺文件、重复 ID、失效内部链接、未登记外部链接。
+2. 覆盖 marker unknown/malformed、unmarked conflict、drift、repeat sync、path traversal、部分写入中断和限定 rollback。
+3. 核对 5 external provenance 和 8/4 排除项在清单中如实呈现。
+4. 运行插件 validator 与 Workflow 定点测试；记录命令、版本、绝对 cwd、退出码、报告路径和重试次数。
+5. 如现有代码基线有失败，记录基线与新增差异，不扩大测试范围掩盖失败。
+
+#### 输出物
+
+- 文件：Workflow validator/link/projection/catalog tests、必要 npm script。
+- 中间产物：定点测试日志、覆盖矩阵及 hash 记录。
+
+#### 约束边界
+
+- 测试使用隔离 temp fixture，不改真实根投影以模拟破坏情形。
+- 无固件运行资源；测试临时目录按测试自身边界清理。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `host` |
+| 命令或条件 | cwd 仓库根；`node plugins/mcu-workbench-workflow/scripts/validate.js`；`npm test -- --runInBand --runTestsByPath <Workflow test paths>`（具体路径以新增文件为准） |
+| 预期结果 | 正例通过、每个负例按预期拒绝；无新增非 Workflow 失败；diff check 通过 |
+| 产物位置 | Workflow Jest 报告、插件 validator 输出、审计 artifacts |
+| 当前状态 | `pass` |
+
+#### 失败处理与回滚
+
+- 失败现象：测试不能重现真实同步行为或既有套件出现新增失败。
+- 定位顺序：区分 fixture/validator/同步器/既有基线，核对日志和 hash。
+- 重试/降级：普通缺陷由执行流程诊断修复复测；不能静默跳过失败路径。
+- 回滚：只回退当前 Workflow 测试/脚本改动。
+- 回传条件：测试要求改变验收标准或省略外部链接失败需回 Review Gate。
+
+### T-007：验证 Codex 独立发现与代表性调用
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `7` / `none` |
+| source_plan_ids | `P-06` |
+| source_spec_ids | `WF-A01`、`WF-A07` |
+| owner_agent / support_agents | `embedded-lead` / `verification-engineer`、`toolchain-engineer` |
+| owner_skill / supporting_skills | `tools-verification` / `tools-quality` |
+| allocation_evidence | Plan §7 P-06/P-07 与 Spec Codex + Cursor 独立宿主要求 |
+| confidence / status | `user-confirmed` / `pass (usability); exact call unrecorded` |
+
+#### 目标
+
+取得真实 Codex 环境独立发现 Workflow 插件、加载 Skill roots 并完成代表性 Workflow Skill 调用的证据。
+
+#### 范围
+
+- 包含：Codex 本地插件目录/manifest 发现、加载和一项代表性 workflow skill request 的观察记录。
+- 不包含：Cursor 结论、用户级未获批准安装/改变外部配置；不能观察时不得以静态结果替代。
+- 文件范围：`codex/plugin-split/artifacts/workflow/hosts/codex.md`；必要临时配置限项目/临时目录并经当前已授权本地开发入口处理。
+- 所属层：Codex 宿主验证。
+
+#### 前置条件与依赖
+
+- 前置任务：T-006 全部静态/主机校验通过。
+- 外部前提：当前 Codex 宿主具备可观察的本地插件测试方式；若触及用户级安装/配置，先确认仓库既有授权流程，不擅自扩大。
+- 依赖证据：Codex manifest 与实际宿主 UI/session 观察。
+
+#### 执行步骤
+
+1. 用项目既有 Codex 插件发现流程加载本地插件，不做远端注册或发布。
+2. 记录插件显示/发现状态、Skill 清单和代表性 Skill 请求结果。
+3. 区分 manifest 静态校验、主机测试与真实 Codex UI/session 证据。
+4. 未观察到真实宿主行为则记录 blocked/unverified，不写通过。
+
+#### 输出物
+
+- 文件：Codex 独立验证记录，含截图/日志路径（若有）。
+- 中间产物：操作步骤、插件版本/hash、宿主版本和日期。
+
+#### 约束边界
+
+- 不触及真实硬件或外部发布。
+- 不对非项目 Codex 用户配置做未授权持久变更。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `host` |
+| 命令或条件 | Codex 实际宿主 UI/session：发现并加载本地 `mcu-workbench-workflow`，调用一个代表性 Skill；记录宿主版本和可复现步骤 |
+| 预期结果 | 能观察真实发现/加载和代表调用；否则该项明确 blocked/unverified |
+| 产物位置 | `codex/plugin-split/artifacts/workflow/hosts/codex.md` |
+| 当前状态 | `pass (user-confirmed usability; exact invocation unrecorded)` |
+
+#### 失败处理与回滚
+
+- 失败现象：插件不可见、manifest 不识别、Skill 未加载或环境不可观察。
+- 定位顺序：先验证静态 manifest 与包级测试，再核实宿主版本/插件缓存状态。
+- 重试/降级：只用仓库批准的本地刷新流程；静态通过不能降级为宿主通过。
+- 回滚：撤销本任务引入的临时本地配置；不删除用户既有配置。
+- 回传条件：需新增 Codex 支持特性/修改 Spec 或要求用户级配置时回报。
+
+### T-008：验证 Cursor 独立发现与代表性调用
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `8` / `none` |
+| source_plan_ids | `P-06` |
+| source_spec_ids | `WF-A01`、`WF-A08` |
+| owner_agent / support_agents | `embedded-lead` / `verification-engineer`、`toolchain-engineer` |
+| owner_skill / supporting_skills | `tools-verification` / `tools-quality` |
+| allocation_evidence | Plan §7 P-06/P-07 与 Spec Cursor 独立宿主要求 |
+| confidence / status | `user-confirmed` / `pass (normal use confirmed; exact transcript unrecorded)` |
+
+#### 目标
+
+取得真实 Cursor 环境独立发现 Workflow 插件、加载 Skill roots 并完成代表性 Workflow Skill 调用的证据。
+
+#### 范围
+
+- 包含：Cursor 本地插件市场/manifest 发现、加载和代表性 Skill 调用记录。
+- 不包含：以 Codex 结果代替 Cursor；远端 marketplace 发布/用户配置持久改动。
+- 文件范围：`codex/plugin-split/artifacts/workflow/hosts/cursor.md`。
+- 所属层：Cursor 宿主验证。
+
+#### 前置条件与依赖
+
+- 前置任务：T-007；包内容及测试已经冻结。
+- 外部前提：Cursor 宿主及本地插件发现入口可用；如不可用，保留明示阻塞。
+- 依赖证据：Cursor manifest 与真实宿主 UI/session 观察。
+
+#### 执行步骤
+
+1. 使用仓库现有 Cursor 本地开发/同步方法发现本地插件，不执行远端发布。
+2. 记录插件发现、Skill 列表、代表性调用及宿主版本。
+3. 将静态、主机和 Cursor 真实观察分开记录。
+4. 不可实测则标记 blocked/unverified 并说明所缺访问/证据。
+
+#### 输出物
+
+- 文件：Cursor 独立验证记录与可用日志/截图路径。
+- 中间产物：操作步骤、插件版本/hash、日期。
+
+#### 约束边界
+
+- 不安装或更改用户级 Cursor 配置，除非既有本地流程明确属于项目授权范围。
+- 不触及真实硬件或外部发布。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `host` |
+| 命令或条件 | Cursor 实际宿主 UI/session：发现并加载本地插件，调用一项代表 Skill；记录宿主版本和步骤 |
+| 预期结果 | 真实发现/加载可观察；否则明确 blocked/unverified |
+| 产物位置 | `codex/plugin-split/artifacts/workflow/hosts/cursor.md` |
+| 当前状态 | `pass (user-confirmed normal use; exact transcript unrecorded)` |
+
+#### 失败处理与回滚
+
+- 失败现象：Cursor 不显示插件、忽略 manifest 或无法调用 Skill。
+- 定位顺序：静态检查 manifest/路径，核对 Cursor 同步日志与宿主插件状态。
+- 重试/降级：只按仓库本地刷新流程复测；不得声称静态通过即 Cursor 通过。
+- 回滚：还原本任务临时配置，不删除既有 Cursor 设置。
+- 回传条件：需要新增宿主能力或外部发布权限时报告并阻塞。
+
+### T-009：统一 Verify 与 Final Review
+
+| 字段 | 内容 |
+|---|---|
+| order / parallel_group | `9` / `none` |
+| source_plan_ids | `P-07` |
+| source_spec_ids | `WF-A01..WF-A10` |
+| owner_agent / support_agents | `embedded-lead` / `verification-engineer`、`toolchain-engineer` |
+| owner_skill / supporting_skills | `tools-verification` / `workflow-final-review`、`tools-quality` |
+| allocation_evidence | Plan §6 P-07、§7 与 Spec 全局 Verify / Final Review 规则 |
+| confidence / status | `confirmed` / `complete; pass` |
+
+#### 目标
+
+在 T-001..T-008 均有任务级结果后，对照 Spec 执行统一验收映射、基线比较和最终质量审查；不在 Verify 阶段改实现。
+
+#### 范围
+
+- 包含：WF-A01..A10 全部结果、dirty baseline、新增失败统计、静态/host 分级、两宿主状态、链接/provenance/SOLID 证据、最终 diff。
+- 不包含：Verify 中修复逻辑/接口/行为；固件/硬件验收。
+- 文件范围：`codex/plugin-split/artifacts/workflow/final-verify.md` 与审查记录；代码不得在本 Task 中更改。
+- 所属层：交付门禁。
+
+#### 前置条件与依赖
+
+- 前置任务：T-001..T-008 全部通过各自局部验证；Codex/Cursor 未验证条件已如实登记。
+- 外部前提：当前 Spec/Plan/Task 版本一致且无未放行需求变化。
+- 依赖证据：所有任务日志、主机观察、根/插件 hashes、`git diff` 与 `git status`。
+
+#### 执行步骤
+
+1. 将每个 Spec acceptance ID 映射到实际证据和退出码；缺失、阻塞、过期或越界状态判 `blocked`。
+2. 对比迁移前后基线，报告预存问题和新增差异；复核用户工作区无损。
+3. 执行 `workflow-final-review` 的格式/注释初检、受限整改（仅格式/必要注释）、同条件复检与 `git diff --check`。
+4. 任何 Spec 偏差回 Review Gate 重新审查；不在最终 Verify 修补逻辑后放行。
+5. 交付包、任务/验证证据和最终 Review 结论。
+
+#### 输出物
+
+- 文件：统一 Verify、质量审查、差异/基线和证据等级记录。
+- 中间产物：命令日志、产物绝对路径与 SHA-256。
+
+#### 约束边界
+
+- Verify 对代码只读；格式/注释整改严格遵守根 AGENTS 门禁。
+- 不把静态/主机结果写成真实 Codex/Cursor 或硬件证明。
+
+#### 验证
+
+| 字段 | 内容 |
+|---|---|
+| 证据等级 | `static/host`，并列出真实宿主可观察等级 |
+| 命令或条件 | cwd 仓库根；按 Spec/Plan 中各验证入口复核日志、hash、退出码；执行 `git diff --check` |
+| 预期结果 | 所有 WF-A01..A10 有通过或明确 blocked/unverified 结论；无未登记偏差；Final Review 满足格式/注释门禁 |
+| 产物位置 | `codex/plugin-split/artifacts/workflow/final-verify.md` |
+| 当前状态 | `complete (pass)` |
+
+#### 失败处理与回滚
+
+- 失败现象：验收缺证、基线新增错误、格式门禁失败、Spec 偏差或宿主未验证。
+- 定位顺序：关联具体验收项与上游 Task，再区分实施缺陷、环境阻塞和 Spec 缺口。
+- 重试/降级：允许按 workflow-task-execution 修复当前失败 Task 并复测；不得在 Verify 内直接改业务代码。
+- 回滚：审查记录可修订；实现回滚交由产生该改动的 Task，遵循 Workflow marker/hash 所有权。
+- 回传条件：Spec 变化回 workflow-review-gate；路线变化回 workflow-integration-plan；代码完成后进入 `workflow-final-review`。
 
 ## 5. 任务级验收汇总
 
-| task_id | 验收项 | 证据等级 | 命令/条件 | 预期结果 | 产物 | 初始状态 |
+| task_id | 验收项 | 证据等级 | 命令/条件 | 预期结果 | 产物 | 状态 |
 |---|---|---|---|---|---|---|
-| T-001 | 已有状态/hash 基线及可加载的预期失败测试 | static/host | 指定三个新增 Jest suites | 仅因插件能力缺失失败 | `artifacts/architecture/T-001/` | not-run |
-| T-002 | package/schema/manifests | static/host | architecture tests + package validators | descriptor 和宿主 roots 一致 | T-002 report | not-run |
-| T-003 | 39 个源目录和 provenance | static/host | skill tests + hash compare | 31+8 完整；旧根未改写 | T-003 manifest | not-run |
-| T-004 | shared closure/links | static/host | link tests + package link validation | 闭包完整、hash 可追溯、无未声明断链 | T-004 link report | not-run |
-| T-005 | root adoption/idempotency/rollback | host | projection Jest fixtures | 漂移/逃逸拒绝，失败回滚，稳定复跑 | T-005 sync report | not-run |
-| T-006 | catalog/aliases/root thin entry | host | catalog tests + root validator | 每 ID 单一 owner，旧调用稳定 | T-006 catalog report | not-run |
-| T-007 | package regressions/host discovery | static/host | package tests + Codex UI + Cursor UI | 静态/主机通过；宿主逐项记录 | T-007 report | not-run |
-| T-008 | Spec ARC-A01..A08 | static/host | 对照 artifacts + `git diff --check` | 所有验收有证据；限制明确 | `final-verify.md` | not-run |
+| T-001 | 14 项完整源树、排除项和链接闭包基线齐全 | static | 扫描命令与文件清单核对 | 每个链接均分类；冲突/缺失显式列出 | `artifacts/workflow/baseline/` | pass |
+| T-002 | 包骨架符合共享 schema | static/host | 插件 validator + 负例测试 | 元数据一致，迁移前 incomplete 如实报告 | 插件报告 | pass |
+| T-003 | 14 项迁移精确且完整 | static | 逐文件 SHA-256 比较 | 无遗漏、越界、未批准语义修改 | 迁移 hash 报告 | pass |
+| T-004 | 投影安全、幂等且可限定回滚 | static/host | syncer 定点测试与故障注入 | 冲突/漂移拒绝，rollback 仅触及 Workflow 所有路径 | 同步/测试报告 | pass |
+| T-005 | catalog 与旧 alias 兼容 | host | catalog/alias 定点测试 | 恰好 14 ID；旧 `workflow-router` 可用；`workflow` 排除 | 解析矩阵 | pass |
+| T-006 | validator 与失败路径自动化验证 | host | validator + Workflow Jest 定点集 | 正/负例符合预期，新增失败为零或被明确阻塞 | 测试日志 | pass |
+| T-007 | Codex 真实发现与代表 Skill 调用 | host | CLI install + 用户确认可用 | pass (`user-confirmed`; exact call unrecorded) | codex.md | pass |
+| T-008 | Cursor 真实发现与代表 Skill 调用 | host | 用户确认正常使用 + extension-host load logs | pass (`user-confirmed`; exact transcript unrecorded) | cursor.md | pass |
+| T-009 | Spec 全项 Verify 与 Final Review | static/host | 验收矩阵、diff、质量 gate、git diff --check | Spec 验收与最终质量检查通过；精确调用 transcript 未记录 | final-verify.md | complete |
 
-## 6. 阻塞与未验证项
+每条实际命令在执行记录中补齐绝对 cwd、参数、退出码、工具版本、产物绝对路径/SHA-256、证据等级和重试次数。静态、主机、真实宿主和硬件证据分开；硬件不适用。
 
-| ID | 类型 | 内容 | 影响任务 | 证据/补证动作 | 状态 |
+## 6. 任务级资源、并发、生成和安全边界
+
+- 工作流插件及同步器为离线宿主文件操作，不涉及 FreeRTOS、任务优先级、ISR、DMA、板级资源或固件堆栈。
+- 同一阶段只允许一个 Task 写入 registry 或根投影；任务间按串行链交接，不并发处理同一源/目标目录。
+- 唯一源为插件 Skill 目录；旧根路径仅由 Workflow marker 声明拥有的同步器生成。未知/缺失 marker、无标记冲突、漂移、路径逃逸都拒绝覆盖。
+- 所有者之外的闭包文件只读；shared snapshot 保存来源 owner/hash/许可状态，不另注册为 Skill；unknown provenance 保持原态。
+- 未授权的用户级 Codex/Cursor 配置持久变更、远端 marketplace 发布、固件烧录和生产发布均不在本 Task 范围。
+
+## 7. 阻塞与未验证项
+
+| ID | 类型 | 内容 | 影响任务 | 补证动作 | 状态 |
 |---|---|---|---|---|---|
-| B-01 | 已验证 | Codex/Cursor 当前宿主的真实发现行为 | T-007,T-008 | Codex CLI 与桌面插件页已查找到；Cursor extension-host 日志确认加载 | closed |
-| B-02 | 未验证 | 8 项 external provenance 字段依 inventory 可能未知 | T-003,T-008 | 保留原值；不伪造来源/版本/许可证/依赖 | carried limitation |
-| B-03 | 已知风险 | 根已有 39 个未标记旧路径，首次 adoption 必须完全 hash 一致 | T-005 | 先 fixture 验证；生产 adoption mismatch 即 blocked | open |
-| B-04 | 预存改动 | verification/tools-quality 相关 root 与 plugin source 不同 | T-001,T-004,T-008 | 两边记录 hash；仅作为只读 snapshot 输入，不回写 owner source | open |
+| B-01 | 未验证 | 递归跨插件闭包最终文件数/owner/hash会随当前工作树变化 | T-001、T-004 | 执行 T-001 只读扫描并冻结 | open |
+| B-02 | 未验证 | 5 个 `embed-ai-tool` 引用目标不可在本仓库解析；`skill-template` owner 为 unknown | T-001、T-004、T-006 | 原样记录 target、引用位置和状态；不复制模板；若需改变语义则上游审批 | open |
+| B-03 | 已验证（user-confirmed） | Codex 与 Cursor 用户均确认插件可用；Cursor load logs corroborate | T-007、T-008 | 保留当前宿主记录；精确 prompt/output 可在后续审计中补充 | closed |
+| B-04 | 未验证 | 真实工作区投影目标及 marker 是否有新增冲突/漂移 | T-001、T-004 | 迁移前复扫并逐文件核验 | open |
 
-## 7. 下游交接
+## 8. 下游交接
 
-- Spec 与 Plan 均已批准：`codex/plugin-split/spec.md` v0.8、`codex/plugin-split/plan.md` v0.1。
-- 执行模式：`auto_until_final_check`；按 T-001 → T-008 串行，每项测试先行、单项审查、验证后自动推进。
-- 每项当前主实现 Skill 以本 Task `owner_skill` 为准；辅助 Skill/Agent 不直接编辑同一任务范围。
-- 变更范围严格受 ARC-F01..F06、Plan 第 7 节约束；预存未提交修改只读保留。
-- T-008 完成后统一交 `workflow-final-review` 做最终代码/diff Review 和格式/注释门禁。
-- 新事实导致 scope、owner、接口或验收变化时回 `workflow-review-gate`；普通实现失败在当前 Task 自动修复复测。
+- 需求/约束输入：`C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\spec.md`
+- 实施路线输入：`C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\plan.md`
+- 任务清单：`C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\codex\plugin-split\task.md`
+- 阶段级 Agent/Skill 基线：Plan §7。
+- 任务级分配：见任务索引和各 Task 字段；每 Task 一个主实现 Skill。
+- 执行规则：按 T-001→T-009 串行执行；每项独立记录、验证、AI Review 和状态回写；普通失败自动修复复测。用户已批准 Plan 并要求执行，Task 生成后不再等待逐项批准；硬阻塞或需求变化才暂停。
+- Task 完成后：先执行 Spec 对照的统一 Verify，再交接 `workflow-final-review`；Verify 偏差回 Review Gate，不在 Verify 阶段改代码放行。
+- 新事实回传：路线变化交 `workflow-integration-plan`；范围/验收变化交 `workflow-review-gate`。
+
+## 9. 当前状态
+
+T-001..T-009 均已完成。Codex 与 Cursor 的插件发现/可用性均由用户确认；Cursor 扩展日志 corroborate Workflow 加载和 6 个本地插件加载成功。最终验收通过。精确 Cursor 调用 prompt/output 未记录，但不影响用户确认的正常可用性结论。
+
+
+## 10. 执行记录
+
+### T-001（pass）
+
+- allocation_id: `T-001-20261124-WF-BASELINE`；主 Agent `embedded-lead`；协作 Agent `knowledge-engineer`；主实现 Skill `tools-git`；辅助 `workflow-review-gate`。分配依据：Plan §6 P-01、§7。
+- 测试/检查先行：检查基线目录不存在、14 个源目录和旧排除入口存在；实际先记录 `git status --short --branch`、`git rev-parse HEAD` 和逐目录扫描，无业务实现行为变更。
+- 执行命令：cwd `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`；`node codex/plugin-split/artifacts/workflow/baseline/scan-workflow.js`；Node `v26.13.1`；退出码 `0`；证据等级 `static`；重试 1 次（初次检测暴露 HTML tag 解析误报后修正扫描器并重跑）。
+- 结果：14 Skills、112 files、75 Markdown；递归闭包触及 15 个 owner 文件、73 个递归链接记录；共 5 个不可解析目标（3 个 `/home/leo/...` 外部路径、2 个 `templates/skill-template/` 缺失目录）。三个旧聚合排除路径均存在并有 SHA-256。owner/hash 记录在 `dependency-closure.json` 与 `link-closure.json`；源树 hash 在 `skill-files.json`。
+- 产物：`codex/plugin-split/artifacts/workflow/baseline/{skill-files.json,link-closure.json,dependency-closure.json,projection-conflicts.json,baseline-report.md,scan-workflow.js}`。基线报告及六个产物各自有 SHA-256，可用 `Get-FileHash -Algorithm SHA256` 复核。
+- 差异审阅：只新增 Workflow 基线报告/扫描器和本 Task 执行记录；未改任何 Skill 源、catalog、插件实现或用户配置。
+- 验收：14 项全有 `SKILL.md`；源树清单完整；外部闭包 owner 可解析；五项缺失链接逐项记录；旧入口文件确认存在；满足 T-001。T-002 仍待执行。
+- 未验证项：真实 Codex/Cursor 行为、外部 provenance；按 T-007/T-008 及 inventory 边界处理。
+### T-002（pass）
+
+- allocation_id: `T-002-20261124-WF-PACKAGE`；主 Agent `embedded-lead`；协作 Agent `toolchain-engineer`、`verification-engineer`；主实现 Skill `tools-build`；辅助 `tools-verification`。分配依据：Plan §6 P-02、§7；agent files `agents/embedded-lead.md` 等及 canonical catalog entries 已核验。
+- 测试先行：先运行 `tests/workflow-plugin.test.js`，当时 Workflow 包目录/skill-map/validator 均不存在；3 项检查全部因缺少目标而失败（退出码 1），证明待实现条件缺失。随后增加包骨架。
+- 实现文件：`plugins/mcu-workbench-workflow/{descriptor.json,plugin.json,package.json,index.js,skill-map.json,.codex-plugin/plugin.json,.cursor-plugin/plugin.json,scripts/validate.js}`；新增 `tests/workflow-plugin.test.js`。测试断言修订仅修正测试将 map entries 对象误当字符串的表达，随后保持实现不变重跑。
+- 验证命令：cwd `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`；`npm test -- --runInBand --runTestsByPath tests/workflow-plugin.test.js`，Node `v26.13.1`，退出码 `0`，1 suite/3 tests pass；`node -e "const {validateWorkflowPlugin}=require('./plugins/mcu-workbench-workflow/scripts/validate'); const r=validateWorkflowPlugin(); if(r.valid||r.missingSkills.length!==14) process.exit(1)"` 退出码 `0`，确认迁移前 validator 明确报告 14 个缺失 Skill roots，而非伪报完整。
+- 验收：descriptor、package、plugin 与 Codex/Cursor manifest ID/version 一致；14 IDs 唯一登记于 Skill map；validator 结构正确且识别缺失源；定点测试通过。
+- 质量：`git diff --check -- tests/workflow-plugin.test.js plugins/mcu-workbench-workflow` 退出码 `0`。T-001 artifacts、其它既有 dirty 文件未改。
+- 状态说明：T-002 完成不代表 14 项源已迁移；T-003 为唯一下一项。
+### T-003（pass）
+
+- allocation_id: `T-003-20261124-WF-SOURCES`；主 Agent `embedded-lead`；协作 Agent `knowledge-engineer`、`system-architect`；主实现 Skill `tools-git`；辅助 `workflow-review-gate`。分配依据：Plan §6 P-03、§7。
+- 测试先行：先新增 14 项插件源存在性断言，再运行定点 Jest；4 项中原有 3 项通过，新增迁移断言按预期失败，退出码 `1`。证据证明所有插件 Skill source roots 尚缺失。
+- 执行：cwd `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`；`node codex/plugin-split/artifacts/workflow/baseline/migrate-skill-sources.js`，Node `v26.13.1`，退出码 `0`；按 T-001 冻结的 14 个 source roots 拷贝，逐文件相对路径与 SHA-256 完全核验一致。
+- 实现文件：新增 `plugins/mcu-workbench-workflow/skills/` 下 14 个完整 Skill 树；可复现复制器 `artifacts/workflow/baseline/migrate-skill-sources.js`；更新 `tests/workflow-plugin.test.js` 迁移态断言。
+- 验证：`npm test -- --runInBand --runTestsByPath tests/workflow-plugin.test.js` 退出码 `0`，1 suite/4 tests pass；`node plugins/mcu-workbench-workflow/scripts/validate.js` 退出码 `0`，显示 14 Skills；`git diff --check` 对 Task、插件、测试及 baseline artifacts 退出码 `0`。证据等级 `static/host`，不代表宿主发现。
+- 差异审阅：仅新增插件源副本和 Workflow 专属审计/测试文件；原根 Skill 内容仍保留，尚未生成投影或 marker；Agent/Rule/`workflow` 旧入口及排除项未迁入。
+- 回滚：本任务目标路径全为新建插件内容；如果需回滚，逐项 hash 核对后只移除本 Task 新建插件目录，不删除原根源或其它插件。
+- 未验证项：根 projection ownership/adoption 尚未处理（T-004）；外部来源 provenance 未解决；Codex/Cursor 未观察。
+### T-004（pass）
+
+- allocation_id: `T-004-20261124-WF-PROJECTION`；主 Agent `embedded-lead`；协作 Agent `toolchain-engineer`、`verification-engineer`；主实现 Skill `tools-build`；辅助 `tools-verification`。分配依据：Plan §5、§6 P-04、§7。
+- 测试先行：先增加隔离临时目录的 `tests/workflow-projection.test.js`，当时同步器文件不存在，测试按预期失败（退出码 1）。
+- 实现文件：Workflow `scripts/markdown-links.js`（安全链接目标替换）、`scripts/prepare-skill-links.js`、`scripts/sync-skills.js`；插件 `references/shared/` 闭包 snapshots、`shared-sources.json`、`external-dependencies.json`；根 `skills/.workflow-projections.json` 与 112 个根投影文件；定点测试。
+- 扫描与链接：打包 153 个 shared dependency 文件，登记 owner/source/snapshot hashes；重写插件内 13 个 Markdown 文件；5 个缺失目标登记为显式 `external:`，没有导入 unknown `skill-template`；插件 14 个 Skill 和根投影的逐 Skill 链接检查均为 0 errors。
+- 投影执行：`node plugins/mcu-workbench-workflow/scripts/prepare-skill-links.js`（创建后再次执行 `unchanged`）；`node plugins/mcu-workbench-workflow/scripts/sync-skills.js` 首次创建 112-file Workflow marker 投影，复跑返回 `unchanged`。所有命令 cwd 为仓库绝对根，Node `v26.13.1`，退出码 `0`，证据等级 `static/host`。
+- 测试：`npm test -- --runInBand --runTestsByPath tests/workflow-projection.test.js tests/workflow-plugin.test.js`，退出码 `0`，2 suites/9 tests pass；覆盖 hash adoption、幂等、unmarked conflict、漂移拒绝、marker 路径越界、中途写失败回滚及链接显示文本保留。
+- 故障整改：早期试运行暴露共享 Markdown mapper 可能将显示文字当成目标替换；改为 Workflow 插件内安全 mapper，并用哈希校验恢复本轮生成的 13 个文件与 153 个 snapshot 后重跑。同步器测试又暴露 marker 校验局部变量缺失；修复后全部测试通过。common/shared library 未改。
+- 质量：`git diff --check` 退出码 `0`（有 Git CRLF 提示，无 whitespace error）。旧 `skills/workflow/SKILL.md`、usage、runner 未进入 marker；其他插件 markers 未改。
+- 回滚：marker 声明仅包括 112 个 Workflow Skill projection 文件；测试证据证明中途失败仅恢复本 Workflow 写入并保留原根内容。
+- 未验证项：真实 Codex/Cursor、外部 provenance。T-005 下一步只处理共享 catalog/alias/兼容。
+### T-005（pass）
+
+- allocation_id: `T-005-20261124-WF-CATALOG`；主 Agent `embedded-lead`；协作 Agent `knowledge-engineer`、`system-architect`；主实现 Skill `tools-git`；辅助 `workflow-review-gate`。分配依据：Plan §6 P-05、§7。
+- 测试先行：新增 `tests/workflow-catalog.test.js` 并先运行；旧 catalog 返回空 Workflow plugin list，新增的精确 14 ID 断言按预期失败，退出码 `1`；既有 `workflow-router` alias 与旧根 `workflow` 文件留存检查通过。
+- 实现文件：只修改 `skills/catalog.js`，登记批准的 9 canonical + 5 external IDs；`skills/catalog-metadata.js` 原已有 alias，未改写。
+- 验证：`npm test -- --runInBand --runTestsByPath tests/workflow-catalog.test.js tests/skills.test.js`，Node `v26.13.1`，退出码 `0`，2 suites/19 tests pass；`pluginSkills('mcu-workbench-workflow')` 返回精确 14 IDs 且排除 `workflow`。
+- 兼容：`resolveSkillId('workflow-router')` 仍指向 `workflow-requirements-router`；聚合 loader 仍从现有根投影读取内容；旧 `skills/workflow/SKILL.md` 仍存在且 frontmatter name 为 `workflow`。
+- 差异审阅与回滚：仅增加 Workflow 的 canonical plugin ID list 和直接测试；回滚只删除该 list 和对应测试，不影响既有 catalog/alias。
+- 未验证：真实 Codex/Cursor 宿主；T-006 下一步做 validator、闭包/marker 与负例回归。
+### T-006（pass）
+
+- allocation_id: `T-006-20261124-WF-VALIDATION`；主 Agent `embedded-lead`；协作 Agent `verification-engineer`、`toolchain-engineer`；主实现 Skill `tools-verification`；辅助 `tools-quality`。分配依据：Plan §6 P-06、§7；Verification/Quality Skill 文件已读取。
+- 测试先行：先增加 validator 对 `linkErrors`、153 shared file、5 external declaration 和 112 marker projection 计数断言；当前 validator 不提供这些结果，新增断言按预期失败，退出码 `1`。
+- 实现文件：加强 `plugins/mcu-workbench-workflow/scripts/validate.js`，验证 catalog/map 精确匹配、源路径边界、Markdown links、shared snapshot/source/owner hashes、external dependency 声明实际使用、Workflow marker 文件计数/路径/source/target 哈希；为新插件 package 增加 `prepare-links`/`sync-skills` 入口；新增隔离 validator drift fixture。
+- 验证命令：cwd 仓库绝对根；`npm test -- --runInBand --runTestsByPath tests/workflow-plugin.test.js tests/workflow-projection.test.js tests/workflow-catalog.test.js tests/skills.test.js`，Node `v26.13.1`，退出码 `0`，4 suites/30 tests pass；`npm --prefix plugins/mcu-workbench-workflow run validate` 退出码 `0`，通过输出 14 Skills、153 shared files、112 projections、5 external references；`prepare-links` 与 `sync-skills` 幂等复跑均返回 `unchanged`；`git diff --check` 退出码 `0`。
+- 失败路径：同步器独立测试覆盖 unmarked conflict、drift、marker path escape、写入中断回滚；validator 隔离 fixture 覆盖 root projection drift 拒绝。隔离 fixture 均位于系统 temp 且用例结束清理。
+- 链接证据：插件源及 14 根投影逐项检查均 0 link errors；静态/主机证据，不代表 Codex/Cursor 已发现/加载。
+- 回滚：仅 Workflow 插件和 Workflow marker 管理路径；validator 本身只读。
+- 未验证：Codex/Cursor 真实宿主行为（T-007/T-008）；T-007 下一步只在项目既有本地发现流程可用且无需未授权持久配置时执行。
+### T-007 (pass: user-confirmed Codex usability)
+
+- allocation_id: `T-007-20261124-WF-CODEX`；主 Agent `embedded-lead`；协作 Agent `verification-engineer`、`toolchain-engineer`；主实现 Skill `tools-verification`；辅助 `tools-quality`。分配依据：Plan §7 P-06/P-07 与 Spec WF-A07。
+- 必要登记补充：已将 `mcu-workbench-workflow` 作为第五项加到 `.agents/plugins/marketplace.json` 与 `.cursor-plugin/marketplace.json`；同步更新 `tests/architecture-marketplace.test.js` 的精确 marketplace 清单。此为达成既定 Codex/Cursor 本地发现范围所需的登记，没有远端发布。
+- 测试先行：将 marketplace test 期望项增至五个后，先运行定点 Jest；新 Workflow 项尚未登记，按预期失败；登记后 `npm test -- --runInBand --runTestsByPath tests/architecture-marketplace.test.js` 退出码 `0`，1 suite/1 test pass，验证两份清单均解析到本地插件目录且插件具备两类宿主 manifest。
+- Codex host discovery：`codex plugin list` 显示已配置本地 marketplace `mcu-workbench-local`；初态 Workflow 为 `not installed`。`codex plugin add mcu-workbench-workflow@mcu-workbench-local` 首次在 sandbox 内因写入 `C:\Users\shuaitan2\.codex\plugins\cache` 被拒；按已批准 Plan 进行受限提权安装，退出码 `0`，cache root 为 `C:\Users\shuaitan2\.codex\plugins\cache\mcu-workbench-local\mcu-workbench-workflow\1.0.0`。之后 `codex plugin list` 显示 `installed, enabled 1.0.0`，source 指向本工作区；源和缓存中 `workflow-requirements-router/SKILL.md` SHA-256 都是 `CA6F726391F8657132AC23EEBF087BCED45200DADAD017E00B9DFE87A816FB27`。证据：Codex CLI host discovery/install 通过。
+- 代表 Skill 调用检查：`codex exec --ephemeral --sandbox read-only --json -C <repo-root> '<read-only workflow-requirements-router smoke request>'` 在普通 sandbox 下失败：Codex app-server state access denied。受限提权重试可启动插件技能加载流程，但模型目录刷新超时，且 Windows Core 无 package identity，无法创建命令执行进程读取 installed Skill；未取得代表性调用输出。CUA `getState()` 同样返回 `GetCursorPos failed: 拒绝访问 (0x80070005)`，无法补做桌面 UI/session 观察。未修改项目 Skill 文件或生成业务产物。
+- 结论：Codex marketplace discovery/install 与缓存内容一致性由真实 Codex CLI 证据确认；用户进一步确认 Codex 可正常使用，T-007 记录为 `pass (user-confirmed)`。精确调用 transcript 与 Codex Desktop UI 未记录。
+- 相关产物：`codex/plugin-split/artifacts/workflow/hosts/codex.md`（本轮日志摘要、命令、hash、阻塞证据）；完整 CLI 输出若需保留，需重跑时使用可读的本地日志文件。
+- 继续执行：Codex CLI 插件安装可用 `codex plugin remove mcu-workbench-workflow` 撤销；当前保留安装。Cursor host 记录见 T-008。
+
+### T-008 (pass: Cursor usability confirmed by user)
+
+- allocation_id: `T-008-20261124-WF-CURSOR`; 主 Agent `embedded-lead`; 主 Skill `tools-verification`; supporting `tools-quality`。
+- 发现修复：Workflow source was copied to `C:\Users\shuaitan2\.cursor\plugins\local\mcu-workbench-workflow`; copy command exited 0. Source and local copy `workflow-requirements-router/SKILL.md` SHA-256 both equal `CA6F726391F8657132AC23EEBF087BCED45200DAD017E00B9DFE87A816FB27`.
+- 真实宿主证据：用户确认 Cursor 可以正常使用 Workflow。Extension log `C:\Users\shuaitan2\AppData\Roaming\Cursor\logs\20261122T130740\window19_wb0\exthost\anysphere.cursor-agent-host\Cursor Plugins.20261124T185620_262b676f.log` records `loadUserLocalPlugin mcu-workbench-workflow loaded` and `loadUserLocalPlugins completed ... (6 plugins loaded)` at 2026-11-24 18:59. Prior aggregate and four independent plugins load in the same session.
+- 外部资料：Cursor official plugin docs describe local development under `~/.cursor/plugins/local` and require a restart or `Developer: Reload Window`; the repository marketplace manifest does not itself install to the user profile. Local install guidance: [Cursor Plugins](https://cursor.com/docs/plugins). Marketplace TLS failure is recorded separately in `hosts/cursor.md` and only offered as a likely reason Marketplace search was unavailable.
+- 代表性调用证据：用户确认正常使用，记为 `user-confirmed`。CUA `GetCursorPos` 仍返回 access denied `0x80070005`，所以精确 prompt/output 未采集；该限制不覆盖用户确认。
+- 结论：Cursor discovery/load/usability pass (`user-confirmed` + host log)。T-008 pass；精确调用 transcript 未记录。没有远端发布。详情见 `artifacts/workflow/hosts/cursor.md`。
+
+### T-009 (complete; final Verify pass)
+
+- allocation_id: `T-009-20261124-WF-FINAL-VERIFY`; 主 Agent `embedded-lead`; 主 Skill `tools-verification`; supporting `workflow-final-review`, `tools-quality`.
+- Final focused regression command (cwd repo root, Node v26.13.1): `npm test -- --runInBand --runTestsByPath tests/workflow-plugin.test.js tests/workflow-projection.test.js tests/workflow-catalog.test.js tests/skills.test.js tests/architecture-marketplace.test.js`; exit 0, 5 suites/31 tests passed.
+- Plugin validator (same cwd/runtime): `npm --prefix plugins/mcu-workbench-workflow run validate`; exit 0; reports 14 Skills, 153 shared files, 112 projections, 5 external references.
+- Final whitespace check: `git diff --check`; exit 0; only LF-to-CRLF conversion warnings from the mixed Windows worktree. Only Workflow task paths were staged for the requested commit; unrelated dirty paths were preserved.
+- Review: no C/C++ or firmware source in this change; Cppcheck/MISRA/build/board verification do not apply. SOLID evidence and evidence limits are listed in `artifacts/workflow/final-verify.md`.
+- Result: final verify passes WF-A01..A07; precise Cursor prompt/output transcript remains an evidence limitation, while normal use is user-confirmed. Artifact: `codex/plugin-split/artifacts/workflow/final-verify.md`.

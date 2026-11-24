@@ -25,6 +25,11 @@
       "name": "mcu-workbench-verification",
       "source": "plugins/mcu-workbench-verification",
       "description": "验证、质量门禁和单元测试 Skills。"
+    },
+    {
+      "name": "mcu-workbench-workflow",
+      "source": "plugins/mcu-workbench-workflow",
+      "description": "需求路由、审查门禁、计划与任务执行 Skills。"
     }
   ]
 }

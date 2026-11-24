@@ -4,5 +4,5 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| 嵌入式分层架构设计 | [完整流程与资源](capabilities/workflow-architecture/GUIDE.md) |
-| 跨 MCU、SDK 或工具链的代码移植 | [完整流程与资源](capabilities/workflow-code-porting/GUIDE.md) |
+| 嵌入式分层架构设计 | [完整流程与资源](./capabilities/workflow-architecture/GUIDE.md) |
+| 跨 MCU、SDK 或工具链的代码移植 | [完整流程与资源](./capabilities/workflow-code-porting/GUIDE.md) |

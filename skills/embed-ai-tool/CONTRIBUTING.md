@@ -28,8 +28,8 @@
 - `## 输出约定`
 - `## 交接关系`
 
-不要从空白文档开始写，直接复用 [templates/skill-template/SKILL.md](/home/leo/work/open-git/em_skill/templates/skill-template/SKILL.md)。
-在认定一个 skill 已经完成前，请用 [templates/skill-template/SCENARIOS.md](/home/leo/work/open-git/em_skill/templates/skill-template/SCENARIOS.md) 定义最小覆盖范围。
+不要从空白文档开始写，直接复用 [templates/skill-template/SKILL.md](external:/home/leo/work/open-git/em_skill/templates/skill-template/SKILL.md)。
+在认定一个 skill 已经完成前，请用 [templates/skill-template/SCENARIOS.md](external:/home/leo/work/open-git/em_skill/templates/skill-template/SCENARIOS.md) 定义最小覆盖范围。
 
 ## 内容准则
 

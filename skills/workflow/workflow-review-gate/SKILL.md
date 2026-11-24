@@ -55,7 +55,7 @@ Skill 内部的 `skills/**` 只能保存维护者编写的规则、模板和设�
 
 ## SOLID 代码硬门禁
 
-代码施工必须遵守 [SOLID 代码施工硬门禁](references/solid-code-gate.md)。本 Skill
+代码施工必须遵守 [SOLID 代码施工硬门禁](./references/solid-code-gate.md)。本 Skill
 在 `spec.md` 放行前记录五项原则的适用性、设计约束和证据要求；任何原则无法满足或
 缺少可验证证据时，判定为 `阻塞`，不得把问题下放给实现 Skill 自行解释。
 
@@ -102,7 +102,7 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 
 ### 固定审查包与代码阶段门禁
 
-审查结果必须按 [`implementation-plan-review-package.md`](references/implementation-plan-review-package.md) 输出。审查包**必选**包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单四个章节，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接；四个章节只在 `Review-Package` 内维护，不生成四个独立 Markdown 文件，审查完成后整合为 `spec.md`。`Review-Package` 是审计记录，`spec.md` 是下游 Skill 的正式需求/约束输入；放行后的 `workflow-integration-plan` 另行生成经过用户选择和方案审查的 `plan.md` 作为实施计划输入。
+审查结果必须按 [`implementation-plan-review-package.md`](./references/implementation-plan-review-package.md) 输出。审查包**必选**包含工程现状表、文件施工清单、代码生成约束清单和验收测试清单四个章节，并在结尾列出可采用部分、需修订项、阻塞风险和下一轮交接；四个章节只在 `Review-Package` 内维护，不生成四个独立 Markdown 文件，审查完成后整合为 `spec.md`。`Review-Package` 是审计记录，`spec.md` 是下游 Skill 的正式需求/约束输入；放行后的 `workflow-integration-plan` 另行生成经过用户选择和方案审查的 `plan.md` 作为实施计划输入。
 
 只要任一会影响施工范围、代码生成约束或验收结论的事实仍是 `inferred` 或 `unverified`，就必须记录补证问题、保持阻塞状态，**不得进入代码阶段**。仅当这些实施相关事实全部为 `confirmed` 或 `user-confirmed`，四张表不存在未关闭阻塞项，且力度满足风险要求时，才能放行：`prototype` 结束于最小记录；`lightweight` 生成精简 `spec.md` 并仅允许局部施工；`full` 生成可交接的 `spec.md`，再交接 `workflow-integration-plan` 规划与分发。代码产物就绪后，由 `workflow-integration-plan` 把最终代码/变更集、适用的 Spec 与验收清单交接给 [`workflow-final-review`](../workflow-final-review/SKILL.md) 做最终代码审查；`workflow-final-review` 不承担代码生成阶段。下游只能在已放行 Spec 的施工边界、生成约束和验收测试范围内工作；发现新事实必须回传本 Skill 更新四张清单、Review-Package 和 Spec。
 
@@ -147,7 +147,7 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 
 ## 分层证据图
 
-先读取 [`software-layer-contract.md`](references/software-layer-contract.md) 作为当前顶层架构唯一依据，再读取 [`software-architecture-knowledge-graph.md`](references/software-architecture-knowledge-graph.md) 和对应 JSON 作为项目证据，按 App → Service → Platform → Impl → Vendor 核对分层边界。必要时再检查 Impl 内的 OS/BSP/MCU/Driver/Handler/Port 角色；Tools 是横切质量与验证能力，不是第六个软件层。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。分层审计、迁移设计与文件级改造顺序由 `workflow-integration-plan` 承担。
+先读取 [`software-layer-contract.md`](./references/software-layer-contract.md) 作为当前顶层架构唯一依据，再读取 [`software-architecture-knowledge-graph.md`](./references/software-architecture-knowledge-graph.md) 和对应 JSON 作为项目证据，按 App → Service → Platform → Impl → Vendor 核对分层边界。必要时再检查 Impl 内的 OS/BSP/MCU/Driver/Handler/Port 角色；Tools 是横切质量与验证能力，不是第六个软件层。图谱中的源码仓库只作为版本化证据，不把上游实现复制进插件。分层审计、迁移设计与文件级改造顺序由 `workflow-integration-plan` 承担。
 
 ## 硬边界
 
@@ -165,9 +165,9 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
 
 ## 参考
 
-- [软件层契约](references/software-layer-contract.md)
-- [GR5526 LVGL 验收映射](references/gr5526-lvgl-mapping.md)
-- [实现方案审查包模板](references/implementation-plan-review-package.md)
+- [软件层契约](./references/software-layer-contract.md)
+- [GR5526 LVGL 验收映射](./references/gr5526-lvgl-mapping.md)
+- [实现方案审查包模板](./references/implementation-plan-review-package.md)
 - [Spec 开发力度与风险分级](../workflow-requirements-router/references/spec-rigor-by-risk.md)
-- [SOLID 代码施工硬门禁](references/solid-code-gate.md)
-- [内化能力索引](references/capability-index.md)
+- [SOLID 代码施工硬门禁](./references/solid-code-gate.md)
+- [内化能力索引](./references/capability-index.md)

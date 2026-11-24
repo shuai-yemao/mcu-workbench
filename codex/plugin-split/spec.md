@@ -5,15 +5,15 @@
 | 字段 | 内容 |
 |---|---|
 | request_id | `REQ-PLUGIN-SPLIT-20261123` |
-| 生成时间 | `2026-11-24T14:28:43+08:00` |
+| 生成时间 | `2026-11-24T17:50:08+08:00` |
 | 项目路径 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai` |
-| 分支/提交 | `host_ai`；`6cd4fadc93ddaff5b03efbf7b32fa6a72b97883b`（工作区含预存未提交改动） |
+| 分支/提交 | `host_ai`；Workflow v0.9 RCP 基线 `43eb4e731568b606451083b0e479a29a5722fb98`（工作区含预存未提交改动） |
 | Spec 力度 | `full` |
 | Spec 叠加门禁 | `[versioned]` |
-| Spec 版本 | `v0.8-architecture-fourth-plugin` |
+| Spec 版本 | `v0.9-workflow-fifth-plugin` |
 | 审查状态 | `review-gate-approved / pending-user-approval` |
-| 用户审查状态 | `approved`（用户于 2026-11-24 批准 v0.8） |
-| 当前判定 | `approved / plan-approved`：Spec 和 architecture Plan 均获用户批准；按已批准 Task 进入拆分施工 |
+| 用户审查状态 | `approved`（用户于 2026-11-24 要求进行下一步；本阶段下一步为进入 Plan 方案选择） |
+| 当前判定 | `spec-approved / plan-option-pending`：Workflow 范围已批准；等待用户选择 Plan 方案，选定并审查通过后再生成正式 Plan |
 | 2026-11-23 变更 | 用户确认修复既有 catalog/link 基线；正式 Skill 必须可登记，链接必须指向仓库内真实目标或显式记录为外部依赖，Jest/插件/链接校验目标为零失败 |
 | 2026-11-24 变更 | 用户确认沿用上一轮边界，按拆分难度选择第二个插件；选定 `mcu-workbench-observability`，并允许已登记外部 Skill 作为该插件的迁移对象；宿主验收范围固定为 Codex + Cursor MVP |
 | 2026-11-24 变更 | 用户明确要求清理插件中的 OpenCode 部分；移除旧聚合插件活动 OpenCode 宿主入口、运行时、配置、专属依赖/脚本/Hook、命令生成器和派生产物；保留历史审计记录中的 OpenCode 事实性文字 |
@@ -22,6 +22,152 @@
 | 2026-11-24 变更 | 用户确认将 `academic-paper`、`academic-paper-reviewer`、`academic-pipeline`、`sr-screener` 从 verification 插件移出，转为 Codex Agent Skills；`embedded-unit-test-generator`、`static-analysis` 留在 verification 插件。Codex 现有同步器的安装目标为 `~/.agents/skills`。Spec 升至 v0.6，并经 Review Gate 及用户批准；v0.5 Plan/Task 不再适用于新范围 |
 | 2026-11-24 变更 | 用户确认第三阶段拆分 `mcu-workbench-devops`：纳入五项 canonical Skills 与归属矩阵内全部 DevOps 外部 Skills；建立完整独立包，Codex + Cursor MVP 验收。Spec 升至 v0.7；v0.6 verification Plan/Task 不适用于本阶段，等待本 Spec 用户审阅后再重制 |
 | 2026-11-24 变更 | 用户确认第四阶段沿用架构 Skill 归属矩阵，项目管理与工作流能力继续归 workflow；Spec 升至 v0.8，等待用户审阅后重制 Plan/Task |
+| 2026-11-24 变更 | 用户确认第五阶段拆分 `mcu-workbench-workflow`：纳入 9 个 canonical Workflow Skills 和 ownership matrix 中 17 个 Workflow 外部 Skills，外部 provenance 未知状态继续保留；不迁入 `embedded-lead` 或根级 `mcu-workflow-io`；沿用插件唯一源与根目录受保护投影；旧 `skills/workflow/SKILL.md`（ID `workflow`）及其 usage/script 文件排除并留在旧聚合入口；Codex + Cursor MVP、旧聚合入口及 aliases 兼容沿用既有批准边界。Spec 升至 v0.9，等待用户审阅后重制 Plan/Task |
+| 2026-11-24 变更 | 用户指出部分外部 Skills 的实际职责与 Workflow 插件范围不符；撤回 v0.9 中“17 项全部属于 Workflow”的推定及 H-05 审阅请求。先基于 Skill 正文逐项重审 ownership，确认后再更新 RCP、Spec 和验收范围；当前不进入用户审批或施工 |
+| 2026-11-24 变更 | 用户批准按内容审查重分类：`can-debug`、`modbus-debug` → Observability；`embedded-bug-hunter`、`memory-analysis` → Verification；`embedded-build-flash-debug` → DevOps；`embedded-project-scaffold`、`parsed-chip-datasheet`、`vendor-minimal-firmware` → Architecture；`deep-research`、`market-mrd-analyst`、`patent-disclosure-skill`、`skill-template` → `unknown`。归属矩阵和 inventory 已更新，provenance 状态保持 blocked。以上 8 项尚未进入目标插件源目录，实体迁移时机待确认 |
+| 2026-11-24 变更 | 用户确认 8 项改归其他插件的 Skill 只更新 ownership/inventory，本阶段不实体迁入已完成的其他插件；其插件源迁移另作后续维护任务。本阶段 Workflow Spec 仅覆盖 9 canonical + 5 external，恢复 Review Gate 并进入用户审阅 |
+| 2026-11-24 变更 | 用户在 Spec 审阅请求后明确要求“进行下一步”；按唯一后续阶段解释为批准 Workflow v0.9，进入 full 力度 Plan 双方案选择；Task 与施工仍需后续门禁 |
+
+## 2026-11-24 当前阶段补充：Workflow 第五个插件拆分（v0.9）
+
+本节是 Workflow v0.9 当前审计版本；原 17 项 Workflow external 范围已按用户确认的内容审查结果收窄为 5 项。当前 Workflow 范围为 9 canonical + 5 external Skills。8 项已重分配到其他插件，但本阶段只更新其 owner 登记，不进行实体迁入；实际迁移作为后续插件维护任务处理。Review Gate 已按此边界重新审查，历史阶段条目保留作审计，不作为本阶段施工范围或批准依据。
+
+### RCP 与确认项
+
+| 字段 | 内容 | 可信等级 |
+|---|---|---|
+| 项目路径 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai` | confirmed |
+| 分支/提交 | `host_ai`；本轮只读观察 HEAD `43eb4e731568b606451083b0e479a29a5722fb98`；工作区存在预存未提交改动 | confirmed |
+| 目标插件 | `mcu-workbench-workflow`，五插件体系中的第五个待拆插件 | user-confirmed（由用户“第五个插件”及既有五插件定义确认） |
+| 目标结果 | 建立可由 Codex 与 Cursor 独立发现、加载和验证的 Workflow 插件，同时保持旧聚合入口及旧 Skill IDs/aliases 兼容 | user-confirmed（沿用既有 MVP 边界） |
+| canonical 范围 | `workflow-requirements-router`、`workflow-claude-layering`、`workflow-document-context`、`workflow-requirements-challenge`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-task-breakdown`、`workflow-task-execution`、`workflow-final-review` | confirmed（catalog metadata） |
+| Workflow 外部 Skill 范围 | `embed-ai-tool`、`embedded-change-report`、`embedded-project-intake`、`embedded-team-sync`、`mrd-to-prd` | user-confirmed（内容审查后保留在 Workflow） |
+| 改归其他插件的外部 Skills | 8 项：Observability 2、Verification 2、DevOps 1、Architecture 3；尚未存在于目标插件源目录，本阶段只更新归属登记，实体迁移留作后续任务 | user-confirmed |
+| 暂无五插件归属的外部 Skills | `deep-research`、`market-mrd-analyst`、`patent-disclosure-skill`、`skill-template`；目标 `unknown` | user-confirmed（按建议更新） |
+| 外部来源状态 | 仍在当前迁移 inventory 中的外部 Skill provenance 保持 `blocked/unverified`；更新 owner 不表示来源、版本、许可证或依赖审计完成 | confirmed（inventory）；ownership user-confirmed |
+| 唯一源模式 | 插件目录作为唯一可编辑 Skill 源；旧根目录 Skill 路径由带 marker/hash 的受保护同步器生成投影 | user-confirmed（本轮明确回复“沿用该模式”） |
+| 旧入口排除项 | `skills/workflow/SKILL.md`（ID `workflow`）、同级 `references/usage.md` 和 `scripts/workflow_runner.py` 排除，继续留在旧聚合入口 | user-confirmed（本轮明确回复“排除并留在旧聚合入口”） |
+| Agent/Rule 边界 | 不迁入 `embedded-lead` Agent、其他领域 Agent 或根级 `rules/mcu-workflow-io.mdc` | user-confirmed（本轮明确“只迁 Skills”及确认选项） |
+| 风险/力度 | 影响共享 catalog、旧调用别名、目录投影和两个宿主 manifest；跨模块且长期维护，采用 `full + versioned` | inferred from confirmed scope; Review Gate approved |
+
+目的质疑结论：把需求路由、门禁、计划和任务执行能力形成独立插件，降低工作流能力与其他插件的发布/发现耦合；不把构建、烧录、调试或运行时观测实现复制到 Workflow。可行性质疑结论：Architecture 等插件已有独立 package、Codex/Cursor manifest、validator 和受保护投影模式可作为仓库内证据；Workflow 的详细依赖闭包、别名冲突与回滚步骤由后续 Plan 基于实际文件确定。范围结论：迁移 9 canonical + 5 留在 Workflow 的 external Skill 完整目录及其必要的随附 references/scripts；按用户批准更新 8 项 other-plugin owner 和 4 项 `unknown`，8 项实体迁移留作后续插件维护任务。明确排除 Agent、根级 Rule、旧 `workflow` build/flash/monitor Skill 及其文件、unknown 项和固件源码。验收缺口：真实 Codex 与 Cursor 的独立发现/加载/代表性调用必须分别留证；静态/主机结果不能替代真实宿主证据。Provenance 未知项保留 `blocked/unverified`，不作为已审计内容发布。
+
+### 目标范围与非目标
+
+**本阶段范围**
+
+1. 新建 `plugins/mcu-workbench-workflow/` 独立包，包含与现有 package pattern 一致的 descriptor、package metadata、Codex/Cursor manifests、Skill roots、独立 validator 和迁移/兼容映射；具体文件由 Plan 据现状确定。
+2. 将上述 9 个 canonical Workflow Skills 的完整目录树纳入插件，包括其内部 references、scripts、assets 和必要链接闭包，不改变 Skill 业务语义。
+3. 将 ownership matrix 确认仍归 Workflow 的 5 个外部 Skills 完整目录纳入插件；保留 inventory/matrix 的原始来源、版本、许可证和依赖状态，不伪称来源审计已完成。
+4. 以插件 `skills/` 为唯一可编辑事实源；根目录旧 canonical/external Skill 路径作为 marker/hash 保护的投影，拒绝覆盖无标记文件或检测到漂移时覆盖。
+5. 更新必要的共享 catalog、resolver、aliases、旧聚合入口、投影标记与验证入口，使本阶段 14 个迁移项保持唯一登记且旧 ID/alias 的行为确定。
+6. 独立验证 Codex 与 Cursor 的 manifest、Skill roots、插件发现/加载与代表性 Workflow Skill 请求；分宿主记录证据。
+7. 保护本阶段开始前所有未提交内容；Plan 需给出精确源/目标 hash、任务文件清单、负例、回滚顺序和 SOLID 证据。
+
+**明确非目标**
+
+- 不迁入 `embedded-lead` 或其他 Agent，也不迁入根级 `mcu-workflow-io` 或其他全局 Rules。
+- 不迁移 `skills/workflow/SKILL.md`（ID `workflow`）、`skills/workflow/references/usage.md`、`skills/workflow/scripts/workflow_runner.py`；它们继续由旧聚合入口提供。
+- 不在本阶段实体迁移已改归 Architecture、Verification、DevOps、Observability 的 8 项 Skills；它们继续留在根目录，目标插件实体迁移另行制定后续范围，不修改其他插件包。
+- `deep-research`、`market-mrd-analyst`、`patent-disclosure-skill`、`skill-template` 保持 `unknown`，不纳入本阶段。
+- 不修改 Skills 的业务语义；不修改固件、HAL、RTOS、BSP、Vendor 或目标硬件。
+- 宿主 MVP 仅为 Codex + Cursor；Claude 延期。不得新增 OpenCode 适配，不承诺热加载或动态卸载。
+- 不把外部来源/许可证/版本/依赖未知改写成已完成审计；不创建空占位 Skill，也不静默排除当前 5 项 Workflow external Skills。
+- 本 Spec 获用户批准前，不更新实施 Plan/Task，不迁移目录、不改插件 manifests/catalog、不执行同步或代码施工。
+
+### 现状证据与可信边界
+
+| ID | 事实 | 证据 | 等级 |
+|---|---|---|---|
+| WF-E01 | 当前 HEAD 为 `43eb4e731568b606451083b0e479a29a5722fb98`，工作区有未提交用户改动 | 本轮 `git rev-parse HEAD`、`git status --short --branch` | confirmed |
+| WF-E02 | catalog 将 9 个 canonical Skills 分类到 workflow | `skills/catalog-metadata.js:71-82` | confirmed |
+| WF-E03 | ownership matrix 经内容复核后保留 5 个 external Skills 在 Workflow；8 个改归其他插件，4 个为 unknown | `codex/plugin-split/skill-ownership-matrix.md:14-55`、inventory；本轮用户确认 | user-confirmed |
+| WF-E04 | 现有 Architecture 插件使用 descriptor/package、独立 Codex/Cursor manifests、Skill map、validator 和 hash marker 投影 | `plugins/mcu-workbench-architecture/` 下 package/manifests/scripts/skill-map | confirmed |
+| WF-E05 | 旧根目录 aliases 包含 `workflow-router` 等入口，必须验证迁移后解算仍指向唯一 canonical Skill | `skills/catalog-metadata.js:174`、`skills/catalog.js` | confirmed |
+| WF-E06 | 现有同步器检测旧目录冲突并拒绝覆盖非管理文件/漂移文件 | `scripts/sync-codex-skills.js:81-98`；Architecture syncer | confirmed |
+| WF-E07 | `skills/workflow/SKILL.md` 是旧 ID `workflow`，内容面向 build/flash/monitor，并引用根级 usage/script；用户明确要求排除 | `skills/workflow/SKILL.md:1-38`、`skills/workflow/references/usage.md`、`skills/workflow/scripts/workflow_runner.py`；本轮用户确认 | confirmed/user-confirmed |
+| WF-E08 | Codex + Cursor 是本阶段宿主 MVP；Claude/OpenCode 不属于通过条件 | 既有已批准 Spec 范围和本轮沿用确认 | user-confirmed |
+| WF-E09 | 本阶段不是固件功能变更；ISR/DMA/硬件验收不适用 | 本阶段目标仅为宿主插件与文档/Skill 包迁移 | confirmed |
+
+## 1. 工程现状表
+
+| ID | 工程事实/约束 | 证据 | 可信等级 | 审查结论 |
+|---|---|---|---|---|
+| WF-R01 | Workflow canonical Skill 根为 `skills/workflow/<id>/`，9 个 ID 由 catalog metadata 定义 | `skills/catalog-metadata.js:71-82` | confirmed | 完整复制所选目录树，不只迁移 `SKILL.md` |
+| WF-R02 | 5 个外部 Skills 经正文复核仍归 Workflow；8 个归其他插件、4 个为 unknown | ownership matrix 对应条目 | user-confirmed | Workflow 仅纳入 5 项；其他 8 项实体迁移为后续插件维护任务 |
+| WF-R03 | 旧 `workflow` 根 Skill 属于编译/烧录/监控流水线，和新 Workflow 项目治理能力边界不同 | `skills/workflow/SKILL.md`；用户排除确认 | user-confirmed | 留在聚合入口，不注册到新 Workflow descriptor |
+| WF-R04 | Agent 和根 Rule 不属于本轮迁移范围 | 用户明确选择“只迁 Skills” | user-confirmed | 不复制/移动 `embedded-lead`、其他 Agent 或根级 Rule |
+| WF-R05 | 根路径兼容依赖 catalog、resolver、alias 与 marker/hash 投影协调 | `skills/catalog.js`、`scripts/sync-codex-skills.js`、Architecture package | confirmed | Plan 指明唯一事实源和精确生成边界 |
+| WF-R06 | 两宿主 manifest 静态通过不能证明实际发现/加载或 Skill 调用 | Architecture/Verification 历史宿主记录分层 | confirmed | Codex、Cursor 分别实际观察并留证；无法观察则明确未验证/阻塞 |
+| WF-R07 | 既有工作区有大量未提交改动，且含 Verification 插件和相关测试改动 | `git status --short --branch` | confirmed | 不清理、不覆盖、不整体暂存；仅触及本阶段批准文件 |
+
+## 2. 文件施工清单
+
+| ID | 目标范围 | 职责归属 | 施工约束/交付 |
+|---|---|---|---|
+| WF-F01 | `plugins/mcu-workbench-workflow/` package、descriptor、Codex/Cursor manifests、validator | Workflow 独立包 | 包 ID/version/roots 与 schema 一致；不声明宿主未证实能力 |
+| WF-F02 | 插件 `skills/` 中 9 个 canonical Skill 全目录 | Workflow | 完整保留必要 references/scripts/assets；不改业务语义 |
+| WF-F03 | 插件 `skills/` 中 5 个外部 Skill 全目录 | Workflow 外部迁移 | 与更新后的 ownership matrix 一致；provenance 保持原状态 |
+| WF-F04 | `skill-map.json`、reference 闭包清单及 hash/provenance 记录 | 迁移审计 | 唯一源/投影一一映射；不得将 `skills/workflow/SKILL.md` 或根脚本误纳入 |
+| WF-F05 | catalog/resolver/aliases 与旧聚合兼容 | 共享注册 | 本阶段 14 个 Skill ID 唯一注册；旧 aliases 继续解析到同一目标；旧聚合入口保持可用 |
+| WF-F06 | Workflow root projection marker/sync 与兼容校验 | 生成边界 | 拒绝未知 marker、非管理文件覆盖及漂移覆盖；有可重复回滚路径 |
+| WF-F07 | 插件级/聚合级验证脚本与直接测试 | 验证 | 覆盖清单、manifest、链接、alias、marker、失败路径和回滚；不迁移 Agent/Rule |
+| WF-F08 | Workflow 专属审计产物 | 需求与实现记录 | 写入 `codex/plugin-split/artifacts/workflow/`；不覆盖其他阶段产物 |
+
+## 3. 代码生成约束清单
+
+| ID | 必须遵守 | 禁止事项 |
+|---|---|---|
+| WF-G01 | 仅按 9 canonical + 5 Workflow external 清单迁移；保留完整 Skill 子树 | 将矩阵外文件、Agent、Rule 或旧 build/flash/monitor `workflow` Skill 混入 |
+| WF-G02 | 每个 Skill 有唯一可编辑事实源，根路径由明确 marker/hash 管理投影 | 插件目录与旧根路径双写、静默覆盖或无法重建的手工副本 |
+| WF-G03 | descriptor/package/两个 manifests/catalog 使用一致插件 ID、版本和 roots | 以静态 manifest 校验冒充真实宿主发现/加载 |
+| WF-G04 | 保留旧 aggregate、canonical IDs 和 aliases；映射到唯一新源或明确兼容提示 | 删除旧入口或造成 alias 重复/歧义 |
+| WF-G05 | 当前迁入的 5 项 provenance 状态按 inventory 原样保留；审计未知需明确表示 | 推测/补造版本、许可证、依赖或来源，或声称已审计完成 |
+| WF-G06 | Codex 与 Cursor 独立验收并分别记录；Claude/OpenCode 不列为通过条件 | 用一宿主结果代表另一宿主或扩展到其他宿主适配 |
+| WF-G07 | 对预存未提交改动进行边界保护，回滚只移除本任务新增/变更内容 | `git add -A`、清理用户文件、重置混合工作区 |
+| WF-G08 | Workflow 编排其他能力时通过公开契约与 Skill 路由协作 | 复制 DevOps、Observability、Verification 或 Architecture 的实现 |
+| WF-G09 | 对 marker 冲突、缺失源、重复 ID、坏 manifest、失效链接和中断写入有显式失败策略 | 对非管理文件静默覆盖或把部分同步报告成功 |
+| WF-G10 | 逐项记录 SRP/OCP/LSP/ISP/DIP 适用性及可验证证据 | 仅写原则名称而无边界与测试证据 |
+
+## 4. 验收测试清单
+
+| ID | 等级 | 验收项 | 通过条件 |
+|---|---|---|---|
+| WF-T01 | 静态/主机 | 14 项 Skill inventory 与目录完整性 | 9 canonical + 5 Workflow external 全部存在，完整子树与 source map/hash 一致，无重复/遗漏 |
+| WF-T02 | 静态 | descriptor/package/Codex/Cursor manifests | schema、ID、版本、Skill roots 一致；无额外 Agent/Rule 声明 |
+| WF-T03 | 静态/主机 | Markdown links/scripts/references 闭包 | 包内链接目标存在；外部边界显式登记；脚本依赖路径可解析 |
+| WF-T04 | 主机 | catalog、resolver、canonical IDs 和 aliases | 14 项唯一归属；旧 aliases 解析稳定；不把旧 ID `workflow` 注册到新包 |
+| WF-T05 | 主机 | 受保护投影同步/重复执行/漂移拒绝 | 首次生成与重复运行结果确定；无 marker 或 hash 漂移时拒绝覆盖并给出定位 |
+| WF-T06 | 主机 | 失败与回滚场景 | 坏 manifest、缺失 Skill、重复 ID、无效链接及投影冲突明确失败；回滚不丢用户文件 |
+| WF-T07 | 兼容 | 旧 `mcu-workbench` aggregate 与旧 aliases | 旧入口仍能发现/转发迁移 Skills；旧 `workflow` build/flash/monitor 入口保持旧 aggregate 行为 |
+| WF-T08 | 宿主 | Codex 独立发现/加载与代表性 Workflow 请求 | 记录本地 Codex 真实证据；静态测试不能替代 |
+| WF-T09 | 宿主 | Cursor 独立发现/加载与代表性 Workflow 请求 | 独立记录 Cursor 真实证据；不以 Codex 结果替代 |
+| WF-T10 | 静态/审计 | 外部 Skill provenance | 当前 5 项未知来源/版本/许可证/依赖维持 `blocked/unverified`，不伪称审计通过 |
+| WF-T11 | 审计 | 迁移边界与 SOLID | Agent/Rule/旧 build-flash-monitor Skill/其他 owner 均未迁移；SRP/OCP/LSP/ISP/DIP 逐项有证据或阻塞 |
+| WF-T12 | 记录 | 命令与产物证据 | 记录绝对 cwd、退出码、产物绝对路径/SHA-256、证据等级、重试及既有基线差异 |
+
+### 验收标准
+
+| ID | 通过条件 |
+|---|---|
+| WF-A01 | `mcu-workbench-workflow` 形成独立完整包，Codex/Cursor manifests 与 descriptor/package 一致 |
+| WF-A02 | 9 canonical 与 5 Workflow external Skills 完整纳入；provenance 未知项继续明确未验证 |
+| WF-A03 | catalog、resolver、aliases 和根聚合兼容明确且无重复/歧义；旧 `workflow` build/flash/monitor 入口未迁入新包 |
+| WF-A04 | Skill 唯一源和受保护根投影可重复构建；漂移/冲突拒绝覆盖；回滚可重复且不丢用户文件 |
+| WF-A05 | Codex 与 Cursor 分别记录独立发现、加载及代表性 Workflow Skill 调用证据 |
+| WF-A06 | embedded-lead、其他 Agent、根级 `mcu-workflow-io` 规则及其他插件 owner 未迁入 |
+| WF-A07 | 静态/主机/宿主证据分层记录；没有把文档或测试写成真实宿主或固件验证 |
+
+### Review Gate 与用户闸门
+
+- RCP 澄清：用户确认目标为第五个 `mcu-workbench-workflow`；纳入 9 canonical + 5 经内容复核仍归 Workflow 的 external Skills；只迁 Skills；插件目录唯一源、旧根路径受保护投影；旧 `workflow` build/flash/monitor Skill 留在旧 aggregate。另 8 项按用户确认改归其他 plugins，4 项改为 unknown。
+- 目的质疑：独立承载工作流编排与治理能力，同时保持现有聚合调用兼容；避免复制工具/固件实现。
+- 可行性质疑：仓库内 Architecture plugin 已证明同类 package、manifest、validator 与 projection 模式可实现；Workflow 交叉链接/共享资源和 alias 冲突需由 Plan/T-001 扫描后确认。
+- 风险/力度：`spec_rigor=full`、`spec_overlays=[versioned]`；涉及多 package、共享 catalog、别名、投影同步、两宿主及未提交工作区。最低产物为 `spec.md + plan.md + task.md + 测试/检查证据`。
+- SOLID：SRP 由职责清单与排除项验证；OCP 由新增 Skill fixture 验证；LSP 由双宿主 manifest 同契约校验；ISP 由最小 Skill roots/无 Agent/Rule 检查；DIP 由 Workflow 只依赖共享 contracts 而非插件实现的依赖检查。详细任务证据在 Plan/Task 列出。
+- Review Gate 判定：本 Spec 记录范围、排除项、审计清单和验证边界，内部结论 `review-gate-approved`；外部来源元数据按用户确认保持未验证，不作为本地迁移授权缺失。实际宿主行为必须在实施阶段分别验证。
+- 用户闸门 H-05 `workflow-spec-review`：`approved`（2026-11-24；用户要求进入 Spec 审阅后的下一步，解释为批准）。下一闸门 H-03 为 Plan 方案选择；H-02 为 Plan 审查/批准，二者通过前不得生成 Task 或迁移文件。
+- 用户批准后交接：由 `workflow-integration-plan` 基于本 Spec 与最新工作区证据制定 Workflow 专属 Plan，明确 source map、链接闭包、注册/alias 变更、回滚和逐项 SOLID 验证；随后由 `workflow-task-breakdown` 生成 Workflow Task。v0.8 Architecture Plan/Task 不适用于本阶段。
 
 ## 2026-11-24 当前阶段补充：Architecture 第四个插件拆分（v0.8）
 

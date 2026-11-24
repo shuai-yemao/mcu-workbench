@@ -67,7 +67,7 @@ Final Review 只保存内部结构化结果，不生成 Final Review Markdown。
 - 阻塞项与未验证假设；
 - 最终门禁结论：`通过` 或 `阻塞`。只有每条 Spec 要求均有代码或测试证据、测试/类型检查/构建及适用检查全部通过、整改后复检和 `git diff --check` 通过时才可通过；任务状态不得单独作为通过依据。
 
-报告契约见 [Review 输入/输出契约](references/prompt-contract.md)。
+报告契约见 [Review 输入/输出契约](./references/prompt-contract.md)。
 
 ## 修复与整改边界（硬规则）
 
@@ -81,14 +81,14 @@ Final Review 只保存内部结构化结果，不生成 Final Review Markdown。
 - 如果最终代码反映了未写入最新 `spec.md` 的需求变化，必须判定为 `阻塞`，回传需求变更门禁；不得先接受代码、再要求补写 Spec。
 - 必须执行 [SOLID 代码施工硬门禁](../workflow-review-gate/references/solid-code-gate.md)，逐项给出 SRP、OCP、LSP、ISP、DIP 的代码或测试/检查证据；任一适用原则缺少证据或不满足时，结论为 `阻塞`。
 - 不将静态检查、主机测试或日志推断写成目标运行或实物验证结论。
-- 不引用归档 workflow 或不存在的 agent 名称；迁移资料只见 [能力索引](references/capability-index.md)。
+- 不引用归档 workflow 或不存在的 agent 名称；迁移资料只见 [能力索引](./references/capability-index.md)。
 - 运行记录必须能区分工具仓库和固件仓库；命令、退出码、产物绝对路径与 SHA-256、证据等级和重试次数必须可追溯。
 
 ## 参考
 
-- [Review 编排与交接](references/collaboration-protocol.md)
-- [Review 输入/输出契约](references/prompt-contract.md)
-- [迁移比对资料](references/capability-index.md)
+- [Review 编排与交接](./references/collaboration-protocol.md)
+- [Review 输入/输出契约](./references/prompt-contract.md)
+- [迁移比对资料](./references/capability-index.md)
 - [代码质量门禁 Skill](../../tools/tools-quality/SKILL.md)
 - [tools-quality 调用模式契约](../../tools/tools-quality/references/quality-mode-contract.md)
 - [项目代码审查门禁](../../tools/tools-quality/references/review-gates.md)

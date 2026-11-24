@@ -1,5 +1,5 @@
 # Generated inventory for REQ-PLUGIN-SPLIT-20261123
-# Evidence rule: provenance metadata remains tracked as unknown unless independently confirmed; target ownership follows the approved Spec.
+# Evidence rule: provenance metadata remains tracked as unknown unless independently confirmed; target ownership is user-confirmed by content review on 2026-11-24.
 request_id: REQ-PLUGIN-SPLIT-20261123
 generated_at: 2026-11-23T00:00:00+08:00
 source_root: skills/
@@ -117,8 +117,8 @@ entries:
     version: unknown; no release/version evidence found
     license: unknown; master/LICENSE not found
     dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-observability
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: chip-driver-manual
@@ -183,8 +183,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: unknown
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: embed-ai-tool
@@ -216,8 +216,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-verification
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: embedded-build-flash-debug
@@ -227,8 +227,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-devops
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: embedded-change-report
@@ -315,8 +315,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-architecture
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: embedded-team-sync
@@ -420,8 +420,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: unknown
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: memory-analysis
@@ -431,8 +431,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-verification
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: modbus-debug
@@ -442,8 +442,8 @@ entries:
     version: unknown; no release/version evidence found
     license: unknown; master/LICENSE not found
     dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-observability
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: mrd-to-prd
@@ -454,7 +454,7 @@ entries:
     license: unknown
     dependencies: unknown
     target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: parsed-chip-datasheet
@@ -464,8 +464,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-architecture
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: patent-disclosure-skill
@@ -475,8 +475,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: unknown
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: prd-to-hardware-solution
@@ -541,8 +541,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: unknown
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: sr-screener
@@ -575,8 +575,8 @@ entries:
     version: unknown
     license: unknown
     dependencies: unknown
-    target_plugin: mcu-workbench-workflow
-    confidence: inferred
+    target_plugin: mcu-workbench-architecture
+    confidence: user-confirmed
     status: blocked
     blocker: external provenance metadata is not registered in the repository
   - skill_id: visa-debug

@@ -1,0 +1,739 @@
+{
+  "generatedAt": "2026-11-24T10:11:45.529Z",
+  "files": [
+    {
+      "path": "skills/tools/tools-quality/SKILL.md",
+      "sha256": "80f4a6bd5d9f5edd8900fa3949a37bd78fb0301f3fa1ce9e184ab7d752474c0e",
+      "bytes": 9719
+    },
+    {
+      "path": "skills/tools/tools-verification/SKILL.md",
+      "sha256": "073ab708da4b9fe46f5de2abf735dbbbc0e0fdc1b5ac5150eabba3f0b9eee3c6",
+      "bytes": 4320
+    },
+    {
+      "path": "skills/app/app-architecture/SKILL.md",
+      "sha256": "0b45f227927c77a6603f9f001f30c6c1994a6f14116f5e35126564e74d70286c",
+      "bytes": 3301
+    },
+    {
+      "path": "skills/platform/platform_os/SKILL.md",
+      "sha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "bytes": 5241
+    },
+    {
+      "path": "skills/impl/impl_os/SKILL.md",
+      "sha256": "c798ccfc9f3229879f87a347915fa0e0dfbcdb1006bf979364aa602e8eba6112",
+      "bytes": 6130
+    },
+    {
+      "path": "skills/platform/platform_bsp/SKILL.md",
+      "sha256": "5149ea9ea9a88654116f33cef20ca1758572b8e1710ef4f15ae107f41a961e2b",
+      "bytes": 9041
+    },
+    {
+      "path": "skills/impl/impl_board/SKILL.md",
+      "sha256": "67b5e2a84e6a16b6859c3144a0437eb37696e96fd81daf3fcc2daa100c0b51e0",
+      "bytes": 6630
+    },
+    {
+      "path": "skills/impl/impl_bsp/SKILL.md",
+      "sha256": "fd466a77494f5b79158d99d5f3e4919274f78256abda73d80f0b35235949d52b",
+      "bytes": 8205
+    },
+    {
+      "path": "skills/platform/platform_mcu/SKILL.md",
+      "sha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641",
+      "bytes": 8488
+    },
+    {
+      "path": "skills/vendor/vendor_mcu/SKILL.md",
+      "sha256": "79bce92d21c2dfa2c5ef0d53954de9e01a412e9b8029b275037ad987acb9fc30",
+      "bytes": 2254
+    },
+    {
+      "path": "skills/vendor/vendor_rtos/SKILL.md",
+      "sha256": "2ad650684e43f30289a6d5658697277325f952048d699b387b64c3b557ccb3fa",
+      "bytes": 2051
+    },
+    {
+      "path": "skills/tools/tools-quality/references/style-profile.md",
+      "sha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "bytes": 30140
+    },
+    {
+      "path": "skills/tools/tools-quality/references/review-gates.md",
+      "sha256": "4020ba7ec990b2aba51de802b805775b62c1a17e37252cafcebcce70b0716090",
+      "bytes": 2543
+    },
+    {
+      "path": "skills/tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md",
+      "sha256": "16f688ef210415e9c4c5f696dc57c2f65e915c8c77da7b64e319c92b35c9c04c",
+      "bytes": 14343
+    },
+    {
+      "path": "skills/tools/tools-quality/references/quality-mode-contract.md",
+      "sha256": "b2fb1bf807793586077bf2f0e4905ee544ca092c61717021eda3dacb995be4cd",
+      "bytes": 3097
+    }
+  ],
+  "links": [
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/style-profile.md",
+      "resolved": "skills/tools/tools-quality/references/style-profile.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "../tools-verification/SKILL.md",
+      "resolved": "skills/tools/tools-verification/SKILL.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "073ab708da4b9fe46f5de2abf735dbbbc0e0fdc1b5ac5150eabba3f0b9eee3c6",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "../tools-observability/SKILL.md",
+      "resolved": "skills/tools/tools-observability/SKILL.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "b851111890f506e7ba5b84ef3086ed67ac127023b9dc62dc1f82fe2c1df9a89c",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "../tools-build/SKILL.md",
+      "resolved": "skills/tools/tools-build/SKILL.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "0e1f4b5b1b2f26247faa71dd5bd5e87c68eb072c60103920a25793e68924d08c",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "../tools-release/SKILL.md",
+      "resolved": "skills/tools/tools-release/SKILL.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "aebf40fdb9bfcad923a0d33644c74836f186adfecfedb438f2ae598b42a4930d",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/quality-mode-contract.md",
+      "resolved": "skills/tools/tools-quality/references/quality-mode-contract.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "b2fb1bf807793586077bf2f0e4905ee544ca092c61717021eda3dacb995be4cd",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/review-gates.md",
+      "resolved": "skills/tools/tools-quality/references/review-gates.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "4020ba7ec990b2aba51de802b805775b62c1a17e37252cafcebcce70b0716090",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/capability-index.md",
+      "resolved": "skills/tools/tools-quality/references/capability-index.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "eb7eb229b572b45250a94cc6d59cdfef201a6dd202063794a70118ce96ddf2f2",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/solid-code-gate.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/solid-code-gate.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "e1a4383eae25ebd5dde0f42cf0df2543671813f56e4529b28fa0f61c7c368326",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/capabilities/quality-code-review/GUIDE.md",
+      "resolved": "skills/tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "16f688ef210415e9c4c5f696dc57c2f65e915c8c77da7b64e319c92b35c9c04c",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/capabilities/quality-format-check/GUIDE.md",
+      "resolved": "skills/tools/tools-quality/references/capabilities/quality-format-check/GUIDE.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "68806066e9059bf58aaffc9ab8047309874087715bdb4f6dace95c365b2163d6",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/SKILL.md",
+      "target": "./references/quality-static-analysis/GUIDE.md",
+      "resolved": "skills/tools/tools-quality/references/quality-static-analysis/GUIDE.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "ffa52f8fb3041f12ab93be25798278ea2b73fae9c85546d6c8294a5b1edd3b6d",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-verification/SKILL.md",
+      "target": "../tools-quality/SKILL.md",
+      "resolved": "skills/tools/tools-quality/SKILL.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "80f4a6bd5d9f5edd8900fa3949a37bd78fb0301f3fa1ce9e184ab7d752474c0e",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-verification/SKILL.md",
+      "target": "./references/capability-index.md",
+      "resolved": "skills/tools/tools-verification/references/capability-index.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "c4d583da92549af627d978043296765cdd545efadaca607eacea54e85667d13e",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-verification/SKILL.md",
+      "target": "../tools-quality/references/capabilities/quality-map-analysis/GUIDE.md",
+      "resolved": "skills/tools/tools-quality/references/capabilities/quality-map-analysis/GUIDE.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "d9af9bb25779f242d984c4e60bd755111dfd43a93493fad77932ab0c38a8481d",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-verification/SKILL.md",
+      "target": "../tools-quality/references/quality-unity-testing/GUIDE.md",
+      "resolved": "skills/tools/tools-quality/references/quality-unity-testing/GUIDE.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "366e99619010b66a582592432a0bcb370dbd08ec0af41e21c15189298898d4c6",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-verification/SKILL.md",
+      "target": "../tools-quality/references/upstream-source-baseline.md",
+      "resolved": "skills/tools/tools-quality/references/upstream-source-baseline.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "60820f7d684bd07b6e2565f03c78e8ba659f85d080e49e44ac5d5e03fe24bd41",
+      "closure": true
+    },
+    {
+      "source": "skills/app/app-architecture/SKILL.md",
+      "target": "./references/app-architecture-evidence.md",
+      "resolved": "skills/app/app-architecture/references/app-architecture-evidence.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275",
+      "closure": true
+    },
+    {
+      "source": "skills/app/app-architecture/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "e3974ef146984249cdfdb6afdb90658080c35a489203e73e22c41891c5fbcabf",
+      "closure": true
+    },
+    {
+      "source": "skills/app/app-architecture/SKILL.md",
+      "target": "../../platform/platform_os/SKILL.md",
+      "resolved": "skills/platform/platform_os/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "closure": true
+    },
+    {
+      "source": "skills/app/app-architecture/SKILL.md",
+      "target": "../../vendor/vendor_lvgl/SKILL.md",
+      "resolved": "skills/vendor/vendor_lvgl/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "48df60a9ca4f0dc138d7c83ef68a9d403140c288db454957eab7b32e8c798fac",
+      "closure": true
+    },
+    {
+      "source": "skills/app/app-architecture/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_os/SKILL.md",
+      "target": "../platform_common/SKILL.md",
+      "resolved": "skills/platform/platform_common/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "3c55b69ff20fd1d85b2cc54db835873c3e060a250c5bd43ee6d4d0d1dbd19537",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_os/SKILL.md",
+      "target": "../../impl/impl_os/SKILL.md",
+      "resolved": "skills/impl/impl_os/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "c798ccfc9f3229879f87a347915fa0e0dfbcdb1006bf979364aa602e8eba6112",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_os/SKILL.md",
+      "target": "./references/platform-os-contract.md",
+      "resolved": "skills/platform/platform_os/references/platform-os-contract.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "6c5243619c4e5cf894b3d95acd600c7981fdd2e4454827411f24c8e5636ee0ad",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_os/SKILL.md",
+      "target": "./references/platform-os-freertos-case.md",
+      "resolved": "skills/platform/platform_os/references/platform-os-freertos-case.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "ab7e098a76b7d65c3c2a9354341dacb92133fb42ce7bd9e301dbdf636ef26fd9",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_os/SKILL.md",
+      "target": "../../platform/platform_os/SKILL.md",
+      "resolved": "skills/platform/platform_os/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_os/SKILL.md",
+      "target": "./references/freertos-source-map.md",
+      "resolved": "skills/impl/impl_os/references/freertos-source-map.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_os/SKILL.md",
+      "target": "./references/freertos-api-quickref.md",
+      "resolved": "skills/impl/impl_os/references/freertos-api-quickref.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "../platform_common/SKILL.md",
+      "resolved": "skills/platform/platform_common/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "3c55b69ff20fd1d85b2cc54db835873c3e060a250c5bd43ee6d4d0d1dbd19537",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "./references/device-model-example.md",
+      "resolved": "skills/platform/platform_bsp/references/device-model-example.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "../platform_mcu/SKILL.md",
+      "resolved": "skills/platform/platform_mcu/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "../../impl/impl_bsp/SKILL.md",
+      "resolved": "skills/impl/impl_bsp/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "fd466a77494f5b79158d99d5f3e4919274f78256abda73d80f0b35235949d52b",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "../../impl/impl_board/SKILL.md",
+      "resolved": "skills/impl/impl_board/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "67b5e2a84e6a16b6859c3144a0437eb37696e96fd81daf3fcc2daa100c0b51e0",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "../platform_os/SKILL.md",
+      "resolved": "skills/platform/platform_os/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_bsp/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "../../bsp/references/bsp-architecture-contract.md",
+      "resolved": "skills/bsp/references/bsp-architecture-contract.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "100b94d4998cc2c96c39c860c3ed6152e5b12d707eda6cc90f620e7437367b41",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "../impl_bsp/SKILL.md",
+      "resolved": "skills/impl/impl_bsp/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "fd466a77494f5b79158d99d5f3e4919274f78256abda73d80f0b35235949d52b",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "./references/bsp-layer-evidence.md",
+      "resolved": "skills/impl/impl_board/references/bsp-layer-evidence.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "18121527d317e11175fc556f8961659cf8cc86dbca74a2c6b1b34c38f35930a6",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "./references/capability-index.md",
+      "resolved": "skills/impl/impl_board/references/capability-index.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "ac60060a6c0599dfd0a66f92699c71829ce9530c190f1494da242d547d92481c",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "../../bsp/references/bsp-aht21-case.md",
+      "resolved": "skills/bsp/references/bsp-aht21-case.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "219b13bb09217888cdf96bf5649220e7530ded61a88934731d3fc83891e36a2a",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "../../bsp/references/gpio-output-peripheral-checklist.md",
+      "resolved": "skills/bsp/references/gpio-output-peripheral-checklist.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "7842d27d6b27831d347492b264d2dd009fd6158f973e038500a1e6500990ad4a",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_board/SKILL.md",
+      "target": "../../bsp/references/common-error-patterns.md",
+      "resolved": "skills/bsp/references/common-error-patterns.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "d0509396181d42b7b496fa44477dfac44d32a46e6d5e2f5953867f548359ea0c",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../bsp/references/bsp-architecture-contract.md",
+      "resolved": "skills/bsp/references/bsp-architecture-contract.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "100b94d4998cc2c96c39c860c3ed6152e5b12d707eda6cc90f620e7437367b41",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "./references/api-policy.md",
+      "resolved": "skills/impl/impl_bsp/references/api-policy.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../bsp/references/gpio-output-peripheral-checklist.md",
+      "resolved": "skills/bsp/references/gpio-output-peripheral-checklist.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "7842d27d6b27831d347492b264d2dd009fd6158f973e038500a1e6500990ad4a",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../tools/tools-quality/references/style-profile.md",
+      "resolved": "skills/tools/tools-quality/references/style-profile.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "./references/hal-driver-evidence.md",
+      "resolved": "skills/impl/impl_bsp/references/hal-driver-evidence.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "f5a235e26d489802c1e9f95feea51d8423cca879111b76ed7bafe922ebd41129",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "./references/handler-evidence.md",
+      "resolved": "skills/impl/impl_bsp/references/handler-evidence.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "./references/capability-index.md",
+      "resolved": "skills/impl/impl_bsp/references/capability-index.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "188f56cf4cbaa56211acacd878d9d0b7baf8641af7dcc7fa74720fecc1caf8ac",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../bsp/references/bsp-aht21-case.md",
+      "resolved": "skills/bsp/references/bsp-aht21-case.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "219b13bb09217888cdf96bf5649220e7530ded61a88934731d3fc83891e36a2a",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../bsp/references/common-error-patterns.md",
+      "resolved": "skills/bsp/references/common-error-patterns.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "d0509396181d42b7b496fa44477dfac44d32a46e6d5e2f5953867f548359ea0c",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../platform/platform_mcu/SKILL.md",
+      "resolved": "skills/platform/platform_mcu/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../../vendor/vendor_mcu/SKILL.md",
+      "resolved": "skills/vendor/vendor_mcu/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "79bce92d21c2dfa2c5ef0d53954de9e01a412e9b8029b275037ad987acb9fc30",
+      "closure": true
+    },
+    {
+      "source": "skills/impl/impl_bsp/SKILL.md",
+      "target": "../impl_board/SKILL.md",
+      "resolved": "skills/impl/impl_board/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "67b5e2a84e6a16b6859c3144a0437eb37696e96fd81daf3fcc2daa100c0b51e0",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_mcu/SKILL.md",
+      "target": "../platform_common/SKILL.md",
+      "resolved": "skills/platform/platform_common/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "3c55b69ff20fd1d85b2cc54db835873c3e060a250c5bd43ee6d4d0d1dbd19537",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_mcu/SKILL.md",
+      "target": "../../vendor/vendor_mcu/SKILL.md",
+      "resolved": "skills/vendor/vendor_mcu/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "79bce92d21c2dfa2c5ef0d53954de9e01a412e9b8029b275037ad987acb9fc30",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_mcu/SKILL.md",
+      "target": "../../impl/impl_mcu/SKILL.md",
+      "resolved": "skills/impl/impl_mcu/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "c08adda043f018e7218e44950835f64a6f33cfeb93450c041011095a3856808b",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_mcu/SKILL.md",
+      "target": "../../impl/impl_board/SKILL.md",
+      "resolved": "skills/impl/impl_board/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "67b5e2a84e6a16b6859c3144a0437eb37696e96fd81daf3fcc2daa100c0b51e0",
+      "closure": true
+    },
+    {
+      "source": "skills/platform/platform_mcu/SKILL.md",
+      "target": "../../impl/impl_bsp/SKILL.md",
+      "resolved": "skills/impl/impl_bsp/SKILL.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "fd466a77494f5b79158d99d5f3e4919274f78256abda73d80f0b35235949d52b",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_mcu/SKILL.md",
+      "target": "./references/vendor-source-matrix.md",
+      "resolved": "skills/vendor/vendor_mcu/references/vendor-source-matrix.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_mcu/SKILL.md",
+      "target": "./references/capability-index.md",
+      "resolved": "skills/vendor/vendor_mcu/references/capability-index.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "46bd6a629536dbdbfbb60c2bca0457608bdbe530fb86cd3f805c1089c9522841",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_mcu/SKILL.md",
+      "target": "../references/vendor-content-contract.md",
+      "resolved": "skills/vendor/references/vendor-content-contract.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "c772c555613c37cbbafa75f8ca06d9a58c24af142f20f63d364a1899a924f634",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_mcu/SKILL.md",
+      "target": "../references/vendor_mapping.md",
+      "resolved": "skills/vendor/references/vendor_mapping.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "53c1e89d281bbde5ee11b08c3e7ab029479ed155e440472b715558d78e39b366",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_mcu/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_rtos/SKILL.md",
+      "target": "../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/vendor/vendor_rtos/SKILL.md",
+      "target": "../references/vendor-content-contract.md",
+      "resolved": "skills/vendor/references/vendor-content-contract.md",
+      "owner": "mcu-workbench-architecture",
+      "kind": "local-existing",
+      "sha256": "c772c555613c37cbbafa75f8ca06d9a58c24af142f20f63d364a1899a924f634",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/references/style-profile.md",
+      "target": "../../../workflow/workflow-review-gate/references/software-layer-contract.md",
+      "resolved": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "owner": "mcu-workbench-workflow",
+      "kind": "local-existing",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/references/style-profile.md",
+      "target": "./capabilities/quality-format-check/.clang-format",
+      "resolved": "skills/tools/tools-quality/references/capabilities/quality-format-check/.clang-format",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "9a21756c48b7e8f2fb2993f9eda977a2f4ee27d6d5ec900cb1767028883ff35f",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/references/review-gates.md",
+      "target": "./style-profile.md",
+      "resolved": "skills/tools/tools-quality/references/style-profile.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "closure": true
+    },
+    {
+      "source": "skills/tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md",
+      "target": "../../style-profile.md",
+      "resolved": "skills/tools/tools-quality/references/style-profile.md",
+      "owner": "mcu-workbench-devops",
+      "kind": "local-existing",
+      "sha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "closure": true
+    }
+  ]
+}

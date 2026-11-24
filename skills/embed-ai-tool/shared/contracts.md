@@ -75,7 +75,7 @@
 - `summary`：一句话说明发生了什么
 - `evidence`：最关键的日志、文件或探测证据
 - `next_action`：推荐的下一条命令或下一个 skill
-- `failure_category`：当状态不是 `success` 时，使用 [failure-taxonomy.md](/home/leo/work/open-git/em_skill/shared/failure-taxonomy.md) 中的分类
+- `failure_category`：当状态不是 `success` 时，使用 [failure-taxonomy.md](external:/home/leo/work/open-git/em_skill/shared/failure-taxonomy.md) 中的分类
 
 ## 最小示例
 

@@ -289,7 +289,7 @@ All skills share a common set of core context for input and output:
 - **Command Outcome Schema** — Unified format for success, failure, or blocked results
 - **Failure Taxonomy** — Standard failure classification with recommended follow-up actions
 
-See [shared/contracts.md](shared/contracts.md) and [shared/failure-taxonomy.md](shared/failure-taxonomy.md).
+See [shared/contracts.md](./shared/contracts.md) and [shared/failure-taxonomy.md](./shared/failure-taxonomy.md).
 
 ## Validation
 
@@ -303,7 +303,7 @@ The validator checks that all skills have the required files, frontmatter, and s
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Use the [templates/skill-template/](templates/skill-template/) template when creating new skills.
+See [CONTRIBUTING.md](./CONTRIBUTING.md). Use the [templates/skill-template/](external:templates/skill-template/) template when creating new skills.
 
 ## Future Extensions
 

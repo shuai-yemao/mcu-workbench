@@ -58,9 +58,9 @@ RCP 是内部结构化状态，不生成用户项目中的 RCP Markdown。Router
 
 ## 阶段三：生成需求约束包
 
-需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 完成补证、目的质疑和可行性质疑；完成后，带有质疑结论和证据的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。方案选择不属于本 Skill 链路。RCP 必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。Router 还必须依据 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md) 选择 `spec_rigor` 和 `spec_overlays`，说明风险原因、最低交付物及升级触发条件。
+需求约束包（Requirement Constraint Package，RCP）先交给 `workflow-requirements-challenge` 完成补证、目的质疑和可行性质疑；完成后，带有质疑结论和证据的更新 RCP 才是交给 `workflow-review-gate` 的唯一正式输入。方案选择不属于本 Skill 链路。RCP 必须区分 `confirmed`、`user-confirmed`、`inferred` 和 `unverified`，并包含证据位置。Router 还必须依据 [`spec-rigor-by-risk.md`](./references/spec-rigor-by-risk.md) 选择 `spec_rigor` 和 `spec_overlays`，说明风险原因、最低交付物及升级触发条件。
 
-RCP 的字段语义可参考 [`references/rcp-template.md`](references/rcp-template.md)，但该模板不是用户项目 Markdown 输出契约。Router 交付的是内部 `preliminary` RCP 状态；`workflow-requirements-challenge` 必须先读取仓库规则和项目证据，按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清，每轮最多提出四个高影响问题并给出推荐，完成后输出质疑结论并交给 `workflow-review-gate`，不生成方案 A/B。
+RCP 的字段语义可参考 [`references/rcp-template.md`](./references/rcp-template.md)，但该模板不是用户项目 Markdown 输出契约。Router 交付的是内部 `preliminary` RCP 状态；`workflow-requirements-challenge` 必须先读取仓库规则和项目证据，按第一版范围/非目标、业务规则、状态/权限、可验证验收四类缺口进行澄清，每轮最多提出四个高影响问题并给出推荐，完成后输出质疑结论并交给 `workflow-review-gate`，不生成方案 A/B。
 
 ```text
 需求约束包
@@ -150,4 +150,4 @@ Spec 叠加门禁：<none | human_review | versioned | both>
 - 需求约束包不等同于实现方案；未确认项不得伪装为约束。
 - RCP 完成补证和 Challenge 后进入 Review Gate 内部放行链；不设置 RCP Markdown 用户审查闸门，Spec 是第一个用户正式审查节点。
 
-跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；风险力度选择见 [`spec-rigor-by-risk.md`](references/spec-rigor-by-risk.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
+跨层边界和源码证据见 [`workflow-review-gate`](../workflow-review-gate/SKILL.md) 及其 [`software-architecture-knowledge-graph.md`](../workflow-review-gate/references/software-architecture-knowledge-graph.md)；风险力度选择见 [`spec-rigor-by-risk.md`](./references/spec-rigor-by-risk.md)；分层审计、迁移设计与分发见 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。

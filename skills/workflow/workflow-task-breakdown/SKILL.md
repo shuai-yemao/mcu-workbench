@@ -114,7 +114,7 @@ Spec 力度：<prototype | lightweight | full>
 
 ## task.md 模板要求
 
-生成文件必须遵循 [`task-template.md`](references/task-template.md)，至少包含：
+生成文件必须遵循 [`task-template.md`](./references/task-template.md)，至少包含：
 
 1. 元数据、输入文件、状态和可信等级约定；
 2. 总体目标、非目标、任务图和关键串行链；
