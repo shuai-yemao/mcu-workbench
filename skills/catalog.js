@@ -304,11 +304,14 @@ const PLUGIN_SKILL_IDS = {
     'embedded-project-scaffold', 'parsed-chip-datasheet', 'vendor-minimal-firmware'
   ],
   'mcu-workbench-workflow': [
-    'workflow-requirements-router', 'workflow-claude-layering', 'workflow-document-context',
+    'workflow-requirements-router', 'workflow-claude-layering',
     'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-integration-plan',
     'workflow-task-breakdown', 'workflow-task-execution', 'workflow-final-review',
-    'embed-ai-tool', 'embedded-change-report', 'embedded-project-intake', 'embedded-team-sync', 'mrd-to-prd',
+    'embed-ai-tool', 'embedded-change-report', 'embedded-project-intake', 'mrd-to-prd',
     'embedded-llm-guardrails', 'embedded-production-test-tool', 'market-mrd-analyst', 'skill-template'
+  ],
+  'mcu-workbench-project-management': [
+    'embedded-team-sync', 'workflow-document-context'
   ]
 };
 

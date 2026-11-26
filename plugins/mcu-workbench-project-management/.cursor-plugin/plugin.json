@@ -1,0 +1,6 @@
+{
+  "name": "mcu-workbench-project-management",
+  "version": "1.0.0",
+  "description": "MCU Workbench project management Skills.",
+  "skills": ["./skills/"]
+}

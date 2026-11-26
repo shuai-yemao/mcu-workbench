@@ -158,7 +158,7 @@ Router 和 `workflow-requirements-challenge` 固定交付带补证记录和质�
   公共 API；Platform Middleware `.c` 不得 include Vendor/HAL/RTOS；Wrapper/Port 只在 OS/BSP 内部承担适配职责，
   Middleware Vendor Port 仍属于 Impl 边界。
 - 本 skill 只输出工程事实、反猜测审查结论、含四个清单章节的 Review-Package、spec.md 和放行/阻塞判定，不直接执行代码移植、分层迁移设计、实现层 Skill 分发或最终代码审查。
-- 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；代码注释、格式、Cppcheck/MISRA 和代码审查质量门禁交给 [`tools-quality`](../../tools/tools-quality/SKILL.md)，Map/内存/Unity 与项目验证交给 [`tools-verification`](../../tools/tools-verification/SKILL.md)。
+- 最终代码/变更集的独立 Review 编排交给 [`workflow-final-review`](../workflow-final-review/SKILL.md)；代码注释、格式、Cppcheck/MISRA 和代码审查质量门禁交给 [`tools-quality`](../../references/shared/skills/tools/tools-quality/SKILL.md)，Map/内存/Unity 与项目验证交给 [`tools-verification`](../../references/shared/skills/tools/tools-verification/SKILL.md)。
 - 分层审计、迁移路线、文件级改造顺序与实现层分发交给 [`workflow-integration-plan`](../workflow-integration-plan/SKILL.md)。
 - H-02 是 Spec 级用户审查闸门；Spec 未记录 `用户审查状态: approved` 前不得进入 Plan。
 - Plan 之后不设置例行用户审查；Task、执行、AI 审查、测试和最终检查由下游自动完成。

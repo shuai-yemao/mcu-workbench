@@ -1,979 +1,883 @@
 {
   "schemaVersion": "1.0.0",
   "plugin": "mcu-workbench-workflow",
-  "generatedAt": "2026-11-24T12:49:57.514Z",
+  "generatedAt": "2026-11-26T09:05:52.868Z",
   "files": [
     {
-      "path": "skills/workflow/workflow-requirements-router/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-requirements-router/SKILL.md",
-      "sourceSha256": "ca6f726391f8657132ac23eebf087bced45200dadad017e00b9dfe87a816fb27",
-      "sha256": "ca6f726391f8657132ac23eebf087bced45200dadad017e00b9dfe87a816fb27"
+      "path": "skills\\workflow\\workflow-requirements-router\\references\\rcp-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-requirements-router\\references\\rcp-template.md",
+      "sha256": "af79624e3b8f73d6d84b473639343768db5c0ffcfd37ffb1de186d2f6d792383",
+      "sourceSha256": "af79624e3b8f73d6d84b473639343768db5c0ffcfd37ffb1de186d2f6d792383"
     },
     {
-      "path": "skills/workflow/workflow-requirements-router/references/rcp-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-requirements-router/references/rcp-template.md",
-      "sourceSha256": "af79624e3b8f73d6d84b473639343768db5c0ffcfd37ffb1de186d2f6d792383",
-      "sha256": "af79624e3b8f73d6d84b473639343768db5c0ffcfd37ffb1de186d2f6d792383"
+      "path": "skills\\workflow\\workflow-requirements-router\\references\\spec-rigor-by-risk.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-requirements-router\\references\\spec-rigor-by-risk.md",
+      "sha256": "9cd99a434edfbcd8f7de60bf44923a13984db85f6299b1b8cf2b7be496d9232f",
+      "sourceSha256": "9cd99a434edfbcd8f7de60bf44923a13984db85f6299b1b8cf2b7be496d9232f"
     },
     {
-      "path": "skills/workflow/workflow-requirements-router/references/spec-rigor-by-risk.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-requirements-router/references/spec-rigor-by-risk.md",
-      "sourceSha256": "9cd99a434edfbcd8f7de60bf44923a13984db85f6299b1b8cf2b7be496d9232f",
-      "sha256": "9cd99a434edfbcd8f7de60bf44923a13984db85f6299b1b8cf2b7be496d9232f"
+      "path": "skills\\workflow\\workflow-requirements-router\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-requirements-router\\SKILL.md",
+      "sha256": "ca6f726391f8657132ac23eebf087bced45200dadad017e00b9dfe87a816fb27",
+      "sourceSha256": "ca6f726391f8657132ac23eebf087bced45200dadad017e00b9dfe87a816fb27"
     },
     {
-      "path": "skills/workflow/workflow-claude-layering/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-claude-layering/SKILL.md",
-      "sourceSha256": "6f8f8fbec272fda4dc24e0cbeb1298b921e0401d6e936e37ff28108fa290dce1",
-      "sha256": "6f8f8fbec272fda4dc24e0cbeb1298b921e0401d6e936e37ff28108fa290dce1"
+      "path": "skills\\workflow\\workflow-claude-layering\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-claude-layering\\SKILL.md",
+      "sha256": "6f8f8fbec272fda4dc24e0cbeb1298b921e0401d6e936e37ff28108fa290dce1",
+      "sourceSha256": "6f8f8fbec272fda4dc24e0cbeb1298b921e0401d6e936e37ff28108fa290dce1"
     },
     {
-      "path": "skills/workflow/workflow-document-context/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-document-context/SKILL.md",
-      "sourceSha256": "2172b63638ea9d0ff67214a2c7c4140e45858f05ce214941ac560e17e5bf8cc8",
-      "sha256": "2172b63638ea9d0ff67214a2c7c4140e45858f05ce214941ac560e17e5bf8cc8"
+      "path": "skills\\workflow\\workflow-requirements-challenge\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-requirements-challenge\\SKILL.md",
+      "sha256": "67adb60a97494d0632f67b5681cde8cb56f61bfb1b3a5ad05e0f9b98d36b3fa8",
+      "sourceSha256": "67adb60a97494d0632f67b5681cde8cb56f61bfb1b3a5ad05e0f9b98d36b3fa8"
     },
     {
-      "path": "skills/workflow/workflow-requirements-challenge/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-requirements-challenge/SKILL.md",
-      "sourceSha256": "67adb60a97494d0632f67b5681cde8cb56f61bfb1b3a5ad05e0f9b98d36b3fa8",
-      "sha256": "67adb60a97494d0632f67b5681cde8cb56f61bfb1b3a5ad05e0f9b98d36b3fa8"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\capabilities\\project-integration\\GUIDE.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\capabilities\\project-integration\\GUIDE.md",
+      "sha256": "0224fc969aa3e496fafff0734337ee7aca8db295085b97b00b87c70d451e8dc1",
+      "sourceSha256": "0224fc969aa3e496fafff0734337ee7aca8db295085b97b00b87c70d451e8dc1"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/SKILL.md",
-      "sourceSha256": "922c3444deff0fe680b2eff3139e75ea28db30223bfeb626231b641e69c6eeab",
-      "sha256": "da14d265db2f922974c965fef38f5038a0cc95469cdbc22e2ce8c881990f7e6c"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\capability-index.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\capability-index.md",
+      "sha256": "9f02e401c93d603e4868b48ba3737d4cff46e62e1fab7ef7253a6f30172a02c2",
+      "sourceSha256": "9f02e401c93d603e4868b48ba3737d4cff46e62e1fab7ef7253a6f30172a02c2"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/capabilities/project-integration/GUIDE.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/capabilities/project-integration/GUIDE.md",
-      "sourceSha256": "0224fc969aa3e496fafff0734337ee7aca8db295085b97b00b87c70d451e8dc1",
-      "sha256": "0224fc969aa3e496fafff0734337ee7aca8db295085b97b00b87c70d451e8dc1"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\ec-s100-architecture-audit.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\ec-s100-architecture-audit.md",
+      "sha256": "0b6e9f4dd3c75d89233bf3bb4e22b32127d7f57a5c01cc0aaa7712f65e455248",
+      "sourceSha256": "0b6e9f4dd3c75d89233bf3bb4e22b32127d7f57a5c01cc0aaa7712f65e455248"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/capability-index.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/capability-index.md",
-      "sourceSha256": "9f02e401c93d603e4868b48ba3737d4cff46e62e1fab7ef7253a6f30172a02c2",
-      "sha256": "9f02e401c93d603e4868b48ba3737d4cff46e62e1fab7ef7253a6f30172a02c2"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\gr5526-lvgl-mapping.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\gr5526-lvgl-mapping.md",
+      "sha256": "bec92b6c2399eaac6a6d4d33c9410c17062a06cfd9a65c82d6dec80c043236a1",
+      "sourceSha256": "bec92b6c2399eaac6a6d4d33c9410c17062a06cfd9a65c82d6dec80c043236a1"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/ec-s100-architecture-audit.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/ec-s100-architecture-audit.md",
-      "sourceSha256": "0b6e9f4dd3c75d89233bf3bb4e22b32127d7f57a5c01cc0aaa7712f65e455248",
-      "sha256": "0b6e9f4dd3c75d89233bf3bb4e22b32127d7f57a5c01cc0aaa7712f65e455248"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\implementation-plan-review-package.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\implementation-plan-review-package.md",
+      "sha256": "030f4d298d5ecf034e2328e19a152047379761ade625cb97ec47a8f2d0a09000",
+      "sourceSha256": "030f4d298d5ecf034e2328e19a152047379761ade625cb97ec47a8f2d0a09000"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/gr5526-lvgl-mapping.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/gr5526-lvgl-mapping.md",
-      "sourceSha256": "bec92b6c2399eaac6a6d4d33c9410c17062a06cfd9a65c82d6dec80c043236a1",
-      "sha256": "bec92b6c2399eaac6a6d4d33c9410c17062a06cfd9a65c82d6dec80c043236a1"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\software-architecture-knowledge-graph.json",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\software-architecture-knowledge-graph.json",
+      "sha256": "b0febd789aad0455d134ac809e2ffe4415bcfba546470e085bda2f11f1884a51",
+      "sourceSha256": "b0febd789aad0455d134ac809e2ffe4415bcfba546470e085bda2f11f1884a51"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/implementation-plan-review-package.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/implementation-plan-review-package.md",
-      "sourceSha256": "030f4d298d5ecf034e2328e19a152047379761ade625cb97ec47a8f2d0a09000",
-      "sha256": "030f4d298d5ecf034e2328e19a152047379761ade625cb97ec47a8f2d0a09000"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\software-architecture-knowledge-graph.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\software-architecture-knowledge-graph.md",
+      "sha256": "585fb25ed0f4dddbf9ce9655503680db8a5ad90cb5c1edd32cc8ac4cb3bdbe9f",
+      "sourceSha256": "585fb25ed0f4dddbf9ce9655503680db8a5ad90cb5c1edd32cc8ac4cb3bdbe9f"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.json",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/software-architecture-knowledge-graph.json",
-      "sourceSha256": "b0febd789aad0455d134ac809e2ffe4415bcfba546470e085bda2f11f1884a51",
-      "sha256": "b0febd789aad0455d134ac809e2ffe4415bcfba546470e085bda2f11f1884a51"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\software-layer-contract.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\software-layer-contract.md",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "sourceSha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/software-architecture-knowledge-graph.md",
-      "sourceSha256": "585fb25ed0f4dddbf9ce9655503680db8a5ad90cb5c1edd32cc8ac4cb3bdbe9f",
-      "sha256": "585fb25ed0f4dddbf9ce9655503680db8a5ad90cb5c1edd32cc8ac4cb3bdbe9f"
+      "path": "skills\\workflow\\workflow-review-gate\\references\\solid-code-gate.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\references\\solid-code-gate.md",
+      "sha256": "e1a4383eae25ebd5dde0f42cf0df2543671813f56e4529b28fa0f61c7c368326",
+      "sourceSha256": "e1a4383eae25ebd5dde0f42cf0df2543671813f56e4529b28fa0f61c7c368326"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/software-layer-contract.md",
-      "sourceSha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
-      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6"
+      "path": "skills\\workflow\\workflow-review-gate\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-review-gate\\SKILL.md",
+      "sha256": "922c3444deff0fe680b2eff3139e75ea28db30223bfeb626231b641e69c6eeab",
+      "sourceSha256": "922c3444deff0fe680b2eff3139e75ea28db30223bfeb626231b641e69c6eeab"
     },
     {
-      "path": "skills/workflow/workflow-review-gate/references/solid-code-gate.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-review-gate/references/solid-code-gate.md",
-      "sourceSha256": "e1a4383eae25ebd5dde0f42cf0df2543671813f56e4529b28fa0f61c7c368326",
-      "sha256": "e1a4383eae25ebd5dde0f42cf0df2543671813f56e4529b28fa0f61c7c368326"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-architecture\\GUIDE.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-architecture\\GUIDE.md",
+      "sha256": "f18a53a70b394c6c82136eee835217fd44d9e6c128a4d78377be31e077e9c342",
+      "sourceSha256": "f18a53a70b394c6c82136eee835217fd44d9e6c128a4d78377be31e077e9c342"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/SKILL.md",
-      "sourceSha256": "9aaeccf16d08bc90f39d6794e2a14be4a950ece6f1c05137e1835628ce4c9839",
-      "sha256": "90ea67a35f0967b4f700d784476812e6f8649bfcabf5f630ed36c4ef76774630"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-architecture\\references\\layered-architecture-model.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-architecture\\references\\layered-architecture-model.md",
+      "sha256": "4f274c470037b0be529c40f3f632e6137a2fb22e7c907d7abaa90059c7df2c33",
+      "sourceSha256": "4f274c470037b0be529c40f3f632e6137a2fb22e7c907d7abaa90059c7df2c33"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-architecture/GUIDE.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-architecture/GUIDE.md",
-      "sourceSha256": "f18a53a70b394c6c82136eee835217fd44d9e6c128a4d78377be31e077e9c342",
-      "sha256": "f18a53a70b394c6c82136eee835217fd44d9e6c128a4d78377be31e077e9c342"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\GUIDE.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\GUIDE.md",
+      "sha256": "e2c73f312c1ce2a1483ae7a0df544054de1f2911ae5bc27bb704cf51fad610a4",
+      "sourceSha256": "e2c73f312c1ce2a1483ae7a0df544054de1f2911ae5bc27bb704cf51fad610a4"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-architecture/references/layered-architecture-model.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-architecture/references/layered-architecture-model.md",
-      "sourceSha256": "4f274c470037b0be529c40f3f632e6137a2fb22e7c907d7abaa90059c7df2c33",
-      "sha256": "4f274c470037b0be529c40f3f632e6137a2fb22e7c907d7abaa90059c7df2c33"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\pipeline.json",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\pipeline.json",
+      "sha256": "b4f2c8db9cd98eb98366aa2d2377893a2addfedfc91eda4856c1815cb672415d",
+      "sourceSha256": "b4f2c8db9cd98eb98366aa2d2377893a2addfedfc91eda4856c1815cb672415d"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/GUIDE.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/GUIDE.md",
-      "sourceSha256": "e2c73f312c1ce2a1483ae7a0df544054de1f2911ae5bc27bb704cf51fad610a4",
-      "sha256": "e2c73f312c1ce2a1483ae7a0df544054de1f2911ae5bc27bb704cf51fad610a4"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\compiler-compat.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\compiler-compat.md",
+      "sha256": "d56902ab63562a84c8b891d15c8562583d6047d06e85dc1072e3034ac18683f1",
+      "sourceSha256": "d56902ab63562a84c8b891d15c8562583d6047d06e85dc1072e3034ac18683f1"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/pipeline.json",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/pipeline.json",
-      "sourceSha256": "b4f2c8db9cd98eb98366aa2d2377893a2addfedfc91eda4856c1815cb672415d",
-      "sha256": "b4f2c8db9cd98eb98366aa2d2377893a2addfedfc91eda4856c1815cb672415d"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\cross-series-peripheral-map.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\cross-series-peripheral-map.md",
+      "sha256": "926fcb9d32929a8ba5810653e3fb8ed03a838b0406e2dd70b3b8222a6b5cb5aa",
+      "sourceSha256": "926fcb9d32929a8ba5810653e3fb8ed03a838b0406e2dd70b3b8222a6b5cb5aa"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/compiler-compat.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/references/compiler-compat.md",
-      "sourceSha256": "d56902ab63562a84c8b891d15c8562583d6047d06e85dc1072e3034ac18683f1",
-      "sha256": "d56902ab63562a84c8b891d15c8562583d6047d06e85dc1072e3034ac18683f1"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\porting-checklist.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\porting-checklist.md",
+      "sha256": "4ae76e95e9a2e0b98795fe18c92388bf84c21aef6561c04acf78b4165f73f9ff",
+      "sourceSha256": "4ae76e95e9a2e0b98795fe18c92388bf84c21aef6561c04acf78b4165f73f9ff"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/cross-series-peripheral-map.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/references/cross-series-peripheral-map.md",
-      "sourceSha256": "926fcb9d32929a8ba5810653e3fb8ed03a838b0406e2dd70b3b8222a6b5cb5aa",
-      "sha256": "926fcb9d32929a8ba5810653e3fb8ed03a838b0406e2dd70b3b8222a6b5cb5aa"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\porting-report-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\references\\porting-report-template.md",
+      "sha256": "bec9bc69bd0cdcb00a3a8540eae5e10c8528064a4452475e031fc6955bc2a580",
+      "sourceSha256": "bec9bc69bd0cdcb00a3a8540eae5e10c8528064a4452475e031fc6955bc2a580"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/porting-checklist.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/references/porting-checklist.md",
-      "sourceSha256": "4ae76e95e9a2e0b98795fe18c92388bf84c21aef6561c04acf78b4165f73f9ff",
-      "sha256": "4ae76e95e9a2e0b98795fe18c92388bf84c21aef6561c04acf78b4165f73f9ff"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\check_reg_compat.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\check_reg_compat.py",
+      "sha256": "27ba600982973d916e230b13a611a21e9c3a8826bd9058bfe45936f6eba1bf52",
+      "sourceSha256": "27ba600982973d916e230b13a611a21e9c3a8826bd9058bfe45936f6eba1bf52"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/porting-report-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/references/porting-report-template.md",
-      "sourceSha256": "bec9bc69bd0cdcb00a3a8540eae5e10c8528064a4452475e031fc6955bc2a580",
-      "sha256": "bec9bc69bd0cdcb00a3a8540eae5e10c8528064a4452475e031fc6955bc2a580"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\cmp_vectors.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\cmp_vectors.py",
+      "sha256": "95ec86c54d2fc445742d57da41326fdfa20f8bb151e527c412010848ed18f460",
+      "sourceSha256": "95ec86c54d2fc445742d57da41326fdfa20f8bb151e527c412010848ed18f460"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/check_reg_compat.py",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/check_reg_compat.py",
-      "sourceSha256": "27ba600982973d916e230b13a611a21e9c3a8826bd9058bfe45936f6eba1bf52",
-      "sha256": "27ba600982973d916e230b13a611a21e9c3a8826bd9058bfe45936f6eba1bf52"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\diff_ld.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\diff_ld.py",
+      "sha256": "a934921c0ef8e25177c79322a4f75bb7d44431b626827f43f9d883abfce31715",
+      "sourceSha256": "a934921c0ef8e25177c79322a4f75bb7d44431b626827f43f9d883abfce31715"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/cmp_vectors.py",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/cmp_vectors.py",
-      "sourceSha256": "95ec86c54d2fc445742d57da41326fdfa20f8bb151e527c412010848ed18f460",
-      "sha256": "95ec86c54d2fc445742d57da41326fdfa20f8bb151e527c412010848ed18f460"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\gen_macro_map.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\gen_macro_map.py",
+      "sha256": "d48dbc69564cae3446e0ba61bf1696fa24c21f82ec1c7998609fac6ae03459e5",
+      "sourceSha256": "d48dbc69564cae3446e0ba61bf1696fa24c21f82ec1c7998609fac6ae03459e5"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/diff_ld.py",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/diff_ld.py",
-      "sourceSha256": "a934921c0ef8e25177c79322a4f75bb7d44431b626827f43f9d883abfce31715",
-      "sha256": "a934921c0ef8e25177c79322a4f75bb7d44431b626827f43f9d883abfce31715"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\gen_porting_report.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capabilities\\workflow-code-porting\\scripts\\gen_porting_report.py",
+      "sha256": "22f834b62bd898225880dadc8186a4085d3f9ae84bdb98f592ae963a98ff55c7",
+      "sourceSha256": "22f834b62bd898225880dadc8186a4085d3f9ae84bdb98f592ae963a98ff55c7"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/gen_macro_map.py",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/gen_macro_map.py",
-      "sourceSha256": "d48dbc69564cae3446e0ba61bf1696fa24c21f82ec1c7998609fac6ae03459e5",
-      "sha256": "d48dbc69564cae3446e0ba61bf1696fa24c21f82ec1c7998609fac6ae03459e5"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\capability-index.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\capability-index.md",
+      "sha256": "2aa4b70ae886055645c8c84c08c99d21e7f8d9cde0d9dd5e30a852971239d294",
+      "sourceSha256": "2aa4b70ae886055645c8c84c08c99d21e7f8d9cde0d9dd5e30a852971239d294"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/gen_porting_report.py",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/gen_porting_report.py",
-      "sourceSha256": "22f834b62bd898225880dadc8186a4085d3f9ae84bdb98f592ae963a98ff55c7",
-      "sha256": "22f834b62bd898225880dadc8186a4085d3f9ae84bdb98f592ae963a98ff55c7"
+      "path": "skills\\workflow\\workflow-integration-plan\\references\\plan-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\references\\plan-template.md",
+      "sha256": "fd6914137b413fd293132fd36a09db461be4361f5c4dbf2ba7330eb8627713f1",
+      "sourceSha256": "fd6914137b413fd293132fd36a09db461be4361f5c4dbf2ba7330eb8627713f1"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/capability-index.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/capability-index.md",
-      "sourceSha256": "2aa4b70ae886055645c8c84c08c99d21e7f8d9cde0d9dd5e30a852971239d294",
-      "sha256": "2aa4b70ae886055645c8c84c08c99d21e7f8d9cde0d9dd5e30a852971239d294"
+      "path": "skills\\workflow\\workflow-integration-plan\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-integration-plan\\SKILL.md",
+      "sha256": "9aaeccf16d08bc90f39d6794e2a14be4a950ece6f1c05137e1835628ce4c9839",
+      "sourceSha256": "9aaeccf16d08bc90f39d6794e2a14be4a950ece6f1c05137e1835628ce4c9839"
     },
     {
-      "path": "skills/workflow/workflow-integration-plan/references/plan-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan/references/plan-template.md",
-      "sourceSha256": "fd6914137b413fd293132fd36a09db461be4361f5c4dbf2ba7330eb8627713f1",
-      "sha256": "fd6914137b413fd293132fd36a09db461be4361f5c4dbf2ba7330eb8627713f1"
+      "path": "skills\\workflow\\workflow-task-breakdown\\references\\task-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-task-breakdown\\references\\task-template.md",
+      "sha256": "8d32058611c968d5953918682a26c7f1d04111502cb2a0a20aed9240d8101ff9",
+      "sourceSha256": "8d32058611c968d5953918682a26c7f1d04111502cb2a0a20aed9240d8101ff9"
     },
     {
-      "path": "skills/workflow/workflow-task-breakdown/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-task-breakdown/SKILL.md",
-      "sourceSha256": "f35bd124635b9109bc6226516ae0708d1761ecd2d098d85c7e81e5f079c51f7f",
-      "sha256": "f35bd124635b9109bc6226516ae0708d1761ecd2d098d85c7e81e5f079c51f7f"
+      "path": "skills\\workflow\\workflow-task-breakdown\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-task-breakdown\\SKILL.md",
+      "sha256": "f35bd124635b9109bc6226516ae0708d1761ecd2d098d85c7e81e5f079c51f7f",
+      "sourceSha256": "f35bd124635b9109bc6226516ae0708d1761ecd2d098d85c7e81e5f079c51f7f"
     },
     {
-      "path": "skills/workflow/workflow-task-breakdown/references/task-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-task-breakdown/references/task-template.md",
-      "sourceSha256": "8d32058611c968d5953918682a26c7f1d04111502cb2a0a20aed9240d8101ff9",
-      "sha256": "8d32058611c968d5953918682a26c7f1d04111502cb2a0a20aed9240d8101ff9"
+      "path": "skills\\workflow\\workflow-task-execution\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-task-execution\\SKILL.md",
+      "sha256": "6d782068a31b86edd262b74b4bbf9100fb5076d6daaf5c12e7dd93d93d37d085",
+      "sourceSha256": "6d782068a31b86edd262b74b4bbf9100fb5076d6daaf5c12e7dd93d93d37d085"
     },
     {
-      "path": "skills/workflow/workflow-task-execution/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-task-execution/SKILL.md",
-      "sourceSha256": "6d782068a31b86edd262b74b4bbf9100fb5076d6daaf5c12e7dd93d93d37d085",
-      "sha256": "6d782068a31b86edd262b74b4bbf9100fb5076d6daaf5c12e7dd93d93d37d085"
+      "path": "skills\\workflow\\workflow-final-review\\references\\capability-index.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-final-review\\references\\capability-index.md",
+      "sha256": "cbc8af102a76a99b98f0be471754a404c485232dd09e7101accd383a5668d18e",
+      "sourceSha256": "cbc8af102a76a99b98f0be471754a404c485232dd09e7101accd383a5668d18e"
     },
     {
-      "path": "skills/workflow/workflow-final-review/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-final-review/SKILL.md",
-      "sourceSha256": "9e7ca436259e3ffe10db21973635e21b06b506a3b61cebe8b36b41c9b9838c2a",
-      "sha256": "e72fcfac396d61fee9cc206b691c522969c152ea5d89d9efb828f23da0c97827"
+      "path": "skills\\workflow\\workflow-final-review\\references\\collaboration-protocol.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-final-review\\references\\collaboration-protocol.md",
+      "sha256": "bb591396b292fd020d19897c16c0a3d764b8e46ccd809fb7e091ff799ffe83cf",
+      "sourceSha256": "bb591396b292fd020d19897c16c0a3d764b8e46ccd809fb7e091ff799ffe83cf"
     },
     {
-      "path": "skills/workflow/workflow-final-review/references/capability-index.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-final-review/references/capability-index.md",
-      "sourceSha256": "cbc8af102a76a99b98f0be471754a404c485232dd09e7101accd383a5668d18e",
-      "sha256": "f606a6f4cd46e9bdea2c60974ed5b3643b1c1ee24e1b87b1fb580e6033f05121"
+      "path": "skills\\workflow\\workflow-final-review\\references\\prompt-contract.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-final-review\\references\\prompt-contract.md",
+      "sha256": "0c86cd641b56b64a3f26301b4914b74bfd10962a64e7a954f96ea5b53982c1df",
+      "sourceSha256": "0c86cd641b56b64a3f26301b4914b74bfd10962a64e7a954f96ea5b53982c1df"
     },
     {
-      "path": "skills/workflow/workflow-final-review/references/collaboration-protocol.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-final-review/references/collaboration-protocol.md",
-      "sourceSha256": "bb591396b292fd020d19897c16c0a3d764b8e46ccd809fb7e091ff799ffe83cf",
-      "sha256": "bb591396b292fd020d19897c16c0a3d764b8e46ccd809fb7e091ff799ffe83cf"
+      "path": "skills\\workflow\\workflow-final-review\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\workflow-final-review\\SKILL.md",
+      "sha256": "9e7ca436259e3ffe10db21973635e21b06b506a3b61cebe8b36b41c9b9838c2a",
+      "sourceSha256": "9e7ca436259e3ffe10db21973635e21b06b506a3b61cebe8b36b41c9b9838c2a"
     },
     {
-      "path": "skills/workflow/workflow-final-review/references/prompt-contract.md",
-      "source": "plugins/mcu-workbench-workflow/skills/workflow-final-review/references/prompt-contract.md",
-      "sourceSha256": "0c86cd641b56b64a3f26301b4914b74bfd10962a64e7a954f96ea5b53982c1df",
-      "sha256": "0c86cd641b56b64a3f26301b4914b74bfd10962a64e7a954f96ea5b53982c1df"
+      "path": "skills\\embed-ai-tool\\.claude\\settings.json",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\.claude\\settings.json",
+      "sha256": "b3383b1b5c332a0215ced26dc7cbc0d368d91c228c0b90c4a8c519977c7e1fd2",
+      "sourceSha256": "b3383b1b5c332a0215ced26dc7cbc0d368d91c228c0b90c4a8c519977c7e1fd2"
     },
     {
-      "path": "skills/embed-ai-tool/.claude/settings.json",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/.claude/settings.json",
-      "sourceSha256": "b3383b1b5c332a0215ced26dc7cbc0d368d91c228c0b90c4a8c519977c7e1fd2",
-      "sha256": "b3383b1b5c332a0215ced26dc7cbc0d368d91c228c0b90c4a8c519977c7e1fd2"
+      "path": "skills\\embed-ai-tool\\.gitattributes",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\.gitattributes",
+      "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
+      "sourceSha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c"
     },
     {
-      "path": "skills/embed-ai-tool/.gitattributes",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/.gitattributes",
-      "sourceSha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
-      "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c"
+      "path": "skills\\embed-ai-tool\\.gitignore",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\.gitignore",
+      "sha256": "2d7f4b5d8f4a70a563a1bb9f8ffa4d08600f91ba2e2aa8bcbc085b5906d59b85",
+      "sourceSha256": "2d7f4b5d8f4a70a563a1bb9f8ffa4d08600f91ba2e2aa8bcbc085b5906d59b85"
     },
     {
-      "path": "skills/embed-ai-tool/.gitignore",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/.gitignore",
-      "sourceSha256": "2d7f4b5d8f4a70a563a1bb9f8ffa4d08600f91ba2e2aa8bcbc085b5906d59b85",
-      "sha256": "2d7f4b5d8f4a70a563a1bb9f8ffa4d08600f91ba2e2aa8bcbc085b5906d59b85"
+      "path": "skills\\embed-ai-tool\\CONTRIBUTING.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\CONTRIBUTING.md",
+      "sha256": "1fc84622b00382487bc92ebaf596579b042c002354812a71fb5577da36a04f36",
+      "sourceSha256": "1fc84622b00382487bc92ebaf596579b042c002354812a71fb5577da36a04f36"
     },
     {
-      "path": "skills/embed-ai-tool/CONTRIBUTING.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/CONTRIBUTING.md",
-      "sourceSha256": "1fc84622b00382487bc92ebaf596579b042c002354812a71fb5577da36a04f36",
-      "sha256": "1fc84622b00382487bc92ebaf596579b042c002354812a71fb5577da36a04f36"
+      "path": "skills\\embed-ai-tool\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\README.md",
+      "sha256": "2d1cf524298fbdbd15da8f510e0590d71db4bf9a6e643ca8539a3716847212e1",
+      "sourceSha256": "2d1cf524298fbdbd15da8f510e0590d71db4bf9a6e643ca8539a3716847212e1"
     },
     {
-      "path": "skills/embed-ai-tool/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/README.md",
-      "sourceSha256": "2d1cf524298fbdbd15da8f510e0590d71db4bf9a6e643ca8539a3716847212e1",
-      "sha256": "2d1cf524298fbdbd15da8f510e0590d71db4bf9a6e643ca8539a3716847212e1"
+      "path": "skills\\embed-ai-tool\\README_EN.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\README_EN.md",
+      "sha256": "ab50372729cc04bbfe4bd7c90d05bbbfc732b1a467d18f949445e462a91e8a09",
+      "sourceSha256": "ab50372729cc04bbfe4bd7c90d05bbbfc732b1a467d18f949445e462a91e8a09"
     },
     {
-      "path": "skills/embed-ai-tool/README_EN.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/README_EN.md",
-      "sourceSha256": "ab50372729cc04bbfe4bd7c90d05bbbfc732b1a467d18f949445e462a91e8a09",
-      "sha256": "ab50372729cc04bbfe4bd7c90d05bbbfc732b1a467d18f949445e462a91e8a09"
+      "path": "skills\\embed-ai-tool\\scripts\\em_config.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\scripts\\em_config.py",
+      "sha256": "44587f13acab99799eb802f8c8a0872e5c240108d0ed60d909fc85df14791ff7",
+      "sourceSha256": "44587f13acab99799eb802f8c8a0872e5c240108d0ed60d909fc85df14791ff7"
     },
     {
-      "path": "skills/embed-ai-tool/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/SKILL.md",
-      "sourceSha256": "d7e4b2f483c78295daf1d54a08fe5d64c6b03027a35e3de5aefb6d8eb37ca1db",
-      "sha256": "d7e4b2f483c78295daf1d54a08fe5d64c6b03027a35e3de5aefb6d8eb37ca1db"
+      "path": "skills\\embed-ai-tool\\scripts\\install.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\scripts\\install.py",
+      "sha256": "5945dff1783d6118a935daa214d55ebce3e7f2290f1bb10d584945e0b8ff5b1a",
+      "sourceSha256": "5945dff1783d6118a935daa214d55ebce3e7f2290f1bb10d584945e0b8ff5b1a"
     },
     {
-      "path": "skills/embed-ai-tool/scripts/em_config.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/scripts/em_config.py",
-      "sourceSha256": "44587f13acab99799eb802f8c8a0872e5c240108d0ed60d909fc85df14791ff7",
-      "sha256": "44587f13acab99799eb802f8c8a0872e5c240108d0ed60d909fc85df14791ff7"
+      "path": "skills\\embed-ai-tool\\scripts\\validate_repo.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\scripts\\validate_repo.py",
+      "sha256": "fc5aad9bccbbc93b07ba47f57de8eb7c732b81651f1d961f410d946d6a6224e0",
+      "sourceSha256": "fc5aad9bccbbc93b07ba47f57de8eb7c732b81651f1d961f410d946d6a6224e0"
     },
     {
-      "path": "skills/embed-ai-tool/scripts/install.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/scripts/install.py",
-      "sourceSha256": "5945dff1783d6118a935daa214d55ebce3e7f2290f1bb10d584945e0b8ff5b1a",
-      "sha256": "5945dff1783d6118a935daa214d55ebce3e7f2290f1bb10d584945e0b8ff5b1a"
+      "path": "skills\\embed-ai-tool\\shared\\contracts.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\contracts.md",
+      "sha256": "8534082cd39d560316eaf66c5a05f0b00329ad7c4cef5e42d480b583e4af18fb",
+      "sourceSha256": "8534082cd39d560316eaf66c5a05f0b00329ad7c4cef5e42d480b583e4af18fb"
     },
     {
-      "path": "skills/embed-ai-tool/scripts/validate_repo.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/scripts/validate_repo.py",
-      "sourceSha256": "fc5aad9bccbbc93b07ba47f57de8eb7c732b81651f1d961f410d946d6a6224e0",
-      "sha256": "fc5aad9bccbbc93b07ba47f57de8eb7c732b81651f1d961f410d946d6a6224e0"
+      "path": "skills\\embed-ai-tool\\shared\\failure-taxonomy.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\failure-taxonomy.md",
+      "sha256": "c5a705c52b4f124ce951d85c59c6eede01fabfc4d71f1f7b1398514fde4aae07",
+      "sourceSha256": "c5a705c52b4f124ce951d85c59c6eede01fabfc4d71f1f7b1398514fde4aae07"
     },
     {
-      "path": "skills/embed-ai-tool/shared/contracts.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/contracts.md",
-      "sourceSha256": "8534082cd39d560316eaf66c5a05f0b00329ad7c4cef5e42d480b583e4af18fb",
-      "sha256": "8534082cd39d560316eaf66c5a05f0b00329ad7c4cef5e42d480b583e4af18fb"
+      "path": "skills\\embed-ai-tool\\shared\\idf_env.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\idf_env.py",
+      "sha256": "eabffee9919da98a1b78fd7883cfd9a7096c2633c1102da10dfb793b1ebeaf39",
+      "sourceSha256": "eabffee9919da98a1b78fd7883cfd9a7096c2633c1102da10dfb793b1ebeaf39"
     },
     {
-      "path": "skills/embed-ai-tool/shared/failure-taxonomy.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/failure-taxonomy.md",
-      "sourceSha256": "c5a705c52b4f124ce951d85c59c6eede01fabfc4d71f1f7b1398514fde4aae07",
-      "sha256": "c5a705c52b4f124ce951d85c59c6eede01fabfc4d71f1f7b1398514fde4aae07"
+      "path": "skills\\embed-ai-tool\\shared\\platform-compatibility.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\platform-compatibility.md",
+      "sha256": "90a7081ce50a0b70127851445beb3988feb68d318460686946a20145f2eb0fda",
+      "sourceSha256": "90a7081ce50a0b70127851445beb3988feb68d318460686946a20145f2eb0fda"
     },
     {
-      "path": "skills/embed-ai-tool/shared/idf_env.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/idf_env.py",
-      "sourceSha256": "eabffee9919da98a1b78fd7883cfd9a7096c2633c1102da10dfb793b1ebeaf39",
-      "sha256": "eabffee9919da98a1b78fd7883cfd9a7096c2633c1102da10dfb793b1ebeaf39"
+      "path": "skills\\embed-ai-tool\\shared\\profile_store.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\profile_store.py",
+      "sha256": "e14f17df2c833e5099f332f4ad5af26251de12ab8215399308aefe11d7f48337",
+      "sourceSha256": "e14f17df2c833e5099f332f4ad5af26251de12ab8215399308aefe11d7f48337"
     },
     {
-      "path": "skills/embed-ai-tool/shared/platform-compatibility.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/platform-compatibility.md",
-      "sourceSha256": "90a7081ce50a0b70127851445beb3988feb68d318460686946a20145f2eb0fda",
-      "sha256": "90a7081ce50a0b70127851445beb3988feb68d318460686946a20145f2eb0fda"
+      "path": "skills\\embed-ai-tool\\shared\\project_detect.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\project_detect.py",
+      "sha256": "8765ed75d8f8e6052a144248bb0ddf94a28956e91d1afc316ecc65b70bbaa29a",
+      "sourceSha256": "8765ed75d8f8e6052a144248bb0ddf94a28956e91d1afc316ecc65b70bbaa29a"
     },
     {
-      "path": "skills/embed-ai-tool/shared/profile_store.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/profile_store.py",
-      "sourceSha256": "e14f17df2c833e5099f332f4ad5af26251de12ab8215399308aefe11d7f48337",
-      "sha256": "e14f17df2c833e5099f332f4ad5af26251de12ab8215399308aefe11d7f48337"
+      "path": "skills\\embed-ai-tool\\shared\\references\\acceptance-scenarios.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\references\\acceptance-scenarios.md",
+      "sha256": "4a657c82fc9379d16f80e26bc663867353d072c62e12fe8375037e29272e0281",
+      "sourceSha256": "4a657c82fc9379d16f80e26bc663867353d072c62e12fe8375037e29272e0281"
     },
     {
-      "path": "skills/embed-ai-tool/shared/project_detect.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/project_detect.py",
-      "sourceSha256": "8765ed75d8f8e6052a144248bb0ddf94a28956e91d1afc316ecc65b70bbaa29a",
-      "sha256": "8765ed75d8f8e6052a144248bb0ddf94a28956e91d1afc316ecc65b70bbaa29a"
+      "path": "skills\\embed-ai-tool\\shared\\references\\tool-detection.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\references\\tool-detection.md",
+      "sha256": "9a47ac7c5675b431cd03da2689c33b98ab0808b2998470236b3464f9cbc82518",
+      "sourceSha256": "9a47ac7c5675b431cd03da2689c33b98ab0808b2998470236b3464f9cbc82518"
     },
     {
-      "path": "skills/embed-ai-tool/shared/references/acceptance-scenarios.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/references/acceptance-scenarios.md",
-      "sourceSha256": "4a657c82fc9379d16f80e26bc663867353d072c62e12fe8375037e29272e0281",
-      "sha256": "4a657c82fc9379d16f80e26bc663867353d072c62e12fe8375037e29272e0281"
+      "path": "skills\\embed-ai-tool\\shared\\tool_config.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\shared\\tool_config.py",
+      "sha256": "92292941301445e0335eb202c297287698cf9e3eb5fbb7dd8bcc309c45172d13",
+      "sourceSha256": "92292941301445e0335eb202c297287698cf9e3eb5fbb7dd8bcc309c45172d13"
     },
     {
-      "path": "skills/embed-ai-tool/shared/references/tool-detection.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/references/tool-detection.md",
-      "sourceSha256": "9a47ac7c5675b431cd03da2689c33b98ab0808b2998470236b3464f9cbc82518",
-      "sha256": "9a47ac7c5675b431cd03da2689c33b98ab0808b2998470236b3464f9cbc82518"
+      "path": "skills\\embed-ai-tool\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embed-ai-tool\\SKILL.md",
+      "sha256": "d7e4b2f483c78295daf1d54a08fe5d64c6b03027a35e3de5aefb6d8eb37ca1db",
+      "sourceSha256": "d7e4b2f483c78295daf1d54a08fe5d64c6b03027a35e3de5aefb6d8eb37ca1db"
     },
     {
-      "path": "skills/embed-ai-tool/shared/tool_config.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embed-ai-tool/shared/tool_config.py",
-      "sourceSha256": "92292941301445e0335eb202c297287698cf9e3eb5fbb7dd8bcc309c45172d13",
-      "sha256": "92292941301445e0335eb202c297287698cf9e3eb5fbb7dd8bcc309c45172d13"
+      "path": "skills\\embedded-change-report\\agents\\openai.yaml",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\agents\\openai.yaml",
+      "sha256": "88f764ea32e8e1a5c7a57a1481bfb938d15c2dd83b3537e99abc110fc0edd5a2",
+      "sourceSha256": "88f764ea32e8e1a5c7a57a1481bfb938d15c2dd83b3537e99abc110fc0edd5a2"
     },
     {
-      "path": "skills/embedded-change-report/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/README.md",
-      "sourceSha256": "1d6f64d9afd2082c58625e3070a0799b59ec489ea3f457c214e71c6b18e0a4bf",
-      "sha256": "1d6f64d9afd2082c58625e3070a0799b59ec489ea3f457c214e71c6b18e0a4bf"
+      "path": "skills\\embedded-change-report\\assets\\change-report-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\assets\\change-report-template.md",
+      "sha256": "0066792055e29adf672a87c120b67a017bfdba5312160cab0d82601a97d9d7b3",
+      "sourceSha256": "0066792055e29adf672a87c120b67a017bfdba5312160cab0d82601a97d9d7b3"
     },
     {
-      "path": "skills/embedded-change-report/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/SKILL.md",
-      "sourceSha256": "fbf20776023bf612b0815cc13e6842027a8871e9c5a4bde82eae87700fa00389",
-      "sha256": "fbf20776023bf612b0815cc13e6842027a8871e9c5a4bde82eae87700fa00389"
+      "path": "skills\\embedded-change-report\\assets\\fix-change-report-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\assets\\fix-change-report-template.md",
+      "sha256": "98f34ca29e99c982f85efc420603a1c70a9aa8ca13df8ae99412e4895b493f90",
+      "sourceSha256": "98f34ca29e99c982f85efc420603a1c70a9aa8ca13df8ae99412e4895b493f90"
     },
     {
-      "path": "skills/embedded-change-report/agents/openai.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/agents/openai.yaml",
-      "sourceSha256": "88f764ea32e8e1a5c7a57a1481bfb938d15c2dd83b3537e99abc110fc0edd5a2",
-      "sha256": "88f764ea32e8e1a5c7a57a1481bfb938d15c2dd83b3537e99abc110fc0edd5a2"
+      "path": "skills\\embedded-change-report\\assets\\release-change-report-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\assets\\release-change-report-template.md",
+      "sha256": "244a91e5b1961e2e01d4334b3ebf0361ddf024064988b5ac6182ff408f22d1e4",
+      "sourceSha256": "244a91e5b1961e2e01d4334b3ebf0361ddf024064988b5ac6182ff408f22d1e4"
     },
     {
-      "path": "skills/embedded-change-report/assets/change-report-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/assets/change-report-template.md",
-      "sourceSha256": "0066792055e29adf672a87c120b67a017bfdba5312160cab0d82601a97d9d7b3",
-      "sha256": "0066792055e29adf672a87c120b67a017bfdba5312160cab0d82601a97d9d7b3"
+      "path": "skills\\embedded-change-report\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\README.md",
+      "sha256": "1d6f64d9afd2082c58625e3070a0799b59ec489ea3f457c214e71c6b18e0a4bf",
+      "sourceSha256": "1d6f64d9afd2082c58625e3070a0799b59ec489ea3f457c214e71c6b18e0a4bf"
     },
     {
-      "path": "skills/embedded-change-report/assets/fix-change-report-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/assets/fix-change-report-template.md",
-      "sourceSha256": "98f34ca29e99c982f85efc420603a1c70a9aa8ca13df8ae99412e4895b493f90",
-      "sha256": "98f34ca29e99c982f85efc420603a1c70a9aa8ca13df8ae99412e4895b493f90"
+      "path": "skills\\embedded-change-report\\references\\embedded-risk-taxonomy.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\references\\embedded-risk-taxonomy.md",
+      "sha256": "6882647fd5611242d602de2929b8511299744016b0af95214679e25010895796",
+      "sourceSha256": "6882647fd5611242d602de2929b8511299744016b0af95214679e25010895796"
     },
     {
-      "path": "skills/embedded-change-report/assets/release-change-report-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/assets/release-change-report-template.md",
-      "sourceSha256": "244a91e5b1961e2e01d4334b3ebf0361ddf024064988b5ac6182ff408f22d1e4",
-      "sha256": "244a91e5b1961e2e01d4334b3ebf0361ddf024064988b5ac6182ff408f22d1e4"
+      "path": "skills\\embedded-change-report\\references\\evidence-checklist.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\references\\evidence-checklist.md",
+      "sha256": "eb860a8fb0e25f7efdc3c86ed9cb6d6b87316628ba715a05bbaaae8d814f9b60",
+      "sourceSha256": "eb860a8fb0e25f7efdc3c86ed9cb6d6b87316628ba715a05bbaaae8d814f9b60"
     },
     {
-      "path": "skills/embedded-change-report/references/embedded-risk-taxonomy.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/references/embedded-risk-taxonomy.md",
-      "sourceSha256": "6882647fd5611242d602de2929b8511299744016b0af95214679e25010895796",
-      "sha256": "6882647fd5611242d602de2929b8511299744016b0af95214679e25010895796"
+      "path": "skills\\embedded-change-report\\references\\information-source-map.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\references\\information-source-map.md",
+      "sha256": "cb275a54f1cfb55be2f2deddce18d8030d5cd48ed0b19068f25304adfea2ff3a",
+      "sourceSha256": "cb275a54f1cfb55be2f2deddce18d8030d5cd48ed0b19068f25304adfea2ff3a"
     },
     {
-      "path": "skills/embedded-change-report/references/evidence-checklist.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/references/evidence-checklist.md",
-      "sourceSha256": "eb860a8fb0e25f7efdc3c86ed9cb6d6b87316628ba715a05bbaaae8d814f9b60",
-      "sha256": "eb860a8fb0e25f7efdc3c86ed9cb6d6b87316628ba715a05bbaaae8d814f9b60"
+      "path": "skills\\embedded-change-report\\references\\report-quality-rubric.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\references\\report-quality-rubric.md",
+      "sha256": "bf29fd559e5b53b8c10bfc9f3fb89d8b7234cdc1467e53defbd4993871732965",
+      "sourceSha256": "bf29fd559e5b53b8c10bfc9f3fb89d8b7234cdc1467e53defbd4993871732965"
     },
     {
-      "path": "skills/embedded-change-report/references/information-source-map.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/references/information-source-map.md",
-      "sourceSha256": "cb275a54f1cfb55be2f2deddce18d8030d5cd48ed0b19068f25304adfea2ff3a",
-      "sha256": "cb275a54f1cfb55be2f2deddce18d8030d5cd48ed0b19068f25304adfea2ff3a"
+      "path": "skills\\embedded-change-report\\references\\report-schema.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\references\\report-schema.md",
+      "sha256": "51b2028e8e7e22ca9638527c4f0cd77dcc18dfb512c8b7daf5105c0d7d77707e",
+      "sourceSha256": "51b2028e8e7e22ca9638527c4f0cd77dcc18dfb512c8b7daf5105c0d7d77707e"
     },
     {
-      "path": "skills/embedded-change-report/references/report-quality-rubric.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/references/report-quality-rubric.md",
-      "sourceSha256": "bf29fd559e5b53b8c10bfc9f3fb89d8b7234cdc1467e53defbd4993871732965",
-      "sha256": "bf29fd559e5b53b8c10bfc9f3fb89d8b7234cdc1467e53defbd4993871732965"
+      "path": "skills\\embedded-change-report\\references\\report-workflow.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\references\\report-workflow.md",
+      "sha256": "0fd27ceb0e816551f43aebf36f6d57f87a1818373f28c19d511621c1544c7d36",
+      "sourceSha256": "0fd27ceb0e816551f43aebf36f6d57f87a1818373f28c19d511621c1544c7d36"
     },
     {
-      "path": "skills/embedded-change-report/references/report-schema.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/references/report-schema.md",
-      "sourceSha256": "51b2028e8e7e22ca9638527c4f0cd77dcc18dfb512c8b7daf5105c0d7d77707e",
-      "sha256": "51b2028e8e7e22ca9638527c4f0cd77dcc18dfb512c8b7daf5105c0d7d77707e"
+      "path": "skills\\embedded-change-report\\scripts\\collect_change_context.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\scripts\\collect_change_context.py",
+      "sha256": "02b1ab0beb81330cfd19c4d3b4f3f7f62566b53eb6d3c0ea3935a08aac085040",
+      "sourceSha256": "02b1ab0beb81330cfd19c4d3b4f3f7f62566b53eb6d3c0ea3935a08aac085040"
     },
     {
-      "path": "skills/embedded-change-report/references/report-workflow.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/references/report-workflow.md",
-      "sourceSha256": "0fd27ceb0e816551f43aebf36f6d57f87a1818373f28c19d511621c1544c7d36",
-      "sha256": "0fd27ceb0e816551f43aebf36f6d57f87a1818373f28c19d511621c1544c7d36"
+      "path": "skills\\embedded-change-report\\scripts\\extract_build_summary.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\scripts\\extract_build_summary.py",
+      "sha256": "fc7199a11785716322bdd6f0eda13bb177c3d80f12e2009d0ab2d62941e9451e",
+      "sourceSha256": "fc7199a11785716322bdd6f0eda13bb177c3d80f12e2009d0ab2d62941e9451e"
     },
     {
-      "path": "skills/embedded-change-report/scripts/collect_change_context.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/scripts/collect_change_context.py",
-      "sourceSha256": "02b1ab0beb81330cfd19c4d3b4f3f7f62566b53eb6d3c0ea3935a08aac085040",
-      "sha256": "02b1ab0beb81330cfd19c4d3b4f3f7f62566b53eb6d3c0ea3935a08aac085040"
+      "path": "skills\\embedded-change-report\\scripts\\extract_git_evidence.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\scripts\\extract_git_evidence.py",
+      "sha256": "dc21da2ba74af88d658ae3dba407352177d7cdcbc8418da0f2a0593055af945a",
+      "sourceSha256": "dc21da2ba74af88d658ae3dba407352177d7cdcbc8418da0f2a0593055af945a"
     },
     {
-      "path": "skills/embedded-change-report/scripts/extract_build_summary.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/scripts/extract_build_summary.py",
-      "sourceSha256": "fc7199a11785716322bdd6f0eda13bb177c3d80f12e2009d0ab2d62941e9451e",
-      "sha256": "fc7199a11785716322bdd6f0eda13bb177c3d80f12e2009d0ab2d62941e9451e"
+      "path": "skills\\embedded-change-report\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-change-report\\SKILL.md",
+      "sha256": "fbf20776023bf612b0815cc13e6842027a8871e9c5a4bde82eae87700fa00389",
+      "sourceSha256": "fbf20776023bf612b0815cc13e6842027a8871e9c5a4bde82eae87700fa00389"
     },
     {
-      "path": "skills/embedded-change-report/scripts/extract_git_evidence.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-change-report/scripts/extract_git_evidence.py",
-      "sourceSha256": "dc21da2ba74af88d658ae3dba407352177d7cdcbc8418da0f2a0593055af945a",
-      "sha256": "dc21da2ba74af88d658ae3dba407352177d7cdcbc8418da0f2a0593055af945a"
+      "path": "skills\\embedded-project-intake\\agents\\openai.yaml",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\agents\\openai.yaml",
+      "sha256": "9bd36b520492c7093580c69f352fc18e360b737ed4156a5b1be4f9425c14edf7",
+      "sourceSha256": "9bd36b520492c7093580c69f352fc18e360b737ed4156a5b1be4f9425c14edf7"
     },
     {
-      "path": "skills/embedded-project-intake/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/SKILL.md",
-      "sourceSha256": "e9422b74e8031eac3a2d9aaa9fee4b37e1427fd75ff024a06b8f4c307bb88152",
-      "sha256": "e9422b74e8031eac3a2d9aaa9fee4b37e1427fd75ff024a06b8f4c307bb88152"
+      "path": "skills\\embedded-project-intake\\assets\\mermaid.min.js",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\assets\\mermaid.min.js",
+      "sha256": "e2f3bcf31d5a7a9bd53a639d48d64bc918f9c0c9c4d8ec2fb01c6d3a65c1a82c",
+      "sourceSha256": "e2f3bcf31d5a7a9bd53a639d48d64bc918f9c0c9c4d8ec2fb01c6d3a65c1a82c"
     },
     {
-      "path": "skills/embedded-project-intake/agents/openai.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/agents/openai.yaml",
-      "sourceSha256": "e68467b86ea1d4411288a7e7fd4c912ef80d13e14b3e37a08f145d7674c39383",
-      "sha256": "e68467b86ea1d4411288a7e7fd4c912ef80d13e14b3e37a08f145d7674c39383"
+      "path": "skills\\embedded-project-intake\\references\\agent-compatibility.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\agent-compatibility.md",
+      "sha256": "7ad628797fcce68b9bc2eb1ee92c60c354bb88cb8a14a312722681003a6e46d7",
+      "sourceSha256": "7ad628797fcce68b9bc2eb1ee92c60c354bb88cb8a14a312722681003a6e46d7"
     },
     {
-      "path": "skills/embedded-project-intake/assets/mermaid.min.js",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/assets/mermaid.min.js",
-      "sourceSha256": "e2f3bcf31d5a7a9bd53a639d48d64bc918f9c0c9c4d8ec2fb01c6d3a65c1a82c",
-      "sha256": "e2f3bcf31d5a7a9bd53a639d48d64bc918f9c0c9c4d8ec2fb01c6d3a65c1a82c"
+      "path": "skills\\embedded-project-intake\\references\\anti-laziness.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\anti-laziness.md",
+      "sha256": "3c966817adaa8670083905e13b2b25ac7751de2b5d8880d7b913b5d2a43dcb4f",
+      "sourceSha256": "3c966817adaa8670083905e13b2b25ac7751de2b5d8880d7b913b5d2a43dcb4f"
     },
     {
-      "path": "skills/embedded-project-intake/references/agent-compatibility.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/agent-compatibility.md",
-      "sourceSha256": "7ad628797fcce68b9bc2eb1ee92c60c354bb88cb8a14a312722681003a6e46d7",
-      "sha256": "7ad628797fcce68b9bc2eb1ee92c60c354bb88cb8a14a312722681003a6e46d7"
+      "path": "skills\\embedded-project-intake\\references\\embedded-review-dimensions.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\embedded-review-dimensions.md",
+      "sha256": "e4b2084ada662d70015bb107fb89aba5f898f8399e5b78d60e195654643171c9",
+      "sourceSha256": "e4b2084ada662d70015bb107fb89aba5f898f8399e5b78d60e195654643171c9"
     },
     {
-      "path": "skills/embedded-project-intake/references/anti-laziness.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/anti-laziness.md",
-      "sourceSha256": "3c966817adaa8670083905e13b2b25ac7751de2b5d8880d7b913b5d2a43dcb4f",
-      "sha256": "3c966817adaa8670083905e13b2b25ac7751de2b5d8880d7b913b5d2a43dcb4f"
+      "path": "skills\\embedded-project-intake\\references\\engineer-report.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\engineer-report.md",
+      "sha256": "8a3073a1abd4c6710bca28af293ce933de4bef0e81e814a8b755df08b920165c",
+      "sourceSha256": "8a3073a1abd4c6710bca28af293ce933de4bef0e81e814a8b755df08b920165c"
     },
     {
-      "path": "skills/embedded-project-intake/references/embedded-review-dimensions.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/embedded-review-dimensions.md",
-      "sourceSha256": "e4b2084ada662d70015bb107fb89aba5f898f8399e5b78d60e195654643171c9",
-      "sha256": "e4b2084ada662d70015bb107fb89aba5f898f8399e5b78d60e195654643171c9"
+      "path": "skills\\embedded-project-intake\\references\\evidence-rules.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\evidence-rules.md",
+      "sha256": "506c560915dea8a99b9e5d0c5e951bf2438eddd67d0fbf170d0ab5c076e30f7a",
+      "sourceSha256": "506c560915dea8a99b9e5d0c5e951bf2438eddd67d0fbf170d0ab5c076e30f7a"
     },
     {
-      "path": "skills/embedded-project-intake/references/engineer-report.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/engineer-report.md",
-      "sourceSha256": "8a3073a1abd4c6710bca28af293ce933de4bef0e81e814a8b755df08b920165c",
-      "sha256": "8a3073a1abd4c6710bca28af293ce933de4bef0e81e814a8b755df08b920165c"
+      "path": "skills\\embedded-project-intake\\references\\html-report-output.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\html-report-output.md",
+      "sha256": "1079511dee7048a4c427a5bb1144ac4af31e20ff795ba78e65f4677c053a0ab0",
+      "sourceSha256": "1079511dee7048a4c427a5bb1144ac4af31e20ff795ba78e65f4677c053a0ab0"
     },
     {
-      "path": "skills/embedded-project-intake/references/evidence-rules.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/evidence-rules.md",
-      "sourceSha256": "506c560915dea8a99b9e5d0c5e951bf2438eddd67d0fbf170d0ab5c076e30f7a",
-      "sha256": "506c560915dea8a99b9e5d0c5e951bf2438eddd67d0fbf170d0ab5c076e30f7a"
+      "path": "skills\\embedded-project-intake\\references\\install-and-usage.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\install-and-usage.md",
+      "sha256": "1de58b37e3d5e2cb7f2621d5e1892344158d3e8b34d4b67f8aea679e797182b6",
+      "sourceSha256": "1de58b37e3d5e2cb7f2621d5e1892344158d3e8b34d4b67f8aea679e797182b6"
     },
     {
-      "path": "skills/embedded-project-intake/references/html-report-output.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/html-report-output.md",
-      "sourceSha256": "1079511dee7048a4c427a5bb1144ac4af31e20ff795ba78e65f4677c053a0ab0",
-      "sha256": "1079511dee7048a4c427a5bb1144ac4af31e20ff795ba78e65f4677c053a0ab0"
+      "path": "skills\\embedded-project-intake\\references\\output-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\references\\output-template.md",
+      "sha256": "85376fc3ea79c2eb76731afe4570cfd37a14a4ea23355cbbacaf962f30ef4d0a",
+      "sourceSha256": "85376fc3ea79c2eb76731afe4570cfd37a14a4ea23355cbbacaf962f30ef4d0a"
     },
     {
-      "path": "skills/embedded-project-intake/references/install-and-usage.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/install-and-usage.md",
-      "sourceSha256": "1de58b37e3d5e2cb7f2621d5e1892344158d3e8b34d4b67f8aea679e797182b6",
-      "sha256": "1de58b37e3d5e2cb7f2621d5e1892344158d3e8b34d4b67f8aea679e797182b6"
+      "path": "skills\\embedded-project-intake\\scripts\\build_entry_scan.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\build_entry_scan.mjs",
+      "sha256": "0b978c54cbd9a7371ce74e3af88cb57911ec4e67307ab75c234060d872dfd72b",
+      "sourceSha256": "0b978c54cbd9a7371ce74e3af88cb57911ec4e67307ab75c234060d872dfd72b"
     },
     {
-      "path": "skills/embedded-project-intake/references/output-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/references/output-template.md",
-      "sourceSha256": "85376fc3ea79c2eb76731afe4570cfd37a14a4ea23355cbbacaf962f30ef4d0a",
-      "sha256": "85376fc3ea79c2eb76731afe4570cfd37a14a4ea23355cbbacaf962f30ef4d0a"
+      "path": "skills\\embedded-project-intake\\scripts\\embedded_signals.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\embedded_signals.mjs",
+      "sha256": "73b64b2eaf8f4848d32f24f7ac9058b86098b419014977b48a19e65dab776d16",
+      "sourceSha256": "73b64b2eaf8f4848d32f24f7ac9058b86098b419014977b48a19e65dab776d16"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/build_entry_scan.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/build_entry_scan.mjs",
-      "sourceSha256": "0b978c54cbd9a7371ce74e3af88cb57911ec4e67307ab75c234060d872dfd72b",
-      "sha256": "0b978c54cbd9a7371ce74e3af88cb57911ec4e67307ab75c234060d872dfd72b"
+      "path": "skills\\embedded-project-intake\\scripts\\evidence_matrix.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\evidence_matrix.mjs",
+      "sha256": "a24530f9becbd9196e8e60345d95517f9ebd7b43496eb31a09a952e48704a9cf",
+      "sourceSha256": "a24530f9becbd9196e8e60345d95517f9ebd7b43496eb31a09a952e48704a9cf"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/embedded_signals.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/embedded_signals.mjs",
-      "sourceSha256": "73b64b2eaf8f4848d32f24f7ac9058b86098b419014977b48a19e65dab776d16",
-      "sha256": "73b64b2eaf8f4848d32f24f7ac9058b86098b419014977b48a19e65dab776d16"
+      "path": "skills\\embedded-project-intake\\scripts\\inline_mermaid_html.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\inline_mermaid_html.mjs",
+      "sha256": "b90584c7fbe3b9d089552ddc6fd267362503ac3c73f43d86e41317482990b5e3",
+      "sourceSha256": "b90584c7fbe3b9d089552ddc6fd267362503ac3c73f43d86e41317482990b5e3"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/evidence_matrix.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/evidence_matrix.mjs",
-      "sourceSha256": "a24530f9becbd9196e8e60345d95517f9ebd7b43496eb31a09a952e48704a9cf",
-      "sha256": "a24530f9becbd9196e8e60345d95517f9ebd7b43496eb31a09a952e48704a9cf"
+      "path": "skills\\embedded-project-intake\\scripts\\install_for_agent.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\install_for_agent.mjs",
+      "sha256": "fe9ba8fc2175f4ea4d73f389c0af4171d35b996b071f93c5bbf20b0b14f1b5f3",
+      "sourceSha256": "fe9ba8fc2175f4ea4d73f389c0af4171d35b996b071f93c5bbf20b0b14f1b5f3"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/inline_mermaid_html.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/inline_mermaid_html.mjs",
-      "sourceSha256": "b90584c7fbe3b9d089552ddc6fd267362503ac3c73f43d86e41317482990b5e3",
-      "sha256": "b90584c7fbe3b9d089552ddc6fd267362503ac3c73f43d86e41317482990b5e3"
+      "path": "skills\\embedded-project-intake\\scripts\\module_map.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\module_map.mjs",
+      "sha256": "6da69f3f926c213a8616284035526a7c19d00a28fa0404bd97b66c97d41ef37e",
+      "sourceSha256": "6da69f3f926c213a8616284035526a7c19d00a28fa0404bd97b66c97d41ef37e"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/install_for_agent.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/install_for_agent.mjs",
-      "sourceSha256": "fe9ba8fc2175f4ea4d73f389c0af4171d35b996b071f93c5bbf20b0b14f1b5f3",
-      "sha256": "fe9ba8fc2175f4ea4d73f389c0af4171d35b996b071f93c5bbf20b0b14f1b5f3"
+      "path": "skills\\embedded-project-intake\\scripts\\project_inventory.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\project_inventory.mjs",
+      "sha256": "5ac3c17a8df20257e0d5d9721f384c314dedb369c94c52fd888ce877e5690770",
+      "sourceSha256": "5ac3c17a8df20257e0d5d9721f384c314dedb369c94c52fd888ce877e5690770"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/module_map.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/module_map.mjs",
-      "sourceSha256": "6da69f3f926c213a8616284035526a7c19d00a28fa0404bd97b66c97d41ef37e",
-      "sha256": "6da69f3f926c213a8616284035526a7c19d00a28fa0404bd97b66c97d41ef37e"
+      "path": "skills\\embedded-project-intake\\scripts\\validate_mermaid_report.mjs",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\scripts\\validate_mermaid_report.mjs",
+      "sha256": "035aad50542142f3ce5ee049a5c556740fce6f03cf20cb5d176ba3e64d7b5b1e",
+      "sourceSha256": "035aad50542142f3ce5ee049a5c556740fce6f03cf20cb5d176ba3e64d7b5b1e"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/project_inventory.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/project_inventory.mjs",
-      "sourceSha256": "5ac3c17a8df20257e0d5d9721f384c314dedb369c94c52fd888ce877e5690770",
-      "sha256": "5ac3c17a8df20257e0d5d9721f384c314dedb369c94c52fd888ce877e5690770"
+      "path": "skills\\embedded-project-intake\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-project-intake\\SKILL.md",
+      "sha256": "e9422b74e8031eac3a2d9aaa9fee4b37e1427fd75ff024a06b8f4c307bb88152",
+      "sourceSha256": "e9422b74e8031eac3a2d9aaa9fee4b37e1427fd75ff024a06b8f4c307bb88152"
     },
     {
-      "path": "skills/embedded-project-intake/scripts/validate_mermaid_report.mjs",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-project-intake/scripts/validate_mermaid_report.mjs",
-      "sourceSha256": "035aad50542142f3ce5ee049a5c556740fce6f03cf20cb5d176ba3e64d7b5b1e",
-      "sha256": "035aad50542142f3ce5ee049a5c556740fce6f03cf20cb5d176ba3e64d7b5b1e"
+      "path": "skills\\mrd-to-prd\\agents\\openai.yaml",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\agents\\openai.yaml",
+      "sha256": "1152f2ab1b9816980a36976376e1b7690a2c7fac6a850ece3c20f4a55378183f",
+      "sourceSha256": "1152f2ab1b9816980a36976376e1b7690a2c7fac6a850ece3c20f4a55378183f"
     },
     {
-      "path": "skills/embedded-team-sync/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/README.md",
-      "sourceSha256": "e04536c39db77553eb07df03f0760cf9044a935af2adac17f59f7b4577e4fade",
-      "sha256": "e04536c39db77553eb07df03f0760cf9044a935af2adac17f59f7b4577e4fade"
+      "path": "skills\\mrd-to-prd\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\README.md",
+      "sha256": "4714345706d404c96b30fb8650cc6a4f25dd65d14b218730c706745d6088ddaa",
+      "sourceSha256": "4714345706d404c96b30fb8650cc6a4f25dd65d14b218730c706745d6088ddaa"
     },
     {
-      "path": "skills/embedded-team-sync/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/SKILL.md",
-      "sourceSha256": "19f111123233e03c64a0da192670ceeae882344c76766a4b7251fcc1141aaf4f",
-      "sha256": "19f111123233e03c64a0da192670ceeae882344c76766a4b7251fcc1141aaf4f"
+      "path": "skills\\mrd-to-prd\\references\\mapping-rules.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\references\\mapping-rules.md",
+      "sha256": "e272b7eac142c1dbb016a6e8ac9a32d86703901e652bf07c05df02dec778d60c",
+      "sourceSha256": "e272b7eac142c1dbb016a6e8ac9a32d86703901e652bf07c05df02dec778d60c"
     },
     {
-      "path": "skills/embedded-team-sync/agents/openai.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/agents/openai.yaml",
-      "sourceSha256": "bc8d2975ac84a99567f855a074fc85f39b64bdf96da7a3bc3d97246826487ba5",
-      "sha256": "bc8d2975ac84a99567f855a074fc85f39b64bdf96da7a3bc3d97246826487ba5"
+      "path": "skills\\mrd-to-prd\\references\\mrd-checklist.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\references\\mrd-checklist.md",
+      "sha256": "92a7983e503dc675c966909bd2eda9b245424cdc6f193158195c326e3098d753",
+      "sourceSha256": "92a7983e503dc675c966909bd2eda9b245424cdc6f193158195c326e3098d753"
     },
     {
-      "path": "skills/embedded-team-sync/assets/PROJECT_STATUS.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/assets/PROJECT_STATUS.md",
-      "sourceSha256": "9cce577d123dc6f70ba4ee4faaa054f3848950634456d87bc9a103ecb2ed19f8",
-      "sha256": "9cce577d123dc6f70ba4ee4faaa054f3848950634456d87bc9a103ecb2ed19f8"
+      "path": "skills\\mrd-to-prd\\references\\prd-templates.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\references\\prd-templates.md",
+      "sha256": "de77cca6ff804a29d20cc442721dd145827df978fac47af2d6a7afe136a801a4",
+      "sourceSha256": "de77cca6ff804a29d20cc442721dd145827df978fac47af2d6a7afe136a801a4"
     },
     {
-      "path": "skills/embedded-team-sync/assets/SKILL_REGISTRY.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/assets/SKILL_REGISTRY.md",
-      "sourceSha256": "3f86b76551544ab1a7792ec88ed95a93237c3cfb23f77d623ad0317563a3ca83",
-      "sha256": "3f86b76551544ab1a7792ec88ed95a93237c3cfb23f77d623ad0317563a3ca83"
+      "path": "skills\\mrd-to-prd\\references\\smart-hardware-prd.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\references\\smart-hardware-prd.md",
+      "sha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29",
+      "sourceSha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29"
     },
     {
-      "path": "skills/embedded-team-sync/assets/TASK_LOG.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/assets/TASK_LOG.md",
-      "sourceSha256": "e43bce8372be115a51d6440310bffa5e0f93e4a66f1c03fb1865153f448a3cf1",
-      "sha256": "e43bce8372be115a51d6440310bffa5e0f93e4a66f1c03fb1865153f448a3cf1"
+      "path": "skills\\mrd-to-prd\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\mrd-to-prd\\SKILL.md",
+      "sha256": "31c49cb951474080c80e077c642ce39900484b3a3e05580773f25f1189652501",
+      "sourceSha256": "31c49cb951474080c80e077c642ce39900484b3a3e05580773f25f1189652501"
     },
     {
-      "path": "skills/embedded-team-sync/assets/TEAM_RULES.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/assets/TEAM_RULES.md",
-      "sourceSha256": "f94e81c27206e90886f237e60b0c5736416a4f26ea24e3554f00e9d19fa49df4",
-      "sha256": "f94e81c27206e90886f237e60b0c5736416a4f26ea24e3554f00e9d19fa49df4"
+      "path": "skills\\embedded-llm-guardrails\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-llm-guardrails\\README.md",
+      "sha256": "6b6ac16f417f2d0d07dad7300a9d05319be2b13d45354d58260e7b02ee356e69",
+      "sourceSha256": "6b6ac16f417f2d0d07dad7300a9d05319be2b13d45354d58260e7b02ee356e69"
     },
     {
-      "path": "skills/embedded-team-sync/references/status-rules.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/references/status-rules.md",
-      "sourceSha256": "3fb2909c3860c6a87a941dd8d11882ea0b504097c2171a55a18b5f9487b102e5",
-      "sha256": "3fb2909c3860c6a87a941dd8d11882ea0b504097c2171a55a18b5f9487b102e5"
+      "path": "skills\\embedded-llm-guardrails\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-llm-guardrails\\SKILL.md",
+      "sha256": "317aba2c0e6c7c073920f5d37d24f14cc85dbc96396f8b84721538c0bfb2d141",
+      "sourceSha256": "317aba2c0e6c7c073920f5d37d24f14cc85dbc96396f8b84721538c0bfb2d141"
     },
     {
-      "path": "skills/embedded-team-sync/references/workflow.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/references/workflow.md",
-      "sourceSha256": "6f0f0413aa4226155c048f6711c4966da883ef895bd053859045ee71b6fd9fb8",
-      "sha256": "6f0f0413aa4226155c048f6711c4966da883ef895bd053859045ee71b6fd9fb8"
+      "path": "skills\\embedded-production-test-tool\\agents\\openai.yaml",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\agents\\openai.yaml",
+      "sha256": "0b325cba6c4d580728399809abecb8961797a73e77abb12bd96802a47c22f431",
+      "sourceSha256": "0b325cba6c4d580728399809abecb8961797a73e77abb12bd96802a47c22f431"
     },
     {
-      "path": "skills/embedded-team-sync/scripts/init_team_sync.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/scripts/init_team_sync.py",
-      "sourceSha256": "6aed6437ce0281cc77ba38a1ff94e379cbf0097ab6dbd465c133f74f6d5a58f5",
-      "sha256": "6aed6437ce0281cc77ba38a1ff94e379cbf0097ab6dbd465c133f74f6d5a58f5"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\.gitignore",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\.gitignore",
+      "sha256": "e409b69cc11b4dbed43c61f4620d9c8e12e3508e6b9de726c757183d131167b8",
+      "sourceSha256": "e409b69cc11b4dbed43c61f4620d9c8e12e3508e6b9de726c757183d131167b8"
     },
     {
-      "path": "skills/embedded-team-sync/scripts/start_task_note.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/scripts/start_task_note.py",
-      "sourceSha256": "f08e1d3d0d75749ea877da22fdaeedd00f0408a96112f6a2b9b8952be69b57ef",
-      "sha256": "f08e1d3d0d75749ea877da22fdaeedd00f0408a96112f6a2b9b8952be69b57ef"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\config\\app.yaml",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\config\\app.yaml",
+      "sha256": "3e89ce6a5eed6a331aa32c535e46fce394854a8b08ab44204be05dfff4562a30",
+      "sourceSha256": "3e89ce6a5eed6a331aa32c535e46fce394854a8b08ab44204be05dfff4562a30"
     },
     {
-      "path": "skills/embedded-team-sync/scripts/summarize_team_sync.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/scripts/summarize_team_sync.py",
-      "sourceSha256": "5ead80406e2624ebff5351fbc162233c1468b90e1ff3c27ae3347e4a426a6b4d",
-      "sha256": "5ead80406e2624ebff5351fbc162233c1468b90e1ff3c27ae3347e4a426a6b4d"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\packaging\\app.spec",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\packaging\\app.spec",
+      "sha256": "7e830af505ec236aebe1e4e691fe45e90f060927344536903d0a1b497df79fe8",
+      "sourceSha256": "7e830af505ec236aebe1e4e691fe45e90f060927344536903d0a1b497df79fe8"
     },
     {
-      "path": "skills/embedded-team-sync/scripts/update_task_log.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-team-sync/scripts/update_task_log.py",
-      "sourceSha256": "56dbc36f9c7da16ce36440519708363c616bce079cf748a72a30339451dc8a1a",
-      "sha256": "56dbc36f9c7da16ce36440519708363c616bce079cf748a72a30339451dc8a1a"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\packaging\\build.ps1",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\packaging\\build.ps1",
+      "sha256": "21d6c38de5a28292a0f3757ae416ee853c8160c1d47257cd5952197b39d36a10",
+      "sourceSha256": "21d6c38de5a28292a0f3757ae416ee853c8160c1d47257cd5952197b39d36a10"
     },
     {
-      "path": "skills/mrd-to-prd/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/README.md",
-      "sourceSha256": "4714345706d404c96b30fb8650cc6a4f25dd65d14b218730c706745d6088ddaa",
-      "sha256": "4714345706d404c96b30fb8650cc6a4f25dd65d14b218730c706745d6088ddaa"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\packaging\\installer.iss",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\packaging\\installer.iss",
+      "sha256": "60b1e52553118ce8ccffb6ac8ad5163e98f65ebf6b8f249558e9a94bb6d8e3bf",
+      "sourceSha256": "60b1e52553118ce8ccffb6ac8ad5163e98f65ebf6b8f249558e9a94bb6d8e3bf"
     },
     {
-      "path": "skills/mrd-to-prd/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/SKILL.md",
-      "sourceSha256": "31c49cb951474080c80e077c642ce39900484b3a3e05580773f25f1189652501",
-      "sha256": "31c49cb951474080c80e077c642ce39900484b3a3e05580773f25f1189652501"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\README.md",
+      "sha256": "aa57778493668cf89e91f94085df8f3271bdb6e8e1ccfb0486e6e9848ddd43d7",
+      "sourceSha256": "aa57778493668cf89e91f94085df8f3271bdb6e8e1ccfb0486e6e9848ddd43d7"
     },
     {
-      "path": "skills/mrd-to-prd/agents/openai.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/agents/openai.yaml",
-      "sourceSha256": "1152f2ab1b9816980a36976376e1b7690a2c7fac6a850ece3c20f4a55378183f",
-      "sha256": "1152f2ab1b9816980a36976376e1b7690a2c7fac6a850ece3c20f4a55378183f"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\requirements.txt",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\requirements.txt",
+      "sha256": "11b568b589c4f459fedb10201b7a54e8706dbfb233ad6edfc2e8916c71290687",
+      "sourceSha256": "11b568b589c4f459fedb10201b7a54e8706dbfb233ad6edfc2e8916c71290687"
     },
     {
-      "path": "skills/mrd-to-prd/references/mapping-rules.md",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/references/mapping-rules.md",
-      "sourceSha256": "e272b7eac142c1dbb016a6e8ac9a32d86703901e652bf07c05df02dec778d60c",
-      "sha256": "e272b7eac142c1dbb016a6e8ac9a32d86703901e652bf07c05df02dec778d60c"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\app.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\app.py",
+      "sha256": "98eb804f027d090c9a71495134bb30b4dc7fb4ff053473d748f1f6f2e38b8e2d",
+      "sourceSha256": "98eb804f027d090c9a71495134bb30b4dc7fb4ff053473d748f1f6f2e38b8e2d"
     },
     {
-      "path": "skills/mrd-to-prd/references/mrd-checklist.md",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/references/mrd-checklist.md",
-      "sourceSha256": "92a7983e503dc675c966909bd2eda9b245424cdc6f193158195c326e3098d753",
-      "sha256": "92a7983e503dc675c966909bd2eda9b245424cdc6f193158195c326e3098d753"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\config\\loader.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\config\\loader.py",
+      "sha256": "ba92d82468162c65f31431653e76d00c3930c83e841dc4489f5a3fbd6a55f0aa",
+      "sourceSha256": "ba92d82468162c65f31431653e76d00c3930c83e841dc4489f5a3fbd6a55f0aa"
     },
     {
-      "path": "skills/mrd-to-prd/references/prd-templates.md",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/references/prd-templates.md",
-      "sourceSha256": "de77cca6ff804a29d20cc442721dd145827df978fac47af2d6a7afe136a801a4",
-      "sha256": "de77cca6ff804a29d20cc442721dd145827df978fac47af2d6a7afe136a801a4"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\config\\__init__.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\config\\__init__.py",
+      "sha256": "2f97e555b171d75ee0d422a8bd989f2ea6445b5d9b9c712141308ad9db698fee",
+      "sourceSha256": "2f97e555b171d75ee0d422a8bd989f2ea6445b5d9b9c712141308ad9db698fee"
     },
     {
-      "path": "skills/mrd-to-prd/references/smart-hardware-prd.md",
-      "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/references/smart-hardware-prd.md",
-      "sourceSha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29",
-      "sha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\reports\\writer.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\reports\\writer.py",
+      "sha256": "64d0e76d25b504abfcc6bb113aa992b1f3abcb2cadc29942cb0c4f54cadfea24",
+      "sourceSha256": "64d0e76d25b504abfcc6bb113aa992b1f3abcb2cadc29942cb0c4f54cadfea24"
     },
     {
-      "path": "skills/embedded-llm-guardrails/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails/README.md",
-      "sourceSha256": "929d8c36df199f9baf4dbe8e9b3ba3e6aecb570ccd921eac0812e5b38cb0ee9e",
-      "sha256": "929d8c36df199f9baf4dbe8e9b3ba3e6aecb570ccd921eac0812e5b38cb0ee9e"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\reports\\__init__.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\reports\\__init__.py",
+      "sha256": "c2d6d54c8c77713f830e230b88b0f6cb9c0f1f7ce090583e557d5772e9dbf75b",
+      "sourceSha256": "c2d6d54c8c77713f830e230b88b0f6cb9c0f1f7ce090583e557d5772e9dbf75b"
     },
     {
-      "path": "skills/embedded-llm-guardrails/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails/SKILL.md",
-      "sourceSha256": "782aa52a339e485dddcb2ebd8851130ea79076661f72c3ac9ebdf8577ba72805",
-      "sha256": "782aa52a339e485dddcb2ebd8851130ea79076661f72c3ac9ebdf8577ba72805"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\sitecustomize.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\sitecustomize.py",
+      "sha256": "1bb89e02a2b37a15a525ae7326664ae007008f6f2a669866c00bca6b2cfbec83",
+      "sourceSha256": "1bb89e02a2b37a15a525ae7326664ae007008f6f2a669866c00bca6b2cfbec83"
     },
     {
-      "path": "skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/locale.cpython-312.pyc",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/locale.cpython-312.pyc",
-      "sourceSha256": "10889d80e13e867b08a85acae7ad916bb6ff01e7930a611172f566c9130be665",
-      "sha256": "10889d80e13e867b08a85acae7ad916bb6ff01e7930a611172f566c9130be665"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\ui\\main_window.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\ui\\main_window.py",
+      "sha256": "65cdf69d34554d6fa6d5a3d9411ddeb2b9ee122e69b13cdc11383afa07658bff",
+      "sourceSha256": "65cdf69d34554d6fa6d5a3d9411ddeb2b9ee122e69b13cdc11383afa07658bff"
     },
     {
-      "path": "skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/textwrap.cpython-312.pyc",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/textwrap.cpython-312.pyc",
-      "sourceSha256": "64b90e0c7515448c1c73e68370e508a3939a3a9fda81d1b4aa962d68222ae33f",
-      "sha256": "64b90e0c7515448c1c73e68370e508a3939a3a9fda81d1b4aa962d68222ae33f"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\ui\\__init__.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\ui\\__init__.py",
+      "sha256": "471781f4a354a12c65d8cccd059840da40600dd6cf05fa93a3121f7266c21363",
+      "sourceSha256": "471781f4a354a12c65d8cccd059840da40600dd6cf05fa93a3121f7266c21363"
     },
     {
-      "path": "skills/embedded-production-test-tool/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/README.md",
-      "sourceSha256": "2bba2d9b0959043173aa74f63065aa2eae9e0f8cbcd8e67de0dd9477d1350be3",
-      "sha256": "2bba2d9b0959043173aa74f63065aa2eae9e0f8cbcd8e67de0dd9477d1350be3"
+      "path": "skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\__version__.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\assets\\pyside6-desktop-scaffold\\src\\__version__.py",
+      "sha256": "cca0d808177e06822599397a80122b939fc028d4c8cd335db7de1a1da076490d",
+      "sourceSha256": "cca0d808177e06822599397a80122b939fc028d4c8cd335db7de1a1da076490d"
     },
     {
-      "path": "skills/embedded-production-test-tool/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/SKILL.md",
-      "sourceSha256": "fb3dbc42bd419f831aa6a3195a7da3df8d3e3a14ac0ccac1496d56713a35523e",
-      "sha256": "fb3dbc42bd419f831aa6a3195a7da3df8d3e3a14ac0ccac1496d56713a35523e"
+      "path": "skills\\embedded-production-test-tool\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\README.md",
+      "sha256": "2bba2d9b0959043173aa74f63065aa2eae9e0f8cbcd8e67de0dd9477d1350be3",
+      "sourceSha256": "2bba2d9b0959043173aa74f63065aa2eae9e0f8cbcd8e67de0dd9477d1350be3"
     },
     {
-      "path": "skills/embedded-production-test-tool/agents/openai.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/agents/openai.yaml",
-      "sourceSha256": "0b325cba6c4d580728399809abecb8961797a73e77abb12bd96802a47c22f431",
-      "sha256": "0b325cba6c4d580728399809abecb8961797a73e77abb12bd96802a47c22f431"
+      "path": "skills\\embedded-production-test-tool\\scripts\\create_pyside6_scaffold.py",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\scripts\\create_pyside6_scaffold.py",
+      "sha256": "4523d524f8be489ff057fce40e97f5d80fb626cc56c7ed82f44b5cb784f34bc8",
+      "sourceSha256": "4523d524f8be489ff057fce40e97f5d80fb626cc56c7ed82f44b5cb784f34bc8"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/.gitignore",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/.gitignore",
-      "sourceSha256": "54b78dd1380456436060e0baeb97643f5d36de2e8a203412a7ad8335238be9e6",
-      "sha256": "54b78dd1380456436060e0baeb97643f5d36de2e8a203412a7ad8335238be9e6"
+      "path": "skills\\embedded-production-test-tool\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\embedded-production-test-tool\\SKILL.md",
+      "sha256": "fb3dbc42bd419f831aa6a3195a7da3df8d3e3a14ac0ccac1496d56713a35523e",
+      "sourceSha256": "fb3dbc42bd419f831aa6a3195a7da3df8d3e3a14ac0ccac1496d56713a35523e"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/README.md",
-      "sourceSha256": "aa57778493668cf89e91f94085df8f3271bdb6e8e1ccfb0486e6e9848ddd43d7",
-      "sha256": "aa57778493668cf89e91f94085df8f3271bdb6e8e1ccfb0486e6e9848ddd43d7"
+      "path": "skills\\market-mrd-analyst\\agents\\openai.yaml",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\agents\\openai.yaml",
+      "sha256": "462ebd41bcdbb6ebdef7d831629a75f3f3c335577684b622e16f6e134ee46d25",
+      "sourceSha256": "462ebd41bcdbb6ebdef7d831629a75f3f3c335577684b622e16f6e134ee46d25"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/config/app.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/config/app.yaml",
-      "sourceSha256": "683f7a3e5ec4a3d3ec50cb10ecea7e462c8d484871cdc466a406c8c8f12cd308",
-      "sha256": "683f7a3e5ec4a3d3ec50cb10ecea7e462c8d484871cdc466a406c8c8f12cd308"
+      "path": "skills\\market-mrd-analyst\\assets\\assumption-map-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\assumption-map-template.md",
+      "sha256": "c49d0ab64fac047713e38fa471b80ac6711adc188ce8e3f5e792a1dc257c66b0",
+      "sourceSha256": "c49d0ab64fac047713e38fa471b80ac6711adc188ce8e3f5e792a1dc257c66b0"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/app.spec",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/app.spec",
-      "sourceSha256": "0d31cc81ddc144ec63ea21a961d4e13a1467ca9b34ee57a81efd31701ca90200",
-      "sha256": "0d31cc81ddc144ec63ea21a961d4e13a1467ca9b34ee57a81efd31701ca90200"
+      "path": "skills\\market-mrd-analyst\\assets\\clarity-score-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\clarity-score-template.md",
+      "sha256": "aa8c4a99035368c9b0f40c0f7ed9a4aa55c64e07aa09c7439cde0d36ae0c4fd5",
+      "sourceSha256": "aa8c4a99035368c9b0f40c0f7ed9a4aa55c64e07aa09c7439cde0d36ae0c4fd5"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/build.ps1",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/build.ps1",
-      "sourceSha256": "86b38bca76848a8b7a628622fd732677313972c458b594c910eb0bb8a46e68d9",
-      "sha256": "86b38bca76848a8b7a628622fd732677313972c458b594c910eb0bb8a46e68d9"
+      "path": "skills\\market-mrd-analyst\\assets\\competitor-matrix-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\competitor-matrix-template.md",
+      "sha256": "9870a7c04eb62858f1c707489b039e818642affa14d1bbbe579e49cfad9e0bf2",
+      "sourceSha256": "9870a7c04eb62858f1c707489b039e818642affa14d1bbbe579e49cfad9e0bf2"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/installer.iss",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/installer.iss",
-      "sourceSha256": "db2fa45652677f5d9f07daad2ecd12a8dfbcad3092952c76f082ca31627ececc",
-      "sha256": "db2fa45652677f5d9f07daad2ecd12a8dfbcad3092952c76f082ca31627ececc"
+      "path": "skills\\market-mrd-analyst\\assets\\evidence-freshness-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\evidence-freshness-template.md",
+      "sha256": "77d4052da13ec0a29151a9b1360f4d53601f47079e54842086324b8fb3938ffd",
+      "sourceSha256": "77d4052da13ec0a29151a9b1360f4d53601f47079e54842086324b8fb3938ffd"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/requirements.txt",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/requirements.txt",
-      "sourceSha256": "1828bb523e02a5c42165ac3962edac6a040fcc369618623acb9e044cde22864d",
-      "sha256": "1828bb523e02a5c42165ac3962edac6a040fcc369618623acb9e044cde22864d"
+      "path": "skills\\market-mrd-analyst\\assets\\intake-gate-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\intake-gate-template.md",
+      "sha256": "7e2974426d7076315277edfebe93f6a9ce7a1136e523e229e39715ba8be8b0d3",
+      "sourceSha256": "7e2974426d7076315277edfebe93f6a9ce7a1136e523e229e39715ba8be8b0d3"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/__version__.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/__version__.py",
-      "sourceSha256": "624c877866d45a8a5cfcdc7da789c79d07db7765d543e61438b0c50e2b6c50aa",
-      "sha256": "624c877866d45a8a5cfcdc7da789c79d07db7765d543e61438b0c50e2b6c50aa"
+      "path": "skills\\market-mrd-analyst\\assets\\market-sizing-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\market-sizing-template.md",
+      "sha256": "5a5f407c5ed2a0a0f64f5133206d29a1f2a1b360a1ee153a4f9b19fbe94324f8",
+      "sourceSha256": "5a5f407c5ed2a0a0f64f5133206d29a1f2a1b360a1ee153a4f9b19fbe94324f8"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/app.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/app.py",
-      "sourceSha256": "b05f2c17f90d9fc7f58ea9a65ac75b62e018099786ead0eace43f5dfc6d4e2b1",
-      "sha256": "b05f2c17f90d9fc7f58ea9a65ac75b62e018099786ead0eace43f5dfc6d4e2b1"
+      "path": "skills\\market-mrd-analyst\\assets\\mrd-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\mrd-template.md",
+      "sha256": "185aaf4ca52f5189bb59694a53ca2e1cb7013a3f7d09a64660ea819b556b52a0",
+      "sourceSha256": "185aaf4ca52f5189bb59694a53ca2e1cb7013a3f7d09a64660ea819b556b52a0"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/__init__.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/__init__.py",
-      "sourceSha256": "30fad32bf30d11311e908d92f711535d1ec847fcf7b968dfbaac62e5318e7dfc",
-      "sha256": "30fad32bf30d11311e908d92f711535d1ec847fcf7b968dfbaac62e5318e7dfc"
+      "path": "skills\\market-mrd-analyst\\assets\\opportunity-alignment-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\opportunity-alignment-template.md",
+      "sha256": "122f47e550d6688194b860dd51d7e4c75fa7b436480dcd95a0723bce01ad40d0",
+      "sourceSha256": "122f47e550d6688194b860dd51d7e4c75fa7b436480dcd95a0723bce01ad40d0"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/loader.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/loader.py",
-      "sourceSha256": "282f7b27bd9d3b9662a622ac6896206a406bf5db650a498ac0f9711bc4923333",
-      "sha256": "282f7b27bd9d3b9662a622ac6896206a406bf5db650a498ac0f9711bc4923333"
+      "path": "skills\\market-mrd-analyst\\assets\\process-log-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\process-log-template.md",
+      "sha256": "5addbe1626108a3e0e1bd33b7e095ec041483633437868774773285848fc2fcf",
+      "sourceSha256": "5addbe1626108a3e0e1bd33b7e095ec041483633437868774773285848fc2fcf"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/__init__.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/__init__.py",
-      "sourceSha256": "c2d6d54c8c77713f830e230b88b0f6cb9c0f1f7ce090583e557d5772e9dbf75b",
-      "sha256": "c2d6d54c8c77713f830e230b88b0f6cb9c0f1f7ce090583e557d5772e9dbf75b"
+      "path": "skills\\market-mrd-analyst\\assets\\red-team-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\red-team-template.md",
+      "sha256": "91fb8b5a3fc4f8e0957f39aba033242de4fb540adfafc17d47410d0431817d56",
+      "sourceSha256": "91fb8b5a3fc4f8e0957f39aba033242de4fb540adfafc17d47410d0431817d56"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/writer.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/writer.py",
-      "sourceSha256": "040b952466b976b6263d54265f5a88e35add9a4477a883273c6d4675a2724fb1",
-      "sha256": "040b952466b976b6263d54265f5a88e35add9a4477a883273c6d4675a2724fb1"
+      "path": "skills\\market-mrd-analyst\\assets\\validation-plan-template.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\assets\\validation-plan-template.md",
+      "sha256": "f1ee3655829305c030dbd021e93909780e60dc5d50572745c4ddf6bd56018f16",
+      "sourceSha256": "f1ee3655829305c030dbd021e93909780e60dc5d50572745c4ddf6bd56018f16"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/sitecustomize.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/sitecustomize.py",
-      "sourceSha256": "e5c229704a9c5de476e1f7a86bbfc7321b822209b2d493172f538f7bb81aeff2",
-      "sha256": "e5c229704a9c5de476e1f7a86bbfc7321b822209b2d493172f538f7bb81aeff2"
+      "path": "skills\\market-mrd-analyst\\README.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\README.md",
+      "sha256": "a2d7efb81279efd92457351975c2daf8396984af440df00ac39696812b752fe6",
+      "sourceSha256": "a2d7efb81279efd92457351975c2daf8396984af440df00ac39696812b752fe6"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/__init__.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/__init__.py",
-      "sourceSha256": "6b733c75adf96ac93a7f91a6a6c5b48abb7214bcdae9c9fbd1512038b4bb772f",
-      "sha256": "6b733c75adf96ac93a7f91a6a6c5b48abb7214bcdae9c9fbd1512038b4bb772f"
+      "path": "skills\\market-mrd-analyst\\references\\clarity-rubric.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\clarity-rubric.md",
+      "sha256": "1362c92f3aa559c79eccc829bd5adb17d7a523a708840cca177db32d1d21346d",
+      "sourceSha256": "1362c92f3aa559c79eccc829bd5adb17d7a523a708840cca177db32d1d21346d"
     },
     {
-      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/main_window.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/main_window.py",
-      "sourceSha256": "5e3b54832bbc1422ab5616d56a1e88977b7e7b1b5cef1d07e7e957f4495fd1eb",
-      "sha256": "5e3b54832bbc1422ab5616d56a1e88977b7e7b1b5cef1d07e7e957f4495fd1eb"
+      "path": "skills\\market-mrd-analyst\\references\\competitor-analysis.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\competitor-analysis.md",
+      "sha256": "8233ffa05de247f42e8db0430a23698bd7e3e5e5d5a996c3f3316a9af7590136",
+      "sourceSha256": "8233ffa05de247f42e8db0430a23698bd7e3e5e5d5a996c3f3316a9af7590136"
     },
     {
-      "path": "skills/embedded-production-test-tool/scripts/create_pyside6_scaffold.py",
-      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/scripts/create_pyside6_scaffold.py",
-      "sourceSha256": "759e342f314dbb714826cc6a92d4cb829d950dd92f71b4df277d9c0efa46a5cf",
-      "sha256": "759e342f314dbb714826cc6a92d4cb829d950dd92f71b4df277d9c0efa46a5cf"
+      "path": "skills\\market-mrd-analyst\\references\\discovery-workflow.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\discovery-workflow.md",
+      "sha256": "f527dfc686d4aa36066a537d436ec48c2d0802ba755f2ba33ea77d5db51058e3",
+      "sourceSha256": "f527dfc686d4aa36066a537d436ec48c2d0802ba755f2ba33ea77d5db51058e3"
     },
     {
-      "path": "skills/market-mrd-analyst/README.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/README.md",
-      "sourceSha256": "a2d7efb81279efd92457351975c2daf8396984af440df00ac39696812b752fe6",
-      "sha256": "a2d7efb81279efd92457351975c2daf8396984af440df00ac39696812b752fe6"
+      "path": "skills\\market-mrd-analyst\\references\\evidence-rules.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\evidence-rules.md",
+      "sha256": "89467fac9bd7118140d75a23c942168882130a6e8e54b8c7d3bd12127cd2715b",
+      "sourceSha256": "89467fac9bd7118140d75a23c942168882130a6e8e54b8c7d3bd12127cd2715b"
     },
     {
-      "path": "skills/market-mrd-analyst/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/SKILL.md",
-      "sourceSha256": "d97b7a754bf6aa5b373f663d84f338e5939efa4cc780047360db84a3cf19436d",
-      "sha256": "d97b7a754bf6aa5b373f663d84f338e5939efa4cc780047360db84a3cf19436d"
+      "path": "skills\\market-mrd-analyst\\references\\feasibility-rubric.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\feasibility-rubric.md",
+      "sha256": "2a4425d9dc0de5c8ce7e3e54dd39d0ab853b40dc27eb691e0312f697167cb22f",
+      "sourceSha256": "2a4425d9dc0de5c8ce7e3e54dd39d0ab853b40dc27eb691e0312f697167cb22f"
     },
     {
-      "path": "skills/market-mrd-analyst/agents/openai.yaml",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/agents/openai.yaml",
-      "sourceSha256": "462ebd41bcdbb6ebdef7d831629a75f3f3c335577684b622e16f6e134ee46d25",
-      "sha256": "462ebd41bcdbb6ebdef7d831629a75f3f3c335577684b622e16f6e134ee46d25"
+      "path": "skills\\market-mrd-analyst\\references\\gated-workflow.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\gated-workflow.md",
+      "sha256": "7400118a1d202e3d18152cad54459782a38f6a25b2a8533ffe2e4fc199af7dd3",
+      "sourceSha256": "7400118a1d202e3d18152cad54459782a38f6a25b2a8533ffe2e4fc199af7dd3"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/assumption-map-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/assumption-map-template.md",
-      "sourceSha256": "c49d0ab64fac047713e38fa471b80ac6711adc188ce8e3f5e792a1dc257c66b0",
-      "sha256": "c49d0ab64fac047713e38fa471b80ac6711adc188ce8e3f5e792a1dc257c66b0"
+      "path": "skills\\market-mrd-analyst\\references\\hardware-mrd-rules.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\hardware-mrd-rules.md",
+      "sha256": "8112c4c172629a98f75579307a39ff2f0acfcbcbeef77cb4be9fc0fb48cb9666",
+      "sourceSha256": "8112c4c172629a98f75579307a39ff2f0acfcbcbeef77cb4be9fc0fb48cb9666"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/clarity-score-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/clarity-score-template.md",
-      "sourceSha256": "aa8c4a99035368c9b0f40c0f7ed9a4aa55c64e07aa09c7439cde0d36ae0c4fd5",
-      "sha256": "aa8c4a99035368c9b0f40c0f7ed9a4aa55c64e07aa09c7439cde0d36ae0c4fd5"
+      "path": "skills\\market-mrd-analyst\\references\\market-sizing.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\market-sizing.md",
+      "sha256": "ae03ffbcf1fad35be58e3409a1847efd93376be07fddba3b128db321682f699b",
+      "sourceSha256": "ae03ffbcf1fad35be58e3409a1847efd93376be07fddba3b128db321682f699b"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/competitor-matrix-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/competitor-matrix-template.md",
-      "sourceSha256": "9870a7c04eb62858f1c707489b039e818642affa14d1bbbe579e49cfad9e0bf2",
-      "sha256": "9870a7c04eb62858f1c707489b039e818642affa14d1bbbe579e49cfad9e0bf2"
+      "path": "skills\\market-mrd-analyst\\references\\mrd-writing-guide.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\references\\mrd-writing-guide.md",
+      "sha256": "90255c66e55aa77b9ead813e51a2362d9aabcc9ba5502e6ed472c0497da0ea8a",
+      "sourceSha256": "90255c66e55aa77b9ead813e51a2362d9aabcc9ba5502e6ed472c0497da0ea8a"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/evidence-freshness-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/evidence-freshness-template.md",
-      "sourceSha256": "77d4052da13ec0a29151a9b1360f4d53601f47079e54842086324b8fb3938ffd",
-      "sha256": "77d4052da13ec0a29151a9b1360f4d53601f47079e54842086324b8fb3938ffd"
+      "path": "skills\\market-mrd-analyst\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\market-mrd-analyst\\SKILL.md",
+      "sha256": "d97b7a754bf6aa5b373f663d84f338e5939efa4cc780047360db84a3cf19436d",
+      "sourceSha256": "d97b7a754bf6aa5b373f663d84f338e5939efa4cc780047360db84a3cf19436d"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/intake-gate-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/intake-gate-template.md",
-      "sourceSha256": "7e2974426d7076315277edfebe93f6a9ce7a1136e523e229e39715ba8be8b0d3",
-      "sha256": "7e2974426d7076315277edfebe93f6a9ce7a1136e523e229e39715ba8be8b0d3"
+      "path": "skills\\skill-template\\CHECKLIST.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\skill-template\\CHECKLIST.md",
+      "sha256": "c332247b20db632cdabcdee4e31b2da3ae38ab293dd3e07c94590952586f05b2",
+      "sourceSha256": "c332247b20db632cdabcdee4e31b2da3ae38ab293dd3e07c94590952586f05b2"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/market-sizing-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/market-sizing-template.md",
-      "sourceSha256": "5a5f407c5ed2a0a0f64f5133206d29a1f2a1b360a1ee153a4f9b19fbe94324f8",
-      "sha256": "5a5f407c5ed2a0a0f64f5133206d29a1f2a1b360a1ee153a4f9b19fbe94324f8"
+      "path": "skills\\skill-template\\SCENARIOS.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\skill-template\\SCENARIOS.md",
+      "sha256": "c8391c9843e838917e95bbbe368eab19d0e895c100f73574f7555b428187d928",
+      "sourceSha256": "c8391c9843e838917e95bbbe368eab19d0e895c100f73574f7555b428187d928"
     },
     {
-      "path": "skills/market-mrd-analyst/assets/mrd-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/mrd-template.md",
-      "sourceSha256": "185aaf4ca52f5189bb59694a53ca2e1cb7013a3f7d09a64660ea819b556b52a0",
-      "sha256": "185aaf4ca52f5189bb59694a53ca2e1cb7013a3f7d09a64660ea819b556b52a0"
-    },
-    {
-      "path": "skills/market-mrd-analyst/assets/opportunity-alignment-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/opportunity-alignment-template.md",
-      "sourceSha256": "122f47e550d6688194b860dd51d7e4c75fa7b436480dcd95a0723bce01ad40d0",
-      "sha256": "122f47e550d6688194b860dd51d7e4c75fa7b436480dcd95a0723bce01ad40d0"
-    },
-    {
-      "path": "skills/market-mrd-analyst/assets/process-log-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/process-log-template.md",
-      "sourceSha256": "5addbe1626108a3e0e1bd33b7e095ec041483633437868774773285848fc2fcf",
-      "sha256": "5addbe1626108a3e0e1bd33b7e095ec041483633437868774773285848fc2fcf"
-    },
-    {
-      "path": "skills/market-mrd-analyst/assets/red-team-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/red-team-template.md",
-      "sourceSha256": "91fb8b5a3fc4f8e0957f39aba033242de4fb540adfafc17d47410d0431817d56",
-      "sha256": "91fb8b5a3fc4f8e0957f39aba033242de4fb540adfafc17d47410d0431817d56"
-    },
-    {
-      "path": "skills/market-mrd-analyst/assets/validation-plan-template.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/validation-plan-template.md",
-      "sourceSha256": "f1ee3655829305c030dbd021e93909780e60dc5d50572745c4ddf6bd56018f16",
-      "sha256": "f1ee3655829305c030dbd021e93909780e60dc5d50572745c4ddf6bd56018f16"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/clarity-rubric.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/clarity-rubric.md",
-      "sourceSha256": "1362c92f3aa559c79eccc829bd5adb17d7a523a708840cca177db32d1d21346d",
-      "sha256": "1362c92f3aa559c79eccc829bd5adb17d7a523a708840cca177db32d1d21346d"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/competitor-analysis.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/competitor-analysis.md",
-      "sourceSha256": "8233ffa05de247f42e8db0430a23698bd7e3e5e5d5a996c3f3316a9af7590136",
-      "sha256": "8233ffa05de247f42e8db0430a23698bd7e3e5e5d5a996c3f3316a9af7590136"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/discovery-workflow.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/discovery-workflow.md",
-      "sourceSha256": "f527dfc686d4aa36066a537d436ec48c2d0802ba755f2ba33ea77d5db51058e3",
-      "sha256": "f527dfc686d4aa36066a537d436ec48c2d0802ba755f2ba33ea77d5db51058e3"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/evidence-rules.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/evidence-rules.md",
-      "sourceSha256": "89467fac9bd7118140d75a23c942168882130a6e8e54b8c7d3bd12127cd2715b",
-      "sha256": "89467fac9bd7118140d75a23c942168882130a6e8e54b8c7d3bd12127cd2715b"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/feasibility-rubric.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/feasibility-rubric.md",
-      "sourceSha256": "2a4425d9dc0de5c8ce7e3e54dd39d0ab853b40dc27eb691e0312f697167cb22f",
-      "sha256": "2a4425d9dc0de5c8ce7e3e54dd39d0ab853b40dc27eb691e0312f697167cb22f"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/gated-workflow.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/gated-workflow.md",
-      "sourceSha256": "7400118a1d202e3d18152cad54459782a38f6a25b2a8533ffe2e4fc199af7dd3",
-      "sha256": "7400118a1d202e3d18152cad54459782a38f6a25b2a8533ffe2e4fc199af7dd3"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/hardware-mrd-rules.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/hardware-mrd-rules.md",
-      "sourceSha256": "8112c4c172629a98f75579307a39ff2f0acfcbcbeef77cb4be9fc0fb48cb9666",
-      "sha256": "8112c4c172629a98f75579307a39ff2f0acfcbcbeef77cb4be9fc0fb48cb9666"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/market-sizing.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/market-sizing.md",
-      "sourceSha256": "ae03ffbcf1fad35be58e3409a1847efd93376be07fddba3b128db321682f699b",
-      "sha256": "ae03ffbcf1fad35be58e3409a1847efd93376be07fddba3b128db321682f699b"
-    },
-    {
-      "path": "skills/market-mrd-analyst/references/mrd-writing-guide.md",
-      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/mrd-writing-guide.md",
-      "sourceSha256": "90255c66e55aa77b9ead813e51a2362d9aabcc9ba5502e6ed472c0497da0ea8a",
-      "sha256": "90255c66e55aa77b9ead813e51a2362d9aabcc9ba5502e6ed472c0497da0ea8a"
-    },
-    {
-      "path": "skills/skill-template/CHECKLIST.md",
-      "source": "plugins/mcu-workbench-workflow/skills/skill-template/CHECKLIST.md",
-      "sourceSha256": "c332247b20db632cdabcdee4e31b2da3ae38ab293dd3e07c94590952586f05b2",
-      "sha256": "c332247b20db632cdabcdee4e31b2da3ae38ab293dd3e07c94590952586f05b2"
-    },
-    {
-      "path": "skills/skill-template/SCENARIOS.md",
-      "source": "plugins/mcu-workbench-workflow/skills/skill-template/SCENARIOS.md",
-      "sourceSha256": "c8391c9843e838917e95bbbe368eab19d0e895c100f73574f7555b428187d928",
-      "sha256": "c8391c9843e838917e95bbbe368eab19d0e895c100f73574f7555b428187d928"
-    },
-    {
-      "path": "skills/skill-template/SKILL.md",
-      "source": "plugins/mcu-workbench-workflow/skills/skill-template/SKILL.md",
-      "sourceSha256": "873913c33278b1fda3a9ee4e4f92ec111a537aeb3a53da55eaadeed1aadf6707",
-      "sha256": "873913c33278b1fda3a9ee4e4f92ec111a537aeb3a53da55eaadeed1aadf6707"
+      "path": "skills\\skill-template\\SKILL.md",
+      "source": "plugins\\mcu-workbench-workflow\\skills\\skill-template\\SKILL.md",
+      "sha256": "873913c33278b1fda3a9ee4e4f92ec111a537aeb3a53da55eaadeed1aadf6707",
+      "sourceSha256": "873913c33278b1fda3a9ee4e4f92ec111a537aeb3a53da55eaadeed1aadf6707"
     }
   ]
 }

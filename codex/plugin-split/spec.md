@@ -6,14 +6,14 @@
 |---|---|
 | request_id | `REQ-PLUGIN-SPLIT-20261123` |
 | 生成时间 | `2026-11-25` |
-| 项目路径 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai` |
-| 分支/提交 | `host_ai`；本轮只读基线 `79ae7a0c231cd417717db0927775131274327e36`（工作区含大量预存未提交及未跟踪改动） |
+| 项目路径 | `C:\Users\shuaitan2\Desktop\mcu-workbench-host_ai` |
+| 分支/提交 | `host_ai`；远程基线 `origin/host_ai`：`aa632a91229b15446279494066cf666704593d2c`；本地 Git 元数据于 2026-11-26 初始化，现有文件尚未与基线提交建立索引，需在任务基线冻结时逐路径核对 |
 | Spec 力度 | `full` |
 | Spec 叠加门禁 | `[versioned]` |
 | Spec 版本 | `v1.6-project-management-team-sync-and-document-context` |
 | 审查状态 | `review-gate-approved` |
-| 用户审查状态 | `pending-user-spec-review`（H-02；本 Spec 获用户审阅批准后再进入 Plan） |
-| 当前判定 | `scope-approved / pending-user-spec-review`：新建 `mcu-workbench-project-management`，纳入 `embedded-team-sync` 和 `workflow-document-context`；Spec 批准前不更新 Plan/Task 或实现文件 |
+| 用户审查状态 | `approved`（H-02；用户于 2026-11-26 指示“生成task开始执行”，批准当前 Spec/Plan 并授权进入 Task 与执行） |
+| 当前判定 | `scope-approved / plan-approved / task-and-execution-authorized`：新建 `mcu-workbench-project-management`，纳入 `embedded-team-sync` 和 `workflow-document-context`；按批准 Plan 生成 Task 并依赖顺序执行 |
 | 2026-11-23 变更 | 用户确认修复既有 catalog/link 基线；正式 Skill 必须可登记，链接必须指向仓库内真实目标或显式记录为外部依赖，Jest/插件/链接校验目标为零失败 |
 | 2026-11-24 变更 | 用户确认沿用上一轮边界，按拆分难度选择第二个插件；选定 `mcu-workbench-observability`，并允许已登记外部 Skill 作为该插件的迁移对象；宿主验收范围固定为 Codex + Cursor MVP |
 | 2026-11-24 变更 | 用户明确要求清理插件中的 OpenCode 部分；移除旧聚合插件活动 OpenCode 宿主入口、运行时、配置、专属依赖/脚本/Hook、命令生成器和派生产物；保留历史审计记录中的 OpenCode 事实性文字 |

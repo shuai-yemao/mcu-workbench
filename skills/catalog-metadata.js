@@ -57,7 +57,6 @@ const EXTERNAL_SKILL_ENTRIES = [
   ['modbus-debug', 'skills/modbus-debug'],
   ['mrd-to-prd', 'skills/mrd-to-prd'],
   ['parsed-chip-datasheet', 'skills/parsed-chip-datasheet'],
-  ['patent-disclosure-skill', 'skills/patent-disclosure-skill'],
   ['prd-to-hardware-solution', 'skills/prd-to-hardware-solution'],
   ['rtos-debug', 'skills/rtos-debug'],
   ['schematic-pinmap-analyzer', 'skills/schematic-pinmap-analyzer'],

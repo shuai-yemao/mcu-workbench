@@ -1,6 +1,6 @@
 # MCU Workbench Project Management 插件拆分计划
 
-> 依据 codex/plugin-split/spec.md v1.6。用户选择方案 B：分阶段切换。本文件供 H-03 审阅；不拆 Task、不迁移文件、不运行验收命令。
+> 依据 codex/plugin-split/spec.md v1.6。用户选择方案 B：分阶段切换。用户于 2026-11-26 指示“生成task开始执行”，据此批准 Plan 并授权进入 Task 与执行。
 >
 > 路线约束：先准备不含重复 Skill/runtime 的插件骨架；随后协调迁移唯一源并同步 owner/catalog/projection/host 注册；最后分阶段验收。不得产生双重可编辑源或重复 owner。
 
@@ -11,18 +11,18 @@
 | request_id | REQ-PLUGIN-SPLIT-20261123 |
 | 生成时间 | 2026-11-26T13:00:00+08:00 |
 | 计划版本 | v0.1-project-management-staged-cutover |
-| 计划状态 | reviewing |
-| 项目路径 | C:/Users/shuaitan2/Downloads/mcu-workbench-host_ai/mcu-workbench-host_ai |
-| 分支/提交 | host_ai @ 79ae7a0c231cd417717db0927775131274327e36；工作区存在大量预存改动 |
-| 输入 spec.md | C:/Users/shuaitan2/Downloads/mcu-workbench-host_ai/mcu-workbench-host_ai/codex/plugin-split/spec.md |
+| 计划状态 | approved / execution-authorized |
+| 项目路径 | C:/Users/shuaitan2/Desktop/mcu-workbench-host_ai |
+| 分支/提交 | host_ai；远程基线 origin/host_ai @ aa632a91229b15446279494066cf666704593d2c；本地索引待按路径冻结 |
+| 输入 spec.md | C:/Users/shuaitan2/Desktop/mcu-workbench-host_ai/codex/plugin-split/spec.md |
 | 输入 Review-Package | Spec v1.6 的 RCP、PM-E01–PM-E09、PM-F01–PM-F10、PM-G01–PM-G10、PM-T01–PM-T10 |
 | Spec 力度 / 风险门禁 | full / versioned |
 | 选定方案 | 方案 B：分阶段切换 |
 | 选择人 | 用户；2026-11-26 回复“b” |
-| 用户审查状态 | awaiting_user_review（H-03） |
+| 用户审查状态 | approved（H-03；用户于 2026-11-26 指示“生成task开始执行”） |
 | 方案审查结论 | 初审问题已按多视角审查修订；复核通过，Plan 待用户审阅 |
 
-用户先要求输出 Plan 方案后选择 B，据此进入 Plan 阶段。本计划未改写 Spec 的 H-02 元数据；在用户批准 Plan 前不拆 Task、不施工。
+用户先要求输出 Plan 方案后选择 B；2026-11-26 用户指示“生成task开始执行”，批准本 Plan 并授权按任务依赖进入执行。该指示同时确认接受 Spec v1.6 范围；此前 H-02/H-03 待审状态更新为已批准。
 
 ## 2. 目标与边界
 
@@ -149,6 +149,6 @@ Task 拆分时需核对 Agent/Skill canonical ID 和实际可用命令；无合�
 - Plan：C:/Users/shuaitan2/Downloads/mcu-workbench-host_ai/mcu-workbench-host_ai/codex/plugin-split/artifacts/project-management/plan.md
 - Task：仅在用户批准此 Plan 后交 workflow-task-breakdown；Task 需核实所有文件、命令、Agent/Skill 分配。
 - 实施：Task 获交付后由 workflow-task-execution 按依赖逐项完成；所有任务后统一最终 Verify，再交 workflow-final-review。
-- 当前状态：reviewing / awaiting_user_review（H-03）。
-- 下一步：用户审阅并批准 Plan，或指出需修订部分。
-- 当前未执行：没有迁移、代码修改、测试、同步、安装或真实宿主验收。
+- 当前状态：approved / execution-authorized（H-03）。
+- 下一步：基于本地 Git 初始化后的 origin/host_ai 基线逐路径冻结，生成 task.md，再按依赖执行。
+- 当前未执行：尚未生成本阶段 Task；没有迁移、代码修改、测试、同步、安装或真实宿主验收。

@@ -6,15 +6,15 @@ const root = path.resolve(__dirname, '..');
 const pluginRoot = path.join(root, 'plugins/mcu-workbench-workflow');
 
 describe('Workflow plugin package skeleton', () => {
-  test('declares the fixed set of 18 Workflow Skills', () => {
+  test('declares the fixed set of 16 Workflow Skills', () => {
     const map = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'skill-map.json'), 'utf8'));
-    expect(map.skills).toHaveLength(18);
-    expect(new Set(map.skills.map(skill => skill.id)).size).toBe(18);
+    expect(map.skills).toHaveLength(16);
+    expect(new Set(map.skills.map(skill => skill.id)).size).toBe(16);
     expect(map.skills.map(skill => skill.id)).toEqual(expect.arrayContaining([
-      'workflow-requirements-router','workflow-claude-layering','workflow-document-context',
+      'workflow-requirements-router','workflow-claude-layering',
       'workflow-requirements-challenge','workflow-review-gate','workflow-integration-plan',
       'workflow-task-breakdown','workflow-task-execution','workflow-final-review',
-      'embed-ai-tool','embedded-change-report','embedded-project-intake','embedded-team-sync','mrd-to-prd',
+      'embed-ai-tool','embedded-change-report','embedded-project-intake','mrd-to-prd',
       'embedded-llm-guardrails','embedded-production-test-tool','market-mrd-analyst','your-skill-name'
     ]));
   });
@@ -42,7 +42,7 @@ describe('Workflow plugin package skeleton', () => {
   });
 });
 
-  test('all 18 mapped Skill source trees exist and contain their SKILL.md', () => {
+  test('all 16 mapped Skill source trees exist and contain their SKILL.md', () => {
     const map = JSON.parse(fs.readFileSync(path.join(pluginRoot, 'skill-map.json'), 'utf8'));
     for (const skill of map.skills) {
       expect(fs.existsSync(path.join(root, skill.sourcePath, 'SKILL.md'))).toBe(true);
@@ -55,7 +55,7 @@ describe('Workflow plugin package skeleton', () => {
     expect(result.linkErrors).toBe(0);
     expect(result.sharedFileCount).toBe(153);
     expect(result.externalDependencyCount).toBe(5);
-    expect(result.projectionFileCount).toBe(162);
+    expect(result.projectionFileCount).toBe(146);
   });
 
 describe('Workflow validator negative fixtures', () => {

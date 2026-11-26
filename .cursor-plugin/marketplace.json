@@ -30,6 +30,11 @@
       "name": "mcu-workbench-workflow",
       "source": "plugins/mcu-workbench-workflow",
       "description": "需求路由、审查门禁、计划与任务执行 Skills。"
+    },
+    {
+      "name": "mcu-workbench-project-management",
+      "source": "plugins/mcu-workbench-project-management",
+      "description": "项目状态、团队同步与文档上下文 Skills。"
     }
   ]
 }

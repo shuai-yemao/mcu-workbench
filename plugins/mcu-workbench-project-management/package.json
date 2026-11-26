@@ -1,0 +1,7 @@
+{
+  "name": "mcu-workbench-project-management",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {"validate": "node scripts/validate.js", "sync-skills": "node scripts/sync-skills.js", "document-context": "node scripts/document-context-api.js"}
+}

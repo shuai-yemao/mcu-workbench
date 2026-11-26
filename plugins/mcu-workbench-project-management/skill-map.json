@@ -1,0 +1,8 @@
+{
+  "plugin": "mcu-workbench-project-management",
+  "skills": [
+    {"id": "embedded-team-sync", "kind": "external", "sourcePath": "plugins/mcu-workbench-project-management/skills/embedded-team-sync", "projectionPath": "skills/embedded-team-sync"},
+    {"id": "workflow-document-context", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-project-management/skills/workflow-document-context", "projectionPath": "skills/workflow/workflow-document-context"}
+  ],
+  "projections": ["skills/embedded-team-sync", "skills/workflow/workflow-document-context"]
+}

@@ -35,6 +35,13 @@
       "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
       "interface": { "displayName": "MCU Workbench Workflow" },
       "category": "Developer Tools"
+    },
+    {
+      "name": "mcu-workbench-project-management",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-project-management" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench Project Management" },
+      "category": "Developer Tools"
     }
   ]
 }

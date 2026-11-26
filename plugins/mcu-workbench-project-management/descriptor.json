@@ -1,0 +1,7 @@
+{
+  "id": "mcu-workbench-project-management",
+  "version": "1.0.0",
+  "capabilities": ["project-management", "team-sync", "document-context"],
+  "dependencies": [],
+  "lifecycle": {"load": "load-project-management", "dispose": "dispose-project-management"}
+}

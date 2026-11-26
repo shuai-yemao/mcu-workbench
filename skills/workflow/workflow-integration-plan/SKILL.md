@@ -167,11 +167,11 @@ LVGL 采用单一 GUI 契约时，计划必须明确 `03_Platform/platform_middl
 
 ## 分发目标
 
-- APP 结构交给 [`app-architecture`](../../app/app-architecture/SKILL.md)。
-- OSAL/OS Port 交给 [`platform_os`](../../platform/platform_os/SKILL.md) 或 [`impl_os`](../../impl/impl_os/SKILL.md)。
-- 器件链路交给 [`platform_bsp`](../../platform/platform_bsp/SKILL.md)、[`impl_board`](../../impl/impl_board/SKILL.md) 或 [`impl_bsp`](../../impl/impl_bsp/SKILL.md)（含 Handler 机制子层）。
-- MCU/厂商库交给 [`platform_mcu`](../../platform/platform_mcu/SKILL.md) 或 [`vendor_mcu`](../../vendor/vendor_mcu/SKILL.md)；目标工程完整保留在 `05_Vendor/vendor_mcu/{stm32,at32,esp32}/`。
-- RTOS 底座交给 [`vendor_rtos`](../../vendor/vendor_rtos/SKILL.md)，目标工程完整保留在 `05_Vendor/vendor_rtos/`；中间件和算法分别交给对应 `vendor_*` Skill，物理路径统一为 `05_Vendor/vendor_middleware/<selected-library>/` 与 `05_Vendor/vendor_algorithm/<selected-library>/`。
+- APP 结构交给 [`app-architecture`](../../references/shared/skills/app/app-architecture/SKILL.md)。
+- OSAL/OS Port 交给 [`platform_os`](../../references/shared/skills/platform/platform_os/SKILL.md) 或 [`impl_os`](../../references/shared/skills/impl/impl_os/SKILL.md)。
+- 器件链路交给 [`platform_bsp`](../../references/shared/skills/platform/platform_bsp/SKILL.md)、[`impl_board`](../../references/shared/skills/impl/impl_board/SKILL.md) 或 [`impl_bsp`](../../references/shared/skills/impl/impl_bsp/SKILL.md)（含 Handler 机制子层）。
+- MCU/厂商库交给 [`platform_mcu`](../../references/shared/skills/platform/platform_mcu/SKILL.md) 或 [`vendor_mcu`](../../references/shared/skills/vendor/vendor_mcu/SKILL.md)；目标工程完整保留在 `05_Vendor/vendor_mcu/{stm32,at32,esp32}/`。
+- RTOS 底座交给 [`vendor_rtos`](../../references/shared/skills/vendor/vendor_rtos/SKILL.md)，目标工程完整保留在 `05_Vendor/vendor_rtos/`；中间件和算法分别交给对应 `vendor_*` Skill，物理路径统一为 `05_Vendor/vendor_middleware/<selected-library>/` 与 `05_Vendor/vendor_algorithm/<selected-library>/`。
 
 分发表（请求事实 → 实现层 Skill）与 Router 的分发依据一致；本 Skill 为每个阶段记录一个主实现 Skill 和必要的 Agent/辅助 Skill 基线，但不执行代码；实际单项分配由 `workflow-task-execution` 依据当前 `task.md` 复核并回写。
 
