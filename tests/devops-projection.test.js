@@ -4,6 +4,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { syncSkills } = require('../plugins/mcu-workbench-devops/scripts/sync-skills');
+const crypto = require('crypto');
 
 describe('DevOps compatibility projection', () => {
   let root;
@@ -45,5 +46,42 @@ describe('DevOps compatibility projection', () => {
     syncSkills(options);
     fs.appendFileSync(path.join(projectRoot, 'skills', 'tools', 'tools-build', 'SKILL.md'), 'user edit\n');
     expect(() => syncSkills(options)).toThrow(/modified projection/);
+  });
+
+  test('extends a marker with an unmarked projection only when it matches frozen baseline bytes', () => {
+    const oldMapping = [{ id: 'tools-build', projection: 'tools/tools-build' }];
+    const newMapping = [...oldMapping, { id: 'embedded-build-flash-debug', projection: 'embedded-build-flash-debug' }];
+    const legacyOptions = { pluginRoot, projectRoot, skillMappings: oldMapping };
+    const newSource = path.join(pluginRoot, 'skills', 'embedded-build-flash-debug');
+    const newTarget = path.join(projectRoot, 'skills', 'embedded-build-flash-debug');
+    fs.mkdirSync(newSource, { recursive: true });
+    fs.writeFileSync(path.join(newSource, 'SKILL.md'), '# Build/flash/debug\n');
+    fs.mkdirSync(newTarget, { recursive: true });
+    const baseline = Buffer.from('# Existing root projection\n');
+    fs.writeFileSync(path.join(newTarget, 'SKILL.md'), baseline);
+    syncSkills(legacyOptions);
+    const baselineHashes = {
+      'skills/embedded-build-flash-debug/SKILL.md': crypto.createHash('sha256').update(baseline).digest('hex')
+    };
+    expect(() => syncSkills({ ...legacyOptions, skillMappings: newMapping, baselineHashes })).not.toThrow();
+    const marker = JSON.parse(fs.readFileSync(path.join(projectRoot, 'skills', 'tools', '.devops-projections.json'), 'utf8'));
+    expect(marker.skills).toEqual(['tools-build', 'embedded-build-flash-debug']);
+    expect(fs.readFileSync(path.join(newTarget, 'SKILL.md'), 'utf8')).toBe('# Build/flash/debug\n');
+  });
+
+  test('rejects an unmarked projection changed after the frozen baseline', () => {
+    const oldMapping = [{ id: 'tools-build', projection: 'tools/tools-build' }];
+    const newMapping = [...oldMapping, { id: 'embedded-build-flash-debug', projection: 'embedded-build-flash-debug' }];
+    const legacyOptions = { pluginRoot, projectRoot, skillMappings: oldMapping };
+    const newSource = path.join(pluginRoot, 'skills', 'embedded-build-flash-debug');
+    const newTarget = path.join(projectRoot, 'skills', 'embedded-build-flash-debug');
+    fs.mkdirSync(newSource, { recursive: true });
+    fs.writeFileSync(path.join(newSource, 'SKILL.md'), '# Build/flash/debug\n');
+    fs.mkdirSync(newTarget, { recursive: true });
+    fs.writeFileSync(path.join(newTarget, 'SKILL.md'), '# Drifted\n');
+    syncSkills(legacyOptions);
+    const baselineHashes = { 'skills/embedded-build-flash-debug/SKILL.md': '0'.repeat(64) };
+    expect(() => syncSkills({ ...legacyOptions, skillMappings: newMapping, baselineHashes })).toThrow(/baseline/);
+    expect(fs.readFileSync(path.join(newTarget, 'SKILL.md'), 'utf8')).toBe('# Drifted\n');
   });
 });

@@ -15,8 +15,8 @@ description: Vendor MCU 能力底座：完整保留 STM32、AT32、ESP32 官方 
 
 确认芯片系列、SDK 版本、生成器和生成配置，定位初始化、寄存器、HAL/LL/SPL 调用，再由 `platform/impl` 形成上层可用能力。厂商 API 的差异由 Impl 后端消化，不复制成平行入口；Service、App 和 Platform 公共头不得直接 include 本底座。
 
-STM32 HAL、ESP-IDF 和 CMSIS 的版本/路径矩阵见 [`vendor-source-matrix.md`](references/vendor-source-matrix.md)。
-HAL/SPL 的完整调用流程、示例和版本差异见 [`capability-index.md`](references/capability-index.md)。
+STM32 HAL、ESP-IDF 和 CMSIS 的版本/路径矩阵见 [`vendor-source-matrix.md`](./references/vendor-source-matrix.md)。
+HAL/SPL 的完整调用流程、示例和版本差异见 [`capability-index.md`](./references/capability-index.md)。
 Vendor 内容、完整性和元数据规范见 [`vendor-content-contract.md`](../references/vendor-content-contract.md)。来源/版本/生成器/路径登记见 [`vendor_mapping.md`](../references/vendor_mapping.md)。
 
 ## 禁止

@@ -58,4 +58,4 @@ flowchart TD
   通过 Impl 内部使用 `platform_bsp`/`platform_os`，BSP Wrapper/Port 与 OS Wrapper/Port 只是内部适配角色，
   App 仍只能通过 Service 使用业务能力。
 
-JSON 机器可读版本见 [`lvgl-knowledge-graph.json`](lvgl-knowledge-graph.json)。
+JSON 机器可读版本见 [`lvgl-knowledge-graph.json`](./lvgl-knowledge-graph.json)。

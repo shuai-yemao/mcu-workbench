@@ -42,6 +42,24 @@
       "sourcePath": "skills/serial-shell",
       "status": "migrated",
       "provenance": "unverified"
+    },
+    {
+      "id": "can-debug",
+      "sourcePath": "skills/can-debug",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "modbus-debug",
+      "sourcePath": "skills/modbus-debug",
+      "status": "migrated",
+      "provenance": "unverified"
+    },
+    {
+      "id": "visa-debug",
+      "sourcePath": "skills/visa-debug",
+      "status": "migrated",
+      "provenance": "unverified"
     }
   ]
 }

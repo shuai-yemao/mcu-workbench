@@ -116,7 +116,7 @@ Review 结论之外，必须执行以下宿主专项闭环。此规则仅覆盖�
 
 ## 7. 写入与交接
 
-- Codex 特化写入范围：`codex/`、Codex 适配测试，以及由脚本生成的 `AGENTS.override.md`。
+- Codex 特化写入范围：默认是 `codex/`、Codex 适配测试，以及由脚本生成的 `AGENTS.override.md`。例外：当本任务的已放行 Spec/Plan 明确批准 MCU Workbench 插件 Skills 的归属复核与迁移时，允许修改 Spec/Plan/Task 中逐项列明的 `plugins/mcu-workbench-{architecture,devops,observability,verification,workflow,project-management}/` Skill 源、对应包元数据/宿主 manifests/Skill maps/validators、`skills/catalog.js` 与必要 resolver、由目标插件 marker 明确拥有的根 Skill projections，以及本任务直接相关的 Codex/Cursor 适配测试。迁移前必须冻结路径与 SHA-256，拒绝覆盖无 marker 冲突或其他插件拥有的路径；迁移后只允许插件源为可编辑唯一源，兼容根路径必须由对应受保护同步器生成。该例外仅适用于当前获批插件迁移清单，不扩展到清单外文件，也不改变对 `common/`、`claude/` 或 `opencode/` 的禁止修改边界。
 - 发现公共规则缺陷时，记录问题和证据，不在 Codex 特化任务中直接修改 `common/`。
 - 交接必须说明：已读取的证据、已修改的 Codex 文件、未验证的项目条件和下一步动作。
 - 提交前至少运行 Codex 相关测试、插件校验和 `git diff --check`；在混合工作区仅暂存本任务文件，禁止使用 `git add -A`。

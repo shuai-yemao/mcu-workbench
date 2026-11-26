@@ -462,5 +462,5 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
 ## 参考资料
 
-- [references/timer-clock-config.md](references/timer-clock-config.md) — APB ×2 规则详解与 PSC/ARR 计算表
-- [references/timer-advanced-modes.md](references/timer-advanced-modes.md) — 编码器、霍尔、单脉冲、主从同步、DMA 突发
+- [./references/timer-clock-config.md](references/timer-clock-config.md) — APB ×2 规则详解与 PSC/ARR 计算表
+- [./references/timer-advanced-modes.md](references/timer-advanced-modes.md) — 编码器、霍尔、单脉冲、主从同步、DMA 突发

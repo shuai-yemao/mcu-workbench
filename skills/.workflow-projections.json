@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "plugin": "mcu-workbench-workflow",
-  "generatedAt": "2026-11-24T11:16:05.464Z",
+  "generatedAt": "2026-11-24T12:49:57.514Z",
   "files": [
     {
       "path": "skills/workflow/workflow-requirements-router/SKILL.md",
@@ -674,6 +674,306 @@
       "source": "plugins/mcu-workbench-workflow/skills/mrd-to-prd/references/smart-hardware-prd.md",
       "sourceSha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29",
       "sha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29"
+    },
+    {
+      "path": "skills/embedded-llm-guardrails/README.md",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails/README.md",
+      "sourceSha256": "929d8c36df199f9baf4dbe8e9b3ba3e6aecb570ccd921eac0812e5b38cb0ee9e",
+      "sha256": "929d8c36df199f9baf4dbe8e9b3ba3e6aecb570ccd921eac0812e5b38cb0ee9e"
+    },
+    {
+      "path": "skills/embedded-llm-guardrails/SKILL.md",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails/SKILL.md",
+      "sourceSha256": "782aa52a339e485dddcb2ebd8851130ea79076661f72c3ac9ebdf8577ba72805",
+      "sha256": "782aa52a339e485dddcb2ebd8851130ea79076661f72c3ac9ebdf8577ba72805"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/locale.cpython-312.pyc",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/locale.cpython-312.pyc",
+      "sourceSha256": "10889d80e13e867b08a85acae7ad916bb6ff01e7930a611172f566c9130be665",
+      "sha256": "10889d80e13e867b08a85acae7ad916bb6ff01e7930a611172f566c9130be665"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/textwrap.cpython-312.pyc",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/.pycache_root/Users/Admin/AppData/Local/Programs/Python/Python312/Lib/textwrap.cpython-312.pyc",
+      "sourceSha256": "64b90e0c7515448c1c73e68370e508a3939a3a9fda81d1b4aa962d68222ae33f",
+      "sha256": "64b90e0c7515448c1c73e68370e508a3939a3a9fda81d1b4aa962d68222ae33f"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/README.md",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/README.md",
+      "sourceSha256": "2bba2d9b0959043173aa74f63065aa2eae9e0f8cbcd8e67de0dd9477d1350be3",
+      "sha256": "2bba2d9b0959043173aa74f63065aa2eae9e0f8cbcd8e67de0dd9477d1350be3"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/SKILL.md",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/SKILL.md",
+      "sourceSha256": "fb3dbc42bd419f831aa6a3195a7da3df8d3e3a14ac0ccac1496d56713a35523e",
+      "sha256": "fb3dbc42bd419f831aa6a3195a7da3df8d3e3a14ac0ccac1496d56713a35523e"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/agents/openai.yaml",
+      "sourceSha256": "0b325cba6c4d580728399809abecb8961797a73e77abb12bd96802a47c22f431",
+      "sha256": "0b325cba6c4d580728399809abecb8961797a73e77abb12bd96802a47c22f431"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/.gitignore",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/.gitignore",
+      "sourceSha256": "54b78dd1380456436060e0baeb97643f5d36de2e8a203412a7ad8335238be9e6",
+      "sha256": "54b78dd1380456436060e0baeb97643f5d36de2e8a203412a7ad8335238be9e6"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/README.md",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/README.md",
+      "sourceSha256": "aa57778493668cf89e91f94085df8f3271bdb6e8e1ccfb0486e6e9848ddd43d7",
+      "sha256": "aa57778493668cf89e91f94085df8f3271bdb6e8e1ccfb0486e6e9848ddd43d7"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/config/app.yaml",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/config/app.yaml",
+      "sourceSha256": "683f7a3e5ec4a3d3ec50cb10ecea7e462c8d484871cdc466a406c8c8f12cd308",
+      "sha256": "683f7a3e5ec4a3d3ec50cb10ecea7e462c8d484871cdc466a406c8c8f12cd308"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/app.spec",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/app.spec",
+      "sourceSha256": "0d31cc81ddc144ec63ea21a961d4e13a1467ca9b34ee57a81efd31701ca90200",
+      "sha256": "0d31cc81ddc144ec63ea21a961d4e13a1467ca9b34ee57a81efd31701ca90200"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/build.ps1",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/build.ps1",
+      "sourceSha256": "86b38bca76848a8b7a628622fd732677313972c458b594c910eb0bb8a46e68d9",
+      "sha256": "86b38bca76848a8b7a628622fd732677313972c458b594c910eb0bb8a46e68d9"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/installer.iss",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/packaging/installer.iss",
+      "sourceSha256": "db2fa45652677f5d9f07daad2ecd12a8dfbcad3092952c76f082ca31627ececc",
+      "sha256": "db2fa45652677f5d9f07daad2ecd12a8dfbcad3092952c76f082ca31627ececc"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/requirements.txt",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/requirements.txt",
+      "sourceSha256": "1828bb523e02a5c42165ac3962edac6a040fcc369618623acb9e044cde22864d",
+      "sha256": "1828bb523e02a5c42165ac3962edac6a040fcc369618623acb9e044cde22864d"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/__version__.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/__version__.py",
+      "sourceSha256": "624c877866d45a8a5cfcdc7da789c79d07db7765d543e61438b0c50e2b6c50aa",
+      "sha256": "624c877866d45a8a5cfcdc7da789c79d07db7765d543e61438b0c50e2b6c50aa"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/app.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/app.py",
+      "sourceSha256": "b05f2c17f90d9fc7f58ea9a65ac75b62e018099786ead0eace43f5dfc6d4e2b1",
+      "sha256": "b05f2c17f90d9fc7f58ea9a65ac75b62e018099786ead0eace43f5dfc6d4e2b1"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/__init__.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/__init__.py",
+      "sourceSha256": "30fad32bf30d11311e908d92f711535d1ec847fcf7b968dfbaac62e5318e7dfc",
+      "sha256": "30fad32bf30d11311e908d92f711535d1ec847fcf7b968dfbaac62e5318e7dfc"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/loader.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/config/loader.py",
+      "sourceSha256": "282f7b27bd9d3b9662a622ac6896206a406bf5db650a498ac0f9711bc4923333",
+      "sha256": "282f7b27bd9d3b9662a622ac6896206a406bf5db650a498ac0f9711bc4923333"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/__init__.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/__init__.py",
+      "sourceSha256": "c2d6d54c8c77713f830e230b88b0f6cb9c0f1f7ce090583e557d5772e9dbf75b",
+      "sha256": "c2d6d54c8c77713f830e230b88b0f6cb9c0f1f7ce090583e557d5772e9dbf75b"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/writer.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/reports/writer.py",
+      "sourceSha256": "040b952466b976b6263d54265f5a88e35add9a4477a883273c6d4675a2724fb1",
+      "sha256": "040b952466b976b6263d54265f5a88e35add9a4477a883273c6d4675a2724fb1"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/sitecustomize.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/sitecustomize.py",
+      "sourceSha256": "e5c229704a9c5de476e1f7a86bbfc7321b822209b2d493172f538f7bb81aeff2",
+      "sha256": "e5c229704a9c5de476e1f7a86bbfc7321b822209b2d493172f538f7bb81aeff2"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/__init__.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/__init__.py",
+      "sourceSha256": "6b733c75adf96ac93a7f91a6a6c5b48abb7214bcdae9c9fbd1512038b4bb772f",
+      "sha256": "6b733c75adf96ac93a7f91a6a6c5b48abb7214bcdae9c9fbd1512038b4bb772f"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/main_window.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/assets/pyside6-desktop-scaffold/src/ui/main_window.py",
+      "sourceSha256": "5e3b54832bbc1422ab5616d56a1e88977b7e7b1b5cef1d07e7e957f4495fd1eb",
+      "sha256": "5e3b54832bbc1422ab5616d56a1e88977b7e7b1b5cef1d07e7e957f4495fd1eb"
+    },
+    {
+      "path": "skills/embedded-production-test-tool/scripts/create_pyside6_scaffold.py",
+      "source": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool/scripts/create_pyside6_scaffold.py",
+      "sourceSha256": "759e342f314dbb714826cc6a92d4cb829d950dd92f71b4df277d9c0efa46a5cf",
+      "sha256": "759e342f314dbb714826cc6a92d4cb829d950dd92f71b4df277d9c0efa46a5cf"
+    },
+    {
+      "path": "skills/market-mrd-analyst/README.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/README.md",
+      "sourceSha256": "a2d7efb81279efd92457351975c2daf8396984af440df00ac39696812b752fe6",
+      "sha256": "a2d7efb81279efd92457351975c2daf8396984af440df00ac39696812b752fe6"
+    },
+    {
+      "path": "skills/market-mrd-analyst/SKILL.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/SKILL.md",
+      "sourceSha256": "d97b7a754bf6aa5b373f663d84f338e5939efa4cc780047360db84a3cf19436d",
+      "sha256": "d97b7a754bf6aa5b373f663d84f338e5939efa4cc780047360db84a3cf19436d"
+    },
+    {
+      "path": "skills/market-mrd-analyst/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/agents/openai.yaml",
+      "sourceSha256": "462ebd41bcdbb6ebdef7d831629a75f3f3c335577684b622e16f6e134ee46d25",
+      "sha256": "462ebd41bcdbb6ebdef7d831629a75f3f3c335577684b622e16f6e134ee46d25"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/assumption-map-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/assumption-map-template.md",
+      "sourceSha256": "c49d0ab64fac047713e38fa471b80ac6711adc188ce8e3f5e792a1dc257c66b0",
+      "sha256": "c49d0ab64fac047713e38fa471b80ac6711adc188ce8e3f5e792a1dc257c66b0"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/clarity-score-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/clarity-score-template.md",
+      "sourceSha256": "aa8c4a99035368c9b0f40c0f7ed9a4aa55c64e07aa09c7439cde0d36ae0c4fd5",
+      "sha256": "aa8c4a99035368c9b0f40c0f7ed9a4aa55c64e07aa09c7439cde0d36ae0c4fd5"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/competitor-matrix-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/competitor-matrix-template.md",
+      "sourceSha256": "9870a7c04eb62858f1c707489b039e818642affa14d1bbbe579e49cfad9e0bf2",
+      "sha256": "9870a7c04eb62858f1c707489b039e818642affa14d1bbbe579e49cfad9e0bf2"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/evidence-freshness-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/evidence-freshness-template.md",
+      "sourceSha256": "77d4052da13ec0a29151a9b1360f4d53601f47079e54842086324b8fb3938ffd",
+      "sha256": "77d4052da13ec0a29151a9b1360f4d53601f47079e54842086324b8fb3938ffd"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/intake-gate-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/intake-gate-template.md",
+      "sourceSha256": "7e2974426d7076315277edfebe93f6a9ce7a1136e523e229e39715ba8be8b0d3",
+      "sha256": "7e2974426d7076315277edfebe93f6a9ce7a1136e523e229e39715ba8be8b0d3"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/market-sizing-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/market-sizing-template.md",
+      "sourceSha256": "5a5f407c5ed2a0a0f64f5133206d29a1f2a1b360a1ee153a4f9b19fbe94324f8",
+      "sha256": "5a5f407c5ed2a0a0f64f5133206d29a1f2a1b360a1ee153a4f9b19fbe94324f8"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/mrd-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/mrd-template.md",
+      "sourceSha256": "185aaf4ca52f5189bb59694a53ca2e1cb7013a3f7d09a64660ea819b556b52a0",
+      "sha256": "185aaf4ca52f5189bb59694a53ca2e1cb7013a3f7d09a64660ea819b556b52a0"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/opportunity-alignment-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/opportunity-alignment-template.md",
+      "sourceSha256": "122f47e550d6688194b860dd51d7e4c75fa7b436480dcd95a0723bce01ad40d0",
+      "sha256": "122f47e550d6688194b860dd51d7e4c75fa7b436480dcd95a0723bce01ad40d0"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/process-log-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/process-log-template.md",
+      "sourceSha256": "5addbe1626108a3e0e1bd33b7e095ec041483633437868774773285848fc2fcf",
+      "sha256": "5addbe1626108a3e0e1bd33b7e095ec041483633437868774773285848fc2fcf"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/red-team-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/red-team-template.md",
+      "sourceSha256": "91fb8b5a3fc4f8e0957f39aba033242de4fb540adfafc17d47410d0431817d56",
+      "sha256": "91fb8b5a3fc4f8e0957f39aba033242de4fb540adfafc17d47410d0431817d56"
+    },
+    {
+      "path": "skills/market-mrd-analyst/assets/validation-plan-template.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/assets/validation-plan-template.md",
+      "sourceSha256": "f1ee3655829305c030dbd021e93909780e60dc5d50572745c4ddf6bd56018f16",
+      "sha256": "f1ee3655829305c030dbd021e93909780e60dc5d50572745c4ddf6bd56018f16"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/clarity-rubric.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/clarity-rubric.md",
+      "sourceSha256": "1362c92f3aa559c79eccc829bd5adb17d7a523a708840cca177db32d1d21346d",
+      "sha256": "1362c92f3aa559c79eccc829bd5adb17d7a523a708840cca177db32d1d21346d"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/competitor-analysis.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/competitor-analysis.md",
+      "sourceSha256": "8233ffa05de247f42e8db0430a23698bd7e3e5e5d5a996c3f3316a9af7590136",
+      "sha256": "8233ffa05de247f42e8db0430a23698bd7e3e5e5d5a996c3f3316a9af7590136"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/discovery-workflow.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/discovery-workflow.md",
+      "sourceSha256": "f527dfc686d4aa36066a537d436ec48c2d0802ba755f2ba33ea77d5db51058e3",
+      "sha256": "f527dfc686d4aa36066a537d436ec48c2d0802ba755f2ba33ea77d5db51058e3"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/evidence-rules.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/evidence-rules.md",
+      "sourceSha256": "89467fac9bd7118140d75a23c942168882130a6e8e54b8c7d3bd12127cd2715b",
+      "sha256": "89467fac9bd7118140d75a23c942168882130a6e8e54b8c7d3bd12127cd2715b"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/feasibility-rubric.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/feasibility-rubric.md",
+      "sourceSha256": "2a4425d9dc0de5c8ce7e3e54dd39d0ab853b40dc27eb691e0312f697167cb22f",
+      "sha256": "2a4425d9dc0de5c8ce7e3e54dd39d0ab853b40dc27eb691e0312f697167cb22f"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/gated-workflow.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/gated-workflow.md",
+      "sourceSha256": "7400118a1d202e3d18152cad54459782a38f6a25b2a8533ffe2e4fc199af7dd3",
+      "sha256": "7400118a1d202e3d18152cad54459782a38f6a25b2a8533ffe2e4fc199af7dd3"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/hardware-mrd-rules.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/hardware-mrd-rules.md",
+      "sourceSha256": "8112c4c172629a98f75579307a39ff2f0acfcbcbeef77cb4be9fc0fb48cb9666",
+      "sha256": "8112c4c172629a98f75579307a39ff2f0acfcbcbeef77cb4be9fc0fb48cb9666"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/market-sizing.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/market-sizing.md",
+      "sourceSha256": "ae03ffbcf1fad35be58e3409a1847efd93376be07fddba3b128db321682f699b",
+      "sha256": "ae03ffbcf1fad35be58e3409a1847efd93376be07fddba3b128db321682f699b"
+    },
+    {
+      "path": "skills/market-mrd-analyst/references/mrd-writing-guide.md",
+      "source": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst/references/mrd-writing-guide.md",
+      "sourceSha256": "90255c66e55aa77b9ead813e51a2362d9aabcc9ba5502e6ed472c0497da0ea8a",
+      "sha256": "90255c66e55aa77b9ead813e51a2362d9aabcc9ba5502e6ed472c0497da0ea8a"
+    },
+    {
+      "path": "skills/skill-template/CHECKLIST.md",
+      "source": "plugins/mcu-workbench-workflow/skills/skill-template/CHECKLIST.md",
+      "sourceSha256": "c332247b20db632cdabcdee4e31b2da3ae38ab293dd3e07c94590952586f05b2",
+      "sha256": "c332247b20db632cdabcdee4e31b2da3ae38ab293dd3e07c94590952586f05b2"
+    },
+    {
+      "path": "skills/skill-template/SCENARIOS.md",
+      "source": "plugins/mcu-workbench-workflow/skills/skill-template/SCENARIOS.md",
+      "sourceSha256": "c8391c9843e838917e95bbbe368eab19d0e895c100f73574f7555b428187d928",
+      "sha256": "c8391c9843e838917e95bbbe368eab19d0e895c100f73574f7555b428187d928"
+    },
+    {
+      "path": "skills/skill-template/SKILL.md",
+      "source": "plugins/mcu-workbench-workflow/skills/skill-template/SKILL.md",
+      "sourceSha256": "873913c33278b1fda3a9ee4e4f92ec111a537aeb3a53da55eaadeed1aadf6707",
+      "sha256": "873913c33278b1fda3a9ee4e4f92ec111a537aeb3a53da55eaadeed1aadf6707"
     }
   ]
 }

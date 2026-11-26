@@ -2,7 +2,7 @@
 
 > 本案例描述 `object-ops`/事务级 Bus 形态，不是所有目标工程的当前事实。若目标工程采用
 > `plat_i2c.h` + `plat_i2c_*()` 的 `flat-logical-resource` profile，先按
-> [`platform-mcu-interface-contract.md`](platform-mcu-interface-contract.md) 审查逻辑 ID、
+> [`platform-mcu-interface-contract.md`](./platform-mcu-interface-contract.md) 审查逻辑 ID、
 > Impl 直接符号实现和 HAL 映射，不要为了套用本案例创建虚构的 `platform_i2c_ops_t`。
 
 ## 证据范围

@@ -28,8 +28,8 @@ description: 当需要解析 .map 文件或 ELF 获取固件内存使用报告�
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、构建目录扫描，还是执行分析。
-2. 若不确定工具是否可用，先运行 [scripts/memory_analyzer.py](scripts/memory_analyzer.py) 的 `--detect` 模式确认。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次是环境探测、构建目录扫描，还是执行分析。
+2. 若不确定工具是否可用，先运行 [./scripts/memory_analyzer.py](scripts/memory_analyzer.py) 的 `--detect` 模式确认。
 3. 使用 `--scan <build_dir>` 自动查找可分析的文件。
 4. 使用 `--map-file` 或 `--elf` 执行内存分析。
 5. 可选使用 `--linker-script` 获取总容量并计算使用率。

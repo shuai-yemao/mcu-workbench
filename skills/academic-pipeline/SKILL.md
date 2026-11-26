@@ -41,7 +41,7 @@ Otherwise, classify the user's input:
 **Anti-pattern (caused #133):** Receiving ambiguous cross-phase materials and silently auto-routing to a single-phase agent based on which phase the materials "look closest to." This bypasses orchestrator-level reconciliation and lets the subagent inherit the full ambiguity without independent oversight.
 <!-- routing-core:end -->
 
-**v3.6.3 (opt-in):** Set `ARS_PASSPORT_RESET=1` to promote FULL and MANDATORY checkpoints to context-reset boundaries. Use `resume_from_passport=<hash>` in a fresh session to continue from the recorded stage. See [`references/passport_as_reset_boundary.md`](references/passport_as_reset_boundary.md).
+**v3.6.3 (opt-in):** Set `ARS_PASSPORT_RESET=1` to promote FULL and MANDATORY checkpoints to context-reset boundaries. Use `resume_from_passport=<hash>` in a fresh session to continue from the recorded stage. See [`references/passport_as_reset_boundary.md`](./references/passport_as_reset_boundary.md).
 
 **#925 (opt-in):** Set `ARS_AUDIT_ARTIFACT_GATE=1` to enable the v3.6.7 Audit Artifact Gate, which has you run `scripts/run_codex_audit.sh` outside the session at each transition after a `synthesis_agent`, `research_architect_agent` (survey-designer), or `report_compiler_agent` (abstract-only) deliverable; the wrapper sends that deliverable to an external model. The variable is configuration, not consent: the gate runs only after the user agrees for the run under the consent boundary in [`shared/cross_model_verification.md`](../shared/cross_model_verification.md). Off by default; the Stage 2.5 and 4.5 integrity gates run either way. See `agents/pipeline_orchestrator_agent.md` § 3.5.
 
@@ -84,7 +84,7 @@ resume_from_passport=<hash> [stage=<n>] [mode=<m>]
 - **Gate (resume)**: No flag required. Any session can invoke `resume_from_passport=<hash>` against a passport that carries a valid boundary entry matching the hash.
 - **Intent**: Invoke in a *fresh* Claude Code session. Resuming within the same session that emitted the boundary provides no token savings and may drop still-live in-session context.
 - **Stage**: Any. Resumes at whatever stage the routing rules above determine.
-- **Reference**: [`references/passport_as_reset_boundary.md`](references/passport_as_reset_boundary.md) — see §"`resume_from_passport` mode contract".
+- **Reference**: [`references/passport_as_reset_boundary.md`](./references/passport_as_reset_boundary.md) — see §"`resume_from_passport` mode contract".
 
 **Execution flow:**
 1. Detect the user's current stage and available materials

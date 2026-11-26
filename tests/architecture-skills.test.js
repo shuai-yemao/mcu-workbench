@@ -14,7 +14,8 @@ const expectedIds = [
   'vendor_flashdb', 'vendor_letter_shell', 'vendor_algorithm',
   'chip-driver-manual', 'chip-resource-finder', 'embedded-architecture-planner',
   'embedded-coding-standard', 'embedded-minimal-project-builder', 'embedded-prd-to-logic',
-  'prd-to-hardware-solution', 'schematic-pinmap-analyzer'
+  'prd-to-hardware-solution', 'schematic-pinmap-analyzer', 'embedded-project-scaffold',
+  'parsed-chip-datasheet', 'vendor-minimal-firmware'
 ];
 
 describe('Architecture plugin Skill ownership', () => {
@@ -37,10 +38,10 @@ describe('Architecture plugin Skill ownership', () => {
     expect(missing).toEqual([]);
   });
 
-  test('registers exactly the 31 canonical and 8 matrix-owned Skills', () => {
+  test('registers exactly the 31 canonical and 11 matrix-owned Skills', () => {
     const skills = pluginSkills('mcu-workbench-architecture');
     expect(skills.map(({ id }) => id).sort()).toEqual([...expectedIds].sort());
-    expect(new Set(skills.map(({ id }) => id)).size).toBe(39);
+    expect(new Set(skills.map(({ id }) => id)).size).toBe(42);
   });
 
   test('contains every registered Skill source inside the architecture plugin', () => {

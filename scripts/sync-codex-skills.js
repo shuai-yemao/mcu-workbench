@@ -3,14 +3,34 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { CANONICAL_SKILLS } = require('../skills/catalog');
+const { CANONICAL_SKILLS, SKILL_BY_ID } = require('../skills/catalog');
 const { collectMarkdownFiles, isExternalOrIgnored, localTarget, mapMarkdownLinks } = require('../lib/skill-links');
+const nativeSkillRegistry = require('../codex/native-skills.json');
 
 const ROOT = path.resolve(__dirname, '..');
+const NATIVE_SKILLS = nativeSkillRegistry.skills.map((id) => {
+  const skill = SKILL_BY_ID[id];
+  if (!skill) throw new Error(`Unknown Codex native Skill: ${id}`);
+  return skill;
+});
+const DEFAULT_SYNC_SKILLS = [...CANONICAL_SKILLS, ...NATIVE_SKILLS];
+
+function selectSkills(include) {
+  if (include === undefined || include === null) return DEFAULT_SYNC_SKILLS;
+  const ids = Array.isArray(include) ? include : String(include).split(',');
+  const requested = ids.map((id) => String(id).trim()).filter(Boolean);
+  if (!requested.length) throw new Error('Skill include list must not be empty');
+  if (new Set(requested).size !== requested.length) throw new Error('Skill include list contains duplicates');
+  const byId = new Map(DEFAULT_SYNC_SKILLS.map((skill) => [skill.id, skill]));
+  const unknown = requested.filter((id) => !byId.has(id));
+  if (unknown.length) throw new Error(`Skills are not registered for Codex sync: ${unknown.join(', ')}`);
+  return requested.map((id) => byId.get(id));
+}
 
 function parseArgs(argv) {
   const options = {
     dryRun: false,
+    include: undefined,
     target: path.join(os.homedir(), '.agents', 'skills'),
     backupRoot: null
   };
@@ -20,6 +40,7 @@ function parseArgs(argv) {
     if (argument === '--dry-run') options.dryRun = true;
     else if (argument === '--target') options.target = argv[++index];
     else if (argument === '--backup-root') options.backupRoot = argv[++index];
+    else if (argument === '--include') options.include = String(argv[++index] || '').split(',').filter(Boolean);
     else if (argument === '--help' || argument === '-h') return { ...options, help: true };
     else throw new Error(`Unknown argument: ${argument}`);
   }
@@ -51,9 +72,10 @@ function sharedReferencePlan(target) {
     .filter((entry) => fs.existsSync(entry.source));
 }
 
-function buildPlan(target) {
+function buildPlan(target, include) {
   const resolvedTarget = path.resolve(target);
-  const plan = CANONICAL_SKILLS.map((skill) => {
+  const skills = selectSkills(include);
+  const plan = skills.map((skill) => {
     const source = skillSource(skill);
     const destination = path.join(resolvedTarget, skill.id);
     const aliases = [skill.legacyId, ...(skill.aliases || [])]
@@ -85,7 +107,7 @@ function buildPlan(target) {
       rename: Boolean(existingAlias && !destinationExists)
     };
   });
-  return { target: resolvedTarget, plan };
+  return { target: resolvedTarget, plan, skills };
 }
 
 function timestamp() {
@@ -97,8 +119,8 @@ function wait(milliseconds) {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 }
 
-function materializedTarget(sourceTarget, target, sharedPlan) {
-  for (const skill of CANONICAL_SKILLS) {
+function materializedTarget(sourceTarget, target, skills, sharedPlan) {
+  for (const skill of skills) {
     const source = skillSource(skill);
     if (sourceTarget === source || isInside(source, sourceTarget)) {
       return path.join(target, skill.id, path.relative(source, sourceTarget));
@@ -112,7 +134,7 @@ function materializedTarget(sourceTarget, target, sharedPlan) {
   return null;
 }
 
-function rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPlan }) {
+function rewriteMaterializedFile({ sourceFile, destinationFile, target, skills, sharedPlan }) {
   const content = fs.readFileSync(destinationFile, 'utf8');
   const rewritten = mapMarkdownLinks(content, ({ target: link }) => {
     if (isExternalOrIgnored(link)) return null;
@@ -120,7 +142,7 @@ function rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPl
     const normalized = localTarget(pathPart);
     if (!normalized) return null;
     const sourceTarget = path.resolve(path.dirname(sourceFile), normalized);
-    const destinationTarget = materializedTarget(sourceTarget, target, sharedPlan);
+    const destinationTarget = materializedTarget(sourceTarget, target, skills, sharedPlan);
     if (!destinationTarget) return null;
     const relative = path.relative(path.dirname(destinationFile), destinationTarget)
       .split(path.sep).join('/');
@@ -130,19 +152,19 @@ function rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPl
   if (rewritten !== content) fs.writeFileSync(destinationFile, rewritten, 'utf8');
 }
 
-function rewriteMaterializedLinks(target, sharedPlan = sharedReferencePlan(target)) {
-  for (const skill of CANONICAL_SKILLS) {
+function rewriteMaterializedLinks(target, skills = DEFAULT_SYNC_SKILLS, sharedPlan = sharedReferencePlan(target)) {
+  for (const skill of skills) {
     const sourceRoot = skillSource(skill);
     const destinationRoot = path.join(target, skill.id);
     for (const sourceFile of collectMarkdownFiles(sourceRoot)) {
       const destinationFile = path.join(destinationRoot, path.relative(sourceRoot, sourceFile));
-      rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPlan });
+      rewriteMaterializedFile({ sourceFile, destinationFile, target, skills, sharedPlan });
     }
   }
   for (const shared of sharedPlan) {
     for (const sourceFile of collectMarkdownFiles(shared.source)) {
       const destinationFile = path.join(shared.destination, path.relative(shared.source, sourceFile));
-      rewriteMaterializedFile({ sourceFile, destinationFile, target, sharedPlan });
+      rewriteMaterializedFile({ sourceFile, destinationFile, target, skills, sharedPlan });
     }
   }
 }
@@ -162,9 +184,9 @@ function renameWithRetry(source, destination, { retries = 4, delayMs = 25 } = {}
   throw lastError;
 }
 
-function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
-  const { target: resolvedTarget, plan } = buildPlan(target || path.join(os.homedir(), '.agents', 'skills'));
-  const sharedPlan = sharedReferencePlan(resolvedTarget);
+function syncCodexSkills({ target, backupRoot, dryRun = false, include } = {}) {
+  const { target: resolvedTarget, plan, skills } = buildPlan(target || path.join(os.homedir(), '.agents', 'skills'), include);
+  const sharedPlan = include === undefined ? sharedReferencePlan(resolvedTarget) : [];
   const changes = plan.filter((entry) => entry.existing || !fs.existsSync(entry.destination));
   const summary = {
     target: resolvedTarget,
@@ -210,7 +232,7 @@ function syncCodexSkills({ target, backupRoot, dryRun = false } = {}) {
     if (fs.existsSync(shared.destination)) fs.rmSync(shared.destination, { recursive: true, force: true });
     fs.cpSync(shared.source, shared.destination, { recursive: true });
   }
-  rewriteMaterializedLinks(resolvedTarget, sharedPlan);
+  rewriteMaterializedLinks(resolvedTarget, skills, sharedPlan);
 
   return summary;
 }
@@ -231,7 +253,7 @@ if (require.main === module) {
   try {
     const options = parseArgs(process.argv.slice(2));
     if (options.help) {
-      console.log('Usage: node scripts/sync-codex-skills.js [--dry-run] [--target <directory>] [--backup-root <directory>]');
+      console.log('Usage: node scripts/sync-codex-skills.js [--dry-run] [--target <directory>] [--backup-root <directory>] [--include <id,id,...>]');
       process.exit(0);
     }
     console.log(formatSummary(syncCodexSkills(options)));
@@ -246,5 +268,6 @@ module.exports = {
   parseArgs,
   renameWithRetry,
   rewriteMaterializedLinks,
+  selectSkills,
   syncCodexSkills
 };

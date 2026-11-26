@@ -12,7 +12,7 @@ const HOST_MANIFESTS = ['.codex-plugin/plugin.json', '.cursor-plugin/plugin.json
 const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const slash = value => value.split(path.sep).join('/');
 const inside = (root,target) => { const rel=path.relative(root,target); return rel===''||(!rel.startsWith(`..${path.sep}`)&&rel!=='..'&&!path.isAbsolute(rel)); };
-const filesUnder = root => !fs.existsSync(root)?[]:fs.readdirSync(root,{withFileTypes:true}).flatMap(e=>{const f=path.join(root,e.name);return e.isDirectory()?filesUnder(f):e.isFile()?[f]:[];}).sort();
+const filesUnder = root => !fs.existsSync(root)?[]:fs.readdirSync(root,{withFileTypes:true}).flatMap(e=>{if(e.isDirectory()&&e.name==='.git')return [];const f=path.join(root,e.name);return e.isDirectory()?filesUnder(f):e.isFile()?[f]:[];}).sort();
 
 function readJson(pluginRoot, relativePath, errors) {
   try { return JSON.parse(fs.readFileSync(path.join(pluginRoot, relativePath), 'utf8')); }
@@ -69,7 +69,7 @@ function validateWorkflowPlugin(options={}) {
   const depKeys=new Set(dependencies.map(item=>`${item.source}\0${item.declaredAs}`));
   const sharedByPackage=sharedFiles;
   const sourceIdentity=packageFile=>{
-    for(const skill of skills){const sourceRoot=path.resolve(pluginRoot,'skills',skill.id);if(inside(sourceRoot,packageFile)){const oldRoot=path.resolve(projectRoot,skill.projectionPath);return slash(path.relative(projectRoot,path.join(oldRoot,path.relative(sourceRoot,packageFile))));}}
+    for(const skill of skills){const sourceRoot=path.resolve(projectRoot,skill.sourcePath);if(inside(sourceRoot,packageFile)){const oldRoot=path.resolve(projectRoot,skill.projectionPath);return slash(path.relative(projectRoot,path.join(oldRoot,path.relative(sourceRoot,packageFile))));}}
     const sharedRoot=path.resolve(pluginRoot,'references/shared');
     if(inside(sharedRoot,packageFile)){
       const rel=slash(path.relative(sharedRoot,packageFile));const entry=sharedByPackage.find(item=>item.packagePath===rel||rel.startsWith(`${item.packagePath}/`));
@@ -91,7 +91,7 @@ function validateWorkflowPlugin(options={}) {
     if(marker){
       if(marker.schemaVersion!=='1.0.0'||marker.plugin!==PLUGIN_ID||!Array.isArray(marker.files))errors.push('Workflow marker identity/schema invalid');
       const seen=new Set();const expected=[];
-      for(const skill of skills){const sourceRoot=path.resolve(pluginRoot,'skills',skill.id),targetRoot=path.resolve(projectRoot,skill.projectionPath);for(const source of filesUnder(sourceRoot))expected.push({source,target:path.resolve(targetRoot,path.relative(sourceRoot,source))});}
+      for(const skill of skills){const sourceRoot=path.resolve(projectRoot,skill.sourcePath),targetRoot=path.resolve(projectRoot,skill.projectionPath);for(const source of filesUnder(sourceRoot))expected.push({source,target:path.resolve(targetRoot,path.relative(sourceRoot,source))});}
       projectionFileCount=marker.files.length;
       if(marker.files.length!==expected.length)errors.push(`Workflow marker file count mismatch: expected ${expected.length}, found ${marker.files.length}`);
       for(const entry of marker.files){

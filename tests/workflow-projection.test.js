@@ -37,6 +37,15 @@ describe('Workflow protected Skill projections', () => {
     expect(syncSkillProjections({ ...f, baselineHashes }).status).toBe('unchanged');
   });
 
+  test('does not project nested Git metadata from a Skill source', () => {
+    const f = fixture();
+    fs.mkdirSync(path.join(f.source, '.git'), { recursive: true });
+    fs.writeFileSync(path.join(f.source, '.git', 'HEAD'), 'ref: refs/heads/main\n');
+    const baselineHashes = { 'skills/sample-skill/SKILL.md': hash('# original root\n') };
+    expect(syncSkillProjections({ ...f, baselineHashes }).status).toBe('created');
+    expect(fs.existsSync(path.join(f.target, '.git', 'HEAD'))).toBe(false);
+  });
+
   test('refuses unmarked conflicting content and refuses managed drift', () => {
     const f = fixture();
     expect(() => syncSkillProjections({ ...f, baselineHashes: {} })).toThrow(/adoption|unmarked/i);

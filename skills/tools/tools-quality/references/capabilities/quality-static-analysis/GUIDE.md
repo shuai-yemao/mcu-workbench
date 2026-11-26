@@ -113,7 +113,7 @@ Required 即使在 XML 中表现为 `style`，仍然阻断统一门禁。
 
 ### MISRA 规则元数据
 
-MISRA 规则元数据位于 [`misra-rule-metadata.json`](misra-rule-metadata.json)，当前覆盖
+MISRA 规则元数据位于 [`misra-rule-metadata.json`](./misra-rule-metadata.json)，当前覆盖
 MISRA C:2012 + Amendment 1 + Amendment 2 的规则/指令分类，不复制规则正文。
 规则分为三级，输出时分级显示：
 - **Mandatory**：强制要求，不可偏离

@@ -6,7 +6,7 @@ const { pluginSkills } = require('../../../skills/catalog');
 const { validateManifests } = require('./validate-manifests');
 
 const PLUGIN_ROOT = path.resolve(__dirname, '..');
-const EXPECTED_SKILL_COUNT = 39;
+const EXPECTED_SKILL_COUNT = 42;
 
 function validateArchitecturePlugin() {
   const errors = [...validateManifests().errors];

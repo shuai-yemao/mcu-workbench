@@ -22,7 +22,7 @@ description: Vendor 底座登记：FAL（Flash Abstraction Layer）源码与知�
 - 相对寻址：上层传分区内 `addr`，FAL 内部换算 `part->offset + addr` 为物理地址。
 - 链接脚本需 `KEEP(*(FalPartTable))`，防止 `--gc-sections` 裁掉静态分区表。
 
-详细流程见 [`fal-partition-porting.md`](references/fal-partition-porting.md)。
+详细流程见 [`fal-partition-porting.md`](./references/fal-partition-porting.md)。
 
 ## 交接
 

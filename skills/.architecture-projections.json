@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "plugin": "mcu-workbench-architecture",
-  "generatedAt": "2026-11-24T09:17:30.407Z",
+  "generatedAt": "2026-11-24T12:23:39.837Z",
   "files": [
     {
       "path": "skills/app/app-architecture/SKILL.md",
@@ -1496,6 +1496,174 @@
       "source": "plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer/references/output-format.md",
       "sourceSha256": "f1a023fc62fc8876b09c15a711d28e0295b2aa2bb1d27a9c08e9b8d4da73917e",
       "sha256": "f1a023fc62fc8876b09c15a711d28e0295b2aa2bb1d27a9c08e9b8d4da73917e"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/README.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/README.md",
+      "sourceSha256": "2d997b330311886d0f86bf96d3fd6f6ac44fda2982258b1abfccdce47720d1e8",
+      "sha256": "2d997b330311886d0f86bf96d3fd6f6ac44fda2982258b1abfccdce47720d1e8"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/SKILL.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/SKILL.md",
+      "sourceSha256": "eba74eb3dd2ff2cccb6d3d2422ebf7090d329936bf8f31a2c33b302f7b563916",
+      "sha256": "eba74eb3dd2ff2cccb6d3d2422ebf7090d329936bf8f31a2c33b302f7b563916"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/agents/openai.yaml",
+      "sourceSha256": "de049fc781377e37b8d8c785cfe1c1e4949c3fd0ebc65d2417f0c1ed9c97650f",
+      "sha256": "de049fc781377e37b8d8c785cfe1c1e4949c3fd0ebc65d2417f0c1ed9c97650f"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/bare-metal.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/bare-metal.md",
+      "sourceSha256": "d8177e4c71c3afaa54a01e8e3259b067cee96bf184a778292a1441f268661640",
+      "sha256": "d8177e4c71c3afaa54a01e8e3259b067cee96bf184a778292a1441f268661640"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/bootloader.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/bootloader.md",
+      "sourceSha256": "fdd7267fb9517bcd9f60f9c7f8b4ccbd5f08304e449eaf99eeaa71bf74055171",
+      "sha256": "fdd7267fb9517bcd9f60f9c7f8b4ccbd5f08304e449eaf99eeaa71bf74055171"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/bringup-checklist.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/bringup-checklist.md",
+      "sourceSha256": "c99ac8e18ff97119cfd435cdce973d28e0340ac9bfc75f9a399b698ed179b85d",
+      "sha256": "c99ac8e18ff97119cfd435cdce973d28e0340ac9bfc75f9a399b698ed179b85d"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/build-flash-debug-scripts.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/build-flash-debug-scripts.md",
+      "sourceSha256": "70bb51f7081f0e03e61262e8d99aa69ecad0ac4acb87ecc62aa6b2731b183dcc",
+      "sha256": "70bb51f7081f0e03e61262e8d99aa69ecad0ac4acb87ecc62aa6b2731b183dcc"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/build-systems.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/build-systems.md",
+      "sourceSha256": "595d5921f821c5af40211717b1ebd0b80dab475adb6f093ba84687e14ff8c48d",
+      "sha256": "595d5921f821c5af40211717b1ebd0b80dab475adb6f093ba84687e14ff8c48d"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/clarification-gate.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/clarification-gate.md",
+      "sourceSha256": "aff34ed368a99c634aa5aa259d2955b897e60e0f5bbc0fac15810fd7b8b36711",
+      "sha256": "aff34ed368a99c634aa5aa259d2955b897e60e0f5bbc0fac15810fd7b8b36711"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/external-driver-demo.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/external-driver-demo.md",
+      "sourceSha256": "e8e7ed5715b6fd60f7e4d48ede0ab32f89187a1573d4f3ac478ff46bbd31c341",
+      "sha256": "e8e7ed5715b6fd60f7e4d48ede0ab32f89187a1573d4f3ac478ff46bbd31c341"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/material-acquisition.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/material-acquisition.md",
+      "sourceSha256": "560975e08cd81c44d1365b70b43bcf5989fd0178051e460de67427fd838c69ab",
+      "sha256": "560975e08cd81c44d1365b70b43bcf5989fd0178051e460de67427fd838c69ab"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/rtos.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/rtos.md",
+      "sourceSha256": "303d718b755406202c7fa9681611369ae096e606d0d9fe92c1cad520c791cd0e",
+      "sha256": "303d718b755406202c7fa9681611369ae096e606d0d9fe92c1cad520c791cd0e"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/source-intake.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/source-intake.md",
+      "sourceSha256": "df8a74b488e8b02d0e4853ff170e28064c6486781cfe2cffb3f14ef5125d406e",
+      "sha256": "df8a74b488e8b02d0e4853ff170e28064c6486781cfe2cffb3f14ef5125d406e"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/toolchain-environment.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/toolchain-environment.md",
+      "sourceSha256": "5b64d153f51b56fcf9e68e286b717164c974221596bdb0b2b57ee9a55d82dd01",
+      "sha256": "5b64d153f51b56fcf9e68e286b717164c974221596bdb0b2b57ee9a55d82dd01"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/references/vendor-reduction.md",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/references/vendor-reduction.md",
+      "sourceSha256": "f671d96db74d165a6e734f40f34a25404d2f1dcb4e3582ae926380e0feaa8c38",
+      "sha256": "f671d96db74d165a6e734f40f34a25404d2f1dcb4e3582ae926380e0feaa8c38"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/scripts/check_scaffold.mjs",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/scripts/check_scaffold.mjs",
+      "sourceSha256": "b8539805234a67b1f8781c566ed4e12a6966b3eaf508b5f9f06ffdca9d1f5d0f",
+      "sha256": "b8539805234a67b1f8781c566ed4e12a6966b3eaf508b5f9f06ffdca9d1f5d0f"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/scripts/detect_environment.mjs",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/scripts/detect_environment.mjs",
+      "sourceSha256": "75dc1ca61d41bc7c2751732e0186c70d94ec4c7ebee9268c78e257047bdb9303",
+      "sha256": "75dc1ca61d41bc7c2751732e0186c70d94ec4c7ebee9268c78e257047bdb9303"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/scripts/download_materials.mjs",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/scripts/download_materials.mjs",
+      "sourceSha256": "d04afb2eb5b520d9c5be8ed9289bcf076c6e2d7137eba55d255176460301a1c8",
+      "sha256": "d04afb2eb5b520d9c5be8ed9289bcf076c6e2d7137eba55d255176460301a1c8"
+    },
+    {
+      "path": "skills/embedded-project-scaffold/scripts/project_inventory.mjs",
+      "source": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold/scripts/project_inventory.mjs",
+      "sourceSha256": "6edf53e6a07d0996329b6b891b370712a1e8c978621391fbbf625cf3c113a08b",
+      "sha256": "6edf53e6a07d0996329b6b891b370712a1e8c978621391fbbf625cf3c113a08b"
+    },
+    {
+      "path": "skills/parsed-chip-datasheet/INSTALL.md",
+      "source": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet/INSTALL.md",
+      "sourceSha256": "18a291d16f02a0ceafef92e184555bc0c8ded44441eacc6ee294afa92c3089ca",
+      "sha256": "18a291d16f02a0ceafef92e184555bc0c8ded44441eacc6ee294afa92c3089ca"
+    },
+    {
+      "path": "skills/parsed-chip-datasheet/README.md",
+      "source": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet/README.md",
+      "sourceSha256": "f9a3118a91974b1454a1908d98b6bcf214a3d005d86ca907a94df601fb3b5827",
+      "sha256": "f9a3118a91974b1454a1908d98b6bcf214a3d005d86ca907a94df601fb3b5827"
+    },
+    {
+      "path": "skills/parsed-chip-datasheet/SKILL.md",
+      "source": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet/SKILL.md",
+      "sourceSha256": "f432615edbb251b8e30588605324894a498b720f8fd7236fc40f0b2d1d25d4e8",
+      "sha256": "f432615edbb251b8e30588605324894a498b720f8fd7236fc40f0b2d1d25d4e8"
+    },
+    {
+      "path": "skills/parsed-chip-datasheet/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet/agents/openai.yaml",
+      "sourceSha256": "a0a9df1ef0cc17ef455a329f787c23c95bc825953a9824e36c7eed39573f8388",
+      "sha256": "a0a9df1ef0cc17ef455a329f787c23c95bc825953a9824e36c7eed39573f8388"
+    },
+    {
+      "path": "skills/parsed-chip-datasheet/scripts/query_bundle.mjs",
+      "source": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet/scripts/query_bundle.mjs",
+      "sourceSha256": "67161139d7c5712ab791ac14b9261d84420ac524131d327c0285deb94aec4b69",
+      "sha256": "67161139d7c5712ab791ac14b9261d84420ac524131d327c0285deb94aec4b69"
+    },
+    {
+      "path": "skills/vendor-minimal-firmware/README.zh-CN.md",
+      "source": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware/README.zh-CN.md",
+      "sourceSha256": "276f5e9c1a908d3fc08dad5fc95b23edf47dbb81dd29047ced1ae280796a6581",
+      "sha256": "276f5e9c1a908d3fc08dad5fc95b23edf47dbb81dd29047ced1ae280796a6581"
+    },
+    {
+      "path": "skills/vendor-minimal-firmware/SKILL.md",
+      "source": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware/SKILL.md",
+      "sourceSha256": "af6c8cc669e4d6790fd1683898cc06467dbd090f8ac17b37d933452d97e479ac",
+      "sha256": "af6c8cc669e4d6790fd1683898cc06467dbd090f8ac17b37d933452d97e479ac"
+    },
+    {
+      "path": "skills/vendor-minimal-firmware/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware/agents/openai.yaml",
+      "sourceSha256": "07ce70ae539829775bb4cf76f958cdadb4c30015328cd67f59a231c6f4b05e62",
+      "sha256": "07ce70ae539829775bb4cf76f958cdadb4c30015328cd67f59a231c6f4b05e62"
+    },
+    {
+      "path": "skills/vendor-minimal-firmware/references/checklist.md",
+      "source": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware/references/checklist.md",
+      "sourceSha256": "0db6a1a7341793a55bced100d6ca89d4a3b864eb0c84b283c07b43aab5f8b0e5",
+      "sha256": "0db6a1a7341793a55bced100d6ca89d4a3b864eb0c84b283c07b43aab5f8b0e5"
     }
   ]
 }

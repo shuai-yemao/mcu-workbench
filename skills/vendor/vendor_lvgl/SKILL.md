@@ -35,11 +35,11 @@ LVGL 不直接调用 FreeRTOS、Core、Driver 或具体器件实现，APP 业务
 
 ## References
 
-- [知识图谱](references/lvgl-knowledge-graph.md) / [JSON 图谱](references/lvgl-knowledge-graph.json)
-- [版本兼容矩阵](references/version-compatibility.md)
-- [移植契约](references/porting-contract.md)
-- [UI 与运行时性能](references/ui-runtime-performance.md)
-- [配置、构建与验证](references/config-build-validation.md)
+- [知识图谱](./references/lvgl-knowledge-graph.md) / [JSON 图谱](./references/lvgl-knowledge-graph.json)
+- [版本兼容矩阵](./references/version-compatibility.md)
+- [移植契约](./references/porting-contract.md)
+- [UI 与运行时性能](./references/ui-runtime-performance.md)
+- [配置、构建与验证](./references/config-build-validation.md)
 
 ## 交接与验收
 

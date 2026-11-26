@@ -9,7 +9,7 @@ description: 设计和实现 BSP Port，将 Wrapper、Handler、Driver 与 Core 
 
 Port 是 BSP 的装配边界：上层只依赖 Wrapper，Port 构造并注册 Handler/Driver，再注入 Core Bus、OSAL、时基和可选 Trace Ops。HAL、寄存器、GPIO 位操作和软件总线时序属于 Core 私有 Backend，不能在 BSP Port 实现。
 
-先读取 BSP 的接口结构体和状态码，再读取 Core Bus、OSAL、时基的公共接口及目标工程装配代码。AHT21 的历史映射与纠正见 [references/aht21-adapter-pattern.md](references/aht21-adapter-pattern.md)。
+先读取 BSP 的接口结构体和状态码，再读取 Core Bus、OSAL、时基的公共接口及目标工程装配代码。AHT21 的历史映射与纠正见 [./references/aht21-adapter-pattern.md](references/aht21-adapter-pattern.md)。
 
 ## 执行流程
 

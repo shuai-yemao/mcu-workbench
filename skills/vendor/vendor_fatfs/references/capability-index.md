@@ -4,5 +4,5 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| FatFs 文件系统 | [完整流程与资源](capabilities/middleware-fatfs/GUIDE.md) |
-| SFUD 串行 Flash 驱动 | [完整流程与资源](capabilities/middleware-sfud/GUIDE.md) |
+| FatFs 文件系统 | [完整流程与资源](./capabilities/middleware-fatfs/GUIDE.md) |
+| SFUD 串行 Flash 驱动 | [完整流程与资源](./capabilities/middleware-sfud/GUIDE.md) |

@@ -58,7 +58,7 @@ description: 负责嵌入式项目级验证：链接 Map 文件、Flash/RAM/ROM/
 
 ## 参考资料
 
-- [`capability-index.md`](references/capability-index.md)
+- [`capability-index.md`](./references/capability-index.md)
 - [`quality-map-analysis`](../tools-quality/references/capabilities/quality-map-analysis/GUIDE.md)
 - [`quality-unity-testing`](../tools-quality/references/quality-unity-testing/GUIDE.md)
 - [`upstream-source-baseline.md`](../tools-quality/references/upstream-source-baseline.md)

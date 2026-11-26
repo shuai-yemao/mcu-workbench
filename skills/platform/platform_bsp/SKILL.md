@@ -59,7 +59,7 @@ Platform BSP 定义平台无关的板级器件能力接口与设备模型协议�
 - guard 用 `__PLATFORM_<TYPE>_H__`（前后双下划线）。
 - `platform_<type>_init()` 声明（填身份证 + 绑四槽）；工程当前实现落 `platform_<type>.c`，硬件绑定和协议实现仍交给 Impl，不在 Platform 契约中下沉。
 
-完整样例与生成自检要点见 [`device-model-example.md`](references/device-model-example.md)。
+完整样例与生成自检要点见 [`device-model-example.md`](./references/device-model-example.md)。
 
 ### 生成流程（两步）
 

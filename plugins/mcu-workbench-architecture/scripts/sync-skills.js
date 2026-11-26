@@ -10,7 +10,13 @@ const PROJECT_ROOT = path.resolve(PLUGIN_ROOT, '../..');
 const MAP = JSON.parse(fs.readFileSync(path.join(PLUGIN_ROOT, 'skill-map.json'), 'utf8'));
 const MARKER = path.join(PROJECT_ROOT, 'skills', '.architecture-projections.json');
 const BASELINE = JSON.parse(fs.readFileSync(path.join(PROJECT_ROOT, 'codex/plugin-split/artifacts/architecture/T-001/source-baseline.json'), 'utf8'));
-const baselineHashes = new Map(BASELINE.skills.flatMap((skill) => skill.files.map((file) => [file.path.replace(/\\/g, '/'), file.sha256])));
+const OWNERSHIP_BASELINE_PATH = path.join(PROJECT_ROOT, 'codex/plugin-split/artifacts/external-skill-ownership/baseline-v1.5.json');
+const OWNERSHIP_BASELINE = fs.existsSync(OWNERSHIP_BASELINE_PATH)
+  ? JSON.parse(fs.readFileSync(OWNERSHIP_BASELINE_PATH, 'utf8')) : { items: [] };
+const baselineHashes = new Map([
+  ...BASELINE.skills.flatMap((skill) => skill.files.map((file) => [file.path.replace(/\\/g, '/'), file.sha256])),
+  ...OWNERSHIP_BASELINE.items.flatMap((item) => (item.rootFiles || []).map((file) => [file.path.replace(/\\/g, '/'), file.sha256]))
+]);
 const sha = (value) => crypto.createHash('sha256').update(value).digest('hex');
 const filesUnder = (root) => !fs.existsSync(root) ? [] : fs.readdirSync(root, { withFileTypes: true }).flatMap((e) => {
   const p = path.join(root, e.name);
@@ -64,8 +70,19 @@ function syncSkills() {
   for (const file of generated) {
     if (fs.existsSync(file.target)) {
       const rel = path.relative(PROJECT_ROOT, file.target).replace(/\\/g, '/');
-      if (previous && !managed.has(rel)) throw new Error(`Refusing to overwrite unmarked projection: ${rel}`);
-      if (previous && sha(fs.readFileSync(file.target)) !== managed.get(rel)) throw new Error(`Refusing to overwrite drifted projection: ${rel}`);
+      const currentHash = sha(fs.readFileSync(file.target));
+      if (previous && managed.has(rel) && currentHash !== managed.get(rel)) throw new Error(`Refusing to overwrite drifted projection: ${rel}`);
+      if (previous && !managed.has(rel) && currentHash !== baselineHashes.get(rel)) throw new Error(`Refusing to overwrite unmarked projection: ${rel}`);
+    }
+  }
+  if (previous) for (const skill of skills) {
+    const hasManagedFiles = previous.files.some((entry) => inside(skill.target, path.resolve(PROJECT_ROOT, entry.path)));
+    if (hasManagedFiles || !fs.existsSync(skill.target)) continue;
+    const expected = generated.filter((file) => inside(skill.target, file.target));
+    const expectedPaths = new Set(expected.map((file) => file.target));
+    const existing = filesUnder(skill.target);
+    if (existing.length !== expected.length || existing.some((file) => !expectedPaths.has(file))) {
+      throw new Error(`Refusing adoption with unrecognized files: ${path.relative(PROJECT_ROOT, skill.target).replace(/\\/g, '/')}`);
     }
   }
   if (previous && generated.every((file) => managed.get(path.relative(PROJECT_ROOT, file.target).replace(/\\/g, '/')) === file.sha256

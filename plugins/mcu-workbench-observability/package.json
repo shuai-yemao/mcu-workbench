@@ -1,5 +1,9 @@
 {
   "name": "mcu-workbench-observability",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "validate": "node ../../scripts/validate-observability-plugin.js",
+    "sync-skills": "node scripts/sync-skills.js"
+  }
 }

@@ -4,6 +4,6 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| 嵌入式代码审查 | [完整流程与资源](capabilities/quality-code-review/GUIDE.md) |
-| 代码格式、注释与 API 文档 | [完整流程与资源](capabilities/quality-format-check/GUIDE.md) |
-| 静态分析与 MISRA 检查 | [完整流程与资源](quality-static-analysis/GUIDE.md) |
+| 嵌入式代码审查 | [完整流程与资源](./capabilities/quality-code-review/GUIDE.md) |
+| 代码格式、注释与 API 文档 | [完整流程与资源](./capabilities/quality-format-check/GUIDE.md) |
+| 静态分析与 MISRA 检查 | [完整流程与资源](./quality-static-analysis/GUIDE.md) |

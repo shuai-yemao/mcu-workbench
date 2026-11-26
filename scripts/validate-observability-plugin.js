@@ -12,7 +12,10 @@ const SKILLS = [
   'logic-analyzer',
   'rtos-debug',
   'serial-monitor',
-  'serial-shell'
+  'serial-shell',
+  'can-debug',
+  'modbus-debug',
+  'visa-debug'
 ];
 
 function readJson(relativePath) {
@@ -32,7 +35,7 @@ function validateObservabilityPlugin() {
     if (!fs.existsSync(skillPath)) errors.push('missing skill: ' + skill);
   }
   const external = readJson('plugins/mcu-workbench-observability/external-skills.json');
-  if (external.entries.length !== 7) errors.push('external skill registry count mismatch');
+  if (external.entries.length !== 10) errors.push('external skill registry count mismatch');
   for (const entry of external.entries) {
     if (entry.status !== 'migrated') errors.push('external skill not marked migrated: ' + entry.id);
     if (!entry.provenance) errors.push('external skill provenance missing: ' + entry.id);

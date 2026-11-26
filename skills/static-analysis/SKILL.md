@@ -27,13 +27,13 @@ description: 当需要对嵌入式 C/C++ 代码运行 cppcheck、clang-tidy 或 
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次使用哪个分析工具。
-2. 若不确定工具是否可用，先运行 [scripts/static_analyzer.py](scripts/static_analyzer.py) 的 `--detect` 模式。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认本次使用哪个分析工具。
+2. 若不确定工具是否可用，先运行 [./scripts/static_analyzer.py](scripts/static_analyzer.py) 的 `--detect` 模式。
 3. 使用 `--cppcheck --source <dir>` 运行 cppcheck 分析。
 4. 使用 `--clang-tidy --source <dir>` 运行 clang-tidy 分析。
 5. 使用 `--gcc-analyzer --source <files>` 运行 GCC analyzer 分析。
 6. 需要 MISRA 合规时，添加 `--misra` 参数启用 cppcheck MISRA addon。
-7. 阅读 [references/misra-quick-ref.md](references/misra-quick-ref.md) 了解常见 MISRA 违规。
+7. 阅读 [./references/misra-quick-ref.md](references/misra-quick-ref.md) 了解常见 MISRA 违规。
 
 ## 失败分流
 

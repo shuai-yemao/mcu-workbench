@@ -274,6 +274,27 @@
       "sourcePath": "plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer",
       "pluginPath": "plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer",
       "projectionPath": "skills/schematic-pinmap-analyzer"
+    },
+    {
+      "id": "embedded-project-scaffold",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold",
+      "projectionPath": "skills/embedded-project-scaffold"
+    },
+    {
+      "id": "parsed-chip-datasheet",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet",
+      "projectionPath": "skills/parsed-chip-datasheet"
+    },
+    {
+      "id": "vendor-minimal-firmware",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware",
+      "projectionPath": "skills/vendor-minimal-firmware"
     }
   ]
 }

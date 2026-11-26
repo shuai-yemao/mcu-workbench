@@ -64,11 +64,11 @@ Hardware Registers
 | 文档 | 用途 | 何时阅读 |
 |------|------|---------|
 | **[GUIDE.md](../GUIDE.md)** | 触发描述、核心工作流 | ⭐ 先读 |
-| **[core-guidelines.md](core-guidelines.md)** | 核心原则、最佳实践 | 编写 HAL 代码前 |
-| **[peripheral-driver-guide.md](peripheral-driver-guide.md)** | 外设驱动开发指南（实战经验） | 开发 I2C/SPI/UART 传感器驱动时 |
-| **[hal-quick-reference.md](hal-quick-reference.md)** | HAL 函数速查表 | 忘记函数签名时查阅 |
-| **[usage-examples.md](usage-examples.md)** | 完整代码示例 | 参考具体实现 |
-| **[troubleshooting-guide.md](troubleshooting-guide.md)** | 故障排查指南 | 遇到问题时查阅 |
+| **[./core-guidelines.md](core-guidelines.md)** | 核心原则、最佳实践 | 编写 HAL 代码前 |
+| **[./peripheral-driver-guide.md](peripheral-driver-guide.md)** | 外设驱动开发指南（实战经验） | 开发 I2C/SPI/UART 传感器驱动时 |
+| **[./hal-quick-reference.md](hal-quick-reference.md)** | HAL 函数速查表 | 忘记函数签名时查阅 |
+| **[./usage-examples.md](usage-examples.md)** | 完整代码示例 | 参考具体实现 |
+| **[./troubleshooting-guide.md](troubleshooting-guide.md)** | 故障排查指南 | 遇到问题时查阅 |
 | **[assets/bsp-template.c](../assets/bsp-template.c)** | BSP 层模板 | 创建新驱动时的起点 |
 
 ---

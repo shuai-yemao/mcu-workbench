@@ -5,15 +5,15 @@
 | 字段 | 内容 |
 |---|---|
 | request_id | `REQ-PLUGIN-SPLIT-20261123` |
-| 生成时间 | `2026-11-24T17:50:08+08:00` |
+| 生成时间 | `2026-11-25` |
 | 项目路径 | `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai` |
-| 分支/提交 | `host_ai`；Workflow v0.9 RCP 基线 `43eb4e731568b606451083b0e479a29a5722fb98`（工作区含预存未提交改动） |
+| 分支/提交 | `host_ai`；本轮只读基线 `79ae7a0c231cd417717db0927775131274327e36`（工作区含大量预存未提交及未跟踪改动） |
 | Spec 力度 | `full` |
 | Spec 叠加门禁 | `[versioned]` |
-| Spec 版本 | `v0.9-workflow-fifth-plugin` |
-| 审查状态 | `review-gate-approved / pending-user-approval` |
-| 用户审查状态 | `approved`（用户于 2026-11-24 要求进行下一步；本阶段下一步为进入 Plan 方案选择） |
-| 当前判定 | `spec-approved / plan-option-pending`：Workflow 范围已批准；等待用户选择 Plan 方案，选定并审查通过后再生成正式 Plan |
+| Spec 版本 | `v1.6-project-management-team-sync-and-document-context` |
+| 审查状态 | `review-gate-approved` |
+| 用户审查状态 | `pending-user-spec-review`（H-02；本 Spec 获用户审阅批准后再进入 Plan） |
+| 当前判定 | `scope-approved / pending-user-spec-review`：新建 `mcu-workbench-project-management`，纳入 `embedded-team-sync` 和 `workflow-document-context`；Spec 批准前不更新 Plan/Task 或实现文件 |
 | 2026-11-23 变更 | 用户确认修复既有 catalog/link 基线；正式 Skill 必须可登记，链接必须指向仓库内真实目标或显式记录为外部依赖，Jest/插件/链接校验目标为零失败 |
 | 2026-11-24 变更 | 用户确认沿用上一轮边界，按拆分难度选择第二个插件；选定 `mcu-workbench-observability`，并允许已登记外部 Skill 作为该插件的迁移对象；宿主验收范围固定为 Codex + Cursor MVP |
 | 2026-11-24 变更 | 用户明确要求清理插件中的 OpenCode 部分；移除旧聚合插件活动 OpenCode 宿主入口、运行时、配置、专属依赖/脚本/Hook、命令生成器和派生产物；保留历史审计记录中的 OpenCode 事实性文字 |
@@ -27,6 +27,33 @@
 | 2026-11-24 变更 | 用户批准按内容审查重分类：`can-debug`、`modbus-debug` → Observability；`embedded-bug-hunter`、`memory-analysis` → Verification；`embedded-build-flash-debug` → DevOps；`embedded-project-scaffold`、`parsed-chip-datasheet`、`vendor-minimal-firmware` → Architecture；`deep-research`、`market-mrd-analyst`、`patent-disclosure-skill`、`skill-template` → `unknown`。归属矩阵和 inventory 已更新，provenance 状态保持 blocked。以上 8 项尚未进入目标插件源目录，实体迁移时机待确认 |
 | 2026-11-24 变更 | 用户确认 8 项改归其他插件的 Skill 只更新 ownership/inventory，本阶段不实体迁入已完成的其他插件；其插件源迁移另作后续维护任务。本阶段 Workflow Spec 仅覆盖 9 canonical + 5 external，恢复 Review Gate 并进入用户审阅 |
 | 2026-11-24 变更 | 用户在 Spec 审阅请求后明确要求“进行下一步”；按唯一后续阶段解释为批准 Workflow v0.9，进入 full 力度 Plan 双方案选择；Task 与施工仍需后续门禁 |
+| 2026-11-24 变更 | Spec 升至 `v1.0-external-skill-ownership-review`：复核全部外部导入 Skills（包含已在插件中的项），按正文职责归类，来源未标明不阻止归类；本阶段 Review Gate 待完成 |
+| 2026-11-24 变更 | 用户进一步确认归属边界，Spec 升至 `v1.1-external-skill-ownership-review`：通用学术研究/论文工作流不纳入嵌入式插件；`market-mrd-analyst`、`skill-template`、`embedded-production-test-tool` 归入 Workflow；来源未标明仍按正文归类 |
+| 2026-11-24 变更 | 用户确认 `patent-disclosure-skill` 留在嵌入式插件体系外；Spec 升至 `v1.2-external-skill-ownership-review` |
+| 2026-11-24 变更 | 用户选择方案 B（按插件分批切换）。Plan 审查发现仓库 AGENTS.md §7 的 Codex 写入范围不包含待迁移的插件源目录、catalog 和 manifests；路线记录于 `codex/plugin-split/artifacts/external-skill-ownership/plan.md`，状态 blocked，暂不拆 Task 或修改目标文件 |
+| 2026-11-24 变更 | 用户要求将嵌入式项目本身的管理能力与 AI 按 Spec 生成项目内容的工作流区分。修订项目管理插件边界：`workflow-integration-plan`、`workflow-task-breakdown`、`workflow-task-execution` 留在 Workflow，继续管理 Spec 驱动的 AI 方案/任务生成与执行链；新建 `mcu-workbench-project-management`，当前纳入外部 `embedded-team-sync`，管理嵌入式项目共享状态、团队规则、共享 Skill registry 和任务日志。`embedded-project-intake` 与 `embedded-change-report` 继续按项目理解/工程报告能力留在 Workflow。Spec 升至 v1.4，等待用户审阅；旧 Plan/Task 过期，须在本版放行后重制。 |
+| 2026-11-24 变更 | 用户要求先执行现有插件迁移，暂不拆分新的项目管理插件，并确认 `embedded-team-sync` 本轮延后迁移。Spec 升至 v1.5：当前执行集为其余 45 项，沿用用户先前选定的方案 B（按插件分批）；项目管理插件与 `embedded-team-sync` 留待后续独立阶段。v1.4 Plan/Task 不可执行；当前生成新版 Plan。 |
+| 2026-11-25 变更 | 用户要求重新整理项目管理相关 Skill，并依据现有内外部 Skill 正文确定归属。经内容审查后，用户确认项目管理插件纳入 `embedded-team-sync` 与 `workflow-document-context`：前者负责团队规则/当前项目状态/共享 Skill registry/追加式任务日志，后者负责 README 受管区块、文档/决策索引、生命周期和会话上下文交接。Workflow 的需求到 AI 计划/任务执行链仍保留；项目接手报告、变更报告和 LLM 代码安全门禁不纳入本插件。Spec 升至 v1.6；旧 Plan/Task 不适用，等待本 Spec H-02 审阅。 |
+
+## 历史范围补充：项目管理插件提案（v1.4，已由 v1.5 调整）
+
+> v1.4 曾提议立即新建项目管理插件；用户随后决定先迁移现有插件 Skills，并将 `embedded-team-sync` 延后。本节保留决策记录，不作为当前迁移执行范围。
+
+用户新增要求：按被管理对象拆分插件职责。`mcu-workbench-project-management` 面向嵌入式项目本身的团队协作与项目状态；`mcu-workbench-workflow` 面向 AI 依据 Spec 生成、审查和执行项目内容的约束链。两者均可涉及“任务”，但前者记录真实项目共享状态与团队任务日志，后者把已批准 Spec/Plan 转换为 AI 可执行任务并管理生成过程。
+
+### 项目管理插件初步范围
+
+| 类别 | Skill | 归属依据 |
+|---|---|---|
+| External | `embedded-team-sync` | 维护团队规则、项目状态、共享 Skill registry 和 append-only 任务日志 |
+
+`workflow-requirements-router`、`workflow-requirements-challenge`、`workflow-review-gate`、`workflow-integration-plan`、`workflow-task-breakdown`、`workflow-task-execution`、`workflow-final-review` 全部保留在 Workflow：它们对 AI 的 Spec 驱动生成、审查、计划和任务执行过程施加约束。`workflow-claude-layering`、`workflow-document-context` 继续承担工作流宿主/上下文能力。`embedded-project-intake` 是固件代码库理解与交接报告，`embedded-change-report` 是证据化工程变更报告，属于 AI 生成项目工程内容而非管理真实项目状态，继续留在 Workflow。以上归属等待本版 Spec 审阅后再重制 Plan/Task 和迁移。
+
+外部 Skill 总数仍为 52，其中 45 项进入本轮现有五插件迁移：Architecture 11、DevOps 12、Observability 10、Verification 4、Workflow 8；`embedded-team-sync` 归属未来项目管理插件但本轮延后，当前文件与注册位置不变；另 6 项仍在嵌入式插件体系外。本轮不创建项目管理插件，也不迁移 Workflow canonical Skills。
+
+## 2026-11-24 当前执行范围：现有五插件迁移（v1.5）
+
+本轮迁移 45 项外部 Skills，采用已选方案 B 的按插件波次执行。现有 Workflow 内的 canonical `workflow-integration-plan`、`workflow-task-breakdown`、`workflow-task-execution` 继续约束 AI 按已批准 Spec 生成和执行项目内容，不拆入新插件。外部 `embedded-team-sync` 的内容职责属于嵌入式项目管理，但用户明确将其延后；其当前 Workflow 插件路径和登记保持原样，不纳入本轮迁移/重注册。项目管理插件创建作为后续阶段。
 
 ## 2026-11-24 当前阶段补充：Workflow 第五个插件拆分（v0.9）
 
@@ -725,3 +752,226 @@ Harness 设计借鉴 DeepSeek Harness 的可组合插件思想：模型适配、
 - Review Gate 结论：四个审计章节已形成，`spec_rigor=full`、`spec_overlays=[versioned]` 与跨插件/多宿主风险匹配；Spec 门禁通过，状态 `review-gate-approved / pending-user-approval`。
 - 用户闸门 H-02：等待用户审阅并批准 v0.7。批准前不得修改 `plan.md`/`task.md` 施工范围或开始任何 DevOps 目录迁移。
 - 用户批准后交接：`workflow-integration-plan` 更新 DevOps 专属 `plan.md`，明确单一事实源、投影/迁移方式、任务依赖、回滚和逐项 SOLID 证据；随后 `workflow-task-breakdown` 重制 `task.md`。v0.6 verification Plan/Task 不适用于此阶段。
+
+> **历史快照，已由 v1.5 supersede：**以下 v1.2 Review-Package 原按五个既有插件形成，但不包含一项项目管理延期。当前有效数量、延期状态与迁移范围以文件顶部的 v1.5 补充为准；不得依据本历史快照恢复旧 Plan/Task。
+
+## 历史阶段补充：外部导入 Skills 全量归属复核与迁移（v1.2）
+
+本节作为本轮需求更新的正式范围。复核对象为 `codex/plugin-split/external-skill-inventory.yaml` 中记录的全部嵌入式领域 Skills，以及盘点后发现但尚未登记的嵌入式外部 Skill；包括根 `skills/` 中尚未迁移的项、已存在于任一插件 `skills/` 中的项，以及登记为 `unknown` 的项。用户明确归入 Workflow 的通用产品工作流/工具也纳入 Workflow 复核。通用学术研究/论文工作流（`academic-paper`、`academic-paper-reviewer`、`academic-pipeline`、`sr-screener`、`deep-research`）不纳入嵌入式插件体系，保留在体系外的现有管理边界。历史 owner、目录名、旧迁移目标和来源标注都只能作为审计线索，不能代替正文判断。纳入项需阅读完整 `SKILL.md` 的职责、触发条件、边界及必要 references/scripts，确定唯一主责插件；来源缺失、版本/许可证/依赖未知不构成归属或迁移阻塞，相关来源字段继续如实标 `unknown/unverified`。
+
+### RCP、范围与证据
+
+| 字段 | 内容 | 可信等级 |
+|---|---|---|
+| 项目路径/分支 | 仓库根目录；`host_ai`；本轮开始时工作区已有大量用户未提交及未跟踪改动 | confirmed |
+| 目标 | 将全部纳入范围的嵌入式外部导入 Skills 按内容归入现有领域插件，并把尚未位于目标插件唯一源目录的项迁入对应插件 | user-confirmed |
+| 复核范围 | 当前 external inventory 基线 52 项中全部嵌入式领域项、用户明确归入 Workflow 的通用产品工作流/工具，以及扫描中发现的新增嵌入式导入项；包含已在插件中的外部 Skills | user-confirmed |
+| 明确排除 | `academic-paper`、`academic-paper-reviewer`、`academic-pipeline`、`sr-screener`、`deep-research`：通用学术研究/论文工作流；`patent-disclosure-skill`：通用专利工作流；均留在嵌入式插件体系之外 | user-confirmed |
+| 明确归属 | `market-mrd-analyst`、`skill-template`、`embedded-production-test-tool` → `mcu-workbench-workflow` | user-confirmed |
+| 归类原则 | 正文实际职责、触发条件、输出物、依赖和排除边界优先；每项唯一主责插件。旧目录、文件名、source/provenance 和历史 matrix 不作归属证据 | user-confirmed |
+| 来源缺失处理 | 不因未标明来源而排除或搁置；照样按内容确定目标插件。不得由归属反推作者、版本、许可证或依赖 | user-confirmed |
+| 插件目标集合 | 仓库当前已登记领域插件；目标 ID 以当前 plugin manifests/catalog 为准。只有确无合适领域插件时才记录 `unassigned` 并说明内容证据及原因，不以 provenance unknown 作为理由 | confirmed + user-confirmed |
+| 唯一事实源 | 每项 Skill 最终只允许一个可编辑源；旧根目录兼容入口如需保留，只能是已登记、可校验、可重建的投影 | confirmed（仓库约束） |
+| 风险/力度 | 跨插件目录、registry、同步器和 host manifests 的归属/迁移；采用 `full + versioned` | inferred；Review Gate 必须复核 |
+
+### 目标、施工边界与非目标
+
+1. 逐项对全部外部导入 Skill 完成内容审查，登记 `reviewed_content`、唯一 `target_plugin`、证据路径/行号、目标理由、现有位置、迁移状态和未决风险；不能只检查 frontmatter 或名称。
+2. 对目标插件相符且已在其中的 Skill，核验其职责与周边 plugin map/manifest/registry 一致；保持原位并登记复核证据。对误放项或尚留在根目录/native registry 的项，迁入唯一目标插件并同步插件 Skill map、外部 inventory、catalog/host package discovery 和受保护投影等必要登记。
+3. 对跨领域 Skill 以其主要执行职责及主要交付物决定唯一 owner；可在必要文档中登记相关联插件，但不得将同一个 Skill ID 重复注册到多个插件。Skill 内指向其他领域能力的引用保持为已登记依赖，不据此复制另一 Skill。
+4. 保留外部来源字段的证据等级。无来源证据的 source/version/license/dependencies 仍为 `unknown/unverified`；这不阻止上述内容审查与插件归类。
+5. 不改写 Skills 的业务流程、领域要求或输出语义；若迁移必须改变内容或接口，先回到 Spec 更新与 Review Gate。保留所有当前工作区内容，按哈希/差异逐项迁移，不能覆盖未知文件或删除用户改动。
+6. 验收要求逐项覆盖 inventory 基线及新增项：每项恰有一个目标领域插件；正文复核证据充分；源目录、plugin map、catalog、manifest、marker/projection、测试和 inventory 状态一致；不存在遗留错误归属、重复注册、遗漏、漂移或未登记的重复可编辑副本。
+
+**非目标：**补造外部 provenance；仅为追求完整而改写 Skill 内容；执行外部下载/发布、真实构建/烧录或硬件操作；调整 Claude/OpenCode 适配；修改公共规则层 `common/` 或其他宿主适配层；新增插件领域以收容与当前产品边界无关的内容。通用学术研究/论文工作流及通用专利工作流明确留在嵌入式插件体系外，不迁移到 MCU 领域插件。
+
+### 需求变化审查章节与门禁
+
+| 审查项 | 结论 |
+|---|---|
+| 范围/非目标 | 复核嵌入式领域外部 Skills（包括已进入插件的项目）；5 项通用学术研究/论文工作流及 1 项通用专利工作流留在嵌入式插件体系外；不改变 Skill 业务语义 |
+| 业务规则 | 正文内容是归属依据；一个纳入范围的 ID 一个主责插件；用户明确指定的 3 项归 Workflow；来源缺失不影响归属；来源真实性元数据继续单独标 unknown/unverified |
+| 状态/权限/资源 | 不变更用户/固件数据，不执行烧录/发布；迁移只涉及仓库 Skill 源、插件发现/registry、inventory 与兼容投影；所有既有未提交文件必须保留 |
+| 可验证验收 | 对 inventory 全集及新增项形成完整归属账本；全量唯一性、内容证据、插件发现/链接/投影一致性检查；插件测试与 `git diff --check`；真实 Codex/Cursor 发现证据与静态/主机证据分开记录 |
+
+**Review Gate 状态：**`approved`。内容归属账本已更新：46 项纳入现有五插件；5 项通用学术工作流及 1 项通用专利工作流留在体系外；来源 provenance 单独保留 unknown/unverified。用户要求开始 Plan 方案生成并确认了关键边界。`workflow-integration-plan` 当前输出同目标方案 A/B；用户选择后再更新正式 `plan.md`，随后由 `workflow-task-breakdown` 重制 Task。历史 Workflow v0.9 的 Plan/Task 不适用于本阶段。
+
+### Review-Package 审查章节（v1.2）
+
+#### 1. 工程现状表
+
+| ID | 工程事实 | 证据 | 等级 | 结论 |
+|---|---|---|---|---|
+| EXT-E01 | 外部导入 inventory 共 52 项；内容归属矩阵覆盖相同 52 IDs | `codex/plugin-split/external-skill-inventory.yaml`、`skill-ownership-matrix.md` | confirmed | 本轮审查全集基线固定为 52 项 |
+| EXT-E02 | 46 项内容归入现有五插件：Architecture 11、DevOps 12、Observability 10、Verification 4、Workflow 9 | ownership matrix；各源 `SKILL.md` 的职责、触发条件、输出范围 | user-confirmed / confirmed by content | 纳入本轮迁移/归属登记 |
+| EXT-E03 | 5 项通用学术研究/论文工作流与 1 项通用专利工作流不进入嵌入式插件 | 用户确认；`academic-*`、`sr-screener`、`deep-research`、`patent-disclosure-skill` 内容 | user-confirmed | 保留在嵌入式插件边界之外 |
+| EXT-E04 | 用户指定 `market-mrd-analyst`、`skill-template`、`embedded-production-test-tool` 属 Workflow | 用户当前确认；对应 `SKILL.md` | user-confirmed | 纳入 Workflow 插件 |
+| EXT-E05 | 用户工作区已有大量未提交与未跟踪变更，插件源已有部分外部 Skill | 本轮 `git status --short --branch`、`plugins/**/skills/` | confirmed | 迁移前逐项 hash/marker 冻结；不覆盖既有改动 |
+| EXT-E06 | 插件目录中已存在部分目标 Skill 源，但根 `skills/` 同时保留入口/内容；其 marker/source ownership 需逐路径复核 | Architecture/DevOps/Observability/Verification/Workflow `skill-map.json`、sync scripts、`skills/.{plugin}-projections.json`（按插件适用） | confirmed; per-file ownership requires baseline | 方案必须先区分 canonical source 与生成投影 |
+| EXT-E07 | 来源、版本、许可证、依赖中有未知值；未知 provenance 不影响已确认内容归属 | inventory provenance fields；用户明确要求 | confirmed / user-confirmed | 保留未知值，不作来源审计或许可结论 |
+| EXT-E08 | 未指定硬件、固件目标、烧录器或板级验收目标 | 本轮请求范围 | user-confirmed / not applicable | 不执行固件构建、烧录和实机验证 |
+
+#### 2. 文件施工清单
+
+| ID | 目标范围 | 所属职责 | 施工要求 |
+|---|---|---|---|
+| EXT-F01 | `plugins/mcu-workbench-architecture/skills/`、`skill-map.json`、validator 与 projection manifest | Architecture | 核验并迁入 11 项唯一源；纳入技能 map 和根受保护投影 |
+| EXT-F02 | `plugins/mcu-workbench-devops/skills/` 与 package/map/validator | DevOps | 核验并迁入 12 项唯一源；保留 build/flash 工具域边界 |
+| EXT-F03 | `plugins/mcu-workbench-observability/skills/`、`external-skills.json`、validator | Observability | 核验并迁入 10 项唯一源，包含 CAN/Modbus/VISA 观测与交互 |
+| EXT-F04 | `plugins/mcu-workbench-verification/skills/`、package/map/validator | Verification | 核验并迁入 4 项缺陷/测试/内存/静态分析能力 |
+| EXT-F05 | `plugins/mcu-workbench-workflow/skills/`、skill-map、sync/validator | Workflow | 核验并迁入 9 项，包括市场 MRD、模板与生产测试桌面工具脚手架 |
+| EXT-F06 | `codex/plugin-split/skill-ownership-matrix.md`、`external-skill-inventory.yaml` | 审计 | 52 项都保留唯一 disposition、内容依据、迁移状态和 provenance 状态 |
+| EXT-F07 | `skills/catalog.js`、插件/宿主 manifests、根投影 marker | 注册/兼容 | 只登记唯一主责插件，保留旧 ID/alias；投影由对应插件 marker 管理 |
+| EXT-F08 | 与本阶段直接关联的 `tests/` 和插件 validator/tests | 验证 | 覆盖唯一 ID、插件归属、链接、来源/目标哈希、漂移拒绝、回滚与坏 manifest |
+
+#### 3. 代码生成约束清单
+
+| ID | 约束 | 放行要求 |
+|---|---|---|
+| EXT-G01 | SRP | 每个 Skill 只由一个职责插件负责；插件 map、校验器与同步器分别保持单一职责 |
+| EXT-G02 | OCP | 纳入新增外部 Skill 通过唯一插件 map/catalog 扩展，不修改不相关插件能力或 Skill 正文 |
+| EXT-G03 | LSP | 保持既有 Skill ID、入口文件和被引用行为；根路径兼容投影语义不变 |
+| EXT-G04 | ISP | 每个宿主 manifest 只暴露该插件批准的 Skills；不把全部 52 项复制进每个插件 |
+| EXT-G05 | DIP | 插件 Skill 之间只依赖显式、可解析引用；不得反向依赖根聚合加载器实现 |
+| EXT-G06 | 唯一源 | 每项迁入后仅插件目录可编辑；根路径如保留只作为受保护投影；迁移前扫描 marker、哈希和未标记冲突 |
+| EXT-G07 | 来源状态 | `source/version/license/dependencies=unknown` 必须如实保留；不能据此阻塞归类，也不能补造值 |
+| EXT-G08 | 工作区保护 | 迁移只改计划冻结的路径；执行前后审阅 diff 与 hashes，保留全部预存变更 |
+
+#### 4. 验收测试清单
+
+| ID | 证据等级 | 验收项 | 通过条件 |
+|---|---|---|---|
+| EXT-T01 | 静态 | inventory 和 ownership matrix 覆盖 | 恰有 52 项；46 项唯一指向六插件；6 项按用户决定留在嵌入式插件之外 |
+| EXT-T02 | 静态/主机 | 内容归属与插件 map/catalog | 每项归属证据可回到 SKILL 内容；目标插件、map、catalog、host manifest 一致，无重复 ID |
+| EXT-T03 | 静态 | 唯一源/投影/链接闭包 | 46 项唯一源可追踪，根投影 marker/hash 匹配，无冲突、漂移或未登记链接 |
+| EXT-T04 | 主机 | 插件 validator 与相关测试 | 六个目标插件 validator 及定点测试通过；坏入口、重复 ID、缺文件、坏链接能失败 |
+| EXT-T05 | 静态/主机 | 兼容与回滚 | 旧 aliases/聚合入口确定可用；每个插件变更可独立回滚且不丢失用户文件 |
+| EXT-T06 | 宿主 | Codex 与 Cursor | 两宿主分别记录发现/加载；静态检查不冒充真实宿主证据 |
+| EXT-T07 | 审计 | provenance | 未知来源、版本、许可证、依赖仍标记 unknown/unverified，不作为归属阻塞 |
+| EXT-T08 | 证据边界 | 固件/硬件 | 不声称构建、烧录、目标运行或实物验证通过 |
+
+**历史 Gate 结论（v1.2，已过期）：**本版外部归属复核已被 v1.5 的项目管理延期决策 supersede。当前迁移只覆盖 45 项及现有五插件；执行依据为 `plan-v1.5.md`，需先完成 Plan 用户审阅和后续 Task 重制。
+
+## 2026-11-25 当前阶段：项目管理插件拆分（v1.6）
+
+本节 supersede v1.5 的“项目管理插件延期”状态，并取代此前只纳入 `embedded-team-sync` 的 v1.4 窄范围提案。当前阶段唯一范围是创建 `mcu-workbench-project-management`，并将两个已确认能力从 Workflow 插件分出：外部 Skill `embedded-team-sync` 与 canonical Skill `workflow-document-context`。其余 45 项既有插件迁移、历史阶段 Plan/Task 均不属于本阶段施工范围。
+
+### RCP、需求目的与可行性质疑
+
+| 字段 | 内容 | 可信等级 |
+|---|---|---|
+| 项目路径/分支/提交 | 仓库 `C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai`；分支 `host_ai`；本轮只读基线 `79ae7a0c231cd417717db0927775131274327e36`；工作区已有大量未提交及未跟踪改动 | confirmed |
+| 需求目的 | 将“嵌入式项目本身的持续协作/文档状态管理”与“AI 按需求生成并执行工程任务的 Workflow”分开，使项目资料有清晰责任边界、Skill 所属插件和可独立验证的能力入口 | user-confirmed；内容依据见 PM-E01–E08 |
+| 用户确认范围 | 新建 `mcu-workbench-project-management`，纳入 `embedded-team-sync` 与 `workflow-document-context` 两项。用户于 2026-11-25 明确同意 | user-confirmed |
+| 插件宿主 | Codex 与 Cursor MVP；沿用仓库已存在的双宿主插件形态 | confirmed（现有插件 manifests）/ user-confirmed（既有产品边界） |
+| 风险力度 | `full` + `versioned`：新增插件并跨插件移动一个 canonical Skill、一个 external Skill、文档上下文运行时代码、host manifests、注册表和受保护投影 | inferred from scope; reviewed |
+| 目的质疑结论 | 两组能力都直接管理嵌入式项目中的持久状态/文档信息；按“被管理对象”与 AI 执行流水线分离，可减少对状态文件、文档索引及任务执行记录的混用 | confirmed by inspected Skill content + user-confirmed boundary |
+| 可行性质疑结论 | 仓库已有五个双宿主插件、唯一源/受保护投影机制、Workflow plugin map/catalog 和文档上下文 CLI/库/测试；可按现有插件骨架拆分。需迁移实现入口和测试，不能只移动 Skill 描述 | confirmed for repository evidence; implementation plan pending |
+| 未决风险 | `.ai/PROJECT_STATUS.md` 与 `.mcu-workbench/document-context/` 均有 handoff/状态相关字段；必须明确各自所有权，避免复制同一状态。所有源文件迁移前需冻结当前哈希并保护混合工作区改动 | confirmed risk; mitigation specified below |
+
+### 已读取 Skill 内容及唯一职责判断
+
+| Skill | 当前身份/位置 | 正文职责与触发产物 | 本阶段判定 |
+|---|---|---|---|
+| `embedded-team-sync` | External；源 `plugins/mcu-workbench-workflow/skills/embedded-team-sync/`，投影 `skills/embedded-team-sync/` | 维护 `.ai/TEAM_RULES.md`、`PROJECT_STATUS.md`、`SKILL_REGISTRY.md`、append-only `TASK_LOG.md`；初始化、任务启动说明、任务结束同步和轻量项目快照；正文明确要求保持轻量，不发展成完整 PM 系统 | 移入 project-management；继续只负责团队协作状态和任务日志 |
+| `workflow-document-context` | Canonical；源 `plugins/mcu-workbench-workflow/skills/workflow-document-context/`，投影 `skills/workflow/workflow-document-context/` | 管 README 受管区块、`.mcu-workbench/document-context/` 的项目/文档/对话/决策索引、生命周期/版本关系、漂移基线、上下文选择和请求/对话交接；明确不生成或审批 Spec/Plan/Task，不替代开发日志或代码验证 | 移入 project-management；只负责文档登记/关系/生命周期/上下文选择 |
+| `embedded-project-intake` | External；Workflow 插件 | 对固件仓库作一次性/按需的工程理解，生成架构与模块分析、调用路径和接手报告（Markdown + standalone HTML） | 保留 Workflow；产物是工程理解/接手报告，不维护共享项目状态或文档生命周期 |
+| `embedded-change-report` | External；Workflow 插件 | 收集 Git、构建、测试、通信及内存等证据，生成变更/缺陷/发布/验证报告 | 保留 Workflow；属于工程报告生成，不拥有持续状态文件 |
+| `embedded-llm-guardrails` | External；Workflow 插件 | 建立和检查 `.ai/LLM_RULES.md`、`LLM_BOUNDARY.md` 及 Agent 入口；代码修改前执行边界确认和最小验证约束 | 保留 Workflow；它约束 LLM 改码行为，不管理团队进度/项目文档索引 |
+| `workflow-requirements-router`、`workflow-requirements-challenge`、`workflow-review-gate` | Canonical；Workflow | 收集需求约束、目的/可行性质疑、Spec 审查放行 | 保留 Workflow；治理 AI 需求链，不管理项目运行状态 |
+| `workflow-integration-plan`、`workflow-task-breakdown`、`workflow-task-execution`、`workflow-final-review` | Canonical；Workflow | 将放行 Spec 转为实施 Plan/Task，按批准任务执行，并按 Spec 验证/最终 Review | 保留 Workflow；管理 AI 生成和执行工程变更的过程，不等同项目团队状态/任务历史 |
+| `workflow-claude-layering` | Canonical；Workflow | 管理 Claude Code 的项目级指令配置、静态扫描和架构状态映射 | 保留 Workflow；宿主适配 Skill，不并入通用项目管理插件 |
+
+判定原则：按 Skill 正文的主要受管对象、写入产物和执行边界归属；文件名、历史分类或互相引用仅作线索。被某 Skill 引用不等于被同一插件拥有。以上审阅覆盖两项拟迁移 Skill、所有最直接相邻的项目管理/文档/报告/规则 Skills，以及 Workflow 需求到执行链。
+
+### 持久化状态与数据所有权
+
+| 对象 | 唯一所有者 | 责任边界及禁止重复 |
+|---|---|---|
+| `.ai/TEAM_RULES.md` | `embedded-team-sync` | 项目团队约定、代码编辑边界、验证记录要求和 AI 使用规则；不承载 Workflow Router/Gate 规则正文 |
+| `.ai/PROJECT_STATUS.md` | `embedded-team-sync` | 当前项目阶段/focus、build/test/flash 状态、风险、阻塞和总体下一步；状态必须有证据等级，不声称未执行的验证 |
+| `.ai/SKILL_REGISTRY.md` | `embedded-team-sync` | 项目团队认可/可用的共享 Skills、工具和脚本登记；来源与安装信息未知时如实标记 |
+| `.ai/TASK_LOG.md` | `embedded-team-sync` | 按时间追加任务目标、变更文件、验证、结果、风险和下一步；默认 append-only |
+| README 受管区块 | `workflow-document-context` | 由项目结构/源码证据生成并保留手写区块；仅改专属标记区间 |
+| `.mcu-workbench/document-context.json` 与 `readme.state.json` | `workflow-document-context` | README 扫描范围、排除项、目录映射、扫描摘要、hash、未确认路径及漂移基线 |
+| `.mcu-workbench/document-context/{project-index,documents,conversations,decisions,events}.json*` | `workflow-document-context` | 文档和决策的登记索引、生命周期/版本关系、事件和可筛选上下文；文档正文继续由原项目路径/其原作者维护 |
+| `.mcu-workbench/document-context/requests/<request_id>/conversations/<conversation_id>/handoff.json` | `workflow-document-context` | 绑定 request/conversation/base_revision 的对话级 handoff、证据和阻塞项 |
+
+handoff 不合并：Team Sync 快照描述整个项目的总体进度，Doc Context handoff 描述某 request/conversation 的版本化交接；需要关联时使用 request/conversation 标识引用对方，不复制正文或覆盖对方状态。Workflow 仍拥有 `spec.md`、`plan.md`、`task.md` 的内容生成/审批链；Doc Context 只能登记这些文档的引用、状态和关系。
+
+### 1. 工程现状表
+
+| ID | 工程事实 | 证据 | 等级 | 结论 |
+|---|---|---|---|---|
+| PM-E01 | 仓库已有 Architecture、DevOps、Observability、Verification、Workflow 五个插件；暂无 project-management 插件 | `plugins/` 目录清单；各插件 `plugin.json`、host manifests | confirmed | 新插件按现有双宿主插件结构创建 |
+| PM-E02 | `embedded-team-sync` 当前登记在 Workflow external skill map，目标项目管理归属标记 deferred | `plugins/mcu-workbench-workflow/skill-map.json:17`；`skills/catalog.js:306-311`；`codex/plugin-split/external-skill-inventory.yaml` | confirmed | 从 Workflow 唯一源/map/catalog/projection 迁出并登记到新插件 |
+| PM-E03 | `workflow-document-context` 当前为 Workflow canonical，唯一源、投影和 catalog 均在 Workflow | `plugins/mcu-workbench-workflow/skill-map.json:7`；`skills/catalog.js:306-309`；`skills/workflow/workflow-document-context/SKILL.md` | confirmed | 保持 Skill ID 和对外 API 语义，移动唯一源并更新唯一 owner |
+| PM-E04 | Doc Context 运行时代码在根 `lib/` 和 `scripts/`，不是 Skill 目录内文件 | `lib/document-context.js`、`lib/document-context-context-selector.js`、`lib/document-context-readme.js`、`lib/document-context-store.js`、`scripts/document-context-api.js`、根 `package.json` 的 `document-context:*` 命令 | confirmed | 新插件必须拥有可发现/可打包的运行时代码与命令入口；不得只迁移 SKILL.md 留下隐式根依赖 |
+| PM-E05 | Doc Context 有六个专用主机测试，Workflow 有注册/插件/投影测试 | `tests/document-context-cli.test.js`、`document-context-context.test.js`、`document-context-lifecycle.test.js`、`document-context-readme.test.js`、`document-context-store.test.js`、`document-context.test.js`；`workflow-catalog.test.js`、`workflow-plugin.test.js`、`workflow-projection.test.js` | confirmed | 迁移必须保留/调整现有覆盖并补 project-management plugin/投影验收 |
+| PM-E06 | 双宿主插件市场清单在仓库根登记 | `.agents/plugins/marketplace.json`、`.cursor-plugin/marketplace.json`；各插件 `.codex-plugin/plugin.json`、`.cursor-plugin/plugin.json` | confirmed | 两个宿主都要发现新插件；不能把静态文件存在当作真实宿主加载证明 |
+| PM-E07 | 根 `package.json` 暴露 `document-context:*` 命令；README、测试和脚本有 Skill/命令引用 | `package.json:45-52`；扫描 `workflow-document-context`、`embedded-team-sync` 的仓库引用 | confirmed | 保留根命令兼容入口或提供等价、文档化别名；移除/更新指向旧 owner 的注册引用 |
+| PM-E08 | 用户工作区已有大量混合未提交/未跟踪内容，且若干目标文件已有变更 | 本轮 `git status --short --branch` | confirmed | 只触及本 Spec 明列路径；实施 Plan 必须逐文件冻结路径/hash 并避免覆盖既有改动 |
+| PM-E09 | 外部 Skill 的 source attribution 曾被用户确认，但版本/许可证/依赖仍有 unknown 值 | `external-skill-inventory.yaml` 中 `embedded-team-sync` provenance 字段 | confirmed | 内容归属不代替 provenance；未知 metadata 不得伪造或作为本轮阻塞理由 |
+
+### 2. 文件施工清单
+
+以下路径是本阶段唯一允许的施工边界。生成投影只可由所属插件同步器生成；实施 Plan 必须在执行前按当前工作区逐项冻结 SHA-256 和 marker 状态，并细化任何动态 manifest/resolver 文件。若发现必要文件不在清单中，先回到本 Spec 追加范围并重新 Review Gate，不得顺手修改。
+
+| ID | 明确路径 | 施工要求 |
+|---|---|---|
+| PM-F01 | `plugins/mcu-workbench-project-management/descriptor.json`、`index.js`、`package.json`、`plugin.json`、`skill-map.json`、`.codex-plugin/plugin.json`、`.cursor-plugin/plugin.json`、`scripts/prepare-skill-links.js`、`scripts/sync-skills.js`、`scripts/validate.js` | 按现有插件模式建立双宿主可发现、可同步、可校验的独立插件；其 skill map 唯一登记本 Spec 的两个 Skill |
+| PM-F02 | `plugins/mcu-workbench-project-management/skills/embedded-team-sync/**`、`plugins/mcu-workbench-project-management/skills/workflow-document-context/**` | 从 Workflow 当前唯一源迁入两项 Skills 所需完整内容/资源；ID、触发语义和用户项目数据格式保持兼容 |
+| PM-F03 | `plugins/mcu-workbench-workflow/skill-map.json`、`package.json`、`plugin.json`、`descriptor.json`、`.codex-plugin/plugin.json`、`.cursor-plugin/plugin.json`、`scripts/sync-skills.js`、`scripts/validate.js`、`references/shared-sources.json`、`references/external-dependencies.json` | 移除被迁出 Skills 的唯一 owner/引用并维持 Workflow 剩余 Skills 注册完整；仅在实际引用存在时更新对应 references |
+| PM-F04 | `plugins/mcu-workbench-project-management/lib/document-context.js`、`document-context-context-selector.js`、`document-context-readme.js`、`document-context-store.js`、`scripts/document-context-api.js`；现有对应源 `lib/document-context.js`、`lib/document-context-context-selector.js`、`lib/document-context-readme.js`、`lib/document-context-store.js`、`scripts/document-context-api.js` | 将 Doc Context 可执行实现/CLI 纳入项目管理插件唯一源；旧根 CLI 路径改为仅委托的兼容入口；不得保留第二份可编辑实现副本 |
+| PM-F05 | 根 `package.json`、`README.md`、根 `scripts/document-context-api.js` | 保持现有 `document-context:*` 命令和直接 CLI 入口兼容（委托到新插件唯一源）；更新插件/命令说明，不改变其他构建、工具或 Skills 的 npm 行为 |
+| PM-F06 | `skills/catalog.js`、`skills/catalog-metadata.js`、`skills/.workflow-projections.json`、`skills/.project-management-projections.json`（新建）、`skills/embedded-team-sync/**`、`skills/workflow/workflow-document-context/**` | 两个 Skill ID 唯一归属新插件；由受保护 projection manifest 管理兼容入口；移除旧 Workflow projection owner 后再生成新投影 |
+| PM-F07 | `.agents/plugins/marketplace.json`、`.cursor-plugin/marketplace.json`、`.cursor-plugin/plugin.json`、`scripts/sync-codex-skills.js`、`scripts/sync-cursor-plugin.js`、新插件及 Workflow 的 `.codex-plugin/plugin.json` 与 `.cursor-plugin/plugin.json` | 注册新插件、移除迁出的 Workflow Skill 暴露；Codex 与 Cursor 清单互相一致；只在现有同步器确实需要时更新注册逻辑 |
+| PM-F08 | `codex/plugin-split/external-skill-inventory.yaml`、`codex/plugin-split/skill-ownership-matrix.md` | 将 `embedded-team-sync` 状态从 deferred 更新为 migrated/本阶段目标；记录 `workflow-document-context` 从 Workflow 到 PM 的迁移证据及唯一 owner；不改动其余 45 项归属 |
+| PM-F09 | `tests/document-context-cli.test.js`、`tests/document-context-context.test.js`、`tests/document-context-lifecycle.test.js`、`tests/document-context-readme.test.js`、`tests/document-context-store.test.js`、`tests/document-context.test.js` | 保留现有 Doc Context 行为覆盖，按新唯一源更新 import/命令路径；不删除既有测试以规避失败 |
+| PM-F10 | `tests/workflow-catalog.test.js`、`tests/workflow-plugin.test.js`、`tests/workflow-projection.test.js`、`tests/plugin-contracts.test.js`、`tests/capability-resolver.test.js`、`tests/architecture-marketplace.test.js`、`tests/codex-plugin.test.js`、`tests/cursor-plugin.test.js`、`tests/sync-codex-skills.test.js`、`tests/project-management-plugin.test.js`（新建）、`tests/project-management-projection.test.js`（新建） | 验证旧插件不再拥有迁出项、新插件双宿主注册/唯一源/投影/链接闭包有效，且其余注册不回归 |
+
+除上表路径以外，禁止修改 `common/`、`claude/`、`opencode/`、固件目标工程文件、其他插件 Skill 源/测试、用户 `.ai/` 项目状态文件以及任何未列明的根规则或实现文件。既有 `plan.md`、`task.md` 只作历史材料，本阶段不得直接沿用或覆盖为施工依据。
+
+### 3. 代码生成约束清单
+
+| ID | 约束 | 放行要求 |
+|---|---|---|
+| PM-G01 | 唯一源和单一插件 owner | 每个 Skill ID、Doc Context CLI/lib 仅有一个可编辑源；旧 `skills/` 路径若保留，只作为由 owner manifest/hash 保护并可重建的投影 |
+| PM-G02 | 被管理对象分离 | Team Sync 拥有 `.ai/TEAM_RULES.md`、`PROJECT_STATUS.md`、`SKILL_REGISTRY.md`、`TASK_LOG.md`；Doc Context 拥有 README 受管区块与 `.mcu-workbench/document-context/` 索引状态；任何更新不得双写对方的主数据 |
+| PM-G03 | Handoff 互通而不复制 | 总体项目快照与 request/conversation 版本化 handoff 使用稳定标识互相引用；不可把 Doc Context 中间索引伪作整体项目状态，亦不可让 Team Sync 追加日志替代版本化 handoff |
+| PM-G04 | 原行为/API 兼容 | 保留 Skill ID `embedded-team-sync`、`workflow-document-context`，既有命令和状态语义；改变路径不改变调用契约，根 CLI 命令保留兼容委托 |
+| PM-G05 | 不扩展为完整 PM 系统 | 本阶段不新增看板、工时/预算、排期/里程碑、团队账号/权限服务、远程协作后端、数据库或云同步；持续使用当前文件式轻量工作流 |
+| PM-G06 | 不改变内容职责 | 不把 intake/change-report/LLM guardrails 或需求路由、Spec/Plan/Task 生成和执行 Skill 移入新插件；跨 Skill 链接只声明依赖，不复制 Skill |
+| PM-G07 | 编码结构和 SOLID | SRP：两项 Skills 各自唯一数据职责、插件注册和运行时实现职责独立；OCP：新插件经 map/catalog 扩展；LSP：旧 Skill ID/命令/数据契约保持可替换；ISP：宿主暴露仅含批准 Skills；DIP：通用 CLI/数据层不反向依赖 Workflow 插件内部。Plan/Task 必须逐原则列出证据，不满足则阻塞 |
+| PM-G08 | 数据保护与冲突处理 | 初始化不得覆盖已有 `.ai/`/`.mcu-workbench/` 文件；`TASK_LOG.md` 默认 append-only；document-context 过期 `base_revision` 标为 stale，不静默覆盖；受管 README 只改标记区块 |
+| PM-G09 | 工作区保护 | 实施前后审阅 Git diff 与基线 hashes；只修改 PM-F01–PM-F10 的列明路径；任何越界或无 marker 冲突立即阻塞并保留用户改动 |
+| PM-G10 | Provenance | 保留外部 Skill 来源/版本/许可证/依赖真实状态；未知继续标注 `unknown/unverified`，不能从 owner 迁移推断来源事实 |
+
+### 4. 验收测试清单
+
+| ID | 证据等级 | 验收项 | 通过条件 |
+|---|---|---|---|
+| PM-T01 | 静态 | 需求范围与所有权 | 两项 Skill 各只有一个 `mcu-workbench-project-management` owner；Workflow 不再暴露这两项；其余 Workflow Skill ID 和其他 45 项归属不变 |
+| PM-T02 | 静态/主机 | 插件注册与双宿主 manifests | PM plugin descriptor/package/plugin/map/marketplace/host manifests 一致；Codex 与 Cursor validator/manifest 检查都识别正确 Skills |
+| PM-T03 | 静态 | 唯一源/投影/hash | 两项唯一源均可追踪；旧根路径仅为登记的受保护投影；不存在重复可编辑副本、owner 碰撞、坏链接或漂移 |
+| PM-T04 | 主机 | Doc Context 行为 | 六个现有 `document-context*.test.js` 在迁移后通过；README 受管区块、登记/决策/上下文选择、生命周期/冲突和 CLI 行为未退化 |
+| PM-T05 | 主机 | Team Sync 数据保护 | 初始化保留现有文件；任务完成记录 append-only；状态、风险、阻塞和验证证据按允许词汇写入；无证据不升级为已验证 |
+| PM-T06 | 主机/静态 | Workflow 回归和根命令兼容 | `workflow-catalog`、plugin、projection、resolver/contract 定点检查通过；既有根 `document-context:*` 命令仍可调用新唯一源 |
+| PM-T07 | 差异审计 | 混合工作区与回滚 | 变更只在 PM-F01–PM-F10；迁移前后 hashes/diff 可审计；可独立回滚新插件注册且不丢失用户文件/数据 |
+| PM-T08 | 宿主 | 实际 Codex/Cursor 加载 | 如可复现真实宿主，分别记录发现/加载证据；未运行时标为 `unverified`，静态/主机测试不得写成宿主证明 |
+| PM-T09 | 来源审计 | External provenance | `embedded-team-sync` provenance 中未有证据的版本/许可证/依赖仍为 unknown/unverified，不影响其内容归属 |
+| PM-T10 | 硬件边界 | 固件/板级 | 本工作只涉及插件和工具仓库；不声称固件构建、烧录、目标运行或实物验证通过 |
+
+### Review Gate 结论与交接
+
+| 审查项 | 结论 |
+|---|---|
+| 范围/非目标 | 通过：本阶段只创建 Project Management 插件并迁移上述两项 Skills 及 Doc Context 运行时/测试；明确不纳入其余报告与 AI 执行链能力 |
+| 业务规则 | 通过：Team Sync 与 Doc Context 的持久化对象已分权；总体项目状态与对话级 handoff 通过稳定标识关联、不双写 |
+| 状态/权限/资源 | 通过：只在 PM-F01–PM-F10 列明的插件/注册/运行时代码/测试路径操作；不得写入实际用户固件工程的数据目录；保留混合工作区内容 |
+| 可验证验收 | 通过：存在六项 Doc Context 主机测试和插件注册/投影测试入口；双宿主真实加载证据另行分级记录 |
+| 可行性/阻塞 | 无阻塞范围缺口；实际迁移顺序、逐文件 hash/marker 冻结、回滚命令与阶段级 Agent/Skill 基线由后续 `workflow-integration-plan` 细化 |
+| `spec_rigor` / overlays | `full` / `[versioned]`，匹配跨插件唯一源、runtime、注册表和投影变更 |
+| Review Gate | `approved`；本结论只表示 Spec 约束审查通过，不代表实现或测试已完成 |
+| 用户闸门 H-02 | `pending-user-spec-review`；用户审阅批准前不得更新正式 Plan/Task 施工范围或修改 PM-F01–PM-F10 实现文件 |
+| 下一步 | H-02 批准后交给 `workflow-integration-plan` 为本 v1.6 生成两种同目标实施方案；用户选择并 Plan 审查批准后，重制 Task，再由 `workflow-task-execution` 自动按依赖执行并验证 |

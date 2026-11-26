@@ -267,17 +267,16 @@ const PLUGIN_SKILL_IDS = {
     'flash-jlink',
     'flash-keil',
     'flash-openocd',
-    'flash-platformio'
+    'flash-platformio',
+    'embedded-build-flash-debug'
   ],
   'mcu-workbench-verification': [
     'tools-verification',
     'tools-quality',
-    'academic-paper',
-    'academic-paper-reviewer',
-    'academic-pipeline',
     'embedded-unit-test-generator',
-    'sr-screener',
-    'static-analysis'
+      'static-analysis',
+      'embedded-bug-hunter',
+      'memory-analysis'
   ],
   'mcu-workbench-observability': [
     'tools-debug',
@@ -288,7 +287,10 @@ const PLUGIN_SKILL_IDS = {
     'logic-analyzer',
     'rtos-debug',
     'serial-monitor',
-    'serial-shell'
+    'serial-shell',
+    'can-debug',
+    'modbus-debug',
+    'visa-debug'
   ],
   'mcu-workbench-architecture': [
     'app-architecture', 'platform_mcu', 'platform_os', 'platform_bsp', 'platform_common', 'platform_middleware',
@@ -298,13 +300,15 @@ const PLUGIN_SKILL_IDS = {
     'vendor_mcu', 'vendor_rtos', 'vendor_lvgl', 'vendor_stack', 'vendor_fatfs', 'vendor_fal', 'vendor_flashdb',
     'vendor_letter_shell', 'vendor_algorithm', 'chip-driver-manual', 'chip-resource-finder',
     'embedded-architecture-planner', 'embedded-coding-standard', 'embedded-minimal-project-builder',
-    'embedded-prd-to-logic', 'prd-to-hardware-solution', 'schematic-pinmap-analyzer'
+    'embedded-prd-to-logic', 'prd-to-hardware-solution', 'schematic-pinmap-analyzer',
+    'embedded-project-scaffold', 'parsed-chip-datasheet', 'vendor-minimal-firmware'
   ],
   'mcu-workbench-workflow': [
     'workflow-requirements-router', 'workflow-claude-layering', 'workflow-document-context',
     'workflow-requirements-challenge', 'workflow-review-gate', 'workflow-integration-plan',
     'workflow-task-breakdown', 'workflow-task-execution', 'workflow-final-review',
-    'embed-ai-tool', 'embedded-change-report', 'embedded-project-intake', 'embedded-team-sync', 'mrd-to-prd'
+    'embed-ai-tool', 'embedded-change-report', 'embedded-project-intake', 'embedded-team-sync', 'mrd-to-prd',
+    'embedded-llm-guardrails', 'embedded-production-test-tool', 'market-mrd-analyst', 'skill-template'
   ]
 };
 

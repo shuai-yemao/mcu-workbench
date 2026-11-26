@@ -26,7 +26,7 @@
 
 ## 检查顺序
 
-1. 确认审查范围、代码来源、profile（按 [style-profile 编码规范](style-profile.md) 的硬性约束）和可复现构建/测试命令；
+1. 确认审查范围、代码来源、profile（按 [style-profile 编码规范](./style-profile.md) 的硬性约束）和可复现构建/测试命令；
 2. 先检查编译、接口、错误路径和资源所有权；
 3. 再检查 ISR/DMA/并发、数组边界及硬件约束；
 4. 最后报告 profile 偏差，并注明其来源；

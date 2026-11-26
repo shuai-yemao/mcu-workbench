@@ -16,7 +16,8 @@
     "flash-jlink",
     "flash-keil",
     "flash-openocd",
-    "flash-platformio"
+    "flash-platformio",
+    "embedded-build-flash-debug"
   ],
   "generatedFiles": {
     "tools/tools-build/SKILL.md": "0e1f4b5b1b2f26247faa71dd5bd5e87c68eb072c60103920a25793e68924d08c",
@@ -136,6 +137,9 @@
     "flash-platformio/SKILL.md": "fc0ccc9c257575b77dcb5ee4d33a7d45cfca089c48664008e7d62c787c5a72ee",
     "flash-platformio/agents/openai.yaml": "14516205e5622416932c9be674d30fb83524a7ab62523b4b99f26b12eb33800b",
     "flash-platformio/references/usage.md": "64a7d0cc2a9b856cc67d738f40f690aa71b2aa59f353f82be8ef70eeface3b9e",
-    "flash-platformio/scripts/pio_flasher.py": "cfdf0ee72abacbe5697371835afe2fa1d3a904c9b037ee549d8549264a281740"
+    "flash-platformio/scripts/pio_flasher.py": "cfdf0ee72abacbe5697371835afe2fa1d3a904c9b037ee549d8549264a281740",
+    "embedded-build-flash-debug/SKILL.md": "ab55916906fd88346e465d8d28420ca7c9e138c6c08eae16b855de397cb1f5c3",
+    "embedded-build-flash-debug/agents/openai.yaml": "70e8f0412273ee65d374ba8a7ed6fc64b9d52b2169e9ab63105a6c4fefbafe1d",
+    "embedded-build-flash-debug/references/templates.md": "93423ebfa1f355fba02aa4c481c984f92e0b04894fc7f3d1ed2a9a07d30d55eb"
   }
 }

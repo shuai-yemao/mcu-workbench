@@ -13,7 +13,10 @@ describe('observability plugin projection', () => {
       'tools-debug',
       'tools-observability',
       'debug-gdb-openocd',
-      'serial-monitor'
+      'serial-monitor',
+      'can-debug',
+      'modbus-debug',
+      'visa-debug'
     ]));
     for (const skill of skills) {
       expect(fs.existsSync(path.join(ROOT, skill.pluginPath, 'SKILL.md'))).toBe(true);

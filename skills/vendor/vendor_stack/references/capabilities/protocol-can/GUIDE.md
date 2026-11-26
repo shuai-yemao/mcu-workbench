@@ -26,7 +26,7 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认操作参数。
+1. 先阅读 [./references/usage.md](references/usage.md)，确认操作参数。
 2. 探测环境：
    ```bash
    python scripts/can_tool.py --detect

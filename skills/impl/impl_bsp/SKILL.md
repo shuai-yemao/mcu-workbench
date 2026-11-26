@@ -14,7 +14,7 @@ description: Impl 落地：器件 Driver 协议子层 + 同类 Driver Handle 机
 2. 写出南北向接口表：Driver 北向为实例操作；南向根据目标 `platform_mcu` profile 使用事务级 Bus、tick/delay、GPIO、IRQ、DMA、yield、trace。`object-ops` 可注入以 `void *context` 为首参的 Ops；`flat-logical-resource` 可直接调用真实存在的 `plat_i2c_*`、`plat_spi_*`、`plat_gpio_*`、`plat_dma_*` 和 `plat_tick_*` 公共函数，但不得因此 include HAL。事务级 Bus 至少说明地址、长度、超时单位和错误码；不得注入 START、STOP、ACK、send-byte、SDA 方向或临界区等软件 IIC 细节。
 3. Driver 与 Handle 均按 `cfg / ctx / data / ops` 定义。Driver `ctx` 只保存 resource 提供并由 Port 注入的 MCU/Core 上下文；Handle `cfg` 保存同一类别 Driver 集合，`ctx` 保存调度/选择上下文，`data` 保存聚合缓存和运行状态。
 4. 定义实例状态：`is_inited`、注入 Ops、私有上下文和设备操作；初始化失败回滚，反初始化可重复。
-5. 默认采用 `instance_only`：模块级仅导出构造函数和必要生命周期入口；其余行为放在对象 `ops` 或 `static` 函数中。兼容例外遵循 [`api-policy.md`](references/api-policy.md)。
+5. 默认采用 `instance_only`：模块级仅导出构造函数和必要生命周期入口；其余行为放在对象 `ops` 或 `static` 函数中。兼容例外遵循 [`api-policy.md`](./references/api-policy.md)。
 5. 用 Fake Bus/Timebase/GPIO 覆盖成功、超时、重试和回滚路径，并把板级四级证据写入契约规定的位置。
 
 GPIO 输出设备（LED、继电器、使能脚）遵循 [`GPIO 输出外设检查表`](../../bsp/references/gpio-output-peripheral-checklist.md)：逻辑状态与物理电平分离，必须保留极性、Core GPIO 上下文、失败状态和 deinit 规则，不能为套用通用器件模板虚构协议或 MCU Ops。
@@ -69,7 +69,7 @@ Port 可长期持有具体 Driver 和 Handle，并把 Handle 的独立公开函�
 - 导出额外的 Driver 行为函数（除获批的 `legacy_event_api` 桥接）。
 - 在 Driver 放置 Handle 的缓存、队列、线程或业务调度。
 
-状态机、错误恢复和交接证据见 [`hal-driver-evidence.md`](references/hal-driver-evidence.md)；Handle 实例、缓存、事件和恢复证据见 [`handler-evidence.md`](references/handler-evidence.md)；器件样例见 [`capability-index.md`](references/capability-index.md)。
+状态机、错误恢复和交接证据见 [`hal-driver-evidence.md`](./references/hal-driver-evidence.md)；Handle 实例、缓存、事件和恢复证据见 [`handler-evidence.md`](./references/handler-evidence.md)；器件样例见 [`capability-index.md`](./references/capability-index.md)。
 共享温湿度案例见 [`bsp-aht21-case.md`](../../bsp/references/bsp-aht21-case.md)。
 GPIO 输出类的同步生命周期、错误传播与 Fake 验证见 [`gpio-output-peripheral-checklist.md`](../../bsp/references/gpio-output-peripheral-checklist.md)。
 跨 skill 通用错误模式与调试教训见 [`common-error-patterns.md`](../../bsp/references/common-error-patterns.md)。

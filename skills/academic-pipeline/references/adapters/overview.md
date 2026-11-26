@@ -13,7 +13,7 @@ An **adapter** is a program (in any language) that reads a user-owned corpus sou
 1. **`passport.yaml`** with a top-level `literature_corpus` array conforming to `literature_corpus_entry.schema.json`.
 2. **`rejection_log.yaml`** conforming to `rejection_log.schema.json`, always emitted (empty when no rejections).
 
-ARS provides three Python reference adapters in [`scripts/adapters/`](../../../scripts/adapters/). Users are expected to write their own adapters for non-reference sources. The three reference adapters are starting points, not production tools.
+ARS provides three Python reference adapters in [`scripts/adapters/`](../../../scripts/adapters). Users are expected to write their own adapters for non-reference sources. The three reference adapters are starting points, not production tools.
 
 ## 2. Why a contract, not a plugin API
 

@@ -20,7 +20,10 @@ function createObservabilityPlugin() {
       'logic-analyzer',
       'rtos-debug',
       'serial-monitor',
-      'serial-shell'
+      'serial-shell',
+      'can-debug',
+      'modbus-debug',
+      'visa-debug'
     ],
     dispose() {
       disposed = true;

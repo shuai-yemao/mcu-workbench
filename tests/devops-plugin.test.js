@@ -14,7 +14,9 @@ describe('DevOps plugin package contract', () => {
     expect(validateDescriptor(plugin.descriptor).valid).toBe(true);
     expect(plugin.descriptor.id).toBe('mcu-workbench-devops');
     expect(plugin.sourceSkills).toEqual([
-      'tools-build', 'tools-linker', 'tools-flash', 'tools-git', 'tools-release'
+      'tools-build', 'tools-linker', 'tools-flash', 'tools-git', 'tools-release',
+      'build-cmake', 'build-iar', 'build-idf', 'build-keil', 'build-makefile', 'build-platformio',
+      'flash-idf', 'flash-jlink', 'flash-keil', 'flash-openocd', 'flash-platformio', 'embedded-build-flash-debug'
     ]);
   });
 
@@ -28,6 +30,6 @@ describe('DevOps plugin package contract', () => {
   });
 
   test('provides a passing standalone plugin validator', () => {
-    expect(validatePlugin()).toMatchObject({ valid: true, skillCount: 16 });
+    expect(validatePlugin()).toMatchObject({ valid: true, skillCount: 17 });
   });
 });

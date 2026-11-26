@@ -56,7 +56,7 @@ platform_bsp 只包含标准类型头和自身公共声明，不能包含本层�
 
 目录和名称固定为 `04_Impl/impl_bsp/impl_bsp_port/Inc|Src/impl_<type>_handle_port.c/.h` 与 `03_Platform/platform_bsp/<type>/Inc|Src/platform_<type>.c/.h`。板级组合根保留在 `04_Impl/impl_board`，只负责调用 Port 注册入口；Port 只导出一个与文件基名对应的注册函数。私有装配区可以调用 Platform 设备契约构造函数并绑定 Driver、Handle，运行时转发只能调用 Handle 的公开函数。新生成代码不得创建 Wrapper 文件。生成实现不直接调用 HAL，硬件生命周期和平台 Ops 应通过 resource 与 platform_mcu Impl 后端注入。生成前先输出 manifest，列明设备 profile、同类 Driver 数量、Ops 映射、OSAL 资源、阻塞/ISR 限制、`style-profile.md` 适用范围与未验证项。
 
-器件协议交给 [`impl_bsp`](../impl_bsp/SKILL.md)，资源/并发交给 [`impl_bsp`](../impl_bsp/SKILL.md)（Handle 机制子层）。实现证据见 [`bsp-layer-evidence.md`](references/bsp-layer-evidence.md)，器件适配和 Fake 样例见 [`capability-index.md`](references/capability-index.md)。
+器件协议交给 [`impl_bsp`](../impl_bsp/SKILL.md)，资源/并发交给 [`impl_bsp`](../impl_bsp/SKILL.md)（Handle 机制子层）。实现证据见 [`bsp-layer-evidence.md`](./references/bsp-layer-evidence.md)，器件适配和 Fake 样例见 [`capability-index.md`](./references/capability-index.md)。
 共享温湿度案例见 [`bsp-aht21-case.md`](../../bsp/references/bsp-aht21-case.md)。
 GPIO 输出外设的绑定、回滚和 Fake 最小集见 [`gpio-output-peripheral-checklist.md`](../../bsp/references/gpio-output-peripheral-checklist.md)。
 跨 skill 通用错误模式与调试教训见 [`common-error-patterns.md`](../../bsp/references/common-error-patterns.md)。

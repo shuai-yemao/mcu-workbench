@@ -281,5 +281,5 @@ HAL_SPI_TransmitReceive(&hspi, &tx, &rx, 1, 100);
 
 ## 参考资料
 
-- [references/spi-nss-management.md](references/spi-nss-management.md) — NSS 硬件/软件管理全面对比
-- [references/spi-errata-workarounds.md](references/spi-errata-workarounds.md) — STM32 SPI Errata 与解决方案
+- [./references/spi-nss-management.md](references/spi-nss-management.md) — NSS 硬件/软件管理全面对比
+- [./references/spi-errata-workarounds.md](references/spi-errata-workarounds.md) — STM32 SPI Errata 与解决方案

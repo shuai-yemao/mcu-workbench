@@ -75,7 +75,7 @@ Detailed per-phase agent behavior and output descriptions for the 8-phase orches
 - In-text citations integrated
 - Word count tracking per section
 - Transition paragraphs between sections
-- Acronym check on the saved draft (#849; [`writing_quality_check.md`](writing_quality_check.md) § F)
+- Acronym check on the saved draft (#849; [`writing_quality_check.md`](./writing_quality_check.md) § F)
 
 ---
 
@@ -97,14 +97,14 @@ Detailed per-phase agent behavior and output descriptions for the 8-phase orches
 **Agent**: `abstract_bilingual_agent`
 **Output**: Bilingual Abstract + Keywords (both languages of the run's declared output language pair)
 
-- L2 abstract (default: English), structured — length from the regime table ([`abstract_writing_guide.md`](abstract_writing_guide.md), run's paper type)
+- L2 abstract (default: English), structured — length from the regime table ([`abstract_writing_guide.md`](./abstract_writing_guide.md), run's paper type)
 - L1 abstract (default: Traditional Chinese), structured — length from the same regime table
 - L2 keywords, count from the same regime table
 - L1 keywords, same declared count
 - Headings and report columns are pair-derived; for the default pair `zh-tw-en` they render exactly as `### English Abstract` / `### Chinese Abstract`
 - Independent writing (not mechanical translation)
 - Field absent → default pair; the heading literals are unchanged from the pre-#862 surface (no rendered-output equivalence is claimed)
-- Acronym check on the saved abstracts (#849; [`writing_quality_check.md`](writing_quality_check.md) § F)
+- Acronym check on the saved abstracts (#849; [`writing_quality_check.md`](./writing_quality_check.md) § F)
 
 ---
 

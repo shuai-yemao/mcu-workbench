@@ -427,5 +427,5 @@ uint32_t jdr1 = ADC1->JDR1;  // 独立读取，不干扰规则组
 
 ## 参考资料
 
-- [references/adc-calibration-guide.md](references/adc-calibration-guide.md) — 校准方法详解
-- [references/adc-timing-config.md](references/adc-timing-config.md) — 时钟树与转换时序计算
+- [./references/adc-calibration-guide.md](references/adc-calibration-guide.md) — 校准方法详解
+- [./references/adc-timing-config.md](references/adc-timing-config.md) — 时钟树与转换时序计算

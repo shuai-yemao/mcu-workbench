@@ -22,7 +22,7 @@ FlashDB 跑在 FAL 分区之上，提供 KVDB（键值数据库）与 TSDB（时
 - 短字符串用 `fdb_kv_set/get`（内部 128B 缓冲区），二进制/长数据用 `fdb_kv_set_blob/get_blob`。
 - 掉电持久化验证时把 `FLASHDB_ERASE_PART_ON_BOOT` 改为 0，断电重启读回。
 
-详细流程与 API 见 [`kvdb-usage.md`](references/kvdb-usage.md)。
+详细流程与 API 见 [`kvdb-usage.md`](./references/kvdb-usage.md)。
 
 ## 交接
 

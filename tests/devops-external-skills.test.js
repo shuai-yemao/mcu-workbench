@@ -5,7 +5,7 @@ const path = require('path');
 
 const pluginSkillsRoot = path.join(__dirname, '..', 'plugins', 'mcu-workbench-devops', 'skills');
 const externalSkills = [
-  'build-cmake', 'build-iar', 'build-idf', 'build-keil', 'build-makefile', 'build-platformio',
+  'build-cmake', 'build-iar', 'build-idf', 'build-keil', 'build-makefile', 'build-platformio', 'embedded-build-flash-debug',
   'flash-idf', 'flash-jlink', 'flash-keil', 'flash-openocd', 'flash-platformio'
 ];
 

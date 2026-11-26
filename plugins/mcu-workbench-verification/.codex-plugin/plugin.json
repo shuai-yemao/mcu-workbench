@@ -1,0 +1,6 @@
+{
+  "name": "mcu-workbench-verification",
+  "version": "1.0.0",
+  "description": "MCU Workbench 验证、质量门禁与外部验证 Skills。",
+  "skills": "./skills/"
+}

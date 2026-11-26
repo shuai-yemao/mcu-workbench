@@ -22,7 +22,8 @@ const SKILL_MAPPINGS = [
   { id: 'flash-jlink', projection: 'flash-jlink' },
   { id: 'flash-keil', projection: 'flash-keil' },
   { id: 'flash-openocd', projection: 'flash-openocd' },
-  { id: 'flash-platformio', projection: 'flash-platformio' }
+  { id: 'flash-platformio', projection: 'flash-platformio' },
+  { id: 'embedded-build-flash-debug', projection: 'embedded-build-flash-debug' }
 ];
 
 function collectFiles(root) {
@@ -106,7 +107,12 @@ function syncSkills(options = {}) {
   const projectionRoot = path.join(projectRoot, 'skills');
   const markerPath = path.join(projectionRoot, 'tools', '.devops-projections.json');
   const source = path.relative(projectRoot, sourceRoot).replace(/\\/g, '/');
+  const frozenBaselinePath = path.join(projectRoot, 'codex/plugin-split/artifacts/external-skill-ownership/baseline-v1.5.json');
+  const baselineHashes = options.baselineHashes || (fs.existsSync(frozenBaselinePath)
+    ? Object.fromEntries(JSON.parse(fs.readFileSync(frozenBaselinePath, 'utf8')).items.flatMap((item) =>
+      (item.rootFiles || []).map((file) => [file.path.replace(/\\/g, '/'), file.sha256]))) : {});
   let previousGeneratedFiles;
+  let previousSkillIds = [];
   if (!isWithin(projectRoot, projectionRoot) || !isWithin(projectRoot, markerPath)) {
     throw new Error('Projection path escaped project root.');
   }
@@ -122,10 +128,13 @@ function syncSkills(options = {}) {
   const markerExists = fs.existsSync(markerPath);
   if (markerExists) {
     const marker = JSON.parse(fs.readFileSync(markerPath, 'utf8'));
-    if (marker.source !== source || JSON.stringify(marker.skills) !== JSON.stringify(mappings.map(({ id }) => id))) {
+    const mappingIds = new Set(mappings.map(({ id }) => id));
+    if (marker.source !== source || !Array.isArray(marker.skills) || marker.skills.some((id) => !mappingIds.has(id))) {
       throw new Error('Projection marker does not match this DevOps plugin.');
     }
-    if (JSON.stringify(currentProjectionHashes(projectRoot, mappings)) !== JSON.stringify(marker.generatedFiles)) {
+    previousSkillIds = marker.skills;
+    const previousMappings = mappings.filter(({ id }) => previousSkillIds.includes(id));
+    if (JSON.stringify(currentProjectionHashes(projectRoot, previousMappings)) !== JSON.stringify(marker.generatedFiles)) {
       throw new Error('Refusing to overwrite a modified projection.');
     }
     previousGeneratedFiles = marker.generatedFiles;
@@ -154,6 +163,25 @@ function syncSkills(options = {}) {
         fs.writeFileSync(stagedFile, rewriteMarkdownLinks(markdown, sourceFile, projectedFile, sourceRoot, projectRoot, mappings), 'utf8');
       } else fs.copyFileSync(sourceFile, stagedFile);
       generatedFiles[path.relative(projectionRoot, projectedFile).replace(/\\/g, '/')] = hashFile(stagedFile);
+    }
+  }
+
+  if (markerExists) for (const mapping of mappings.filter(({ id }) => !previousSkillIds.includes(id))) {
+    const targetDirectory = path.join(projectRoot, 'skills', mapping.projection);
+    if (!fs.existsSync(targetDirectory)) continue;
+    const sourceDirectory = path.join(sourceRoot, mapping.id);
+    const sourceFiles = collectFiles(sourceDirectory);
+    const expectedTargets = new Set(sourceFiles.map((file) => path.join(targetDirectory, path.relative(sourceDirectory, file))));
+    const existingTargets = collectFiles(targetDirectory);
+    if (existingTargets.length !== sourceFiles.length || existingTargets.some((file) => !expectedTargets.has(file))) {
+      throw new Error(`Refusing adoption with unrecognized files: ${mapping.projection}`);
+    }
+    for (const sourceFile of sourceFiles) {
+      const targetFile = path.join(targetDirectory, path.relative(sourceDirectory, sourceFile));
+      const relative = path.relative(projectRoot, targetFile).replace(/\\/g, '/');
+      if (hashFile(targetFile) !== baselineHashes[relative]) {
+        throw new Error(`Refusing unmarked projection that differs from frozen baseline: ${relative}`);
+      }
     }
   }
 

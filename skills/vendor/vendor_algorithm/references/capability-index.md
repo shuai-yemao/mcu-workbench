@@ -4,5 +4,5 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| 嵌入式数字信号处理 | [完整流程与资源](capabilities/middleware-dsp/GUIDE.md) |
-| 快速傅里叶变换 | [完整流程与资源](capabilities/middleware-fft/GUIDE.md) |
+| 嵌入式数字信号处理 | [完整流程与资源](./capabilities/middleware-dsp/GUIDE.md) |
+| 快速傅里叶变换 | [完整流程与资源](./capabilities/middleware-fft/GUIDE.md) |

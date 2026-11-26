@@ -4,5 +4,5 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| STM32 CubeMX/HAL 固件开发 | [完整流程与资源](capabilities/platform-stm32-hal/GUIDE.md) |
-| STM32 标准外设库开发 | [完整流程与资源](capabilities/platform-stm32-spl/GUIDE.md) |
+| STM32 CubeMX/HAL 固件开发 | [完整流程与资源](./capabilities/platform-stm32-hal/GUIDE.md) |
+| STM32 标准外设库开发 | [完整流程与资源](./capabilities/platform-stm32-spl/GUIDE.md) |

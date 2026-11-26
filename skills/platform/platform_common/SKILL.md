@@ -110,7 +110,7 @@ typedef struct {
 - `platform_service_init()`：建立基础服务对象，四元组槽置空；
 - `platform_service_model_init()`：绑定调用者借用的 `cfg/ctx/data/ops`，Common 不负责释放这些指针。
 
-设备具体 Model 若承载对象身份，仍应使用 `base + cfg/ctx/data/ops` 四元组；纯函数表不强行伪装成对象。详见 [`object-four-tuple-template.md`](references/object-four-tuple-template.md)。
+设备具体 Model 若承载对象身份，仍应使用 `base + cfg/ctx/data/ops` 四元组；纯函数表不强行伪装成对象。详见 [`object-four-tuple-template.md`](./references/object-four-tuple-template.md)。
 
 ## 管理器机制与板级边界
 
@@ -143,4 +143,4 @@ typedef struct {
 
 相关调用 Skill：[`platform_mcu`](../platform_mcu/SKILL.md)、[`platform_bsp`](../platform_bsp/SKILL.md)、[`impl_board`](../../impl/impl_board/SKILL.md)、[`service_log`](../../service/service_log/SKILL.md)、[`service_diagnosis`](../../service/service_diagnosis/SKILL.md)。
 
-跨层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，对象四元组见 [`object-four-tuple-template.md`](references/object-four-tuple-template.md)，日志/诊断流转见 [`diag-log-flow.md`](references/diag-log-flow.md)。
+跨层契约见 [`software-layer-contract.md`](../../workflow/workflow-review-gate/references/software-layer-contract.md)，对象四元组见 [`object-four-tuple-template.md`](./references/object-four-tuple-template.md)，日志/诊断流转见 [`diag-log-flow.md`](./references/diag-log-flow.md)。

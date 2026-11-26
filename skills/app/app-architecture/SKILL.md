@@ -39,7 +39,7 @@ description: 设计嵌入式 APP 的 main、Manager、Task、Logic、UI 与 Prof
 
 ## 证据与产物
 
-先读取 [`app-architecture-evidence.md`](references/app-architecture-evidence.md)，再判断项目是否真的存在 `manager/`、`task/`、`logic/`、`ui/` 和 `profile/`。插件生成器默认只提供 `App/main.c`、`BSP/`、`System/`、`Core/` 和 `cmake/`，不得把规划目录当成现成实现。
+先读取 [`app-architecture-evidence.md`](./references/app-architecture-evidence.md)，再判断项目是否真的存在 `manager/`、`task/`、`logic/`、`ui/` 和 `profile/`。插件生成器默认只提供 `App/main.c`、`BSP/`、`System/`、`Core/` 和 `cmake/`，不得把规划目录当成现成实现。
 
 最小产物包括：APP 层目录图、启动链、组件职责表、**App→Service 依赖审计**（确认无 Vendor/Impl/HAL 引用）、测试入口和未决风险。需要完整分层证据时交接 [`software-architecture-knowledge-graph.md`](../../workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md)。
 

@@ -13,7 +13,7 @@ const relativeLink=(from,to)=>{let r=slash(path.relative(path.dirname(from),to))
 const suffixOf=raw=>{const n=raw.indexOf('#');return n<0?'':raw.slice(n);};
 const rootTarget=(file,raw)=>path.resolve(path.dirname(file),localTarget(raw));
 function readJson(p){return JSON.parse(fs.readFileSync(p,'utf8'));}
-function loadMap(){const map=readJson(MAP_PATH);if(map.plugin!=='mcu-workbench-workflow'||map.skills.length!==14)throw new Error('Workflow skill map must contain exactly 14 Skills.');return map;}
+function loadMap(){const map=readJson(MAP_PATH);if(map.plugin!=='mcu-workbench-workflow'||map.skills.length!==18)throw new Error('Workflow skill map must contain exactly 18 Skills.');return map;}
 function sourcesFor(map){return map.skills.map(item=>({id:item.id,oldRoot:path.resolve(PROJECT_ROOT,item.projectionPath),packageRoot:path.resolve(PLUGIN_ROOT,'skills',item.id),projection:item.projectionPath}));}
 function selectedSource(file,sources){return sources.find(s=>inside(s.oldRoot,file));}
 function knownExternal(raw,sourceFile){const resolved=rootTarget(sourceFile,raw);return {source:slash(path.relative(PROJECT_ROOT,sourceFile)),target:raw,resolved:slash(path.relative(PROJECT_ROOT,resolved)),reason:path.isAbsolute(raw)||/^\/(?:home|Users|tmp)\//.test(raw)?'absolute-path-outside-repository':'target-not-present-in-repository'};}

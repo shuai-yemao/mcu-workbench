@@ -1,0 +1,4 @@
+interface:
+  display_name: "Vendor Minimal Firmware"
+  short_description: "Trim vendor MCU examples into minimal projects."
+  default_prompt: "Use $vendor-minimal-firmware to create a minimal MCU firmware project from vendor examples."

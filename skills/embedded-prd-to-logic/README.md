@@ -1,6 +1,6 @@
 # Embedded PRD To Application Logic 使用指南
 
-把客户需求 / PRD / issue 转换成嵌入式产品的**应用逻辑交接文档**。完整工作流、来源标签、范围边界见 [SKILL.md](SKILL.md) 与 `references/`。
+把客户需求 / PRD / issue 转换成嵌入式产品的**应用逻辑交接文档**。完整工作流、来源标签、范围边界见 [./SKILL.md](SKILL.md) 与 `references/`。
 
 **不在范围**（路由给其他 skill，详见 `references/embedded-risk-rules.md`）：硬件 / 驱动 / 寄存器 / 协议 → `hardware-solution`；代码边界保护 → `embedded-llm-guardrails`；单元测试 → `embedded-unit-test-generator`；变更报告 → `embedded-change-report`。
 

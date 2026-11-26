@@ -427,5 +427,5 @@ HAL_StatusTypeDef ret = HAL_UART_Receive(&huart1, &rx_test, 1, 100);
 
 ## 参考资料
 
-- [references/uart-advanced-modes.md](references/uart-advanced-modes.md) — RS485/LIN/多机/Smartcard/半双工/RTO 详解
-- [references/uart-baudrate-config.md](references/uart-baudrate-config.md) — 波特率计算表与误差分析
+- [./references/uart-advanced-modes.md](references/uart-advanced-modes.md) — RS485/LIN/多机/Smartcard/半双工/RTO 详解
+- [./references/uart-baudrate-config.md](references/uart-baudrate-config.md) — 波特率计算表与误差分析

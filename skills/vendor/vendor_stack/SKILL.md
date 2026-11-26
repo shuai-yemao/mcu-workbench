@@ -17,7 +17,7 @@ description: Vendor 底座登记：MQTT、BLE、CAN、Modbus、WiFi、蜂窝、L
 
 先确定链路与协议，再定义平台无关消息接口、超时和错误模型，最后由 `impl_middleware` 通过 Platform 契约接入收发通道。MQTT/BLE 等技术差异放在 `references/`，不新增重复主 skill。
 
-MQTT 任务读取 [`mqtt-coremqtt.md`](references/mqtt-coremqtt.md)，重点核对版本、传输回调、上下文串行化和重连证据。
-BLE、CAN、蜂窝、GPS、LoRa、Modbus、USB、WiFi、Ymodem 与 MQTT 的完整协议资料见 [`capability-index.md`](references/capability-index.md)。
+MQTT 任务读取 [`mqtt-coremqtt.md`](./references/mqtt-coremqtt.md)，重点核对版本、传输回调、上下文串行化和重连证据。
+BLE、CAN、蜂窝、GPS、LoRa、Modbus、USB、WiFi、Ymodem 与 MQTT 的完整协议资料见 [`capability-index.md`](./references/capability-index.md)。
 
 交接：网络/无线设备能力由 `impl_middleware` 接入 [`platform_bsp`](../../platform/platform_bsp/SKILL.md)，任务和队列由 `impl_os` 实现 [`platform_os`](../../platform/platform_os/SKILL.md)。

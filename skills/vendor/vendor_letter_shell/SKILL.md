@@ -22,7 +22,7 @@ UART 通道与物理收发属于 [`platform_mcu`](../../platform/platform_mcu/SK
 - 命令函数必须能返回，不能在里面死循环，否则 shell 任务被卡死。
 - 多任务并发打印开 `SHELL_USING_LOCK`，用 OSAL 互斥锁（递归性质，同任务多次打印不死锁）。
 
-详细注册与移植见 [`command-export-and-porting.md`](references/command-export-and-porting.md)。
+详细注册与移植见 [`command-export-and-porting.md`](./references/command-export-and-porting.md)。
 
 ## 交接
 

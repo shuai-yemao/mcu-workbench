@@ -15,6 +15,10 @@
     { "id": "embedded-change-report", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-change-report", "projectionPath": "skills/embedded-change-report" },
     { "id": "embedded-project-intake", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-project-intake", "projectionPath": "skills/embedded-project-intake" },
     { "id": "embedded-team-sync", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-team-sync", "projectionPath": "skills/embedded-team-sync" },
-    { "id": "mrd-to-prd", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/mrd-to-prd", "projectionPath": "skills/mrd-to-prd" }
+    { "id": "mrd-to-prd", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/mrd-to-prd", "projectionPath": "skills/mrd-to-prd" },
+    { "id": "embedded-llm-guardrails", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails", "projectionPath": "skills/embedded-llm-guardrails" },
+    { "id": "embedded-production-test-tool", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool", "projectionPath": "skills/embedded-production-test-tool" },
+    { "id": "market-mrd-analyst", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst", "projectionPath": "skills/market-mrd-analyst" },
+    { "id": "your-skill-name", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/skill-template", "projectionPath": "skills/skill-template" }
   ]
 }

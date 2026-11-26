@@ -86,8 +86,8 @@ Event Group、Task Notification、Stream Buffer、Message Buffer 和取消语义
    目标运行、串口/RTT 和实物时序验证。
 5. 不同能力族证据不一致时使用 `mixed`，不能用一个最完整能力族代表整个 Port。
 
-源码映射见 [`freertos-source-map.md`](references/freertos-source-map.md)，原生
-API 速查见 [`freertos-api-quickref.md`](references/freertos-api-quickref.md)。
+源码映射见 [`freertos-source-map.md`](./references/freertos-source-map.md)，原生
+API 速查见 [`freertos-api-quickref.md`](./references/freertos-api-quickref.md)。
 
 ## 生成与审查禁止事项
 

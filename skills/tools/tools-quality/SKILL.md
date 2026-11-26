@@ -21,7 +21,7 @@ description: 负责嵌入式项目的代码质量检查与最终质量出口：�
 质量检查必须区分代码来源，并先标记变更范围：
 
 - **插件生成代码**：插件生成的文件、代码片段和符号，必须完整执行
-  [`style-profile.md`](references/style-profile.md) 的命名、函数、注释和格式规则。
+  [`style-profile.md`](./references/style-profile.md) 的命名、函数、注释和格式规则。
 - **插件要求修改的代码**：即使文件原本已经存在，只要本次修改由插件规则、生成流程或插件交接任务明确要求，
   本次涉及的文件名、函数、代码块、新增符号和注释同样必须完整执行上述规则。
 - **既有无关代码**：保留原有文件名、公开 API 和无关区域，只作为基线记录，不得用基线豁免插件要求修改的范围。
@@ -50,7 +50,7 @@ description: 负责嵌入式项目的代码质量检查与最终质量出口：�
 
 `final-gate` 是代码质量的最终出口，但不替代 `workflow-final-review` 对 Spec 的逐条核对，也不替代 `tools-verification` 的 Map、Unity、目标运行或硬件证据。缺少任一必需证据时必须阻塞。
 
-两种模式的详细输入、输出和调用约束见 [`quality-mode-contract.md`](references/quality-mode-contract.md)。
+两种模式的详细输入、输出和调用约束见 [`quality-mode-contract.md`](./references/quality-mode-contract.md)。
 
 ## 输入与规则优先级
 
@@ -61,7 +61,7 @@ description: 负责嵌入式项目的代码质量检查与最终质量出口：�
 1. 用户明确要求；
 2. 目标工程的 `.editorconfig`、`.clang-format`、编译/构建配置和已确认的质量配置；
 3. 目标目录相邻源码的稳定写法；
-4. 本 Skill 的 [`style-profile.md`](references/style-profile.md) 与 [`review-gates.md`](references/review-gates.md)；
+4. 本 Skill 的 [`style-profile.md`](./references/style-profile.md) 与 [`review-gates.md`](./references/review-gates.md)；
 5. 保守的 C/C++ 默认规则。
 
 任何偏差都要记录来源、适用范围、理由和是否需要用户确认。不能用猜测补齐缺失的项目规则。
@@ -92,7 +92,7 @@ description: 负责嵌入式项目的代码质量检查与最终质量出口：�
 
 ### 6. 代码审查与报告
 
-使用 [`capability-index.md`](references/capability-index.md) 选择详细检查表，分离报告：风格/注释、静态规则、功能风险、接口/资源所有权、ISR/DMA/并发、安全、分层和 SOLID 问题。SOLID 检查必须遵守 [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)，逐项记录 SRP、OCP、LSP、ISP、DIP 的适用性、代码证据、测试/检查证据和阻塞原因。代码审查可提出问题，但不擅自扩大实现范围。
+使用 [`capability-index.md`](./references/capability-index.md) 选择详细检查表，分离报告：风格/注释、静态规则、功能风险、接口/资源所有权、ISR/DMA/并发、安全、分层和 SOLID 问题。SOLID 检查必须遵守 [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)，逐项记录 SRP、OCP、LSP、ISP、DIP 的适用性、代码证据、测试/检查证据和阻塞原因。代码审查可提出问题，但不擅自扩大实现范围。
 
 函数审查必须逐项记录：是否足够短小、是否只做一件事、语句是否处于同一抽象层级、函数排列是否逐层下降、名称是否描述职责、参数数量是否合理、是否存在重复逻辑。无法从代码和测试证据证明时，必须标记为待补或阻塞。
 
@@ -114,11 +114,11 @@ description: 负责嵌入式项目的代码质量检查与最终质量出口：�
 
 ## 参考资料
 
-- [`capability-index.md`](references/capability-index.md)
-- [`style-profile.md`](references/style-profile.md)
-- [`review-gates.md`](references/review-gates.md)
-- [`quality-code-review`](references/capabilities/quality-code-review/GUIDE.md)
-- [`quality-format-check`](references/capabilities/quality-format-check/GUIDE.md)
-- [`quality-static-analysis`](references/quality-static-analysis/GUIDE.md)
-- [`quality-mode-contract.md`](references/quality-mode-contract.md)
+- [`capability-index.md`](./references/capability-index.md)
+- [`style-profile.md`](./references/style-profile.md)
+- [`review-gates.md`](./references/review-gates.md)
+- [`quality-code-review`](./references/capabilities/quality-code-review/GUIDE.md)
+- [`quality-format-check`](./references/capabilities/quality-format-check/GUIDE.md)
+- [`quality-static-analysis`](./references/quality-static-analysis/GUIDE.md)
+- [`quality-mode-contract.md`](./references/quality-mode-contract.md)
 - [`solid-code-gate.md`](../../workflow/workflow-review-gate/references/solid-code-gate.md)

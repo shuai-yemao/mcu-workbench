@@ -414,7 +414,7 @@ typedef struct
 
 ## 统一嵌入式源码排版 profile
 
-插件默认使用 [`quality-format-check/.clang-format`](capabilities/quality-format-check/.clang-format)。
+插件默认使用 [`quality-format-check/.clang-format`](./capabilities/quality-format-check/.clang-format)。
 该 profile 将审查过的 FreeRTOS/内核源码排版特征作为所有插件生成代码的统一基线；它不把
 FreeRTOS 的注释内容、命名方式、函数设计或内核语义提升为额外规则。
 

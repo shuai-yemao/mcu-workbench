@@ -412,4 +412,4 @@ Iron rules:
 - If a `boundary` entry carries `pending_decision`, `next` is advisory only. The user's branch choice happens AFTER `resume_from_passport=<hash>` in the fresh session, or right after an in-session `continue` in non-SR modes, never in the reset checkpoint itself. The orchestrator re-prompts the user in the new session before transitioning to any `Stage N+1`. The `resume` entry records the chosen branch via `chosen_branch`. Actual routing comes from the matched option's `next_stage`/`next_mode`; `next` is a fallback default only.
 - `pending_decision` stays authoritative for the reset path when the run ledger (#887) also records the checkpoint. The ledger's opened entry names the boundary hash (`reset_boundary_hash`), and the answer closes both: the `resume` entry that consumes that hash records it, and so does the ledger's closing entry for the same checkpoint.
 
-See [`passport_as_reset_boundary.md`](passport_as_reset_boundary.md) for the full protocol.
+See [`passport_as_reset_boundary.md`](./passport_as_reset_boundary.md) for the full protocol.

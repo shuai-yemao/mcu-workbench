@@ -280,5 +280,5 @@ for (uint8_t addr = 0x01; addr < 0x7F; addr++) {
 
 ## 参考资料
 
-- [references/i2c-hal-state-machine.md](references/i2c-hal-state-machine.md) — HAL I2C 状态机与 Bug 汇总
-- [references/i2c-errata-workarounds.md](references/i2c-errata-workarounds.md) — STM32 I2C Errata 与解决方案
+- [./references/i2c-hal-state-machine.md](references/i2c-hal-state-machine.md) — HAL I2C 状态机与 Bug 汇总
+- [./references/i2c-errata-workarounds.md](references/i2c-errata-workarounds.md) — STM32 I2C Errata 与解决方案

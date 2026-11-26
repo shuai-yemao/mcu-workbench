@@ -9,7 +9,7 @@ const { mapMarkdownLinks } = require('./markdown-links');
 const sha = value => crypto.createHash('sha256').update(value).digest('hex');
 const slash = value => value.split(path.sep).join('/');
 const inside = (root, target) => { const rel=path.relative(root,target); return rel===''||(!rel.startsWith(`..${path.sep}`)&&rel!=='..'&&!path.isAbsolute(rel)); };
-const filesUnder = root => !fs.existsSync(root)?[]:fs.readdirSync(root,{withFileTypes:true}).flatMap(e=>{const f=path.join(root,e.name);return e.isDirectory()?filesUnder(f):e.isFile()?[f]:[];}).sort();
+const filesUnder = root => !fs.existsSync(root)?[]:fs.readdirSync(root,{withFileTypes:true}).flatMap(e=>{if(e.isDirectory()&&e.name==='.git')return [];const f=path.join(root,e.name);return e.isDirectory()?filesUnder(f):e.isFile()?[f]:[];}).sort();
 
 function rewriteMarkdown(content, source, target, skills, pluginRoot, projectRoot, sharedSources) {
   return mapMarkdownLinks(content, ({ target: raw }) => {
@@ -41,9 +41,17 @@ function rewriteMarkdown(content, source, target, skills, pluginRoot, projectRoo
 function loadBaseline(projectRoot, explicit) {
   if(explicit) return explicit instanceof Map?explicit:new Map(Object.entries(explicit));
   const file=path.join(projectRoot,'codex/plugin-split/artifacts/workflow/baseline/skill-files.json');
-  if(!fs.existsSync(file)) return new Map();
-  const baseline=JSON.parse(fs.readFileSync(file,'utf8'));
-  return new Map(baseline.files.map(entry=>[entry.path,entry.sha256]));
+  const hashes=new Map();
+  if(fs.existsSync(file)){
+    const baseline=JSON.parse(fs.readFileSync(file,'utf8'));
+    for(const entry of baseline.files) hashes.set(entry.path,entry.sha256);
+  }
+  const external=path.join(projectRoot,'codex/plugin-split/artifacts/external-skill-ownership/baseline-v1.5.json');
+  if(fs.existsSync(external)){
+    const baseline=JSON.parse(fs.readFileSync(external,'utf8'));
+    for(const skill of baseline.items||[]) for(const entry of skill.rootFiles||[]) hashes.set(entry.path,entry.sha256);
+  }
+  return hashes;
 }
 
 function syncSkillProjections(options={}) {
@@ -108,9 +116,27 @@ function syncSkillProjections(options={}) {
     }
   }else{
     const managedPaths=new Set(managed.keys());
+    const previousSources=new Set((previous.files||[]).map(entry=>entry.source.split('/').slice(0,4).join('/')));
     for(const file of generated){
       const rel=slash(path.relative(projectRoot,file.target));
-      if(fs.existsSync(file.target)&&!managedPaths.has(rel)) throw new Error(`Refusing to overwrite unmarked projection: ${rel}`);
+      if(fs.existsSync(file.target)&&!managedPaths.has(rel)){
+        const skill=skills.find(item=>inside(item.target,file.target));
+        const sourceRoot=slash(path.relative(projectRoot,skill.source));
+        if(previousSources.has(sourceRoot)) throw new Error(`Refusing to overwrite unmarked projection: ${rel}`);
+      }
+    }
+    for(const [skill,expected] of expectedBySkill){
+      const sourceRoot=slash(path.relative(projectRoot,skill.source));
+      if(previousSources.has(sourceRoot)) continue;
+      const existing=filesUnder(skill.target);
+      const expectedSet=new Set(expected.map(file=>file.target));
+      if(existing.some(file=>!expectedSet.has(file))||existing.length>expected.length) throw new Error(`Refusing adoption with unrecognized files: ${slash(path.relative(projectRoot,skill.target))}`);
+      for(const file of expected){
+        if(!fs.existsSync(file.target)) continue;
+        const current=sha(fs.readFileSync(file.target));
+        const rel=slash(path.relative(projectRoot,file.target));
+        if(current!==file.sha256&&current!==baseline.get(rel)) throw new Error(`Refusing adoption because bytes differ from baseline and generated projection: ${rel}`);
+      }
     }
   }
   if(previous&&generated.every(file=>managed.get(slash(path.relative(projectRoot,file.target)))===file.sha256&&fs.existsSync(file.target)&&sha(fs.readFileSync(file.target))===file.sha256)) return {status:'unchanged',fileCount:generated.length,marker};

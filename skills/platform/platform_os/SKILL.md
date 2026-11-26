@@ -82,8 +82,8 @@ Notification、Stream Buffer、Message Buffer 和取消语义不能从某个 RTO
 6. 用 Fake/Mock 或主机检查验证公共契约；将交叉编译、目标运行和实物证据
    分开记录。
 
-接口验收矩阵见 [`platform-os-contract.md`](references/platform-os-contract.md)；
-FreeRTOS 案例见 [`platform-os-freertos-case.md`](references/platform-os-freertos-case.md)。
+接口验收矩阵见 [`platform-os-contract.md`](./references/platform-os-contract.md)；
+FreeRTOS 案例见 [`platform-os-freertos-case.md`](./references/platform-os-freertos-case.md)。
 
 ## 禁止
 

@@ -9,7 +9,7 @@ description: 设计、实现、审查和移植位于 BSP Driver 之上的嵌入�
 
 把多个 Driver 实例组织成上层可用的服务。旧名称中的 “Handler” 指同一职责；统一命名后使用 Service，强调它管理实例、调度和资源，不重复实现设备协议，也不绕过 Driver 访问硬件。
 
-先读取目标工程的 Handler 头文件、实现文件、Driver 公共接口和 RTOS/Adapter 接口。AHT21 的多实例模式见 [references/aht21-handler-pattern.md](references/aht21-handler-pattern.md)。
+先读取目标工程的 Handler 头文件、实现文件、Driver 公共接口和 RTOS/Adapter 接口。AHT21 的多实例模式见 [./references/aht21-handler-pattern.md](references/aht21-handler-pattern.md)。
 
 ## 执行流程
 

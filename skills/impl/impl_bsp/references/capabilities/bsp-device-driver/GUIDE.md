@@ -9,7 +9,7 @@ description: 设计、实现、审查和移植嵌入式 BSP 外设 Driver，覆�
 
 把一个具体外设封装成与 MCU 平台解耦的 Driver。Driver 只处理设备协议、设备状态和公开行为；GPIO、I2C、SPI、时间、RTOS 和中断由注入的接口提供。
 
-先读取目标工程的 `AGENTS.md`、Driver 头文件、实现文件、配置头文件和现有 Adapter。AHT21 的接口提炼见 [references/aht21-driver-pattern.md](references/aht21-driver-pattern.md)，它是实例，不是固定 API。
+先读取目标工程的 `AGENTS.md`、Driver 头文件、实现文件、配置头文件和现有 Adapter。AHT21 的接口提炼见 [./references/aht21-driver-pattern.md](references/aht21-driver-pattern.md)，它是实例，不是固定 API。
 
 ## 执行流程
 
