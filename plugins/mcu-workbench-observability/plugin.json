@@ -1,0 +1,12 @@
+{
+  "id": "mcu-workbench-observability",
+  "version": "1.0.0",
+  "description": "MCU Workbench 调试与运行时观测插件。",
+  "skills": "./skills/",
+  "hosts": ["codex", "cursor"],
+  "compatibility": {
+    "aggregatePlugin": "mcu-workbench",
+    "lifecycle": "explicit",
+    "hotUnload": false
+  }
+}

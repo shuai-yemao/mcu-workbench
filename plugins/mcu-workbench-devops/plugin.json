@@ -1,0 +1,12 @@
+{
+  "id": "mcu-workbench-devops",
+  "version": "1.0.0",
+  "description": "MCU Workbench 构建、链接、烧录、Git 和发布工具 Skills。",
+  "skills": "./skills/",
+  "hosts": ["codex", "cursor"],
+  "compatibility": {
+    "aggregatePlugin": "mcu-workbench",
+    "lifecycle": "explicit",
+    "hotUnload": false
+  }
+}

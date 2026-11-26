@@ -1,0 +1,300 @@
+{
+  "schemaVersion": "1.0.0",
+  "plugin": "mcu-workbench-architecture",
+  "skills": [
+    {
+      "id": "app-architecture",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/app-architecture",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/app-architecture",
+      "projectionPath": "skills/app/app-architecture"
+    },
+    {
+      "id": "platform_mcu",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/platform_mcu",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/platform_mcu",
+      "projectionPath": "skills/platform/platform_mcu"
+    },
+    {
+      "id": "platform_os",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/platform_os",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/platform_os",
+      "projectionPath": "skills/platform/platform_os"
+    },
+    {
+      "id": "platform_bsp",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/platform_bsp",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/platform_bsp",
+      "projectionPath": "skills/platform/platform_bsp"
+    },
+    {
+      "id": "platform_common",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/platform_common",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/platform_common",
+      "projectionPath": "skills/platform/platform_common"
+    },
+    {
+      "id": "platform_middleware",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/platform_middleware",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/platform_middleware",
+      "projectionPath": "skills/platform/platform_middleware"
+    },
+    {
+      "id": "impl_os",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/impl_os",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/impl_os",
+      "projectionPath": "skills/impl/impl_os"
+    },
+    {
+      "id": "impl_mcu",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/impl_mcu",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/impl_mcu",
+      "projectionPath": "skills/impl/impl_mcu"
+    },
+    {
+      "id": "impl_board",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/impl_board",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/impl_board",
+      "projectionPath": "skills/impl/impl_board"
+    },
+    {
+      "id": "impl_bsp",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/impl_bsp",
+      "projectionPath": "skills/impl/impl_bsp"
+    },
+    {
+      "id": "impl_middleware",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/impl_middleware",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/impl_middleware",
+      "projectionPath": "skills/impl/impl_middleware"
+    },
+    {
+      "id": "service_system",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_system",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_system",
+      "projectionPath": "skills/service/service_system"
+    },
+    {
+      "id": "service_battery",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_battery",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_battery",
+      "projectionPath": "skills/service/service_battery"
+    },
+    {
+      "id": "service_backlight",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_backlight",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_backlight",
+      "projectionPath": "skills/service/service_backlight"
+    },
+    {
+      "id": "service_calendar",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_calendar",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_calendar",
+      "projectionPath": "skills/service/service_calendar"
+    },
+    {
+      "id": "service_diagnosis",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_diagnosis",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_diagnosis",
+      "projectionPath": "skills/service/service_diagnosis"
+    },
+    {
+      "id": "service_log",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_log",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_log",
+      "projectionPath": "skills/service/service_log"
+    },
+    {
+      "id": "service_ota",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_ota",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_ota",
+      "projectionPath": "skills/service/service_ota"
+    },
+    {
+      "id": "service_power",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_power",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_power",
+      "projectionPath": "skills/service/service_power"
+    },
+    {
+      "id": "service_sensor",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_sensor",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_sensor",
+      "projectionPath": "skills/service/service_sensor"
+    },
+    {
+      "id": "service_storage",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_storage",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_storage",
+      "projectionPath": "skills/service/service_storage"
+    },
+    {
+      "id": "service_watchdog",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/service_watchdog",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/service_watchdog",
+      "projectionPath": "skills/service/service_watchdog"
+    },
+    {
+      "id": "vendor_mcu",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_mcu",
+      "projectionPath": "skills/vendor/vendor_mcu"
+    },
+    {
+      "id": "vendor_rtos",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_rtos",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_rtos",
+      "projectionPath": "skills/vendor/vendor_rtos"
+    },
+    {
+      "id": "vendor_lvgl",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl",
+      "projectionPath": "skills/vendor/vendor_lvgl"
+    },
+    {
+      "id": "vendor_stack",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_stack",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_stack",
+      "projectionPath": "skills/vendor/vendor_stack"
+    },
+    {
+      "id": "vendor_fatfs",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_fatfs",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_fatfs",
+      "projectionPath": "skills/vendor/vendor_fatfs"
+    },
+    {
+      "id": "vendor_fal",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_fal",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_fal",
+      "projectionPath": "skills/vendor/vendor_fal"
+    },
+    {
+      "id": "vendor_flashdb",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_flashdb",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_flashdb",
+      "projectionPath": "skills/vendor/vendor_flashdb"
+    },
+    {
+      "id": "vendor_letter_shell",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_letter_shell",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_letter_shell",
+      "projectionPath": "skills/vendor/vendor_letter_shell"
+    },
+    {
+      "id": "vendor_algorithm",
+      "kind": "canonical",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor_algorithm",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor_algorithm",
+      "projectionPath": "skills/vendor/vendor_algorithm"
+    },
+    {
+      "id": "chip-driver-manual",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/chip-driver-manual",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/chip-driver-manual",
+      "projectionPath": "skills/chip-driver-manual"
+    },
+    {
+      "id": "chip-resource-finder",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/chip-resource-finder",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/chip-resource-finder",
+      "projectionPath": "skills/chip-resource-finder"
+    },
+    {
+      "id": "embedded-architecture-planner",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/embedded-architecture-planner",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/embedded-architecture-planner",
+      "projectionPath": "skills/embedded-architecture-planner"
+    },
+    {
+      "id": "embedded-coding-standard",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/embedded-coding-standard",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/embedded-coding-standard",
+      "projectionPath": "skills/embedded-coding-standard"
+    },
+    {
+      "id": "embedded-minimal-project-builder",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/embedded-minimal-project-builder",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/embedded-minimal-project-builder",
+      "projectionPath": "skills/embedded-minimal-project-builder"
+    },
+    {
+      "id": "embedded-prd-to-logic",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/embedded-prd-to-logic",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/embedded-prd-to-logic",
+      "projectionPath": "skills/embedded-prd-to-logic"
+    },
+    {
+      "id": "prd-to-hardware-solution",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/prd-to-hardware-solution",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/prd-to-hardware-solution",
+      "projectionPath": "skills/prd-to-hardware-solution"
+    },
+    {
+      "id": "schematic-pinmap-analyzer",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer",
+      "projectionPath": "skills/schematic-pinmap-analyzer"
+    },
+    {
+      "id": "embedded-project-scaffold",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/embedded-project-scaffold",
+      "projectionPath": "skills/embedded-project-scaffold"
+    },
+    {
+      "id": "parsed-chip-datasheet",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet",
+      "projectionPath": "skills/parsed-chip-datasheet"
+    },
+    {
+      "id": "vendor-minimal-firmware",
+      "kind": "external",
+      "sourcePath": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware",
+      "pluginPath": "plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware",
+      "projectionPath": "skills/vendor-minimal-firmware"
+    }
+  ]
+}

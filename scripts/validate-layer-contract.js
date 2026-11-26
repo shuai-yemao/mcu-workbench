@@ -1,0 +1,1062 @@
+#!/usr/bin/env node
+
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { spawnSync } = require('child_process');
+const {
+  generateBspDriver,
+  generateCorePeripheral,
+  normalizeCorePeripheral,
+  normalizeDevice,
+  normalizeDeviceType
+} = require('../lib/generator');
+
+const STANDARD_HEADERS = new Set(['stdbool.h', 'stddef.h', 'stdint.h', 'inttypes.h', 'limits.h']);
+
+// Platform Common 是共享基础层：其类型/错误码/宏出口是 Model 按 skill 规范
+// （platform_common/SKILL.md 输出契约）必须 include 的依赖，不属于越层泄漏。
+// 仍禁止 wrapper include platform_mcu/platform_bsp/impl_*/vendor/HAL/RTOS 头。
+const PLATFORM_COMMON_HEADERS = new Set(['platform_type.h', 'platform_error.h', 'platform_def.h']);
+const FORMAT_CONFIG = path.join(
+  __dirname,
+  '..',
+  'skills',
+  'tools',
+  'tools-quality',
+  'references',
+  'capabilities',
+  'quality-format-check',
+  '.clang-format'
+);
+const FORMAT_VALIDATION_CONFIG = path.join(
+  __dirname,
+  '..',
+  'skills',
+  'tools',
+  'tools-quality',
+  'references',
+  'capabilities',
+  'quality-format-check',
+  '.clang-format-validation'
+);
+
+function maskCommentsAndStrings(content) {
+  let result = '';
+  let index = 0;
+  let state = 'code';
+  while (index < content.length) {
+    const current = content[index];
+    const next = content[index + 1];
+    if (state === 'code' && current === '/' && next === '*') {
+      result += '  ';
+      index += 2;
+      state = 'block';
+    } else if (state === 'code' && current === '/' && next === '/') {
+      result += '  ';
+      index += 2;
+      state = 'line';
+    } else if (state === 'code' && (current === '"' || current === "'")) {
+      result += ' ';
+      index += 1;
+      state = current === '"' ? 'string' : 'char';
+    } else if (state === 'block' && current === '*' && next === '/') {
+      result += '  ';
+      index += 2;
+      state = 'code';
+    } else if ((state === 'string' || state === 'char') && current === '\\') {
+      result += '  ';
+      index += 2;
+    } else if ((state === 'string' && current === '"') || (state === 'char' && current === "'")) {
+      result += ' ';
+      index += 1;
+      state = 'code';
+    } else {
+      result += (state === 'code' || current === '\n' || current === '\r') ? current : ' ';
+      if (state === 'line' && current === '\n') state = 'code';
+      index += 1;
+    }
+  }
+  return result;
+}
+
+function directIncludes(content) {
+  return [...content.matchAll(/^\s*#\s*include\s*[<"]([^>"]+)[>"]/gm)].map((match) => match[1]);
+}
+
+function findFunctionDefinitions(content) {
+  const code = maskCommentsAndStrings(content);
+  const definitions = [];
+  const expression = /(^|\n)\s*((?:static\s+)?[A-Za-z_][\w\s*]*?)\b([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{/g;
+  for (const match of code.matchAll(expression)) {
+    const prefix = match[2];
+    const start = (match.index || 0) + match[0].lastIndexOf(match[3]);
+    let cursor = code.indexOf('{', start);
+    let depth = 0;
+    for (; cursor < code.length; cursor += 1) {
+      if (code[cursor] === '{') depth += 1;
+      else if (code[cursor] === '}') {
+        depth -= 1;
+        if (depth === 0) break;
+      }
+    }
+    definitions.push({
+      name: match[3],
+      isStatic: /\bstatic\b/.test(prefix),
+      body: code.slice(code.indexOf('{', start) + 1, cursor)
+    });
+  }
+  return definitions;
+}
+
+function splitFunctionParameters(parameters) {
+  const result = [];
+  let start = 0;
+  let depth = 0;
+  for (let index = 0; index < parameters.length; index += 1) {
+    if (parameters[index] === '(') depth += 1;
+    if (parameters[index] === ')') depth -= 1;
+    if (parameters[index] === ',' && depth === 0) {
+      result.push(parameters.slice(start, index).trim());
+      start = index + 1;
+    }
+  }
+  const last = parameters.slice(start).trim();
+  if (last) result.push(last);
+  return result.filter((parameter) => parameter !== 'void' && parameter !== '...');
+}
+
+function parameterName(parameter) {
+  const match = parameter.replace(/\s*=.*$/, '').trim().match(/([A-Za-z_]\w*)(?:\s*\[[^\]]*\])?$/);
+  return match ? match[1] : null;
+}
+
+function findFunctionComments(content, start) {
+  const prefix = content.slice(0, start);
+  const commentEnd = prefix.lastIndexOf('*/');
+  if (commentEnd < 0) return '';
+  const afterComment = prefix.slice(commentEnd + 2);
+  if (/[^\s]/.test(afterComment)) return '';
+  const commentStart = prefix.lastIndexOf('/**', commentEnd);
+  if (commentStart < 0 || prefix.lastIndexOf('/*', commentEnd) !== commentStart) return '';
+  return prefix.slice(commentStart, commentEnd + 2);
+}
+
+function findFunctionContracts(content) {
+  const code = maskCommentsAndStrings(content);
+  const lines = code.split('\n');
+  const offsets = [];
+  let offset = 0;
+  for (const line of lines) {
+    offsets.push(offset);
+    offset += line.length + 1;
+  }
+  const contracts = [];
+  for (let lineIndex = 0; lineIndex < lines.length; lineIndex += 1) {
+    const line = lines[lineIndex];
+    const openParen = line.indexOf('(');
+    if (openParen < 0) continue;
+    const prefix = line.slice(0, openParen);
+    if (/^[ \t]*typedef\b/.test(line) || /\(\s*\*/.test(line)) continue;
+    const nameMatch = prefix.match(/([A-Za-z_]\w*)[ \t]*$/);
+    if (!nameMatch) continue;
+    const name = nameMatch[1];
+    const returnType = prefix.slice(0, nameMatch.index).trim();
+    if (/^\s*#/.test(line)
+      || !returnType || /\breturn\b|->|\.|[|&!+\-/=%<>]/.test(returnType)) continue;
+    let signature = line;
+    let endLine = lineIndex;
+    while (endLine + 1 < lines.length && endLine - lineIndex < 20
+      && !/\)\s*[;{]\s*$/.test(signature)) {
+      endLine += 1;
+      signature += `\n${lines[endLine]}`;
+    }
+    const terminatorMatch = signature.match(/\)\s*([;{])\s*$/);
+    if (!terminatorMatch) continue;
+    if (['if', 'for', 'while', 'switch', 'return', 'void'].includes(name)
+      || /\breturn\s+[A-Za-z_]\w*\s*\(/.test(line)
+      || /\(\s*\*\s*\w+\s*\)/.test(line)) continue;
+    const lineStart = offsets[lineIndex] + line.search(/\S/);
+    const nameStart = offsets[lineIndex] + prefix.lastIndexOf(name);
+    const terminator = terminatorMatch[1];
+    const openBrace = terminator === '{'
+      ? offsets[endLine] + lines[endLine].lastIndexOf('{')
+      : -1;
+    let body = '';
+    if (openBrace >= 0) {
+      let depth = 0;
+      let cursor = openBrace;
+      for (; cursor < code.length; cursor += 1) {
+        if (code[cursor] === '{') depth += 1;
+        else if (code[cursor] === '}') {
+          depth -= 1;
+          if (depth === 0) break;
+        }
+      }
+      body = content.slice(openBrace + 1, cursor);
+    }
+    const closeParen = signature.lastIndexOf(')');
+    contracts.push({
+      name,
+      isStatic: /\bstatic\b/.test(code.slice(lineStart, nameStart)),
+      start: lineStart,
+      returnType: code.slice(lineStart, nameStart).trim(),
+      parameters: signature.slice(openParen + 1, closeParen),
+      body,
+      comment: findFunctionComments(content, lineStart),
+      isDefinition: terminator === '{'
+    });
+    lineIndex = endLine;
+  }
+  return contracts;
+}
+
+function isPrivateHeaderPath(relative) {
+  const normalized = String(relative || '').replace(/\\/g, '/').toLowerCase();
+  const baseName = path.posix.basename(normalized);
+  return /(?:^|\/)(?:private|priv|internal)(?:\/|$)/.test(normalized)
+    || /(?:^|[-_])(?:private|priv|internal)(?:[-_.]|$)/.test(baseName);
+}
+
+function isCoreFunctionContract(contract) {
+  const source = `${contract.name} ${contract.parameters} ${contract.body}`;
+  const bodyLines = contract.body
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !/^\/\//.test(line) && !/^\/\*/.test(line));
+  const controlFlowCount = (source.match(/\b(?:if|for|while|switch|case|return)\b/g) || []).length;
+  const callCount = (contract.body.match(/\b[A-Za-z_]\w*\s*\(/g) || []).length;
+  const riskyOperation = /(?:dma|irq|isr|callback|queue|mutex|semaphore|timeout|retry|state|error|cleanup|register|volatile)/i.test(source);
+  const coreName = /(?:^|_)(?:init|deinit|register|unregister|process|dispatch|notify|transfer|flush|start|stop|cancel|handle|recover|reset|configure|bind|open|close|destroy|create|read|write|get|set)(?:_|$)/i.test(contract.name);
+
+  return coreName || bodyLines.length >= 8 || controlFlowCount >= 3 || callCount >= 3 || riskyOperation;
+}
+
+function requiresFunctionDocumentation(contract, relative) {
+  if (/\.(?:h|hpp)$/i.test(relative)) return !isPrivateHeaderPath(relative);
+  return /\.c$/i.test(relative) && contract.isDefinition && isCoreFunctionContract(contract);
+}
+
+function validateFunctionInternalCommentAlignment(file, errors) {
+  const lines = file.content.split(/\r?\n/).map((line) => expandTabs(line));
+  const codeLines = maskCommentsAndStrings(file.content).split(/\r?\n/).map((line) => expandTabs(line));
+  let braceDepth = 0;
+  let group = [];
+  const flush = () => {
+    if (group.length > 1) {
+      const commentColumn = group[0].commentColumn;
+      const commentEndColumn = group[0].commentEndColumn;
+      for (const item of group) {
+        if (item.commentColumn !== commentColumn || item.commentEndColumn !== commentEndColumn) {
+          addError(errors, 'LAYER_FORMAT_FUNCTION_COMMENT_ALIGNMENT', file.relative,
+            `Consecutive function comments must align both sides at line ${item.line + 1}.`);
+        }
+      }
+    }
+    group = [];
+  };
+
+  lines.forEach((line, index) => {
+    if (braceDepth === 0) {
+      flush();
+      const code = codeLines[index] || '';
+      braceDepth += (code.match(/{/g) || []).length;
+      braceDepth -= (code.match(/}/g) || []).length;
+      braceDepth = Math.max(0, braceDepth);
+      return;
+    }
+    const match = line.match(/^(\s*)\/(\*(?!\*)\s*[^*]*?\s*\*\/\s*)$/);
+    if (match) {
+      const commentColumn = match[1].length;
+      const commentEndColumn = line.lastIndexOf('*/') + 2;
+      if (group.length > 0 && group.at(-1).commentColumn !== commentColumn) flush();
+      group.push({ line: index, commentColumn, commentEndColumn });
+    } else {
+      flush();
+    }
+    const code = codeLines[index] || '';
+    braceDepth += (code.match(/{/g) || []).length;
+    braceDepth -= (code.match(/}/g) || []).length;
+    braceDepth = Math.max(0, braceDepth);
+  });
+  flush();
+}
+
+function expandTabs(line, tabWidth = 4) {
+  let column = 0;
+  let result = '';
+  for (const character of line) {
+    if (character === '\t') {
+      const spaces = tabWidth - (column % tabWidth);
+      result += ' '.repeat(spaces);
+      column += spaces;
+    } else {
+      result += character;
+      column += 1;
+    }
+  }
+  return result;
+}
+
+function validateCommentCompleteness(files, errors, { strictGeneratedStyle = true } = {}) {
+  for (const file of Object.values(files)) {
+    if (!strictGeneratedStyle && !file.content.includes('@version')) continue;
+    for (const tag of ['Copyright', 'All Rights Reserved.', '@file', '@brief', '@author', '@version']) {
+      if (!file.content.includes(tag)) {
+        addError(errors, 'LAYER_FILE_DOC', file.relative,
+          `Generated file header must contain ${tag}.`);
+      }
+    }
+    for (const [pattern, description] of [
+      [/^ \* Copyright \(C\) 2024 EternalChip, Inc\.\(Gmbh\) or its affiliates\.$/m, 'the EternalChip copyright line'],
+      [/^ \* @author Jack \| R&D Dept\. \| EternalChip$/m, 'the fixed EternalChip author line']
+    ]) {
+      if (!pattern.test(file.content)) {
+        addError(errors, 'LAYER_FILE_DOC', file.relative,
+          `Generated file header must contain ${description}.`);
+      }
+    }
+    if (!/^ \* @par dependencies$/m.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DOC', file.relative,
+        'Generated file header must contain the fixed @par dependencies field.');
+    }
+    if (!/^ \* @note 1 tab == 4 spaces\.$/m.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DOC', file.relative,
+        'Generated file header must contain the fixed indentation note.');
+    }
+    const contracts = findFunctionContracts(file.content);
+    for (const contract of contracts) {
+      const requiresDocumentation = requiresFunctionDocumentation(contract, file.relative);
+      if (!requiresDocumentation) continue;
+      if (!contract.comment || !/@brief\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_DOC', file.relative,
+          `Function ${contract.name} must have a Doxygen @brief comment.`);
+        continue;
+      }
+      for (const parameter of splitFunctionParameters(contract.parameters)) {
+        const name = parameterName(parameter);
+        if (!name) continue;
+        if (!new RegExp(`@param\\s+[^\\n]*\\b${name}\\b`).test(contract.comment)) {
+          addError(errors, 'LAYER_FUNCTION_PARAM_DOC', file.relative,
+            `Function ${contract.name} must document parameter ${name} with @param.`);
+        }
+      }
+      if (!/\bvoid\b/.test(contract.returnType) || /\*/.test(contract.returnType)) {
+        if (!/@retval\b/.test(contract.comment)) {
+          addError(errors, 'LAYER_FUNCTION_RETVAL_DOC', file.relative,
+            `Function ${contract.name} must document its return value with @retval.`);
+        }
+      }
+      const source = `${contract.name} ${contract.parameters} ${contract.body}`;
+      if (/from_isr|\b(?:irq|isr)\b/i.test(source) && !/@warning\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_WARNING_DOC', file.relative,
+          `Function ${contract.name} must document its ISR restriction with @warning.`);
+      }
+      if (/timeout|transfer|flush|\block\b|\bunlock\b/i.test(source) && !/@note\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_NOTE_DOC', file.relative,
+          `Function ${contract.name} must document blocking or timeout behavior with @note.`);
+      }
+      if (/dma/i.test(source) && !/@warning\b/.test(contract.comment)) {
+        addError(errors, 'LAYER_FUNCTION_WARNING_DOC', file.relative,
+          `Function ${contract.name} must document DMA prerequisites with @warning.`);
+      }
+    }
+    const typePattern = /typedef\s+(?:enum|struct)\s*\{/g;
+    for (const match of file.content.matchAll(typePattern)) {
+      const preceding = file.content.slice(0, match.index);
+      const comment = preceding.match(/\/\*[\s\S]*?\*\/\s*$/);
+      if (!comment || !/@brief\b/.test(comment[0])) {
+        addError(errors, 'LAYER_TYPE_DOC', file.relative, 'Enum or struct typedef must have a Doxygen @brief comment.');
+      }
+    }
+    const lines = file.content.split(/\r?\n/);
+    lines.forEach((line, index) => {
+      if (!/^\s*#define\s+[A-Z][A-Z0-9_]*\b/.test(line) || /_H\b/.test(line)) return;
+      const previous = lines[index - 1] || '';
+      const sectionPattern = /(?:Includes|Public|Private|Functions|Types|Defines|State|Composition|包含文件|公开类型|公开宏定义|公开函数|私有宏定义|私有类型|私有状态|私有组合对象|私有函数)/;
+      const isSectionComment = /^\s*\/\*\s*.*(?: -+)?\s*\*\/$/.test(previous)
+        && sectionPattern.test(previous);
+      const subsectionPattern = /(?:返回值|超时值|事件|配置|默认值)\s+-+\s*\*\/$/;
+      const isSubsectionComment = /^\s*\/\*\s*/.test(previous)
+        && subsectionPattern.test(previous);
+      if (!/^\s*\/\*/.test(previous) || isSectionComment || isSubsectionComment) {
+        addError(errors, 'LAYER_MACRO_DOC', file.relative,
+          `Macro on line ${index + 1} must have a preceding block comment.`);
+      }
+    });
+  }
+}
+
+function createLayerError(message) {
+  const error = new Error(message);
+  error.code = 'LAYER';
+  return error;
+}
+
+function expectedPaths({ core, deviceType, device }) {
+  const type = normalizeDeviceType(deviceType);
+  const normalizedDevice = normalizeDevice(device);
+  const driverRoot = `04_Impl/impl_bsp/impl_bsp_hal_driver/${normalizedDevice.directory}`;
+  const handleRoot = `04_Impl/impl_bsp/impl_bsp_handle/${type}`;
+  const portRoot = '04_Impl/impl_bsp/impl_bsp_port';
+  const modelRoot = `03_Platform/platform_bsp/${type}`;
+  return {
+    modelHeader: `${modelRoot}/Inc/platform_${type}_model.h`,
+    modelSource: `${modelRoot}/Src/platform_${type}_model.c`,
+    coreHeader: `03_Platform/platform_mcu/Inc/platform_${core}.h`,
+    coreSource: `03_Platform/platform_mcu/Src/platform_${core}.c`,
+    driverConfig: `${driverRoot}/Inc/impl_${normalizedDevice.stem}_config.h`,
+    driverHeader: `${driverRoot}/Inc/impl_${normalizedDevice.stem}_driver.h`,
+    driverSource: `${driverRoot}/Src/impl_${normalizedDevice.stem}_driver.c`,
+    handleHeader: `${handleRoot}/Inc/impl_${type}_handle.h`,
+    handleSource: `${handleRoot}/Src/impl_${type}_handle.c`,
+    portHeader: `${portRoot}/Inc/impl_${type}_handle_port.h`,
+    portSource: `${portRoot}/Src/impl_${type}_handle_port.c`,
+    wrapperHeader: `${modelRoot}/Inc/platform_${type}_wrapper.h`,
+    wrapperSource: `${modelRoot}/Src/platform_${type}_wrapper.c`
+  };
+}
+
+const SLICE_ROLES = {
+  model: ['modelHeader', 'modelSource'],
+  wrapper: ['wrapperHeader', 'wrapperSource'],
+  driver: ['driverConfig', 'driverHeader', 'driverSource'],
+  handle: ['handleHeader', 'handleSource'],
+  port: ['portHeader', 'portSource'],
+  all: null
+};
+
+function filterSlice(paths, slice) {
+  if (!slice || slice === 'all') {
+    return Object.fromEntries(Object.entries(paths).filter(([role]) => !role.startsWith('wrapper')));
+  }
+  const roles = SLICE_ROLES[slice];
+  if (!roles) throw createLayerError(`Unknown slice: ${slice}. Expected model, driver, handle, port, or all.`);
+  return Object.fromEntries(Object.entries(paths).filter(([role]) => roles.includes(role)));
+}
+
+function readSlice(root, paths, errors) {
+  const files = {};
+  for (const [role, relative] of Object.entries(paths)) {
+    const absolute = path.join(root, relative);
+    if (!fs.existsSync(absolute)) {
+      errors.push({ ruleId: 'LAYER_REQUIRED_FILE', file: relative, message: 'Required generated file is missing.' });
+    } else {
+      files[role] = { relative, content: fs.readFileSync(absolute, 'utf8') };
+    }
+  }
+  return files;
+}
+
+function addError(errors, ruleId, file, message) {
+  errors.push({ ruleId, file, message });
+}
+
+function extractCommentText(content) {
+  const blocks = [];
+  const pattern = /\/\*[\s\S]*?\*\/|\/\/[^\n]*/g;
+  let match;
+  while ((match = pattern.exec(content))) blocks.push(match[0]);
+  return blocks.join('\n');
+}
+
+function validateCommentLanguage(files, errors, { rulePrefix = 'LAYER', skipRoles = ['coreHeader', 'coreSource'] } = {}) {
+  for (const [role, file] of Object.entries(files)) {
+    if (skipRoles.includes(role)) continue;
+    const englishOnly = [...file.content.matchAll(/\/\*[\s\S]*?\*\/|\/\/[^\n]*/g)].some((match) => {
+      const text = match[0].replace(/\/\*|\*\/|\/\//g, ' ').replace(/\s+/g, ' ').trim();
+      if (/^(?:Includes|Public|Private|Functions|Types|Defines|State|Composition|Composition Root|Functions|Defines)\b/.test(text)) return false;
+      if (/^[A-Z0-9_]+_H$/.test(text)) return false;
+      return /[A-Za-z]{2,}/.test(text) && !/[\u4e00-\u9fff]/.test(text);
+    });
+    if (englishOnly) {
+      addError(errors, `${rulePrefix}_COMMENT_LANGUAGE`, file.relative,
+        'Generated comments must be written in Chinese by default (style-profile rule 8). Use English only when the project explicitly requires it.');
+    }
+  }
+}
+
+function validateSections(files, errors, { strictGeneratedStyle = true } = {}) {
+  const sectionPattern = (label) => new RegExp(`\\/\\* ${label} -+ \\*\\/`);
+  const hasAnySection = (content, labels) => labels.some((label) => sectionPattern(label).test(content));
+  const requireSection = (file, labels, description) => {
+    if (!hasAnySection(file.content, labels)) {
+      addError(errors, 'LAYER_SOURCE_SECTION', file.relative,
+        `Generated file must contain ${description} section.`);
+    }
+  };
+
+  for (const file of Object.values(files)) {
+    if (!strictGeneratedStyle) {
+      if (!file.content.includes('@file')) {
+        addError(errors, 'LAYER_FILE_DOC', file.relative, 'Generated file must have an @file documentation header.');
+      }
+      if (file.relative.endsWith('.c')) {
+        for (const [english, chinese] of [['Includes', '包含文件'], ['Public Functions', '公开函数']]) {
+          const legacyPattern = new RegExp(`/\\* (?:${english}|${chinese})(?: -+)? \\*/`);
+          if (!legacyPattern.test(file.content)) {
+            addError(errors, 'LAYER_SOURCE_SECTION', file.relative,
+              `Generated source must contain ${chinese} section.`);
+          }
+        }
+      }
+      continue;
+    }
+    const code = maskCommentsAndStrings(file.content);
+    const contracts = findFunctionContracts(file.content);
+    const definitions = findFunctionDefinitions(file.content);
+    const hasTypes = /\btypedef\s+(?:enum|struct)\s*\{/.test(code);
+    const hasMacros = code.split(/\r?\n/).some((line) => {
+      const match = line.match(/^\s*#define\s+([A-Z][A-Z0-9_]*)\b/);
+      return Boolean(match && !/_H\b/.test(match[1]));
+    });
+    const hasPublicFunctions = contracts.some((contract) => !contract.isDefinition)
+      || definitions.some((definition) => !definition.isStatic);
+    const hasPrivateFunctions = contracts.some((contract) => contract.isDefinition)
+      && definitions.some((definition) => definition.isStatic);
+    const hasPrivateState = /^\s*static\s+(?![^\n]*\([^\n]*\))[^;{}]+;\s*$/m.test(code);
+
+    if (directIncludes(file.content).length > 0) requireSection(file, ['包含文件'], '包含文件');
+    if (hasTypes) requireSection(file, ['公开类型', '私有类型'], '类型');
+    if (hasMacros) requireSection(file, ['公开宏定义', '私有宏定义'], '宏定义');
+    if (hasPublicFunctions) requireSection(file, ['公开函数'], '公开函数');
+    if (hasPrivateFunctions) requireSection(file, ['私有函数'], '私有函数');
+    if (hasPrivateState) requireSection(file, ['私有状态', '私有组合对象'], '私有状态或组合对象');
+  }
+}
+
+const ALIGNMENT_KEYWORDS = new Set([
+  'case', 'do', 'else', 'for', 'goto', 'if', 'return', 'switch', 'while'
+]);
+
+function parseDeclarationAlignment(line) {
+  const code = line.replace(/\s*\/\*.*\*\/\s*$/, '');
+  const trimmed = code.trim();
+  if (!trimmed.endsWith(';') || /[(),{}]/.test(trimmed)) return null;
+  const firstToken = trimmed.match(/^([A-Za-z_]\w*)/)?.[1];
+  if (!firstToken || ALIGNMENT_KEYWORDS.has(firstToken)) return null;
+  const match = code.match(/([A-Za-z_]\w*)\s*(?:\[[^\]]*\])?\s*(=|);\s*$/);
+  if (!match || !/\s|\*/.test(code.slice(0, match.index))
+    || /->|\./.test(code.slice(0, match.index))) return null;
+  const assignment = match[2] === '=' ? code.indexOf('=', match.index) : -1;
+  return {
+    nameColumn: match.index,
+    operatorColumn: assignment >= 0 ? assignment : null
+  };
+}
+
+function parseAssignmentAlignment(line) {
+  if (/^\s*(?:#|(?:if|for|while|switch)\s*\()/.test(line)) return null;
+  const match = line.match(
+    /^(\s*)([^;{}()]+?)(\+=|-=|\*=|\/=|%=|<<=|>>=|&=|\^=|\|=|=(?!=))\s*[^;]*;\s*(?:\/\*.*\*\/)?$/
+  );
+  if (!match) return null;
+  return { operatorColumn: line.indexOf(match[3]) };
+}
+
+function parseEnumAlignment(line) {
+  const match = line.match(
+    /^\s*[A-Z][A-Z0-9_]*\s*=\s*[^,]+,?\s*(?:\/\*.*\*\/)?\s*$/
+  );
+  return match ? { operatorColumn: line.indexOf('=') } : null;
+}
+
+function parseTrailingCommentAlignment(line) {
+  const match = line.match(/^(\s*.*?\S)\s+(\/\*\*?<[^]*?\*\/|\/\*[^]*?\*\/|\/\/.*)\s*$/);
+  if (!match || /^\s*\/\//.test(match[1]) || /^\s*\/\*/.test(match[1])
+    || !/^\/\*/.test(match[2])) return null;
+  return {
+    commentColumn: line.indexOf(match[2]),
+    commentEndColumn: line.lastIndexOf('*/') + 2
+  };
+}
+
+function stripPluginAlignment(content) {
+  let wrappedPointerDeclaration = false;
+  return content.split(/\r?\n/).map((line) => {
+    const match = line.match(/^(\s*.*?\S)\s+(\/\*\*?<[^]*?\*\/|\/\*[^]*?\*\/|\/\/.*)\s*$/);
+    let normalized = !match || /^\s*\/\//.test(match[1]) || /^\s*\/\*/.test(match[1])
+      ? line
+      : `${match[1]} ${match[2]}`;
+    const normalizedCode = normalized.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '');
+    if (wrappedPointerDeclaration && /^\s*[A-Za-z_]\w*\s*;\s*$/.test(normalizedCode)) {
+      normalized = normalized.replace(/^\s+/, '        ');
+    }
+    const commentStart = normalized.search(/\/\*|\/\//);
+    const codePart = commentStart >= 0 ? normalized.slice(0, commentStart) : normalized;
+    const commentPart = commentStart >= 0 ? normalized.slice(commentStart) : '';
+    const leading = codePart.match(/^\s*/)?.[0] || '';
+    let codeBody = codePart.slice(leading.length);
+    codeBody = codeBody.replace(/\s{2,}/g, ' ');
+    codeBody = codeBody.replace(
+      /\s+(<<=|>>=|\+=|-=|\*=|\/=|%=|&=|\^=|\|=|=(?!=))\s*/g,
+      ' $1 '
+    );
+    if (/;\s*$/.test(codeBody) && !/[(),{}]/.test(codeBody)) {
+      codeBody = codeBody.replace(/\s*\*\s*/g, ' *');
+    }
+    normalized = leading + codeBody + commentPart;
+    const code = normalized.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '').trimEnd();
+    wrappedPointerDeclaration = /^\s*[A-Za-z_][\w\s*]*\*\s*$/.test(code);
+    return normalized;
+  }).join('\n');
+}
+
+function validateAlignmentGroups(lines, file, errors, parser, ruleId, field, description, maxWidth = null) {
+  let group = [];
+
+  const flush = () => {
+    if (group.length < 2) {
+      group = [];
+      return;
+    }
+    const columns = new Set(group.map((item) => item[field]));
+    const target = Math.max(...group.map((item) => item[field]));
+    if (maxWidth !== null && group.some((item) => target + lines[item.index].length - item[field] > maxWidth)) {
+      group = [];
+      return;
+    }
+    if (columns.size > 1) {
+      addError(errors, ruleId, file.relative,
+        `${description} must align within one consecutive code group (line ${group[0].index + 1}).`);
+    }
+    group = [];
+  };
+
+  lines.forEach((line, index) => {
+    const parsed = parser(line);
+    if (!parsed || parsed[field] === null) {
+      flush();
+      return;
+    }
+    group.push({ ...parsed, index });
+  });
+  flush();
+}
+
+function clangFormatCandidates() {
+  return process.env.MCUWB_CLANG_FORMAT
+    ? [process.env.MCUWB_CLANG_FORMAT]
+    : process.platform === 'win32'
+      ? ['C:\\Program Files\\LLVM\\bin\\clang-format.exe', 'clang-format']
+      : ['clang-format'];
+}
+
+function validateClangFormat(file, errors) {
+  const failures = [];
+  for (const executable of clangFormatCandidates()) {
+    const result = spawnSync(executable, [
+      `-style=file:${FORMAT_VALIDATION_CONFIG}`,
+      `-assume-filename=${file.relative}`
+    ], { input: stripPluginAlignment(file.content), encoding: 'utf8' });
+    if (result.status === 0) return true;
+    const diagnostic = String(result.stderr || '').split(/\r?\n/)
+      .find((line) => line.includes('error:'))?.trim() || '';
+    failures.push(`${executable}${diagnostic ? `: ${diagnostic}` : ''}`);
+  }
+  addError(errors, 'LAYER_FORMAT_CLANG', file.relative,
+    `Generated file must pass clang-format (${FORMAT_CONFIG}). ${failures.join('; ')}`);
+  return false;
+}
+
+function validateGeneratedStyle(files, errors, { strictGeneratedStyle = true } = {}) {
+  const datePattern = new RegExp(`@version\\s+V1\\.0\\s+${new Date().toISOString().slice(0, 10)}`);
+  const functionDefinition = /^\s*(?:static\s+)?[A-Za-z_][\w\s*]*\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/;
+  const primaryLabels = Object.values({
+    includes: '包含文件',
+    publicTypes: '公开类型',
+    publicDefines: '公开宏定义',
+    publicFunctions: '公开函数',
+    privateDefines: '私有宏定义',
+    privateTypes: '私有类型',
+    privateState: '私有状态',
+    privateComposition: '私有组合对象',
+    privateFunctions: '私有函数'
+  });
+  const secondaryLabels = ['返回值', '超时值', '事件', '配置', '默认值', '初始化', '读写', '回调', '辅助', '接口'];
+  const validatePartitionWidth = (line, labels, width, ruleId, currentFile, inCodeBlock) => {
+    const start = line.indexOf('/*');
+    if (start < 0) return;
+    const comment = line.slice(start);
+    for (const label of labels) {
+      const isMatch = new RegExp(`^/\\* ${label} -+ \\*/$`).test(comment);
+      const isOverlappingLabel = ['事件', '回调'].includes(label);
+      const expectedWidth = isOverlappingLabel ? (inCodeBlock ? 40 : 60) : width;
+      if (isMatch && expectedWidth === width && comment.length !== width) {
+        addError(errors, ruleId, currentFile.relative,
+          `${label} partition must be ${width} columns from /*.`);
+      }
+    }
+  };
+  for (const file of Object.values(files)) {
+    const lines = file.content.split(/\r?\n/);
+    const alignmentLines = lines.map((line) => expandTabs(line));
+    if (!strictGeneratedStyle && !file.content.includes('@version')) continue;
+    validateClangFormat(file, errors);
+    validateAlignmentGroups(
+      alignmentLines, file, errors, parseDeclarationAlignment,
+      'LAYER_FORMAT_DECLARATION_ALIGNMENT', 'nameColumn', 'Declaration names'
+    );
+    validateAlignmentGroups(
+      alignmentLines, file, errors, parseDeclarationAlignment,
+      'LAYER_FORMAT_DECLARATION_ASSIGNMENT', 'operatorColumn', 'Declaration initializers'
+    );
+    validateAlignmentGroups(
+      alignmentLines, file, errors, parseAssignmentAlignment,
+      'LAYER_FORMAT_ASSIGNMENT_ALIGNMENT', 'operatorColumn', 'Assignment operators'
+    );
+    validateAlignmentGroups(
+      alignmentLines, file, errors, parseEnumAlignment,
+      'LAYER_FORMAT_ENUM_ALIGNMENT', 'operatorColumn', 'Enum initializers'
+    );
+    validateAlignmentGroups(
+      alignmentLines, file, errors, parseTrailingCommentAlignment,
+      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentColumn', 'Trailing comments', 80
+    );
+    validateAlignmentGroups(
+      alignmentLines, file, errors, parseTrailingCommentAlignment,
+      'LAYER_FORMAT_TRAILING_COMMENT_ALIGNMENT', 'commentEndColumn', 'Trailing comment ends', 80
+    );
+    validateFunctionInternalCommentAlignment(file, errors);
+    if (!datePattern.test(file.content)) {
+      addError(errors, 'LAYER_FILE_DATE', file.relative,
+        'Generated file header must contain the current date in @version.');
+    }
+    let braceDepth = 0;
+    lines.forEach((line, index) => {
+      if (/typedef\s+(?:struct|enum)\s*\{/.test(line)) {
+        addError(errors, 'LAYER_FORMAT_TYPE_BRACE', file.relative,
+          `Type definition brace must be on its own line (line ${index + 1}).`);
+      }
+      if (functionDefinition.test(line)) {
+        addError(errors, 'LAYER_FORMAT_FUNCTION_BRACE', file.relative,
+          `Function brace must be on its own line (line ${index + 1}).`);
+      }
+      validatePartitionWidth(line, primaryLabels, 80, 'LAYER_FORMAT_PRIMARY_PARTITION', file, braceDepth > 0);
+      validatePartitionWidth(line, secondaryLabels, 60, 'LAYER_FORMAT_SECONDARY_PARTITION', file, braceDepth > 0);
+      const code = line.replace(/\/\*[^]*?\*\//g, '').replace(/\/\/.*$/, '');
+      braceDepth += (code.match(/{/g) || []).length;
+      braceDepth -= (code.match(/}/g) || []).length;
+      braceDepth = Math.max(0, braceDepth);
+    });
+  }
+}
+
+function validateCore(files, errors) {
+  if (!files.coreHeader) return;
+  const forbidden = /#\s*include\s*[<"][^>"]*(?:stm32\w*_hal|stm32|FreeRTOS|cmsis_os|task|queue|semphr)[^>"]*[>"]|\b(?:I2C|SPI|UART|GPIO|DMA|TIM|ADC|RTC)_\w*TypeDef\b/i;
+  if (forbidden.test(files.coreHeader.content)) {
+    addError(errors, 'LAYER_CORE_PUBLIC_LEAK', files.coreHeader.relative, 'Core public header must not expose HAL, RTOS, or vendor types.');
+  }
+}
+
+function validateLegacyWrapper(files, errors) {
+  for (const role of ['wrapperHeader', 'wrapperSource']) {
+    const file = files[role];
+    if (!file) continue;
+    for (const include of directIncludes(file.content)) {
+      const includeName = path.basename(include);
+      const ownHeader = role === 'wrapperSource' && includeName === path.basename(files.wrapperHeader.relative);
+      if (!ownHeader && !STANDARD_HEADERS.has(includeName) && !PLATFORM_COMMON_HEADERS.has(includeName)) {
+        addError(errors, 'LAYER_WRAPPER_DEPENDENCY', file.relative, `Wrapper include is not allowed: ${include}.`);
+      }
+    }
+  }
+}
+
+function validateModel(files, errors) {
+  for (const role of ['modelHeader', 'modelSource']) {
+    const file = files[role];
+    if (!file) continue;
+    for (const include of directIncludes(file.content)) {
+      const includeName = path.basename(include);
+      const ownHeader = role === 'modelSource' && includeName === path.basename(files.modelHeader.relative);
+      if (!ownHeader && !STANDARD_HEADERS.has(includeName)
+        && !PLATFORM_COMMON_HEADERS.has(includeName)
+        && !/^platform_(?:device|lifecycle|type)\.h$/.test(includeName)) {
+        addError(errors, 'LAYER_MODEL_DEPENDENCY', file.relative, `Platform Model include is not allowed: ${include}.`);
+      }
+    }
+  }
+}
+
+function validateFourTuple(files, errors) {
+  const model = files.modelHeader;
+  if (!model) return;
+  const code = maskCommentsAndStrings(model.content);
+  const definesDeviceObject = /\bplatform_device_t\b|\bplatform_service_t\b/.test(code);
+  if (definesDeviceObject) {
+    for (const slot of ['cfg', 'ctx', 'data', 'ops']) {
+      if (!new RegExp(`\\b${slot}\\s*;`).test(code)) {
+        addError(errors, 'LAYER_MODEL_FOUR_TUPLE', model.relative,
+          `Device object struct must declare the ${slot} slot (four-tuple: base + cfg/ctx/data/ops).`);
+      }
+    }
+  }
+}
+
+function validateLegacyWrapperFourTuple(files, errors) {
+  const wrapper = files.wrapperHeader;
+  if (!wrapper) return;
+  const code = maskCommentsAndStrings(wrapper.content);
+  if (/\bplatform_device_t\b|\bplatform_service_t\b/.test(code)) {
+    for (const slot of ['cfg', 'ctx', 'data', 'ops']) {
+      if (!new RegExp(`\\b${slot}\\s*;`).test(code)) {
+        addError(errors, 'LAYER_WRAPPER_FOUR_TUPLE', wrapper.relative,
+          `Device object struct must declare the ${slot} slot (four-tuple: base + cfg/ctx/data/ops).`);
+      }
+    }
+  }
+}
+
+function validateHalDriver(files, errors) {
+  for (const role of ['driverHeader', 'driverSource']) {
+    const file = files[role];
+    if (!file) continue;
+    const code = maskCommentsAndStrings(file.content);
+    if (/\bHAL_[A-Za-z0-9_]+\s*\(|#\s*include\s*[<"][^>"]*(?:stm32|hal|freertos|rtthread|cmsis_os)[^>"]*[>"]/i.test(code)) {
+      addError(errors, 'LAYER_HAL_DRIVER_CONCRETE_DEPENDENCY', file.relative, 'HAL Driver must use injected Core and MCU Ops rather than HAL or RTOS dependencies.');
+    }
+  }
+  if (files.driverHeader && !/(?:^|_)driver_(?:construct|inst)\s*\(/m.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_CONSTRUCTOR', files.driverHeader.relative, 'Driver must expose only a constructor for caller-owned instances.');
+  }
+  if (files.driverHeader && !/pf_[A-Za-z0-9_]+/.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_CORE_OPS', files.driverHeader.relative, 'Driver must declare injected Core transaction Ops.');
+  }
+  if (files.driverHeader && !/(?:mcu|platform|core|device|feature)[A-Za-z0-9_]*_ops_t|pf_[A-Za-z0-9_]+/.test(files.driverHeader.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_MCU_OPS', files.driverHeader.relative, 'Driver must declare injected MCU feature Ops.');
+  }
+  if (files.driverSource && !/p_driver->ctx\.pf_[A-Za-z0-9_]+\s*\(\s*p_driver->ctx\.p_context\s*\)/.test(files.driverSource.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_CORE_OPS', files.driverSource.relative, 'HAL Driver must invoke injected Core Ops in its protocol path.');
+  }
+  if (files.driverSource && !/p_driver->ctx\.pf_[A-Za-z0-9_]+\s*\(\s*p_driver->ctx\.p_mcu_context\s*\)/.test(files.driverSource.content)) {
+    addError(errors, 'LAYER_HAL_DRIVER_EFFECTIVE_MCU_OPS', files.driverSource.relative, 'HAL Driver must invoke injected MCU Ops in its chip-specific protocol path.');
+  }
+}
+
+function validateHandler(files, errors) {
+  for (const role of ['handleHeader', 'handleSource']) {
+    const file = files[role];
+    if (!file) continue;
+    const code = maskCommentsAndStrings(file.content);
+    if (/#\s*include\s*[<"][^>"]*(?:drv_adapter_(?:port|wrapper)|core_|mcu_|stm32|hal|freertos|rtthread|osal_internal)[^>"]*[>"]/i.test(code)) {
+      addError(errors, 'LAYER_HANDLER_CONCRETE_DEPENDENCY', file.relative, 'Handle must use injected OS and Driver Ops only.');
+    }
+  }
+  if (files.handleHeader && !/driver_count/.test(files.handleHeader.content)) {
+    addError(errors, 'LAYER_HANDLE_DRIVER_SET', files.handleHeader.relative, 'Handle must declare a same-class Driver collection and its count.');
+  }
+  if (files.handleHeader && !/const\s+impl_[a-z0-9_]+_handle_ops_t\s*\*ops/.test(files.handleHeader.content)) {
+    addError(errors, 'LAYER_HANDLE_INTERNAL_OPS', files.handleHeader.relative, 'Handle must keep its ops in the Impl object and out of Platform Model.');
+  }
+  if (files.handleSource && !/p_ref->read_id\s*\(\s*p_ref->p_context\s*,\s*p_device_id\s*\)/.test(files.handleSource.content)) {
+    addError(errors, 'LAYER_HANDLE_EFFECTIVE_DRIVER_SET', files.handleSource.relative, 'Handle must invoke a selected same-class Driver reference.');
+  }
+}
+
+function validatePort(files, type, errors) {
+  if (!files.portSource) return;
+  const expected = `impl_${type}_handle_port_register`;
+  const definitions = findFunctionDefinitions(files.portSource.content);
+  const publicDefinitions = definitions.filter((definition) => !definition.isStatic);
+  if (publicDefinitions.length !== 1 || publicDefinitions[0].name !== expected) {
+    addError(errors, 'LAYER_PORT_PUBLIC_API', files.portSource.relative, `Port must define exactly one non-static function: ${expected}.`);
+  }
+  for (const definition of definitions.filter((entry) => entry.isStatic)) {
+    const callsDriverDirectly = /\bimpl_[a-z0-9_]+_driver\b/i.test(definition.body);
+    const callsCoreDirectly = /\bplatform_[a-z0-9_]+\b/i.test(definition.body);
+    if (callsDriverDirectly || callsCoreDirectly) {
+      addError(errors, 'LAYER_PORT_RUNTIME_BYPASS', files.portSource.relative, `Port runtime function ${definition.name} must call Handle APIs only.`);
+    }
+    if (/port_(?:core|mcu|osal)/i.test(definition.name)
+      && /\breturn\s+(?:\(\s*[A-Za-z_]\w*\s*\)\s*)*0(?:[uUlL]+)?\s*;/.test(definition.body)) {
+      addError(errors, 'LAYER_PORT_STUB_OPS', files.portSource.relative, `Port operation ${definition.name} must bind a real platform operation instead of returning success.`);
+    }
+  }
+  if (/\bHAL_[A-Za-z0-9_]+\s*\(/.test(maskCommentsAndStrings(files.portSource.content))) {
+    addError(errors, 'LAYER_PORT_HAL', files.portSource.relative, 'Generated Port must not directly call HAL APIs.');
+  }
+  const requiredInjections = [
+    ['LAYER_PORT_RESOURCE_INJECTION', /=\s*[A-Za-z_][A-Za-z0-9_]*_resource_get_ops\s*\(/, 'Port must obtain MCU/Core context from resource.'],
+    ['LAYER_PORT_DRIVER_CONSTRUCTION', /_driver_(?:construct|inst)\s*\(/, 'Port must construct the concrete Driver.'],
+    ['LAYER_PORT_HANDLE_CONSTRUCTION', /_handle_construct\s*\(/, 'Port must construct the same-class Handle.'],
+    ['LAYER_PORT_HANDLE_BINDING', /\.[a-z0-9_]+\s*=\s*impl_[a-z0-9_]+_handle_[a-z0-9_]+\s*,/i, 'Port must bind Handle Platform-facing functions directly.'],
+    ['LAYER_PORT_MODEL_INIT', /platform_[a-z0-9_]+_init\s*\(/i, 'Port must initialize the Platform Device Model.'],
+    ['LAYER_PORT_MODEL_REGISTRATION', /platform_[a-z0-9_]+_(?:register_default|register)\s*\(/i, 'Port must register the Platform Device Model.']
+  ];
+  for (const [ruleId, pattern, message] of requiredInjections) {
+    if (!pattern.test(files.portSource.content)) addError(errors, ruleId, files.portSource.relative, message);
+  }
+}
+
+function validateHandle(files, type, errors) {
+  if (!files.handleSource) return;
+  const prefix = `impl_${type}_handle`;
+  const definitions = findFunctionDefinitions(files.handleSource.content);
+  const process = definitions.find((definition) => definition.name === `${type}_handle_process_impl`)
+    || definitions.find((definition) => definition.name === `${prefix}_process`);
+  if (!process || !/is_inited/.test(process.body) || !/NOT_INITIALIZED/.test(files.handleSource.content)) {
+    addError(errors, 'LAYER_HANDLE_PROCESS_STATE', files.handleSource.relative, 'Handle process API must guard its initialized state.');
+  }
+}
+
+function validateSsd1306Display(files, errors) {
+  for (const role of ['handleHeader', 'handleSource']) {
+    const file = files[role];
+    if (file && /impl_ssd1306_(?:driver|config)/i.test(file.content)) {
+      addError(errors, 'LAYER_HANDLE_DEVICE_DEPENDENCY', file.relative, 'Display Handle must not depend on SSD1306 files or configuration.');
+    }
+  }
+  if (files.driverSource && /\bHAL_[A-Za-z0-9_]+\s*\(|#\s*include\s*[<"][^>"]*(?:stm32|hal|freertos|rtthread|cmsis_os)[^>"]*[>"]/i.test(maskCommentsAndStrings(files.driverSource.content))) {
+    addError(errors, 'LAYER_HAL_DRIVER_CONCRETE_DEPENDENCY', files.driverSource.relative, 'SSD1306 Driver must use injected Core Bus Ops only.');
+  }
+  if (files.portSource) {
+    const source = files.portSource.content;
+    for (const [ruleId, pattern, message] of [
+      ['LAYER_PORT_OSAL_CONSTRUCTION', /osal_mutex_create\s*\(/, 'Display Port must create its declared OSAL mutex.'],
+      ['LAYER_PORT_OSAL_INJECTION', /pf_bind_osal\s*\(/, 'Display Port must inject OSAL Ops into the Handle.'],
+      ['LAYER_PORT_OSAL_CLEANUP', /osal_mutex_destroy\s*\(/, 'Display Port must release the created OSAL mutex on assembly failure.'],
+      ['LAYER_PORT_DIRECT_CONTEXT_OPS', /pf_bind_bus\(driver_api\.p_context/, 'Port must bind context-first Driver Ops directly.'],
+      ['LAYER_PORT_WRAPPER_REGISTRATION', /platform_display_wrapper_register\s*\(/, 'Port must register display public Ops with the Wrapper.']
+    ]) {
+      if (!pattern.test(source)) addError(errors, ruleId, files.portSource.relative, message);
+    }
+    if (/\(\s*int32_t\s*\(\s*\*\s*\)/.test(source)) {
+      addError(errors, 'LAYER_PORT_FUNCTION_POINTER_CAST', files.portSource.relative, 'Port must not use function-pointer casts for context-first Ops.');
+    }
+  }
+  if (files.handleSource && (!/pf_lock\(/.test(files.handleSource.content)
+    || !/pf_unlock\(/.test(files.handleSource.content))) {
+    addError(errors, 'LAYER_HANDLER_OSAL_MUTEX_USE', files.handleSource.relative, 'Display Handle must use injected OSAL mutex operations around framebuffer access.');
+  }
+}
+
+function validateLayerContract({
+  root, core, deviceType, device, slice = 'all', strictGeneratedStyle = true
+} = {}) {
+  if (!root || !core || !deviceType || !device) throw createLayerError('--root, --core, --device-type, and --device are required.');
+  const normalizedCore = normalizeCorePeripheral(core);
+  const type = normalizeDeviceType(deviceType);
+  const normalizedDevice = normalizeDevice(device);
+  const allPaths = expectedPaths({ core: normalizedCore, deviceType: type, device });
+  const paths = filterSlice(allPaths, slice);
+  const errors = [];
+  const resolvedRoot = path.resolve(root);
+  const files = readSlice(resolvedRoot, paths, errors);
+  validateSections(files, errors, { strictGeneratedStyle });
+  validateGeneratedStyle(files, errors, { strictGeneratedStyle });
+  validateCommentCompleteness(files, errors, { strictGeneratedStyle });
+  validateCommentLanguage(files, errors);
+  validateCore(files, errors);
+  if (slice === 'wrapper') {
+    validateLegacyWrapper(files, errors);
+    validateLegacyWrapperFourTuple(files, errors);
+    validateCommentLanguage(files, errors, { rulePrefix: 'LAYER_WRAPPER' });
+    return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
+  }
+  validateModel(files, errors);
+  validateFourTuple(files, errors);
+  if (slice === 'model') {
+    validateCommentLanguage(files, errors, { rulePrefix: 'LAYER_MODEL' });
+    return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
+  }
+  validateHalDriver(files, errors);
+  validateHandler(files, errors);
+  validatePort(files, type, errors);
+  validateHandle(files, type, errors);
+  const legacyWrapperRoot = path.join(resolvedRoot, `03_Platform/platform_bsp/${type}`);
+  const legacyWrapperFiles = [
+    path.join(legacyWrapperRoot, `platform_${type}_wrapper.h`),
+    path.join(legacyWrapperRoot, `platform_${type}_wrapper.c`)
+  ];
+  if (legacyWrapperFiles.some((file) => fs.existsSync(file))) {
+    addError(errors, 'LAYER_LEGACY_WRAPPER_DEFAULT', `03_Platform/platform_bsp/${type}`,
+      'New BSP output must not contain platform_*_wrapper.c/.h; migrate the legacy Wrapper before validation.');
+  }
+  return { root: resolvedRoot, slice, paths, errors, valid: errors.length === 0 };
+}
+
+function parseArgs(argv, cwd = process.cwd()) {
+  if (argv.length === 1 && argv[0] === '--self-check') return { selfCheck: true };
+  const options = { root: null, core: null, deviceType: null, device: null, json: false, slice: 'all' };
+  const names = { '--root': 'root', '--core': 'core', '--device-type': 'deviceType', '--device': 'device', '--slice': 'slice' };
+  for (let index = 0; index < argv.length; index += 1) {
+    const argument = argv[index];
+    // package.json 的 validate:layer 脚本固定注入 --self-check；
+    // 当用户附加真实参数（--root/--core/...）时该默认参数被忽略，走真实校验。
+    if (argument === '--self-check') continue;
+    if (argument === '--json') options.json = true;
+    else if (names[argument]) {
+      const value = argv[++index];
+      if (!value) throw createLayerError(`${argument} requires a value.`);
+      options[names[argument]] = argument === '--root' ? path.resolve(cwd, value) : value;
+    }
+    else throw createLayerError(`Unknown argument: ${argument}`);
+  }
+  if (!options.root || !options.core || !options.deviceType || !options.device) {
+    throw createLayerError('--root, --core, --device-type, and --device are required.');
+  }
+  if (options.slice !== 'all' && !SLICE_ROLES[options.slice]) {
+    throw createLayerError(`Unknown --slice value: ${options.slice}. Expected model, driver, handle, port, or all.`);
+  }
+  return options;
+}
+
+async function runSelfCheck() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'mcu-layer-contract-self-check-'));
+  try {
+    const files = [
+      ...(await generateCorePeripheral('spi', 'stm32f4')),
+      ...(await generateBspDriver({
+        deviceType: 'externflash', device: 'W25Q64', cores: ['spi'], platform: 'stm32f4'
+      }))
+    ];
+    for (const file of files) {
+      const target = path.join(root, file.path);
+      fs.mkdirSync(path.dirname(target), { recursive: true });
+      fs.writeFileSync(target, file.content, 'utf8');
+    }
+    return validateLayerContract({ root, core: 'spi', deviceType: 'externflash', device: 'W25Q64' });
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+}
+
+async function main(argv = process.argv.slice(2)) {
+  const options = parseArgs(argv);
+  const result = options.selfCheck ? await runSelfCheck() : validateLayerContract(options);
+  if (options.json) console.log(JSON.stringify(result, null, 2));
+  else if (result.valid) console.log(`Layer contract valid: ${result.root}${options.selfCheck ? ' (generated self-check)' : ''}`);
+  else result.errors.forEach((error) => console.error(`${error.ruleId} ${error.file}: ${error.message}`));
+  process.exitCode = result.valid ? 0 : 3;
+  return result;
+}
+
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`Layer validation failed: ${error.message}`);
+    process.exitCode = error.code === 'LAYER' || error.code === 'USAGE' ? 3 : 1;
+  });
+}
+
+module.exports = {
+  SLICE_ROLES,
+  directIncludes,
+  expectedPaths,
+  extractCommentText,
+  filterSlice,
+  findFunctionContracts,
+  findFunctionDefinitions,
+  maskCommentsAndStrings,
+  parseArgs,
+  validateCommentCompleteness,
+  runSelfCheck,
+  validateCommentLanguage,
+  validateGeneratedStyle,
+  validateFourTuple,
+  validateHalDriver,
+  validateHandler,
+  validateSsd1306Display,
+  validateLayerContract
+};

@@ -6,6 +6,15 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 
+function readCodexPluginVersion(sourceRoot = ROOT) {
+  const manifestPath = path.join(sourceRoot, '.codex-plugin', 'plugin.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  if (typeof manifest.version !== 'string' || !manifest.version.trim()) {
+    throw new Error(`Codex plugin manifest must contain a version: ${manifestPath}`);
+  }
+  return manifest.version;
+}
+
 function parseArgs(argv) {
   const options = { marketplaceRoot: path.resolve(ROOT, '..'), force: false };
   for (let index = 0; index < argv.length; index += 1) {
@@ -33,7 +42,7 @@ function registerMarketplace({ marketplaceRoot, force = false } = {}) {
   }
   const entry = {
     name: 'mcu-workbench',
-    version: '1.0.0',
+    version: readCodexPluginVersion(ROOT),
     source: { source: 'local', path: './mcu-workbench' },
     policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' },
     category: 'Engineering'
@@ -59,4 +68,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { parseArgs, registerMarketplace };
+module.exports = { parseArgs, readCodexPluginVersion, registerMarketplace };

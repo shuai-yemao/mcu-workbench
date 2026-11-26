@@ -1,0 +1,69 @@
+PASS tests/sync-codex-skills.test.js (28.026 s)
+PASS tests/layer-contract.test.js (57.236 s)
+PASS tests/agents.test.js (19.601 s)
+PASS tests/codex-plugin.test.js (10.544 s)
+PASS tests/learning-tutor-skill.test.js (9.762 s)
+PASS tests/generator.test.js (10.272 s)
+PASS tests/codegen.test.js (9.567 s)
+PASS tests/claude-layering.test.js
+PASS tests/workflow-dashboard.test.js
+PASS tests/workflow-gate.test.js
+PASS tests/embedded-architecture-skills.test.js
+PASS tests/plugin-refresh.test.js
+PASS tests/cursor-plugin.test.js
+PASS tests/skills.test.js (10.549 s)
+PASS tests/validate-architecture.test.js
+PASS tests/agent-artifacts.test.js
+PASS tests/agent-domains.test.js
+PASS tests/version-sync.test.js
+PASS tests/document-context-context.test.js
+PASS tests/platform.test.js
+PASS tests/workflow-state.test.js
+PASS tests/document-context-lifecycle.test.js
+PASS tests/validate-architecture-cli.test.js
+PASS tests/plugin-runtime.test.js
+PASS tests/quality-style-onboarding.test.js
+PASS tests/document-context-store.test.js
+PASS tests/document-context.test.js
+PASS tests/observability-plugin.test.js
+PASS tests/quality-format-profile.test.js
+PASS tests/verification-pilot.test.js
+PASS tests/software-architecture-graph.test.js
+PASS tests/document-context-readme.test.js
+PASS tests/debugger.test.js
+PASS tests/capability-resolver.test.js
+PASS tests/verification-plugin.test.js
+PASS tests/codegen-runtime.test.js
+PASS tests/workflow-dashboard-manager.test.js
+PASS tests/plugin-contracts.test.js
+PASS tests/builder.test.js
+PASS tests/workflow-execution-contract.test.js
+PASS tests/validate-bsp-contract.test.js
+PASS tests/flash-algorithm-profile.test.js
+PASS tests/document-context-cli.test.js
+PASS tests/codex-local-dev.test.js
+PASS tests/codex-compat.test.js
+PASS tests/verification-skill-projection.test.js
+PASS tests/session-runner.test.js
+PASS tests/lvgl-skill.test.js
+PASS tests/ai-collab-skills.test.js
+PASS tests/workflow-final-review-contract.test.js
+PASS tests/observability-manifest.test.js
+PASS tests/monitor.test.js
+PASS tests/skill-links.test.js
+PASS tests/workflows.test.js
+PASS tests/workflow-output-contract.test.js
+PASS tests/tools-git-skill.test.js
+PASS tests/verification-catalog.test.js
+PASS tests/flasher.test.js
+PASS tests/verification-external-skills.test.js
+PASS tests/devops-projection.test.js
+PASS tests/devops-plugin.test.js
+PASS tests/devops-skills.test.js
+PASS tests/devops-external-skills.test.js
+PASS tests/devops-catalog.test.js
+
+Test Suites: 64 passed, 64 total
+Tests:       376 passed, 376 total
+Snapshots:   0 total
+Time:        226.551 s

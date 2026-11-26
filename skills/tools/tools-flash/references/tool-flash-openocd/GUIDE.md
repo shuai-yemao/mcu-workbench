@@ -30,8 +30,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、配置扫描，还是执行烧录。
-2. 若不确定探针状态，先运行自带脚本 [scripts/openocd_flasher.py](scripts/openocd_flasher.py) 的 `--detect` 模式确认。
+1. 先阅读 [usage.md](../capabilities/tool-flash-openocd/references/usage.md)，确认本次是环境探测、配置扫描，还是执行烧录。
+2. 若不确定探针状态，先运行自带脚本 [openocd_flasher.py](../capabilities/tool-flash-openocd/scripts/openocd_flasher.py) 的 `--detect` 模式确认。
 3. 若不确定 OpenOCD 配置，使用 `--scan-configs` 扫描工作区线索。
 4. 使用 `--artifact` 指定产物，配合 `--interface` + `--target` 或 `--config` 执行烧录。
 5. 对 BIN 文件，必须同时提供 `--base-address`。

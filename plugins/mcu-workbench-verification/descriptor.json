@@ -1,0 +1,17 @@
+{
+  "id": "mcu-workbench-verification",
+  "version": "1.0.0",
+  "capabilities": [
+    {
+      "id": "verification-run",
+      "ownerPlugin": "mcu-workbench-verification",
+      "version": "1.0.0",
+      "permissions": ["run-test"]
+    }
+  ],
+  "dependencies": [],
+  "lifecycle": {
+    "load": "load-verification",
+    "dispose": "dispose-verification"
+  }
+}

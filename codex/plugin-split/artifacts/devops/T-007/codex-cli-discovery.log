@@ -1,0 +1,49 @@
+COMMAND: codex plugin list --marketplace mcu-workbench-devops-local --available --json
+EXIT=0
+WARNING: failed to clean up stale arg0 temp dirs: 拒绝访问。 (os error 5)
+WARNING: proceeding, even though we could not create PATH aliases: 拒绝访问。 (os error 5) at path "C:\\Users\\shuaitan2\\.codex\\tmp\\arg0-windows\\codex-arg00odphw"
+{
+  "installed": [
+    {
+      "pluginId": "mcu-workbench-devops@mcu-workbench-devops-local",
+      "name": "mcu-workbench-devops",
+      "marketplaceName": "mcu-workbench-devops-local",
+      "version": "1.0.0",
+      "installed": true,
+      "enabled": true,
+      "source": {
+        "source": "local",
+        "path": "C:\\Users\\shuaitan2\\.codex\\plugins\\mcu-workbench-devops"
+      },
+      "installPolicy": "AVAILABLE",
+      "authPolicy": "ON_INSTALL"
+    }
+  ],
+  "available": []
+}
+
+COMMAND: codex plugin add mcu-workbench-devops@mcu-workbench-devops-local --json
+EXIT=0 (installation completed in prior invocation; installedPath recorded by CLI)
+COMMAND: codex plugin list --marketplace mcu-workbench-devops-local --json
+EXIT=0
+WARNING: failed to clean up stale arg0 temp dirs: 拒绝访问。 (os error 5)
+WARNING: proceeding, even though we could not create PATH aliases: 拒绝访问。 (os error 5) at path "C:\\Users\\shuaitan2\\.codex\\tmp\\arg0-windows\\codex-arg0blCW7S"
+{
+  "installed": [
+    {
+      "pluginId": "mcu-workbench-devops@mcu-workbench-devops-local",
+      "name": "mcu-workbench-devops",
+      "marketplaceName": "mcu-workbench-devops-local",
+      "version": "1.0.0",
+      "installed": true,
+      "enabled": true,
+      "source": {
+        "source": "local",
+        "path": "C:\\Users\\shuaitan2\\.codex\\plugins\\mcu-workbench-devops"
+      },
+      "installPolicy": "AVAILABLE",
+      "authPolicy": "ON_INSTALL"
+    }
+  ],
+  "available": []
+}

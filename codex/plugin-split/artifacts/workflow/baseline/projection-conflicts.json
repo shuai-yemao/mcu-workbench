@@ -1,0 +1,92 @@
+{
+  "generatedAt": "2026-11-24T10:11:45.529Z",
+  "excludedEntrypoints": [
+    {
+      "path": "skills/workflow/SKILL.md",
+      "exists": true,
+      "sha256": "a17240489ba866b82470cef8482b68dbd4575cd2c487d793f172fb2318c5344c"
+    },
+    {
+      "path": "skills/workflow/references/usage.md",
+      "exists": true,
+      "sha256": "4fd1144f7ab9394871aaa010c7cb745da32b51fc02f68507c200ede8fb6e65fa"
+    },
+    {
+      "path": "skills/workflow/scripts/workflow_runner.py",
+      "exists": true,
+      "sha256": "d5a2a64d85b798e5ed0035f7ea8ff262ce6860ee5584b17fa4311855e9f9c7a7"
+    }
+  ],
+  "roots": [
+    {
+      "id": "workflow-requirements-router",
+      "source": "skills/workflow/workflow-requirements-router",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-requirements-router"
+    },
+    {
+      "id": "workflow-claude-layering",
+      "source": "skills/workflow/workflow-claude-layering",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-claude-layering"
+    },
+    {
+      "id": "workflow-document-context",
+      "source": "skills/workflow/workflow-document-context",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-document-context"
+    },
+    {
+      "id": "workflow-requirements-challenge",
+      "source": "skills/workflow/workflow-requirements-challenge",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-requirements-challenge"
+    },
+    {
+      "id": "workflow-review-gate",
+      "source": "skills/workflow/workflow-review-gate",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-review-gate"
+    },
+    {
+      "id": "workflow-integration-plan",
+      "source": "skills/workflow/workflow-integration-plan",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan"
+    },
+    {
+      "id": "workflow-task-breakdown",
+      "source": "skills/workflow/workflow-task-breakdown",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-task-breakdown"
+    },
+    {
+      "id": "workflow-task-execution",
+      "source": "skills/workflow/workflow-task-execution",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-task-execution"
+    },
+    {
+      "id": "workflow-final-review",
+      "source": "skills/workflow/workflow-final-review",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/workflow-final-review"
+    },
+    {
+      "id": "embed-ai-tool",
+      "source": "skills/embed-ai-tool",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/embed-ai-tool"
+    },
+    {
+      "id": "embedded-change-report",
+      "source": "skills/embedded-change-report",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/embedded-change-report"
+    },
+    {
+      "id": "embedded-project-intake",
+      "source": "skills/embedded-project-intake",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/embedded-project-intake"
+    },
+    {
+      "id": "embedded-team-sync",
+      "source": "skills/embedded-team-sync",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/embedded-team-sync"
+    },
+    {
+      "id": "mrd-to-prd",
+      "source": "skills/mrd-to-prd",
+      "pluginTarget": "plugins/mcu-workbench-workflow/skills/mrd-to-prd"
+    }
+  ]
+}

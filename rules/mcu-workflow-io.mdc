@@ -1,0 +1,16 @@
+---
+description: MCU-Workbench 需求输入与 spec.md、plan.md、task.md 输出交接
+alwaysApply: true
+---
+
+嵌入式需求先进入 `workflow-requirements-router`。内部状态顺序固定为 RCP、`workflow-requirements-challenge`、Review-Package。这三项不写入用户项目 Markdown。
+
+用户正式文档只有三个，并且只放在目标项目 `<project_root>/00_Docs/04_需求文档/`：
+
+1. `spec.md`：`workflow-review-gate` 放行后写出，是第一个用户审查点。
+2. `plan.md`：用户放行 Spec 后，由 `workflow-integration-plan` 写出并等待批准。
+3. `task.md`：Plan 批准后，由 `workflow-task-breakdown` 写出，再交给 `workflow-task-execution`。
+
+`prototype` 不生成正式 `spec.md`。Spec 未放行前只做只读补证，不改业务代码，不生成 Plan 或 Task。Verify 对照 `spec.md`，发现偏差必须回到 Spec。插件仓库、当前会话目录和 `process.cwd()` 都不是输出根。
+
+下划线 canonical id 在 Cursor 中使用同名连字符技能，例如 `platform_mcu` 对应 `platform-mcu`。调用适配技能时先读取它指向的 canonical `SKILL.md`。

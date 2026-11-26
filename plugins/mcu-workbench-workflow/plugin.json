@@ -1,0 +1,8 @@
+{
+  "id": "mcu-workbench-workflow",
+  "version": "1.0.0",
+  "description": "MCU Workbench requirements, review, planning and task workflow Skills.",
+  "skills": "./skills/",
+  "hosts": ["codex", "cursor"],
+  "compatibility": { "aggregatePlugin": "mcu-workbench", "lifecycle": "explicit", "hotUnload": false }
+}

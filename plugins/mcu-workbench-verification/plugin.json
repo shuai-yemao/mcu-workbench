@@ -1,0 +1,12 @@
+{
+  "id": "mcu-workbench-verification",
+  "version": "1.0.0",
+  "description": "MCU Workbench 单元测试与质量验证插件。",
+  "skills": "./skills/",
+  "hosts": ["codex", "cursor"],
+  "compatibility": {
+    "aggregatePlugin": "mcu-workbench",
+    "lifecycle": "explicit",
+    "hotUnload": false
+  }
+}

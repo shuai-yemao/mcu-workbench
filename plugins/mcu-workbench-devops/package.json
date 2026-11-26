@@ -1,0 +1,11 @@
+{
+  "name": "mcu-workbench-devops",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "validate": "node scripts/validate.js",
+    "skills": "node scripts/sync-skills.js",
+    "validate-manifests": "node scripts/validate-manifests.js"
+  }
+}

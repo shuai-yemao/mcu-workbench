@@ -1,0 +1,26 @@
+{
+  "name": "mcu-workbench",
+  "version": "1.0.0",
+  "description": "面向 STM32、GR5526、ESP32 和 Cortex-M 的嵌入式开发 Skills 与工具集。",
+  "author": {
+    "name": "MCU-Workbench Team"
+  },
+  "homepage": "https://github.com/shuai-yemao/mcu-workbench",
+  "repository": "https://github.com/shuai-yemao/mcu-workbench",
+  "license": "MIT",
+  "keywords": [
+    "embedded",
+    "mcu",
+    "stm32",
+    "gr5526",
+    "esp32",
+    "firmware"
+  ],
+  "skills": [
+    "./skills/app",
+    "./skills/hardware",
+    "./skills/tools",
+    "./skills/workflow",
+    "./cursor-skills"
+  ]
+}

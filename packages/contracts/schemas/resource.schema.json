@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mcu-workbench/resource/1.0.0",
+  "type": "object",
+  "required": ["id", "kind", "version", "ownerPlugin", "evidence"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "kind": { "enum": ["skill", "agent", "rule", "hook", "mcp", "evidence"] },
+    "version": { "type": "string" },
+    "ownerPlugin": { "type": "string" },
+    "evidence": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

@@ -16,13 +16,13 @@
 
 ```bash
 # 列出串口
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py --list
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py --list
 
 # 自动检测串口并读取 5 秒
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py --auto --duration 5
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py --auto --duration 5
 
 # 指定串口和波特率
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --port /dev/ttyACM0 \
   --baud 115200 \
   --duration 3
@@ -33,7 +33,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 ### 1. 等待关键字符串
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --port /dev/ttyACM0 \
   --wait "System Start"
 ```
@@ -43,7 +43,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 ### 2. 交互式持续监视
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --port {SERIAL_PORT} \
   --monitor \
   --timestamp
@@ -56,7 +56,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 ### 3. 保存日志
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto \
   --duration 30 \
   --save logs/run.log
@@ -67,7 +67,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 ### 4. 先监听，再等待复位
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto \
   --wait-reset \
   --duration 5 \
@@ -86,7 +86,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 如果已经明确 OpenOCD 配置，可以把复位动作也交给脚本：
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto \
   --wait-reset \
   --auto-reset \
@@ -98,7 +98,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 也可以直接传入完整板级配置：
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --port /dev/ttyUSB0 \
   --wait-reset \
   --auto-reset \
@@ -147,7 +147,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 
 ```bash
 # 烧录后等待启动信息
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --wait "System Start"
 # 输出: ✅ 检测到关键字符串: System Start
 ```
@@ -156,7 +156,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 
 ```bash
 # 读取 10 秒，检查是否有错误
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --duration 10 -v
 # 如果有错误会显示:
 # ❌ 检测到 1 条错误相关日志
@@ -168,7 +168,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 
 ```bash
 # 自动复位（最简单，需要 OpenOCD + 调试器）
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --wait-reset --auto-reset \
   --interface stlink --openocd-target target/stm32f4x.cfg \
   --duration 5 -v
@@ -177,7 +177,7 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 ### 场景 4：保存测试日志供后续分析
 
 ```bash
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --duration 60 --save test_log.txt --timestamp
 ```
 
@@ -187,31 +187,31 @@ python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py
 
 ```bash
 # 1. 等待启动完成
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py --auto --wait "System Start"
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py --auto --wait "System Start"
 
 # 2. 检查运行状态
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py --auto --duration 3 -v
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py --auto --duration 3 -v
 
 # 3. 持续监控
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py --auto --monitor --timestamp
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py --auto --monitor --timestamp
 ```
 
 ### 捕获完整启动日志
 
 ```bash
 # 方法 1：自动复位（推荐）
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --wait-reset --auto-reset \
   --interface stlink --openocd-target target/stm32f4x.cfg \
   --duration 5 --save startup.log
 
 # 方法 2：手动复位
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py \
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py \
   --auto --wait-reset --duration 5 --save startup.log
 # 看到提示后，在另一个终端烧录或按复位键
 
 # 方法 3：读取缓冲区历史数据
-python3 skills/operations/observability-serial-monitor/scripts/serial_monitor.py --auto --keep
+python3 skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py --auto --keep
 ```
 
 ### 场景选择参考

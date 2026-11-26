@@ -1,0 +1,589 @@
+# Generated inventory for REQ-PLUGIN-SPLIT-20261123
+# Evidence rule: provenance metadata remains tracked as unknown unless independently confirmed; target ownership is user-confirmed by content review on 2026-11-24.
+request_id: REQ-PLUGIN-SPLIT-20261123
+generated_at: 2026-11-24T20:59:21+08:00
+source_root: skills/
+status: ownership-reviewed; migration-complete
+scope_note: 45 embedded or user-directed Skills are included in this five-plugin migration; embedded-team-sync is deferred to a future project-management plugin phase; five academic research workflows and one general patent workflow are excluded from MCU plugins. Provenance fields remain independently unverified where evidence is unavailable.
+entries:
+  - skill_id: academic-paper
+    source_path: skills/academic-paper
+    codex_skill_path: skills/academic-paper
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
+  - skill_id: academic-paper-reviewer
+    source_path: skills/academic-paper-reviewer
+    codex_skill_path: skills/academic-paper-reviewer
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
+  - skill_id: academic-pipeline
+    source_path: skills/academic-pipeline
+    codex_skill_path: skills/academic-pipeline
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
+  - skill_id: build-cmake
+    migrated_path: plugins/mcu-workbench-devops/skills/build-cmake
+    source_path: plugins/mcu-workbench-devops/skills/build-cmake
+    migrated_from: skills/build-cmake
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: build-iar
+    migrated_path: plugins/mcu-workbench-devops/skills/build-iar
+    source_path: plugins/mcu-workbench-devops/skills/build-iar
+    migrated_from: skills/build-iar
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: build-idf
+    migrated_path: plugins/mcu-workbench-devops/skills/build-idf
+    source_path: plugins/mcu-workbench-devops/skills/build-idf
+    migrated_from: skills/build-idf
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: build-keil
+    migrated_path: plugins/mcu-workbench-devops/skills/build-keil
+    source_path: plugins/mcu-workbench-devops/skills/build-keil
+    migrated_from: skills/build-keil
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: build-makefile
+    migrated_path: plugins/mcu-workbench-devops/skills/build-makefile
+    source_path: plugins/mcu-workbench-devops/skills/build-makefile
+    migrated_from: skills/build-makefile
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: build-platformio
+    migrated_path: plugins/mcu-workbench-devops/skills/build-platformio
+    source_path: plugins/mcu-workbench-devops/skills/build-platformio
+    migrated_from: skills/build-platformio
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: can-debug
+    source_path: skills/can-debug
+    migrated_path: plugins/mcu-workbench-observability/skills/can-debug
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: chip-driver-manual
+    migrated_path: plugins/mcu-workbench-architecture/skills/chip-driver-manual
+    source_path: skills/chip-driver-manual
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: chip-resource-finder
+    migrated_path: plugins/mcu-workbench-architecture/skills/chip-resource-finder
+    source_path: skills/chip-resource-finder
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: debug-gdb-openocd
+    migrated_path: plugins/mcu-workbench-observability/skills/debug-gdb-openocd
+    source_path: skills/debug-gdb-openocd
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: debug-jlink
+    migrated_path: plugins/mcu-workbench-observability/skills/debug-jlink
+    source_path: skills/debug-jlink
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: debug-platformio
+    migrated_path: plugins/mcu-workbench-observability/skills/debug-platformio
+    source_path: skills/debug-platformio
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: deep-research
+    source_path: skills/deep-research
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: outside-mcu-plugin-scope
+    confidence: user-confirmed
+    status: excluded-from-mcu-plugins; provenance-unverified
+  - skill_id: embed-ai-tool
+    migrated_path: plugins/mcu-workbench-workflow/skills/embed-ai-tool
+    source_path: skills/embed-ai-tool
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-architecture-planner
+    migrated_path: plugins/mcu-workbench-architecture/skills/embedded-architecture-planner
+    source_path: skills/embedded-architecture-planner
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-bug-hunter
+    source_path: skills/embedded-bug-hunter
+    migrated_path: plugins/mcu-workbench-verification/skills/embedded-bug-hunter
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-verification
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: embedded-build-flash-debug
+    source_path: skills/embedded-build-flash-debug
+    migrated_path: plugins/mcu-workbench-devops/skills/embedded-build-flash-debug
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-devops
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: embedded-change-report
+    migrated_path: plugins/mcu-workbench-workflow/skills/embedded-change-report
+    source_path: skills/embedded-change-report
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-coding-standard
+    migrated_path: plugins/mcu-workbench-architecture/skills/embedded-coding-standard
+    source_path: skills/embedded-coding-standard
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-llm-guardrails
+    source_path: skills/embedded-llm-guardrails
+    migrated_path: plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: confirmed-by-content
+    status: migrated; provenance-unverified
+  - skill_id: embedded-minimal-project-builder
+    migrated_path: plugins/mcu-workbench-architecture/skills/embedded-minimal-project-builder
+    source_path: skills/embedded-minimal-project-builder
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-prd-to-logic
+    migrated_path: plugins/mcu-workbench-architecture/skills/embedded-prd-to-logic
+    source_path: skills/embedded-prd-to-logic
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-production-test-tool
+    source_path: skills/embedded-production-test-tool
+    migrated_path: plugins/mcu-workbench-workflow/skills/embedded-production-test-tool
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: embedded-project-intake
+    migrated_path: plugins/mcu-workbench-workflow/skills/embedded-project-intake
+    source_path: skills/embedded-project-intake
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: embedded-project-scaffold
+    source_path: skills/embedded-project-scaffold
+    migrated_path: plugins/mcu-workbench-architecture/skills/embedded-project-scaffold
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: embedded-team-sync
+    source_path: skills/embedded-team-sync
+    current_plugin_path: plugins/mcu-workbench-workflow/skills/embedded-team-sync
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-project-management
+    confidence: inferred
+    status: deferred; provenance-unverified
+  - skill_id: embedded-unit-test-generator
+    source_path: skills/embedded-unit-test-generator
+    migrated_path: plugins/mcu-workbench-verification/skills/embedded-unit-test-generator
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-verification
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: flash-idf
+    migrated_path: plugins/mcu-workbench-devops/skills/flash-idf
+    source_path: plugins/mcu-workbench-devops/skills/flash-idf
+    migrated_from: skills/flash-idf
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: flash-jlink
+    migrated_path: plugins/mcu-workbench-devops/skills/flash-jlink
+    source_path: plugins/mcu-workbench-devops/skills/flash-jlink
+    migrated_from: skills/flash-jlink
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: flash-keil
+    migrated_path: plugins/mcu-workbench-devops/skills/flash-keil
+    source_path: plugins/mcu-workbench-devops/skills/flash-keil
+    migrated_from: skills/flash-keil
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: flash-openocd
+    migrated_path: plugins/mcu-workbench-devops/skills/flash-openocd
+    source_path: plugins/mcu-workbench-devops/skills/flash-openocd
+    migrated_from: skills/flash-openocd
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: flash-platformio
+    migrated_path: plugins/mcu-workbench-devops/skills/flash-platformio
+    source_path: plugins/mcu-workbench-devops/skills/flash-platformio
+    migrated_from: skills/flash-platformio
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-devops
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: logic-analyzer
+    migrated_path: plugins/mcu-workbench-observability/skills/logic-analyzer
+    source_path: skills/logic-analyzer
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: market-mrd-analyst
+    source_path: skills/market-mrd-analyst
+    migrated_path: plugins/mcu-workbench-workflow/skills/market-mrd-analyst
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: memory-analysis
+    source_path: skills/memory-analysis
+    migrated_path: plugins/mcu-workbench-verification/skills/memory-analysis
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-verification
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: modbus-debug
+    source_path: skills/modbus-debug
+    migrated_path: plugins/mcu-workbench-observability/skills/modbus-debug
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: mrd-to-prd
+    migrated_path: plugins/mcu-workbench-workflow/skills/mrd-to-prd
+    source_path: skills/mrd-to-prd
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: parsed-chip-datasheet
+    source_path: skills/parsed-chip-datasheet
+    migrated_path: plugins/mcu-workbench-architecture/skills/parsed-chip-datasheet
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: patent-disclosure-skill
+    source_path: skills/patent-disclosure-skill
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: outside-mcu-plugin-scope
+    confidence: user-confirmed
+    status: excluded-from-mcu-plugins; provenance-unverified
+  - skill_id: prd-to-hardware-solution
+    migrated_path: plugins/mcu-workbench-architecture/skills/prd-to-hardware-solution
+    source_path: skills/prd-to-hardware-solution
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: rtos-debug
+    migrated_path: plugins/mcu-workbench-observability/skills/rtos-debug
+    source_path: skills/rtos-debug
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: schematic-pinmap-analyzer
+    migrated_path: plugins/mcu-workbench-architecture/skills/schematic-pinmap-analyzer
+    source_path: skills/schematic-pinmap-analyzer
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: serial-monitor
+    migrated_path: plugins/mcu-workbench-observability/skills/serial-monitor
+    source_path: skills/serial-monitor
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: serial-shell
+    migrated_path: plugins/mcu-workbench-observability/skills/serial-shell
+    source_path: skills/serial-shell
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown; no release/version evidence found
+    license: unknown; master/LICENSE not found
+    dependencies: unknown; repository-level shared dependencies are documented but not mapped per Skill
+    target_plugin: mcu-workbench-observability
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: skill-template
+    source_path: skills/skill-template
+    migrated_path: plugins/mcu-workbench-workflow/skills/skill-template
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-workflow
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: sr-screener
+    source_path: skills/sr-screener
+    codex_skill_path: skills/sr-screener
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: codex-agent-skills
+    confidence: user-confirmed
+    status: registered; provenance-unverified
+  - skill_id: static-analysis
+    source_path: skills/static-analysis
+    migrated_path: plugins/mcu-workbench-verification/skills/static-analysis
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-verification
+    confidence: inferred
+    status: migrated; provenance-unverified
+  - skill_id: vendor-minimal-firmware
+    source_path: skills/vendor-minimal-firmware
+    migrated_path: plugins/mcu-workbench-architecture/skills/vendor-minimal-firmware
+    source: LeoKemp223 (user-confirmed; unpublished/private source)
+    source_evidence: user-confirmed; author attribution supplied in current task
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-architecture
+    confidence: user-confirmed
+    status: migrated; provenance-unverified
+  - skill_id: visa-debug
+    source_path: skills/visa-debug
+    migrated_path: plugins/mcu-workbench-observability/skills/visa-debug
+    source: https://github.com/LeoKemp223/embed-ai-tool
+    source_evidence: user-confirmed; repository README lists this Skill
+    version: unknown
+    license: unknown
+    dependencies: unknown
+    target_plugin: mcu-workbench-observability
+    confidence: confirmed-by-content
+    status: migrated; provenance-unverified

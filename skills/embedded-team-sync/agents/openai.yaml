@@ -1,0 +1,4 @@
+interface:
+  display_name: "嵌入式团队同步"
+  short_description: "同步嵌入式团队规则和项目状态"
+  default_prompt: "使用 $embedded-team-sync 为这个嵌入式项目初始化或更新轻量团队协作状态。"

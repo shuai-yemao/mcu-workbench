@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "1.0.0",
+  "plugin": "mcu-workbench-workflow",
+  "generatedAt": "2026-11-24T10:22:07.967Z",
+  "dependencies": [
+    {
+      "source": "skills/embed-ai-tool/CONTRIBUTING.md",
+      "target": "/home/leo/work/open-git/em_skill/templates/skill-template/SKILL.md",
+      "resolved": "../../../../../home/leo/work/open-git/em_skill/templates/skill-template/SKILL.md",
+      "reason": "absolute-path-outside-repository",
+      "declaredAs": "external:/home/leo/work/open-git/em_skill/templates/skill-template/SKILL.md"
+    },
+    {
+      "source": "skills/embed-ai-tool/CONTRIBUTING.md",
+      "target": "/home/leo/work/open-git/em_skill/templates/skill-template/SCENARIOS.md",
+      "resolved": "../../../../../home/leo/work/open-git/em_skill/templates/skill-template/SCENARIOS.md",
+      "reason": "absolute-path-outside-repository",
+      "declaredAs": "external:/home/leo/work/open-git/em_skill/templates/skill-template/SCENARIOS.md"
+    },
+    {
+      "source": "skills/embed-ai-tool/README.md",
+      "target": "templates/skill-template/",
+      "resolved": "skills/embed-ai-tool/templates/skill-template",
+      "reason": "target-not-present-in-repository",
+      "declaredAs": "external:templates/skill-template/"
+    },
+    {
+      "source": "skills/embed-ai-tool/README_EN.md",
+      "target": "templates/skill-template/",
+      "resolved": "skills/embed-ai-tool/templates/skill-template",
+      "reason": "target-not-present-in-repository",
+      "declaredAs": "external:templates/skill-template/"
+    },
+    {
+      "source": "skills/embed-ai-tool/shared/contracts.md",
+      "target": "/home/leo/work/open-git/em_skill/shared/failure-taxonomy.md",
+      "resolved": "../../../../../home/leo/work/open-git/em_skill/shared/failure-taxonomy.md",
+      "reason": "absolute-path-outside-repository",
+      "declaredAs": "external:/home/leo/work/open-git/em_skill/shared/failure-taxonomy.md"
+    }
+  ]
+}

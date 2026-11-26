@@ -1,0 +1,40 @@
+{
+  "name": "mcu-workbench-local",
+  "owner": { "name": "MCU Workbench" },
+  "metadata": {
+    "description": "MCU Workbench 的 Codex 和 Cursor 插件目录。",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "mcu-workbench-architecture",
+      "source": "plugins/mcu-workbench-architecture",
+      "description": "嵌入式 App、Service、Platform、Impl 与 Vendor 架构 Skills。"
+    },
+    {
+      "name": "mcu-workbench-devops",
+      "source": "plugins/mcu-workbench-devops",
+      "description": "构建、链接、烧录、Git 和发布 Skills。"
+    },
+    {
+      "name": "mcu-workbench-observability",
+      "source": "plugins/mcu-workbench-observability",
+      "description": "调试、串口、RTT 与运行时观测 Skills。"
+    },
+    {
+      "name": "mcu-workbench-verification",
+      "source": "plugins/mcu-workbench-verification",
+      "description": "验证、质量门禁和单元测试 Skills。"
+    },
+    {
+      "name": "mcu-workbench-workflow",
+      "source": "plugins/mcu-workbench-workflow",
+      "description": "需求路由、审查门禁、计划与任务执行 Skills。"
+    },
+    {
+      "name": "mcu-workbench-project-management",
+      "source": "plugins/mcu-workbench-project-management",
+      "description": "项目状态、团队同步与文档上下文 Skills。"
+    }
+  ]
+}

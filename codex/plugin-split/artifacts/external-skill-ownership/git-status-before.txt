@@ -1,0 +1,171 @@
+ M AGENTS.override.md
+ M codex/AGENTS.md
+ M codex/plugin-split/external-skill-inventory.yaml
+ M codex/plugin-split/skill-ownership-matrix.md
+ M codex/plugin-split/spec.md
+ M package.json
+ M plugins/verification/index.js
+ M scripts/sync-codex-skills.js
+ M scripts/verification-pilot.js
+ M skills/academic-paper/SKILL.md
+ M skills/academic-paper/references/disclosure_mode_protocol.md
+ M skills/academic-paper/references/workflow_phase_details.md
+ M skills/academic-pipeline/SKILL.md
+ M skills/academic-pipeline/references/adapters/overview.md
+ M skills/academic-pipeline/references/passport_as_reset_boundary.md
+ M skills/academic-pipeline/references/pipeline_state_machine.md
+ M skills/app/app-architecture/SKILL.md
+ M skills/embedded-coding-standard/SKILL.md
+ M skills/embedded-prd-to-logic/README.md
+ M skills/impl/impl_board/SKILL.md
+ M skills/impl/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md
+ M skills/impl/impl_board/references/capability-index.md
+ M skills/impl/impl_bsp/SKILL.md
+ M skills/impl/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md
+ M skills/impl/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md
+ M skills/impl/impl_bsp/references/capability-index.md
+ M skills/impl/impl_bsp/references/hal-driver-evidence.md
+ M skills/impl/impl_os/SKILL.md
+ M skills/platform/platform_bsp/SKILL.md
+ M skills/platform/platform_common/SKILL.md
+ M skills/platform/platform_mcu/references/capabilities/bus-i2c/GUIDE.md
+ M skills/platform/platform_mcu/references/capabilities/bus-spi/GUIDE.md
+ M skills/platform/platform_mcu/references/capabilities/bus-uart/GUIDE.md
+ M skills/platform/platform_mcu/references/capabilities/peripheral-adc/GUIDE.md
+ M skills/platform/platform_mcu/references/capabilities/peripheral-timer/GUIDE.md
+ M skills/platform/platform_mcu/references/capability-index.md
+ M skills/platform/platform_mcu/references/core-iic-backends-case.md
+ M skills/platform/platform_os/SKILL.md
+ M skills/service/service_system/SKILL.md
+ M skills/service/service_system/references/capability-index.md
+ M skills/static-analysis/SKILL.md
+ M skills/tools/tools-quality/SKILL.md
+ M skills/tools/tools-quality/references/capabilities/quality-static-analysis/GUIDE.md
+ M skills/tools/tools-quality/references/capabilities/quality-unity-testing/GUIDE.md
+ M skills/tools/tools-quality/references/capability-index.md
+ M skills/tools/tools-quality/references/review-gates.md
+ M skills/tools/tools-quality/references/style-profile.md
+ M skills/tools/tools-verification/SKILL.md
+ M skills/vendor/vendor_algorithm/SKILL.md
+ M skills/vendor/vendor_algorithm/references/capability-index.md
+ M skills/vendor/vendor_fal/SKILL.md
+ M skills/vendor/vendor_fatfs/SKILL.md
+ M skills/vendor/vendor_fatfs/references/capability-index.md
+ M skills/vendor/vendor_flashdb/SKILL.md
+ M skills/vendor/vendor_letter_shell/SKILL.md
+ M skills/vendor/vendor_lvgl/SKILL.md
+ M skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.md
+ M skills/vendor/vendor_mcu/SKILL.md
+ M skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md
+ M skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/overview.md
+ M skills/vendor/vendor_mcu/references/capability-index.md
+ M skills/vendor/vendor_stack/SKILL.md
+ M skills/vendor/vendor_stack/references/capabilities/protocol-can/GUIDE.md
+ M skills/vendor/vendor_stack/references/capabilities/protocol-modbus/GUIDE.md
+ M skills/vendor/vendor_stack/references/capability-index.md
+ M tests/sync-codex-skills.test.js
+?? .playwright-cli/console-2026-08-20T11-50-31-514Z.log
+?? .playwright-cli/console-2026-08-20T12-08-36-559Z.log
+?? .playwright-cli/page-2026-08-20T11-50-32-051Z.yml
+?? .playwright-cli/page-2026-08-20T12-08-37-071Z.yml
+?? .pnpm-store/v11/index.db
+?? .pnpm-store/v11/index.db-shm
+?? .pnpm-store/v11/index.db-wal
+?? artifacts/verification-plugin-pilot/verification-report.json
+?? artifacts/verification-plugin-pilot/verification-report.junit.xml
+?? artifacts/verification-plugin-pilot/verification-report.md
+?? artifacts/verification-root-pilot/verification-report.json
+?? artifacts/verification-root-pilot/verification-report.junit.xml
+?? artifacts/verification-root-pilot/verification-report.md
+?? codex/native-skills.json
+?? codex/plugin-split/artifacts/external-skill-ownership/baseline.json
+?? codex/plugin-split/artifacts/external-skill-ownership/git-context.json
+?? codex/plugin-split/artifacts/external-skill-ownership/git-status-before.txt
+?? codex/plugin-split/artifacts/external-skill-ownership/plan-v1.5.md
+?? codex/plugin-split/artifacts/external-skill-ownership/plan.md
+?? codex/plugin-split/artifacts/external-skill-ownership/scan-baseline.js
+?? codex/plugin-split/artifacts/external-skill-ownership/task-v1.5.md
+?? codex/plugin-split/artifacts/external-skill-ownership/task.md
+?? codex/plugin-split/artifacts/verification/T-001/result.md
+?? codex/plugin-split/artifacts/verification/T-002/result.md
+?? codex/plugin-split/artifacts/verification/T-003/result.md
+?? codex/plugin-split/artifacts/verification/T-004/result.md
+?? codex/plugin-split/artifacts/verification/T-005/result.md
+?? codex/plugin-split/artifacts/verification/T-006/result.md
+?? codex/plugin-split/artifacts/verification/T-007/result.md
+?? codex/plugin-split/artifacts/verification/T-008/plugin-pilot/verification-report.json
+?? codex/plugin-split/artifacts/verification/T-008/plugin-pilot/verification-report.junit.xml
+?? codex/plugin-split/artifacts/verification/T-008/plugin-pilot/verification-report.md
+?? codex/plugin-split/artifacts/verification/T-008/result.md
+?? codex/plugin-split/artifacts/verification/T-008/root-pilot/verification-report.json
+?? codex/plugin-split/artifacts/verification/T-008/root-pilot/verification-report.junit.xml
+?? codex/plugin-split/artifacts/verification/T-008/root-pilot/verification-report.md
+?? codex/plugin-split/artifacts/verification/T-009/result.md
+?? codex/plugin-split/artifacts/verification/T-010/result.md
+?? codex/plugin-split/artifacts/verification/T-011/result.md
+?? plugins/mcu-workbench-verification/.codex-plugin/plugin.json
+?? plugins/mcu-workbench-verification/.cursor-plugin/plugin.json
+?? plugins/mcu-workbench-verification/descriptor.json
+?? plugins/mcu-workbench-verification/index.js
+?? plugins/mcu-workbench-verification/package.json
+?? plugins/mcu-workbench-verification/plugin.json
+?? plugins/mcu-workbench-verification/scripts/pilot.js
+?? plugins/mcu-workbench-verification/scripts/sync-skills.js
+?? plugins/mcu-workbench-verification/scripts/validate-manifests.js
+?? plugins/mcu-workbench-verification/scripts/validate.js
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/README.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/SKILL.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/agents/openai.yaml
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/assets/ceedling-project-snippet.yml
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/assets/cpputest-test-template.cpp
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/assets/googletest-test-template.cpp
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/assets/test-case-matrix-template.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/assets/test-plan-template.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/assets/unity-test-template.c
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/coverage-and-verification.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/embedded-test-risk-taxonomy.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/framework-selection.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/information-source-map.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/mock-stub-strategy.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/quality-rubric.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/test-case-design.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/references/workflow.md
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/scripts/analyze_c_module.py
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/scripts/collect_unit_test_context.py
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/scripts/generate_test_matrix.py
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/scripts/generate_test_skeleton.py
+?? plugins/mcu-workbench-verification/skills/embedded-unit-test-generator/scripts/summarize_test_results.py
+?? plugins/mcu-workbench-verification/skills/static-analysis/SKILL.md
+?? plugins/mcu-workbench-verification/skills/static-analysis/agents/openai.yaml
+?? plugins/mcu-workbench-verification/skills/static-analysis/references/misra-quick-ref.md
+?? plugins/mcu-workbench-verification/skills/static-analysis/references/usage.md
+?? plugins/mcu-workbench-verification/skills/static-analysis/scripts/static_analyzer.py
+?? plugins/mcu-workbench-verification/skills/tools-quality/SKILL.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-code-review/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-format-check/.clang-format
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-format-check/.clang-format-validation
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-format-check/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-map-analysis/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-map-analysis/map_analyzer.py
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-static-analysis/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-static-analysis/misra-rule-metadata.json
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-static-analysis/static_analysis.py
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-unity-testing/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-unity-testing/agents/openai.yaml
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capabilities/quality-unity-testing/references/aht21-unity-pattern.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/capability-index.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/quality-code-review/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/quality-map-analysis/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/quality-mode-contract.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/quality-static-analysis/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/quality-unity-testing/GUIDE.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/review-gates.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/style-profile.md
+?? plugins/mcu-workbench-verification/skills/tools-quality/references/upstream-source-baseline.md
+?? plugins/mcu-workbench-verification/skills/tools-verification/SKILL.md
+?? plugins/mcu-workbench-verification/skills/tools-verification/references/capability-index.md
+?? skills/tools/.verification-projections.json
+?? tests/verification-catalog.test.js
+?? tests/verification-external-skills.test.js
+?? tests/verification-plugin.test.js
+?? tests/verification-skill-projection.test.js

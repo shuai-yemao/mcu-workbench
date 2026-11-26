@@ -1,0 +1,700 @@
+{
+  "generatedAt": "2026-11-24T10:11:45.529Z",
+  "roots": {
+    "workflow-requirements-router": "skills/workflow/workflow-requirements-router",
+    "workflow-claude-layering": "skills/workflow/workflow-claude-layering",
+    "workflow-document-context": "skills/workflow/workflow-document-context",
+    "workflow-requirements-challenge": "skills/workflow/workflow-requirements-challenge",
+    "workflow-review-gate": "skills/workflow/workflow-review-gate",
+    "workflow-integration-plan": "skills/workflow/workflow-integration-plan",
+    "workflow-task-breakdown": "skills/workflow/workflow-task-breakdown",
+    "workflow-task-execution": "skills/workflow/workflow-task-execution",
+    "workflow-final-review": "skills/workflow/workflow-final-review",
+    "embed-ai-tool": "skills/embed-ai-tool",
+    "embedded-change-report": "skills/embedded-change-report",
+    "embedded-project-intake": "skills/embedded-project-intake",
+    "embedded-team-sync": "skills/embedded-team-sync",
+    "mrd-to-prd": "skills/mrd-to-prd"
+  },
+  "files": [
+    {
+      "skill": "workflow-requirements-router",
+      "path": "skills/workflow/workflow-requirements-router/references/rcp-template.md",
+      "sha256": "af79624e3b8f73d6d84b473639343768db5c0ffcfd37ffb1de186d2f6d792383",
+      "bytes": 9536
+    },
+    {
+      "skill": "workflow-requirements-router",
+      "path": "skills/workflow/workflow-requirements-router/references/spec-rigor-by-risk.md",
+      "sha256": "9cd99a434edfbcd8f7de60bf44923a13984db85f6299b1b8cf2b7be496d9232f",
+      "bytes": 3680
+    },
+    {
+      "skill": "workflow-requirements-router",
+      "path": "skills/workflow/workflow-requirements-router/SKILL.md",
+      "sha256": "b7d83c23dbbc6532592fe1e9d01923d72283134776b1a32dd8771623b4ffe001",
+      "bytes": 14378
+    },
+    {
+      "skill": "workflow-claude-layering",
+      "path": "skills/workflow/workflow-claude-layering/SKILL.md",
+      "sha256": "6f8f8fbec272fda4dc24e0cbeb1298b921e0401d6e936e37ff28108fa290dce1",
+      "bytes": 7678
+    },
+    {
+      "skill": "workflow-document-context",
+      "path": "skills/workflow/workflow-document-context/SKILL.md",
+      "sha256": "2172b63638ea9d0ff67214a2c7c4140e45858f05ce214941ac560e17e5bf8cc8",
+      "bytes": 8164
+    },
+    {
+      "skill": "workflow-requirements-challenge",
+      "path": "skills/workflow/workflow-requirements-challenge/SKILL.md",
+      "sha256": "67adb60a97494d0632f67b5681cde8cb56f61bfb1b3a5ad05e0f9b98d36b3fa8",
+      "bytes": 11953
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/capabilities/project-integration/GUIDE.md",
+      "sha256": "0224fc969aa3e496fafff0734337ee7aca8db295085b97b00b87c70d451e8dc1",
+      "bytes": 12084
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/capability-index.md",
+      "sha256": "98c37d5ed0c22c3829bed7250e268e4d9353b18900b656c3c66b89b6416d4a44",
+      "bytes": 396
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/ec-s100-architecture-audit.md",
+      "sha256": "0b6e9f4dd3c75d89233bf3bb4e22b32127d7f57a5c01cc0aaa7712f65e455248",
+      "bytes": 6664
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/gr5526-lvgl-mapping.md",
+      "sha256": "bec92b6c2399eaac6a6d4d33c9410c17062a06cfd9a65c82d6dec80c043236a1",
+      "bytes": 1250
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/implementation-plan-review-package.md",
+      "sha256": "030f4d298d5ecf034e2328e19a152047379761ade625cb97ec47a8f2d0a09000",
+      "bytes": 8021
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.json",
+      "sha256": "b0febd789aad0455d134ac809e2ffe4415bcfba546470e085bda2f11f1884a51",
+      "bytes": 30092
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md",
+      "sha256": "e3974ef146984249cdfdb6afdb90658080c35a489203e73e22c41891c5fbcabf",
+      "bytes": 3394
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/software-layer-contract.md",
+      "sha256": "a47946a31cd9384d3b2cef730cbfb3dd1096802f00811b530fce2594de514cb6",
+      "bytes": 8760
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/references/solid-code-gate.md",
+      "sha256": "e1a4383eae25ebd5dde0f42cf0df2543671813f56e4529b28fa0f61c7c368326",
+      "bytes": 3338
+    },
+    {
+      "skill": "workflow-review-gate",
+      "path": "skills/workflow/workflow-review-gate/SKILL.md",
+      "sha256": "b94e2f5b33bb571fcd4e9face00cf64c1215170393ff92bb15966a766af545d7",
+      "bytes": 14929
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-architecture/GUIDE.md",
+      "sha256": "f18a53a70b394c6c82136eee835217fd44d9e6c128a4d78377be31e077e9c342",
+      "bytes": 15514
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-architecture/references/layered-architecture-model.md",
+      "sha256": "4f274c470037b0be529c40f3f632e6137a2fb22e7c907d7abaa90059c7df2c33",
+      "bytes": 14220
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/GUIDE.md",
+      "sha256": "e2c73f312c1ce2a1483ae7a0df544054de1f2911ae5bc27bb704cf51fad610a4",
+      "bytes": 33889
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/pipeline.json",
+      "sha256": "b4f2c8db9cd98eb98366aa2d2377893a2addfedfc91eda4856c1815cb672415d",
+      "bytes": 757
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/compiler-compat.md",
+      "sha256": "d56902ab63562a84c8b891d15c8562583d6047d06e85dc1072e3034ac18683f1",
+      "bytes": 10310
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/cross-series-peripheral-map.md",
+      "sha256": "926fcb9d32929a8ba5810653e3fb8ed03a838b0406e2dd70b3b8222a6b5cb5aa",
+      "bytes": 9631
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/porting-checklist.md",
+      "sha256": "4ae76e95e9a2e0b98795fe18c92388bf84c21aef6561c04acf78b4165f73f9ff",
+      "bytes": 5986
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/references/porting-report-template.md",
+      "sha256": "bec9bc69bd0cdcb00a3a8540eae5e10c8528064a4452475e031fc6955bc2a580",
+      "bytes": 5186
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/check_reg_compat.py",
+      "sha256": "27ba600982973d916e230b13a611a21e9c3a8826bd9058bfe45936f6eba1bf52",
+      "bytes": 7626
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/cmp_vectors.py",
+      "sha256": "95ec86c54d2fc445742d57da41326fdfa20f8bb151e527c412010848ed18f460",
+      "bytes": 5916
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/diff_ld.py",
+      "sha256": "a934921c0ef8e25177c79322a4f75bb7d44431b626827f43f9d883abfce31715",
+      "bytes": 7359
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/gen_macro_map.py",
+      "sha256": "d48dbc69564cae3446e0ba61bf1696fa24c21f82ec1c7998609fac6ae03459e5",
+      "bytes": 6693
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capabilities/workflow-code-porting/scripts/gen_porting_report.py",
+      "sha256": "22f834b62bd898225880dadc8186a4085d3f9ae84bdb98f592ae963a98ff55c7",
+      "bytes": 14962
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/capability-index.md",
+      "sha256": "e1b1b81846bf7fd4dc9b34711aab869ec2d19844551d87968a82261f1fb81f67",
+      "bytes": 478
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/references/plan-template.md",
+      "sha256": "fd6914137b413fd293132fd36a09db461be4361f5c4dbf2ba7330eb8627713f1",
+      "bytes": 9023
+    },
+    {
+      "skill": "workflow-integration-plan",
+      "path": "skills/workflow/workflow-integration-plan/SKILL.md",
+      "sha256": "08a875d22f94e60c26366b95557aaf6a6fa3494c0ee343138535db76802ba21c",
+      "bytes": 16386
+    },
+    {
+      "skill": "workflow-task-breakdown",
+      "path": "skills/workflow/workflow-task-breakdown/references/task-template.md",
+      "sha256": "8d32058611c968d5953918682a26c7f1d04111502cb2a0a20aed9240d8101ff9",
+      "bytes": 4925
+    },
+    {
+      "skill": "workflow-task-breakdown",
+      "path": "skills/workflow/workflow-task-breakdown/SKILL.md",
+      "sha256": "48da9e8fadedfc078e4cd4595d1d95d46514ba556fab7d9791d12b778f4e66f7",
+      "bytes": 10311
+    },
+    {
+      "skill": "workflow-task-execution",
+      "path": "skills/workflow/workflow-task-execution/SKILL.md",
+      "sha256": "6d782068a31b86edd262b74b4bbf9100fb5076d6daaf5c12e7dd93d93d37d085",
+      "bytes": 13754
+    },
+    {
+      "skill": "workflow-final-review",
+      "path": "skills/workflow/workflow-final-review/references/capability-index.md",
+      "sha256": "f606a6f4cd46e9bdea2c60974ed5b3643b1c1ee24e1b87b1fb580e6033f05121",
+      "bytes": 668
+    },
+    {
+      "skill": "workflow-final-review",
+      "path": "skills/workflow/workflow-final-review/references/collaboration-protocol.md",
+      "sha256": "bb591396b292fd020d19897c16c0a3d764b8e46ccd809fb7e091ff799ffe83cf",
+      "bytes": 2230
+    },
+    {
+      "skill": "workflow-final-review",
+      "path": "skills/workflow/workflow-final-review/references/prompt-contract.md",
+      "sha256": "0c86cd641b56b64a3f26301b4914b74bfd10962a64e7a954f96ea5b53982c1df",
+      "bytes": 5567
+    },
+    {
+      "skill": "workflow-final-review",
+      "path": "skills/workflow/workflow-final-review/SKILL.md",
+      "sha256": "e532ab9d2b1890a9d8d107d956cd7e3a56fa9ccbb81422a20bbd677ee686aa56",
+      "bytes": 11434
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/.claude/settings.json",
+      "sha256": "b3383b1b5c332a0215ced26dc7cbc0d368d91c228c0b90c4a8c519977c7e1fd2",
+      "bytes": 220
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/.gitattributes",
+      "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c",
+      "bytes": 19
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/.gitignore",
+      "sha256": "2d7f4b5d8f4a70a563a1bb9f8ffa4d08600f91ba2e2aa8bcbc085b5906d59b85",
+      "bytes": 95
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/CONTRIBUTING.md",
+      "sha256": "2a60095e83ca3eed110c86e9c96ac3b13b1eb49a981fce17c4993c7e0fd2fbcb",
+      "bytes": 1729
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/README.md",
+      "sha256": "90934787854239b9e6dd17d47799ea0bfa196f7aa2596a27e9d15d264ff2a9cf",
+      "bytes": 11596
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/README_EN.md",
+      "sha256": "d06b60a10569acbedfcd6f6687c7ed7109b35666876abc82fc6afd63f6da9582",
+      "bytes": 12221
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/scripts/em_config.py",
+      "sha256": "44587f13acab99799eb802f8c8a0872e5c240108d0ed60d909fc85df14791ff7",
+      "bytes": 3614
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/scripts/install.py",
+      "sha256": "5945dff1783d6118a935daa214d55ebce3e7f2290f1bb10d584945e0b8ff5b1a",
+      "bytes": 18822
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/scripts/validate_repo.py",
+      "sha256": "fc5aad9bccbbc93b07ba47f57de8eb7c732b81651f1d961f410d946d6a6224e0",
+      "bytes": 3128
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/contracts.md",
+      "sha256": "411da9e6e4c7811445867647e85532f3602f5afcdad0eb86cebe2526a2b13792",
+      "bytes": 4191
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/failure-taxonomy.md",
+      "sha256": "c5a705c52b4f124ce951d85c59c6eede01fabfc4d71f1f7b1398514fde4aae07",
+      "bytes": 2102
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/idf_env.py",
+      "sha256": "eabffee9919da98a1b78fd7883cfd9a7096c2633c1102da10dfb793b1ebeaf39",
+      "bytes": 9522
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/platform-compatibility.md",
+      "sha256": "90a7081ce50a0b70127851445beb3988feb68d318460686946a20145f2eb0fda",
+      "bytes": 1816
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/profile_store.py",
+      "sha256": "e14f17df2c833e5099f332f4ad5af26251de12ab8215399308aefe11d7f48337",
+      "bytes": 8213
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/project_detect.py",
+      "sha256": "8765ed75d8f8e6052a144248bb0ddf94a28956e91d1afc316ecc65b70bbaa29a",
+      "bytes": 6585
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/references/acceptance-scenarios.md",
+      "sha256": "4a657c82fc9379d16f80e26bc663867353d072c62e12fe8375037e29272e0281",
+      "bytes": 1238
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/references/tool-detection.md",
+      "sha256": "9a47ac7c5675b431cd03da2689c33b98ab0808b2998470236b3464f9cbc82518",
+      "bytes": 3121
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/shared/tool_config.py",
+      "sha256": "6c02f5980e37a68b8397d128782e3b1e305ee2c6c20b8d76aec40298929141d6",
+      "bytes": 4881
+    },
+    {
+      "skill": "embed-ai-tool",
+      "path": "skills/embed-ai-tool/SKILL.md",
+      "sha256": "d7e4b2f483c78295daf1d54a08fe5d64c6b03027a35e3de5aefb6d8eb37ca1db",
+      "bytes": 14042
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/agents/openai.yaml",
+      "sha256": "88f764ea32e8e1a5c7a57a1481bfb938d15c2dd83b3537e99abc110fc0edd5a2",
+      "bytes": 247
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/assets/change-report-template.md",
+      "sha256": "0066792055e29adf672a87c120b67a017bfdba5312160cab0d82601a97d9d7b3",
+      "bytes": 1972
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/assets/fix-change-report-template.md",
+      "sha256": "98f34ca29e99c982f85efc420603a1c70a9aa8ca13df8ae99412e4895b493f90",
+      "bytes": 1687
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/assets/release-change-report-template.md",
+      "sha256": "244a91e5b1961e2e01d4334b3ebf0361ddf024064988b5ac6182ff408f22d1e4",
+      "bytes": 1862
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/README.md",
+      "sha256": "1d6f64d9afd2082c58625e3070a0799b59ec489ea3f457c214e71c6b18e0a4bf",
+      "bytes": 8714
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/references/embedded-risk-taxonomy.md",
+      "sha256": "6882647fd5611242d602de2929b8511299744016b0af95214679e25010895796",
+      "bytes": 2786
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/references/evidence-checklist.md",
+      "sha256": "eb860a8fb0e25f7efdc3c86ed9cb6d6b87316628ba715a05bbaaae8d814f9b60",
+      "bytes": 3998
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/references/information-source-map.md",
+      "sha256": "cb275a54f1cfb55be2f2deddce18d8030d5cd48ed0b19068f25304adfea2ff3a",
+      "bytes": 4164
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/references/report-quality-rubric.md",
+      "sha256": "bf29fd559e5b53b8c10bfc9f3fb89d8b7234cdc1467e53defbd4993871732965",
+      "bytes": 2055
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/references/report-schema.md",
+      "sha256": "51b2028e8e7e22ca9638527c4f0cd77dcc18dfb512c8b7daf5105c0d7d77707e",
+      "bytes": 3445
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/references/report-workflow.md",
+      "sha256": "0fd27ceb0e816551f43aebf36f6d57f87a1818373f28c19d511621c1544c7d36",
+      "bytes": 3499
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/scripts/collect_change_context.py",
+      "sha256": "02b1ab0beb81330cfd19c4d3b4f3f7f62566b53eb6d3c0ea3935a08aac085040",
+      "bytes": 7905
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/scripts/extract_build_summary.py",
+      "sha256": "fc7199a11785716322bdd6f0eda13bb177c3d80f12e2009d0ab2d62941e9451e",
+      "bytes": 5217
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/scripts/extract_git_evidence.py",
+      "sha256": "dc21da2ba74af88d658ae3dba407352177d7cdcbc8418da0f2a0593055af945a",
+      "bytes": 9132
+    },
+    {
+      "skill": "embedded-change-report",
+      "path": "skills/embedded-change-report/SKILL.md",
+      "sha256": "fbf20776023bf612b0815cc13e6842027a8871e9c5a4bde82eae87700fa00389",
+      "bytes": 7046
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/agents/openai.yaml",
+      "sha256": "e68467b86ea1d4411288a7e7fd4c912ef80d13e14b3e37a08f145d7674c39383",
+      "bytes": 789
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/assets/mermaid.min.js",
+      "sha256": "70137e77bb273bb2ef972b86e8b0400cca8be53cb25bfc45911a186dc98665de",
+      "bytes": 3312967
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/agent-compatibility.md",
+      "sha256": "7ad628797fcce68b9bc2eb1ee92c60c354bb88cb8a14a312722681003a6e46d7",
+      "bytes": 1509
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/anti-laziness.md",
+      "sha256": "3c966817adaa8670083905e13b2b25ac7751de2b5d8880d7b913b5d2a43dcb4f",
+      "bytes": 2256
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/embedded-review-dimensions.md",
+      "sha256": "e4b2084ada662d70015bb107fb89aba5f898f8399e5b78d60e195654643171c9",
+      "bytes": 2429
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/engineer-report.md",
+      "sha256": "8a3073a1abd4c6710bca28af293ce933de4bef0e81e814a8b755df08b920165c",
+      "bytes": 8153
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/evidence-rules.md",
+      "sha256": "506c560915dea8a99b9e5d0c5e951bf2438eddd67d0fbf170d0ab5c076e30f7a",
+      "bytes": 1575
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/html-report-output.md",
+      "sha256": "1079511dee7048a4c427a5bb1144ac4af31e20ff795ba78e65f4677c053a0ab0",
+      "bytes": 12648
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/install-and-usage.md",
+      "sha256": "1de58b37e3d5e2cb7f2621d5e1892344158d3e8b34d4b67f8aea679e797182b6",
+      "bytes": 7390
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/references/output-template.md",
+      "sha256": "85376fc3ea79c2eb76731afe4570cfd37a14a4ea23355cbbacaf962f30ef4d0a",
+      "bytes": 13848
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/build_entry_scan.mjs",
+      "sha256": "0b978c54cbd9a7371ce74e3af88cb57911ec4e67307ab75c234060d872dfd72b",
+      "bytes": 2596
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/embedded_signals.mjs",
+      "sha256": "73b64b2eaf8f4848d32f24f7ac9058b86098b419014977b48a19e65dab776d16",
+      "bytes": 3133
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/evidence_matrix.mjs",
+      "sha256": "a24530f9becbd9196e8e60345d95517f9ebd7b43496eb31a09a952e48704a9cf",
+      "bytes": 3147
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/inline_mermaid_html.mjs",
+      "sha256": "b90584c7fbe3b9d089552ddc6fd267362503ac3c73f43d86e41317482990b5e3",
+      "bytes": 2605
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/install_for_agent.mjs",
+      "sha256": "fe9ba8fc2175f4ea4d73f389c0af4171d35b996b071f93c5bbf20b0b14f1b5f3",
+      "bytes": 1659
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/module_map.mjs",
+      "sha256": "6da69f3f926c213a8616284035526a7c19d00a28fa0404bd97b66c97d41ef37e",
+      "bytes": 4082
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/project_inventory.mjs",
+      "sha256": "5ac3c17a8df20257e0d5d9721f384c314dedb369c94c52fd888ce877e5690770",
+      "bytes": 2116
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/scripts/validate_mermaid_report.mjs",
+      "sha256": "035aad50542142f3ce5ee049a5c556740fce6f03cf20cb5d176ba3e64d7b5b1e",
+      "bytes": 5460
+    },
+    {
+      "skill": "embedded-project-intake",
+      "path": "skills/embedded-project-intake/SKILL.md",
+      "sha256": "e9422b74e8031eac3a2d9aaa9fee4b37e1427fd75ff024a06b8f4c307bb88152",
+      "bytes": 19913
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/agents/openai.yaml",
+      "sha256": "bc8d2975ac84a99567f855a074fc85f39b64bdf96da7a3bc3d97246826487ba5",
+      "bytes": 234
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/assets/PROJECT_STATUS.md",
+      "sha256": "9cce577d123dc6f70ba4ee4faaa054f3848950634456d87bc9a103ecb2ed19f8",
+      "bytes": 387
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/assets/SKILL_REGISTRY.md",
+      "sha256": "3f86b76551544ab1a7792ec88ed95a93237c3cfb23f77d623ad0317563a3ca83",
+      "bytes": 711
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/assets/TASK_LOG.md",
+      "sha256": "e43bce8372be115a51d6440310bffa5e0f93e4a66f1c03fb1865153f448a3cf1",
+      "bytes": 157
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/assets/TEAM_RULES.md",
+      "sha256": "f94e81c27206e90886f237e60b0c5736416a4f26ea24e3554f00e9d19fa49df4",
+      "bytes": 1234
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/README.md",
+      "sha256": "e04536c39db77553eb07df03f0760cf9044a935af2adac17f59f7b4577e4fade",
+      "bytes": 3017
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/references/status-rules.md",
+      "sha256": "3fb2909c3860c6a87a941dd8d11882ea0b504097c2171a55a18b5f9487b102e5",
+      "bytes": 541
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/references/workflow.md",
+      "sha256": "6f0f0413aa4226155c048f6711c4966da883ef895bd053859045ee71b6fd9fb8",
+      "bytes": 1079
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/scripts/init_team_sync.py",
+      "sha256": "6aed6437ce0281cc77ba38a1ff94e379cbf0097ab6dbd465c133f74f6d5a58f5",
+      "bytes": 3046
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/scripts/start_task_note.py",
+      "sha256": "f08e1d3d0d75749ea877da22fdaeedd00f0408a96112f6a2b9b8952be69b57ef",
+      "bytes": 3013
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/scripts/summarize_team_sync.py",
+      "sha256": "5ead80406e2624ebff5351fbc162233c1468b90e1ff3c27ae3347e4a426a6b4d",
+      "bytes": 3858
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/scripts/update_task_log.py",
+      "sha256": "56dbc36f9c7da16ce36440519708363c616bce079cf748a72a30339451dc8a1a",
+      "bytes": 3732
+    },
+    {
+      "skill": "embedded-team-sync",
+      "path": "skills/embedded-team-sync/SKILL.md",
+      "sha256": "19f111123233e03c64a0da192670ceeae882344c76766a4b7251fcc1141aaf4f",
+      "bytes": 4453
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/agents/openai.yaml",
+      "sha256": "1152f2ab1b9816980a36976376e1b7690a2c7fac6a850ece3c20f4a55378183f",
+      "bytes": 335
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/README.md",
+      "sha256": "4714345706d404c96b30fb8650cc6a4f25dd65d14b218730c706745d6088ddaa",
+      "bytes": 3047
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/references/mapping-rules.md",
+      "sha256": "e272b7eac142c1dbb016a6e8ac9a32d86703901e652bf07c05df02dec778d60c",
+      "bytes": 1337
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/references/mrd-checklist.md",
+      "sha256": "92a7983e503dc675c966909bd2eda9b245424cdc6f193158195c326e3098d753",
+      "bytes": 732
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/references/prd-templates.md",
+      "sha256": "de77cca6ff804a29d20cc442721dd145827df978fac47af2d6a7afe136a801a4",
+      "bytes": 1874
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/references/smart-hardware-prd.md",
+      "sha256": "34ca8e6450a331116334a67cec57c6c5c619e78c72a0749f94e263e8e67d7b29",
+      "bytes": 5699
+    },
+    {
+      "skill": "mrd-to-prd",
+      "path": "skills/mrd-to-prd/SKILL.md",
+      "sha256": "31c49cb951474080c80e077c642ce39900484b3a3e05580773f25f1189652501",
+      "bytes": 3714
+    }
+  ],
+  "counts": {
+    "skills": 14,
+    "files": 112,
+    "markdown": 75,
+    "directLocalPairs": 132,
+    "uniqueTargets": 97
+  }
+}

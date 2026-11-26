@@ -1,0 +1,52 @@
+{
+  "request_id": "REQ-PLATFORM-IMPL-OS-UPGRADE-20260821",
+  "state_version": "v1.0",
+  "spec_version": "v1.0",
+  "plan_version": "v1.0",
+  "task_version": "v1.0",
+  "current_stage": "task-execution",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": ["versioned"],
+  "requirements": {
+    "scope": "升级 platform_os 与 impl_os 的架构规则、参考资料、证据分级和插件测试契约",
+    "non_goals": [
+      "不新增 Event Group、Task Notification 等 OS 能力",
+      "不新增代码生成模板",
+      "不修改固件、FreeRTOS、HAL、BSP、Vendor 或其他宿主适配层"
+    ],
+    "implementation_profiles": ["direct-platform-backend", "explicit-impl-bridge", "bare-metal-or-fake", "mixed", "missing"]
+  },
+  "constraints": {
+    "preserve_existing_worktree_changes": true,
+    "preserve_existing_root_docs": true,
+    "preserve_canonical_names_and_aliases": true,
+    "no_code_before_spec_approval": true
+  },
+  "evidence": [
+    {"id": "E-01", "source": "git metadata", "confidence": "confirmed"},
+    {"id": "E-03", "source": "git status --short", "confidence": "confirmed"},
+    {"id": "E-04", "source": "skills/platform/platform_os and skills/impl/impl_os", "confidence": "confirmed"},
+    {"id": "E-07", "source": "OS reference files", "confidence": "confirmed"},
+    {"id": "E-08", "source": "tests/embedded-architecture-skills.test.js", "confidence": "confirmed"},
+    {"id": "E-11", "source": "current user-confirmed architecture context", "confidence": "user-confirmed"}
+  ],
+  "decisions": [
+    {"id": "D-01", "decision": "第一版只升级规则、参考资料、证据分级和测试契约", "owner": "user", "confidence": "user-confirmed"},
+    {"id": "D-02", "decision": "不把二次 impl_os 桥接强制为唯一架构", "owner": "user", "confidence": "user-confirmed"},
+    {"id": "D-03", "decision": "选择方案 B：剖面化契约升级", "owner": "user", "confidence": "user-confirmed"}
+  ],
+  "open_questions": [],
+  "user_gates": {
+    "H-01": "passed",
+    "H-02": "passed",
+    "H-03": "passed"
+  },
+  "task_summary": {"total": 8, "ready": 8, "blocked": 0, "key_chain": "T-001 → T-002 → T-003 → T-004 → T-005 → T-006 → T-007 → T-008"},
+  "current_task": null,
+  "completed_tasks": ["T-001", "T-002", "T-003", "T-004", "T-005", "T-006", "T-007", "T-008"],
+  "verify_summary": {"status": "passed", "evidence": ["npm test 50 suites/313 tests", "npm run build exit 0", "validate:plugin exit 0", "validate:links exit 0", "git diff --check exit 0"]},
+  "final_review_summary": {"status": "passed", "quality_gate": "passed", "board_validation": "unverified"},
+  "blockers": [],
+  "updated_at": "2026-08-21T14:42:00+08:00"
+}

@@ -1,0 +1,66 @@
+{
+  "request_id": "REQ-DOCUMENT-CONTEXT-20260820",
+  "state_version": 1,
+  "project_root": "C:\\Users\\zhang\\Documents\\mcu-workbench",
+  "spec_version": "v0.1",
+  "plan_version": "v0.1",
+  "task_version": "v0.1",
+  "current_stage": "final_verify",
+  "current_status": "completed",
+  "spec_rigor": "full",
+  "spec_overlays": ["human_review", "versioned", "context_budget"],
+  "requirements": [
+    "request_owned_documents",
+    "conversation_drafts_before_promotion",
+    "multi_conversation_handoff",
+    "multi_request_conversation_binding",
+    "cross_request_shared_decisions",
+    "optimistic_revision_check",
+    "document_registration_and_scan",
+    "lifecycle_and_archive",
+    "minimal_budgeted_context",
+    "managed_readme_index"
+  ],
+  "constraints": [
+    "preserve_existing_paths",
+    "no_automatic_migration",
+    "no_transcript_as_default_context",
+    "formal_docs_are_spec_plan_task",
+    "no_code_implementation_before_spec_approval"
+  ],
+  "evidence": [
+    {"level": "confirmed", "artifact": "skills/workflow/workflow-document-context/SKILL.md"},
+    {"level": "confirmed", "artifact": "README.md"},
+    {"level": "confirmed", "artifact": "git status --short"},
+    {"level": "user-confirmed", "artifact": "current conversation decisions"}
+  ],
+  "decisions": [
+    {"decision": "draft_first_promotion", "status": "user-confirmed"},
+    {"decision": "archived_files_retained_but_not_loaded", "status": "user-confirmed"},
+    {"decision": "optimistic_concurrency_with_revision", "status": "user-confirmed"},
+    {"decision": "active_request_required_for_document_operations", "status": "user-confirmed"},
+    {"decision": "cross_request_decision_records", "status": "user-confirmed"},
+    {"decision": "budgeted_minimal_context", "status": "user-confirmed"},
+    {"decision": "selected_plan_option_b", "status": "user-confirmed"}
+  ],
+  "open_questions": [],
+  "user_gates": {
+    "spec": "approved",
+    "plan": "approved",
+    "task": "completed",
+    "hard_blocker": "none"
+  },
+  "blockers": [],
+  "task_summary": {
+    "total": 9,
+    "completed": 9,
+    "current_task": null
+  },
+  "verify_summary": {
+    "status": "passed",
+    "evidence_level": "static_and_host",
+    "acceptance_ids": ["V-01", "V-02", "V-03", "V-04", "V-05", "V-06", "V-07", "V-08", "V-09", "V-10", "V-11", "V-12", "V-13", "V-14", "V-15"],
+    "unverified": ["real_host_auto_trigger", "target_build", "target_runtime", "hardware_measurement", "host_token_counter"]
+  },
+  "updated_at": "2026-08-20T23:59:00+08:00"
+}

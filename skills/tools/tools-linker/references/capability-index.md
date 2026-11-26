@@ -4,4 +4,4 @@
 
 | 能力主题 | 详细资料 |
 | --- | --- |
-| 链接脚本与散装加载 | [完整流程与资源](capabilities/tool-linker-scatter/GUIDE.md) |
+| 链接脚本与散装加载 | [完整流程与资源](./capabilities/tool-linker-scatter/GUIDE.md) |

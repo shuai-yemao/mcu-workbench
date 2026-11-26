@@ -1,0 +1,4 @@
+interface:
+  display_name: "芯片驱动手册解析"
+  short_description: "从芯片手册中提取嵌入式驱动开发参数。"
+  default_prompt: "使用 $chip-driver-manual 从这份芯片手册中提取外设寄存器参数，用于驱动开发。"

@@ -1,0 +1,8 @@
+{
+  "id": "mcu-workbench-project-management",
+  "version": "1.0.0",
+  "description": "MCU Workbench project state, team synchronization and document context Skills.",
+  "skills": "./skills/",
+  "hosts": ["codex", "cursor"],
+  "compatibility": {"aggregatePlugin": "mcu-workbench", "lifecycle": "explicit", "hotUnload": false}
+}

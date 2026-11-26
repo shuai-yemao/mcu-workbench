@@ -1,0 +1,12 @@
+{
+  "name": "mcu-workbench-architecture",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "prepare-links": "node scripts/prepare-skill-links.js",
+    "validate": "node scripts/validate.js",
+    "validate-manifests": "node scripts/validate-manifests.js",
+    "sync-skills": "node scripts/sync-skills.js"
+  }
+}

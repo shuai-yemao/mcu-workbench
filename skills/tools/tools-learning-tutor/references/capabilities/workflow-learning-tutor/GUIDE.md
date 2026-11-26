@@ -6,9 +6,12 @@ description: >
   以项目代码和 Obsidian 知识笔记模板为基础，逐节向用户提问，判断理解是否到位（能否一句话说清），
   最终输出带 mermaid 图表和代码片段的 Obsidian 完整笔记。
   适用于嵌入式 C 项目（STM32、传感器驱动、RTOS 等）的模块学习和笔记生成。
+migration_status: compare-only
 ---
 
 # Learning Tutor — 交互式嵌入式代码学习辅导
+
+> 迁移状态：仅用于旧版流程比对，不作为 `tools-learning-tutor` 的 active reference。现行流程以主 `SKILL.md` 及其直接引用的提问、笔记和写入协议为准。
 
 ## 概述
 

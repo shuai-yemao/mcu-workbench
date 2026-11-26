@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "id": "w25q64-ui-3m-stm32f411-pb12-15",
+  "flash": {
+    "part": "W25Q64",
+    "physical_size": 8388608,
+    "sector_size": 4096,
+    "page_size": 256
+  },
+  "keil_window": {
+    "base": 2415919104,
+    "size": 3145728
+  },
+  "physical_window": {
+    "offset": 3145728,
+    "size": 3145728
+  },
+  "pins": {
+    "cs": "PB12",
+    "sck": "PB13",
+    "miso": "PB14",
+    "mosi": "PB15",
+    "transport": "gpio-soft-spi-mode-0"
+  },
+  "safety": {
+    "erase_chip": false,
+    "reject_outside_window": true
+  }
+}

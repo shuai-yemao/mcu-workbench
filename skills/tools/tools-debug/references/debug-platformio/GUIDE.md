@@ -25,7 +25,7 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次操作。
+1. 先阅读 [usage.md](../capabilities/debug-platformio/references/usage.md)，确认本次操作。
 2. 探测调试环境：
    ```bash
    python scripts/pio_debugger.py --detect --project-dir <工程目录> --env <环境名>

@@ -1,0 +1,4 @@
+interface:
+  display_name: "嵌入式深度缺陷排查"
+  short_description: "发现嵌入式深层 bug 和设计风险"
+  default_prompt: "使用 $embedded-bug-hunter 在改代码前检查这个固件工程的深层 bug 和设计风险。"

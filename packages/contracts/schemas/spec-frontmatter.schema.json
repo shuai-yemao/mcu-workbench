@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "mcu-workbench/spec-frontmatter/1.0.0",
+  "type": "object",
+  "required": ["requestId", "version", "requiredCapabilities", "optionalCapabilities"],
+  "properties": {
+    "requestId": { "type": "string", "pattern": "^[A-Z0-9][A-Z0-9-]+$" },
+    "version": { "type": "string" },
+    "requiredCapabilities": { "type": "array", "items": { "type": "string" } },
+    "optionalCapabilities": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

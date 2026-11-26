@@ -1,0 +1,9 @@
+app:
+  name: "ProductionTools"
+  version: "0.1.0"
+  log_file: "logs/app.log"
+  window:
+    title: "Production Tools"
+    width: 1100
+    height: 720
+    theme: "system"

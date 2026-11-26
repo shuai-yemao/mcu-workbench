@@ -1,0 +1,10 @@
+{
+  "id": "mcu-workbench-devops",
+  "version": "1.0.0",
+  "capabilities": [],
+  "dependencies": [],
+  "lifecycle": {
+    "load": "load-devops",
+    "dispose": "dispose-devops"
+  }
+}

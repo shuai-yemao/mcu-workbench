@@ -29,7 +29,7 @@ function validateClaudeManifestSkillPaths(manifest, expectedLayers, errors) {
   }
   for (const skillPath of actualManifestPaths) {
     if (!expectedManifestPaths.has(skillPath)) errors.push(`manifest: 未登记 skills 路径 ${skillPath}`);
-    if (!/^\.\/skills\/[a-z0-9-]+\/$/.test(skillPath)) {
+    if (!/^\.\/skills\/[a-z0-9_-]+\/$/.test(skillPath)) {
       errors.push(`manifest: skills 路径格式无效 ${skillPath}`);
       continue;
     }

@@ -37,8 +37,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、烧录、擦除，还是启动调试。
-2. 若不确定环境状态，先运行自带脚本 [scripts/idf_flasher.py](scripts/idf_flasher.py) 的 `--detect` 模式确认。
+1. 先阅读 [usage.md](../capabilities/tool-flash-esp-idf/references/usage.md)，确认本次是环境探测、烧录、擦除，还是启动调试。
+2. 若不确定环境状态，先运行自带脚本 [idf_flasher.py](../capabilities/tool-flash-esp-idf/scripts/idf_flasher.py) 的 `--detect` 模式确认。
 3. 使用 `--flash --project <path>` 执行烧录，可通过 `--port` 和 `--baud` 指定串口参数。
 4. 若用户需要擦除 Flash，使用 `--erase-flash`。
 5. 若用户需要烧录后立即查看串口输出，提示手动运行 `idf.py flash monitor`（交互式长运行命令）。

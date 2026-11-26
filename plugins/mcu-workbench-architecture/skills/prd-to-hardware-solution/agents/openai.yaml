@@ -1,0 +1,4 @@
+interface:
+  display_name: "PRD 转硬件方案"
+  short_description: "从 PRD 生成联网选型硬件方案。"
+  default_prompt: "使用 $prd-to-hardware-solution 根据这份 PRD 生成完整硬件方案文档。"

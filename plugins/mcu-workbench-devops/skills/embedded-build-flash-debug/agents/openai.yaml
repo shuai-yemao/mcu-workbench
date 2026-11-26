@@ -1,0 +1,4 @@
+interface:
+  display_name: "Embedded Build Flash Debug"
+  short_description: "Create or repair build/flash/debug entry scripts for existing embedded firmware projects."
+  default_prompt: "Use $embedded-build-flash-debug to add build, flash, and debug entry scripts to my firmware project."

@@ -1,0 +1,6 @@
+{
+  "name": "mcu-workbench-architecture",
+  "version": "1.0.0",
+  "description": "MCU Workbench 嵌入式软件架构 Skills。",
+  "skills": ["./skills/"]
+}

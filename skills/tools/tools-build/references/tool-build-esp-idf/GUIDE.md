@@ -39,8 +39,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、设置目标、执行构建，还是仅扫描产物。
-2. 若不确定环境是否就绪，先运行自带脚本 [scripts/idf_builder.py](scripts/idf_builder.py) 的 `--detect` 模式确认。
+1. 先阅读 [usage.md](../capabilities/tool-build-esp-idf/references/usage.md)，确认本次是环境探测、设置目标、执行构建，还是仅扫描产物。
+2. 若不确定环境是否就绪，先运行自带脚本 [idf_builder.py](../capabilities/tool-build-esp-idf/scripts/idf_builder.py) 的 `--detect` 模式确认。
 3. 若需要设置或切换目标芯片，使用 `--set-target <chip>` 执行。
 4. 使用 `--build --project <path>` 执行构建。
 5. 若用户需要修改 sdkconfig，提示手动运行 `idf.py menuconfig`（交互式命令，不可自动执行）。

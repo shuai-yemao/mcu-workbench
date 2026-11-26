@@ -1,0 +1,6 @@
+{
+  "name": "mcu-workbench-observability",
+  "version": "1.0.0",
+  "description": "MCU Workbench 调试、串口、RTT 与运行时观测 Skills。",
+  "skills": "./skills/"
+}

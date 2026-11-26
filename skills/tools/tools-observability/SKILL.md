@@ -9,9 +9,13 @@ description: 负责 ELOG、SEGGER RTT、串口监控、SystemView 和运行时�
 
 统一处理目标端日志输出、PC 端采集、过滤、时间戳、缓冲溢出和任务/中断追踪。先确认输出通道与数据格式，再加载对应 reference。
 
+## 路由边界
+
+本 skill 承担**日志流**（运行时观测）：偶发异常、长稳监控、事件时序重建、丢包/溢出判断、崩溃前面包屑、SWV/ITM 输出。当日志只能定位到"某处异常"而无法确定根因时，交接 [`tools-debug`](../tools-debug/SKILL.md)（调试流）读取崩溃现场；编码期/构建期预防交接 [`tools-quality`](../tools-quality/SKILL.md)（静态分析流）。连接观测工具只证明通道可用，不能替代业务或实物验证。
+
 ## 变体
 
-ELOG、RTT 移植/监控、串口监控和 SystemView 的资料按旧入口放在 `references/observability-*/GUIDE.md` 下；重复脚本按原入口放在各自的 reference 命名空间中。
+ELOG、RTT 移植/监控、串口监控、SystemView、SWV/ITM 和面包屑崩溃记录的资料按旧入口放在 `references/observability-*/GUIDE.md` 下；重复脚本按原入口放在各自的 reference 命名空间中。
 
 官方目标端源码和 commit 基线见 [`upstream-source-baseline.md`](references/upstream-source-baseline.md)。
 ELOG、RTT、串口和 SystemView 的完整移植、采集与脚本资料见 [`capability-index.md`](references/capability-index.md)。
@@ -19,3 +23,5 @@ ELOG、RTT、串口和 SystemView 的完整移植、采集与脚本资料见 [`c
 ## 输出
 
 给出采集命令、通道配置、过滤规则、日志证据和丢包/溢出判断。需要根因定位时交接 [`tools-debug`](../tools-debug/SKILL.md)。
+
+固定源码的 EasyLogger/RTT 接线、锁风险与证据格式见 [`debugcomponent-rtt-case.md`](references/debugcomponent-rtt-case.md)。连接观测工具只证明通道可用，不能替代业务或实物验证。

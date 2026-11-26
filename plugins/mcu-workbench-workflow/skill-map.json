@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0.0",
+  "plugin": "mcu-workbench-workflow",
+  "skills": [
+    { "id": "workflow-requirements-router", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-requirements-router", "projectionPath": "skills/workflow/workflow-requirements-router" },
+    { "id": "workflow-claude-layering", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-claude-layering", "projectionPath": "skills/workflow/workflow-claude-layering" },
+    { "id": "workflow-requirements-challenge", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-requirements-challenge", "projectionPath": "skills/workflow/workflow-requirements-challenge" },
+    { "id": "workflow-review-gate", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-review-gate", "projectionPath": "skills/workflow/workflow-review-gate" },
+    { "id": "workflow-integration-plan", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-integration-plan", "projectionPath": "skills/workflow/workflow-integration-plan" },
+    { "id": "workflow-task-breakdown", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-task-breakdown", "projectionPath": "skills/workflow/workflow-task-breakdown" },
+    { "id": "workflow-task-execution", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-task-execution", "projectionPath": "skills/workflow/workflow-task-execution" },
+    { "id": "workflow-final-review", "kind": "canonical", "sourcePath": "plugins/mcu-workbench-workflow/skills/workflow-final-review", "projectionPath": "skills/workflow/workflow-final-review" },
+    { "id": "embed-ai-tool", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embed-ai-tool", "projectionPath": "skills/embed-ai-tool" },
+    { "id": "embedded-change-report", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-change-report", "projectionPath": "skills/embedded-change-report" },
+    { "id": "embedded-project-intake", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-project-intake", "projectionPath": "skills/embedded-project-intake" },
+    { "id": "mrd-to-prd", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/mrd-to-prd", "projectionPath": "skills/mrd-to-prd" },
+    { "id": "embedded-llm-guardrails", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-llm-guardrails", "projectionPath": "skills/embedded-llm-guardrails" },
+    { "id": "embedded-production-test-tool", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/embedded-production-test-tool", "projectionPath": "skills/embedded-production-test-tool" },
+    { "id": "market-mrd-analyst", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/market-mrd-analyst", "projectionPath": "skills/market-mrd-analyst" },
+    { "id": "your-skill-name", "kind": "external", "sourcePath": "plugins/mcu-workbench-workflow/skills/skill-template", "projectionPath": "skills/skill-template" }
+  ]
+}

@@ -1,0 +1,2537 @@
+{
+  "schemaVersion": "1.0.0",
+  "plugin": "mcu-workbench-workflow",
+  "generatedAt": "2026-11-24T10:22:07.967Z",
+  "files": [
+    {
+      "sourcePath": "skills/app/app-architecture/SKILL.md",
+      "packagePath": "skills/app/app-architecture/SKILL.md",
+      "sourceSha256": "0b45f227927c77a6603f9f001f30c6c1994a6f14116f5e35126564e74d70286c",
+      "sha256": "dc3ccda8a38d30e67f100e08f60da91e3f25664481a5507bda96f9f839b1b6b3",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/app-architecture/SKILL.md",
+      "ownerPluginSha256": "bd38bad42285e842feb6522c4539f64fae576e1e2b35d35b2f4404eec9fafeb5"
+    },
+    {
+      "sourcePath": "skills/app/app-architecture/references/app-architecture-evidence.md",
+      "packagePath": "skills/app/app-architecture/references/app-architecture-evidence.md",
+      "sourceSha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275",
+      "sha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/app-architecture/references/app-architecture-evidence.md",
+      "ownerPluginSha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275"
+    },
+    {
+      "sourcePath": "skills/bsp/references/bsp-aht21-case.md",
+      "packagePath": "skills/bsp/references/bsp-aht21-case.md",
+      "sourceSha256": "219b13bb09217888cdf96bf5649220e7530ded61a88934731d3fc83891e36a2a",
+      "sha256": "219b13bb09217888cdf96bf5649220e7530ded61a88934731d3fc83891e36a2a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/bsp/references/bsp-architecture-contract.md",
+      "packagePath": "skills/bsp/references/bsp-architecture-contract.md",
+      "sourceSha256": "100b94d4998cc2c96c39c860c3ed6152e5b12d707eda6cc90f620e7437367b41",
+      "sha256": "db07b50ab5e01322d02f30991f13adbfbad55347632a5ceddcd24a5cfb20ebb9",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/bsp/references/common-error-patterns.md",
+      "packagePath": "skills/bsp/references/common-error-patterns.md",
+      "sourceSha256": "d0509396181d42b7b496fa44477dfac44d32a46e6d5e2f5953867f548359ea0c",
+      "sha256": "d0509396181d42b7b496fa44477dfac44d32a46e6d5e2f5953867f548359ea0c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/bsp/references/gpio-output-peripheral-checklist.md",
+      "packagePath": "skills/bsp/references/gpio-output-peripheral-checklist.md",
+      "sourceSha256": "7842d27d6b27831d347492b264d2dd009fd6158f973e038500a1e6500990ad4a",
+      "sha256": "7842d27d6b27831d347492b264d2dd009fd6158f973e038500a1e6500990ad4a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/SKILL.md",
+      "packagePath": "skills/impl/impl_board/SKILL.md",
+      "sourceSha256": "67b5e2a84e6a16b6859c3144a0437eb37696e96fd81daf3fcc2daa100c0b51e0",
+      "sha256": "073160326ea3ad447bd7b3facdcba6245da3b253fcfe7dd00a371c89f4d4495e",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/SKILL.md",
+      "ownerPluginSha256": "3f7aee4d95e375861acc422d67afbd9b862afe871c5c713dca88d3b51d6c5896"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/bsp-layer-evidence.md",
+      "packagePath": "skills/impl/impl_board/references/bsp-layer-evidence.md",
+      "sourceSha256": "18121527d317e11175fc556f8961659cf8cc86dbca74a2c6b1b34c38f35930a6",
+      "sha256": "0d099e99bfa01eb2dc8e950e86e74d8bc49bdfa159fc6ddd0a0481c959477252",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/bsp-layer-evidence.md",
+      "ownerPluginSha256": "370102e6a2805a5f7b2bcd6e5e820d2f46c09c856d43c0bd8564d48b40269963"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/GUIDE.md",
+      "packagePath": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/GUIDE.md",
+      "sourceSha256": "0c7a6653bd9345fb54e8d320a59d37d4e161d6dd025ef805f9c3c4636684281d",
+      "sha256": "0c7a6653bd9345fb54e8d320a59d37d4e161d6dd025ef805f9c3c4636684281d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-device-adaptation/GUIDE.md",
+      "ownerPluginSha256": "9a5ff9dbc9c50fa4c0d222f7df6fa17c17e4dfd760b98dd22a4ecf5acdc2542d"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md",
+      "packagePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md",
+      "sourceSha256": "dd541400e2a6b52e5ab0de51fa3977c5e9837d201dc77dec3a7c86c0d07f0433",
+      "sha256": "f4585187a3617c2eb35d7742b85836bbccaaebf46e96378873bca095d1cb1ba0",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md",
+      "ownerPluginSha256": "2bcf8280ca7048539e72d3d2ffd0755d3f3e61925f7596cc1865bef5a00fb964"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/aht21-adapter-pattern.md",
+      "packagePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/aht21-adapter-pattern.md",
+      "sourceSha256": "bd4ef3528a32d5114f78fbef5afe1775485fed8bbb519ac48c84f7aff4ea0f39",
+      "sha256": "bd4ef3528a32d5114f78fbef5afe1775485fed8bbb519ac48c84f7aff4ea0f39",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/references/aht21-adapter-pattern.md",
+      "ownerPluginSha256": "bd4ef3528a32d5114f78fbef5afe1775485fed8bbb519ac48c84f7aff4ea0f39"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/mpu6050-adapter-pattern.md",
+      "packagePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/mpu6050-adapter-pattern.md",
+      "sourceSha256": "7616b01947f75047a97bea5e4cba5705ab0b674855217ceeec80cbb489237ea8",
+      "sha256": "7616b01947f75047a97bea5e4cba5705ab0b674855217ceeec80cbb489237ea8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/references/mpu6050-adapter-pattern.md",
+      "ownerPluginSha256": "7616b01947f75047a97bea5e4cba5705ab0b674855217ceeec80cbb489237ea8"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/w25qxx-adapter-pattern.md",
+      "packagePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/w25qxx-adapter-pattern.md",
+      "sourceSha256": "f662cbc85cc6c205084f1de3c5a2904dd2ac37f4571a0f82c2b75d63c6adce34",
+      "sha256": "f662cbc85cc6c205084f1de3c5a2904dd2ac37f4571a0f82c2b75d63c6adce34",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/references/w25qxx-adapter-pattern.md",
+      "ownerPluginSha256": "f662cbc85cc6c205084f1de3c5a2904dd2ac37f4571a0f82c2b75d63c6adce34"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capability-index.md",
+      "packagePath": "skills/impl/impl_board/references/capability-index.md",
+      "sourceSha256": "ac60060a6c0599dfd0a66f92699c71829ce9530c190f1494da242d547d92481c",
+      "sha256": "ac60060a6c0599dfd0a66f92699c71829ce9530c190f1494da242d547d92481c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capability-index.md",
+      "ownerPluginSha256": "db8a94ffee27c85decd58de4444431bd04b91ec7bce383b1fe3028cbcac39aaa"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/SKILL.md",
+      "packagePath": "skills/impl/impl_bsp/SKILL.md",
+      "sourceSha256": "fd466a77494f5b79158d99d5f3e4919274f78256abda73d80f0b35235949d52b",
+      "sha256": "4cdb6943a076d6419b94d67fd59146c423a67c6dde2e33829ca8cb7f8d05146c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/SKILL.md",
+      "ownerPluginSha256": "fae4fdbe8fad46847ded0b0a69938bccc81d7172c77f9022151ddbad30fe85c7"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/api-policy.md",
+      "packagePath": "skills/impl/impl_bsp/references/api-policy.md",
+      "sourceSha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb",
+      "sha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/api-policy.md",
+      "ownerPluginSha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md",
+      "sourceSha256": "dbf56775c5c60d9191a0240ac0acf6edb6ee51da3418c5854e7dfeecc2f50c50",
+      "sha256": "5fb4d0ac009247b3a507c59b00e3df6cf90f7ebba7b6e5d99a7412b7a95215d9",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md",
+      "ownerPluginSha256": "4df1b4944eee89f63b1fa51786dd46d15b2f4b3952da4e9d4bd5edc9409ff14f"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/aht21-driver-pattern.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/aht21-driver-pattern.md",
+      "sourceSha256": "f86fd5814bdee1da7b938235341bb0f242395c526fe87db144841efa97d1278c",
+      "sha256": "f86fd5814bdee1da7b938235341bb0f242395c526fe87db144841efa97d1278c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/references/aht21-driver-pattern.md",
+      "ownerPluginSha256": "f86fd5814bdee1da7b938235341bb0f242395c526fe87db144841efa97d1278c"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md",
+      "sourceSha256": "23bddb282fcac30e5a3137f8addcf969592bd3b083c6e75fbb35ea51933c2e34",
+      "sha256": "23bddb282fcac30e5a3137f8addcf969592bd3b083c6e75fbb35ea51933c2e34",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md",
+      "ownerPluginSha256": "23bddb282fcac30e5a3137f8addcf969592bd3b083c6e75fbb35ea51933c2e34"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md",
+      "sourceSha256": "c5061440ce88403b198404a90808049dc2d27a20d12d8cce8c1e7063d643faec",
+      "sha256": "c5061440ce88403b198404a90808049dc2d27a20d12d8cce8c1e7063d643faec",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md",
+      "ownerPluginSha256": "c5061440ce88403b198404a90808049dc2d27a20d12d8cce8c1e7063d643faec"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md",
+      "sourceSha256": "1beee2b46c46f168629a46dbe6d56e9e17c8a080b47596000d6feb476910aa3d",
+      "sha256": "1aa198fd17c4662519183c45deac0ad48234f6b84f54991b96eccde63fc4aa26",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md",
+      "ownerPluginSha256": "44932d2d03c22cfb9b68ebb5cef00d805743cebe05e8fce0c1488e29096d60b6"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/aht21-handler-pattern.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/aht21-handler-pattern.md",
+      "sourceSha256": "953be8b6cb485ea38bce600827fa08432a34a8849e3d3b9d4dbc15b9cb49520a",
+      "sha256": "953be8b6cb485ea38bce600827fa08432a34a8849e3d3b9d4dbc15b9cb49520a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/references/aht21-handler-pattern.md",
+      "ownerPluginSha256": "953be8b6cb485ea38bce600827fa08432a34a8849e3d3b9d4dbc15b9cb49520a"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/mpu6050-handler-pattern.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/mpu6050-handler-pattern.md",
+      "sourceSha256": "857765bc532426166f642aca32cbc5de9578648d2cfea91839f7f92f75e7e49d",
+      "sha256": "857765bc532426166f642aca32cbc5de9578648d2cfea91839f7f92f75e7e49d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/references/mpu6050-handler-pattern.md",
+      "ownerPluginSha256": "857765bc532426166f642aca32cbc5de9578648d2cfea91839f7f92f75e7e49d"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/w25qxx-handler-pattern.md",
+      "packagePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/w25qxx-handler-pattern.md",
+      "sourceSha256": "c90f7a1e4c0fa9908b0a590a98e4209b2c51551757a303f6c4f3e84e81043637",
+      "sha256": "c90f7a1e4c0fa9908b0a590a98e4209b2c51551757a303f6c4f3e84e81043637",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/references/w25qxx-handler-pattern.md",
+      "ownerPluginSha256": "c90f7a1e4c0fa9908b0a590a98e4209b2c51551757a303f6c4f3e84e81043637"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capability-index.md",
+      "packagePath": "skills/impl/impl_bsp/references/capability-index.md",
+      "sourceSha256": "188f56cf4cbaa56211acacd878d9d0b7baf8641af7dcc7fa74720fecc1caf8ac",
+      "sha256": "188f56cf4cbaa56211acacd878d9d0b7baf8641af7dcc7fa74720fecc1caf8ac",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capability-index.md",
+      "ownerPluginSha256": "b13522a8011c914049d4a7c773d0ae154b19538af3d255c1d741499fa8f1ee7d"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/hal-driver-evidence.md",
+      "packagePath": "skills/impl/impl_bsp/references/hal-driver-evidence.md",
+      "sourceSha256": "f5a235e26d489802c1e9f95feea51d8423cca879111b76ed7bafe922ebd41129",
+      "sha256": "f5a235e26d489802c1e9f95feea51d8423cca879111b76ed7bafe922ebd41129",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/hal-driver-evidence.md",
+      "ownerPluginSha256": "d7242d1ed5bbed15f7455d7a1cb3cfc9d3429a6e0d5fa97d5779229e7ce48166"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/handler-evidence.md",
+      "packagePath": "skills/impl/impl_bsp/references/handler-evidence.md",
+      "sourceSha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36",
+      "sha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/handler-evidence.md",
+      "ownerPluginSha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36"
+    },
+    {
+      "sourcePath": "skills/impl/impl_mcu/SKILL.md",
+      "packagePath": "skills/impl/impl_mcu/SKILL.md",
+      "sourceSha256": "c08adda043f018e7218e44950835f64a6f33cfeb93450c041011095a3856808b",
+      "sha256": "c08adda043f018e7218e44950835f64a6f33cfeb93450c041011095a3856808b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_mcu/SKILL.md",
+      "ownerPluginSha256": "dc61bd53d469c66d561d8c097c087147dbf233b96b2794dc0795153025c5ad18"
+    },
+    {
+      "sourcePath": "skills/impl/impl_middleware/SKILL.md",
+      "packagePath": "skills/impl/impl_middleware/SKILL.md",
+      "sourceSha256": "45af4d881d8c631f33e46bb7a827677e57ef9c8fcdff2c8a0834a7376aa5df47",
+      "sha256": "45af4d881d8c631f33e46bb7a827677e57ef9c8fcdff2c8a0834a7376aa5df47",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_middleware/SKILL.md",
+      "ownerPluginSha256": "45af4d881d8c631f33e46bb7a827677e57ef9c8fcdff2c8a0834a7376aa5df47"
+    },
+    {
+      "sourcePath": "skills/impl/impl_os/SKILL.md",
+      "packagePath": "skills/impl/impl_os/SKILL.md",
+      "sourceSha256": "c798ccfc9f3229879f87a347915fa0e0dfbcdb1006bf979364aa602e8eba6112",
+      "sha256": "c798ccfc9f3229879f87a347915fa0e0dfbcdb1006bf979364aa602e8eba6112",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_os/SKILL.md",
+      "ownerPluginSha256": "f524e5c143216a567bed86243dbba451c2f171a03bd4e0907f0a38e8d9fa912e"
+    },
+    {
+      "sourcePath": "skills/impl/impl_os/references/freertos-api-quickref.md",
+      "packagePath": "skills/impl/impl_os/references/freertos-api-quickref.md",
+      "sourceSha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873",
+      "sha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_os/references/freertos-api-quickref.md",
+      "ownerPluginSha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873"
+    },
+    {
+      "sourcePath": "skills/impl/impl_os/references/freertos-source-map.md",
+      "packagePath": "skills/impl/impl_os/references/freertos-source-map.md",
+      "sourceSha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9",
+      "sha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_os/references/freertos-source-map.md",
+      "ownerPluginSha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9"
+    },
+    {
+      "sourcePath": "skills/platform/platform_bsp/SKILL.md",
+      "packagePath": "skills/platform/platform_bsp/SKILL.md",
+      "sourceSha256": "5149ea9ea9a88654116f33cef20ca1758572b8e1710ef4f15ae107f41a961e2b",
+      "sha256": "4ade45f0dc5dbc72ce8bc0013df59a507102436d9db9c740c489675a654439f4",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_bsp/SKILL.md",
+      "ownerPluginSha256": "90c3a3050cf96d8a681be8aa36e579672f0461b3de49edaab61003804c0e62ab"
+    },
+    {
+      "sourcePath": "skills/platform/platform_bsp/references/device-model-example.md",
+      "packagePath": "skills/platform/platform_bsp/references/device-model-example.md",
+      "sourceSha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948",
+      "sha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_bsp/references/device-model-example.md",
+      "ownerPluginSha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948"
+    },
+    {
+      "sourcePath": "skills/platform/platform_common/SKILL.md",
+      "packagePath": "skills/platform/platform_common/SKILL.md",
+      "sourceSha256": "3c55b69ff20fd1d85b2cc54db835873c3e060a250c5bd43ee6d4d0d1dbd19537",
+      "sha256": "e609f30caf9ab4d31994c587e42ca92c058c990d916357687bc1e502f7b53743",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_common/SKILL.md",
+      "ownerPluginSha256": "f02be2c2ebd0e77ce33248be1832cbdf67138c33beecf7875595b7d44f19734e"
+    },
+    {
+      "sourcePath": "skills/platform/platform_common/references/diag-log-flow.md",
+      "packagePath": "skills/platform/platform_common/references/diag-log-flow.md",
+      "sourceSha256": "0fd1ee79c634eef1a215db91a716fc615cb408fa2307954c76bb4bc0b5751523",
+      "sha256": "0fd1ee79c634eef1a215db91a716fc615cb408fa2307954c76bb4bc0b5751523",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_common/references/diag-log-flow.md",
+      "ownerPluginSha256": "0fd1ee79c634eef1a215db91a716fc615cb408fa2307954c76bb4bc0b5751523"
+    },
+    {
+      "sourcePath": "skills/platform/platform_common/references/object-four-tuple-template.md",
+      "packagePath": "skills/platform/platform_common/references/object-four-tuple-template.md",
+      "sourceSha256": "25b6b4a81f57fe60db8b2d8dd325d7a4d44feab2b92eb1d1fac941e38f66a771",
+      "sha256": "25b6b4a81f57fe60db8b2d8dd325d7a4d44feab2b92eb1d1fac941e38f66a771",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_common/references/object-four-tuple-template.md",
+      "ownerPluginSha256": "25b6b4a81f57fe60db8b2d8dd325d7a4d44feab2b92eb1d1fac941e38f66a771"
+    },
+    {
+      "sourcePath": "skills/platform/platform_mcu/SKILL.md",
+      "packagePath": "skills/platform/platform_mcu/SKILL.md",
+      "sourceSha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641",
+      "sha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_mcu/SKILL.md",
+      "ownerPluginSha256": "991c3a71ac0d9df0a43ef27f007d51ee42a8a463301a179bc41f9d7efda6f703"
+    },
+    {
+      "sourcePath": "skills/platform/platform_middleware/SKILL.md",
+      "packagePath": "skills/platform/platform_middleware/SKILL.md",
+      "sourceSha256": "2336f24a152a0f8a751898978c316bb0dcdda45be2cf91f62093d43f119e8d94",
+      "sha256": "88f96f6269831ac55adbed4098989b0591cbdf93020db1f7e5a202f10e13c23d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_middleware/SKILL.md",
+      "ownerPluginSha256": "33b8fccb81f708a290606a02cafb36334bf5c4bd7c23f22f72ef2bf54a32f70b"
+    },
+    {
+      "sourcePath": "skills/platform/platform_os/SKILL.md",
+      "packagePath": "skills/platform/platform_os/SKILL.md",
+      "sourceSha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "sha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_os/SKILL.md",
+      "ownerPluginSha256": "24ce3dc63c96c7c3bec6875b743c3df0b2c0a84a8f8b0aacf15dfd50518c39c0"
+    },
+    {
+      "sourcePath": "skills/platform/platform_os/references/platform-os-contract.md",
+      "packagePath": "skills/platform/platform_os/references/platform-os-contract.md",
+      "sourceSha256": "6c5243619c4e5cf894b3d95acd600c7981fdd2e4454827411f24c8e5636ee0ad",
+      "sha256": "6c5243619c4e5cf894b3d95acd600c7981fdd2e4454827411f24c8e5636ee0ad",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_os/references/platform-os-contract.md",
+      "ownerPluginSha256": "fecb12eb4cfb743f6725b785c9002a63a67dd0ae6ad4e40fa98fcd632c347804"
+    },
+    {
+      "sourcePath": "skills/platform/platform_os/references/platform-os-freertos-case.md",
+      "packagePath": "skills/platform/platform_os/references/platform-os-freertos-case.md",
+      "sourceSha256": "ab7e098a76b7d65c3c2a9354341dacb92133fb42ce7bd9e301dbdf636ef26fd9",
+      "sha256": "ab7e098a76b7d65c3c2a9354341dacb92133fb42ce7bd9e301dbdf636ef26fd9",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_os/references/platform-os-freertos-case.md",
+      "ownerPluginSha256": "2b5722a0e56e9fbeb094faa062a6c6d4b8f9b548444bfb25481c93dc99a6d8c5"
+    },
+    {
+      "sourcePath": "skills/service/service_diagnosis/SKILL.md",
+      "packagePath": "skills/service/service_diagnosis/SKILL.md",
+      "sourceSha256": "e2e8a08b5cefc877b270c994a6f364e1a013618862816d1203e968462b97873c",
+      "sha256": "e2e8a08b5cefc877b270c994a6f364e1a013618862816d1203e968462b97873c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_diagnosis/SKILL.md",
+      "ownerPluginSha256": "37b04f270ef781656d149e2eb1ae59e31ed985bf03d61c5f3820d2dca867d3c9"
+    },
+    {
+      "sourcePath": "skills/service/service_log/SKILL.md",
+      "packagePath": "skills/service/service_log/SKILL.md",
+      "sourceSha256": "f2cb77de934996aaf7829ee8a424dc364063d828dabbb5d25ab60adb21ef513a",
+      "sha256": "f2cb77de934996aaf7829ee8a424dc364063d828dabbb5d25ab60adb21ef513a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_log/SKILL.md",
+      "ownerPluginSha256": "1eae2851c98a9b8422b5893540b3fb64298bd88795d4ed39df51298b2d8da97c"
+    },
+    {
+      "sourcePath": "skills/service/service_system/SKILL.md",
+      "packagePath": "skills/service/service_system/SKILL.md",
+      "sourceSha256": "12f79c6ad9421f15cc9aa8dc27a33fff9dc3d9e56a6d9c08f5e2d18773a0403e",
+      "sha256": "d820926e04738d39f80d7dc175065fe54e02145a56b2fe6930e4aab757cf0795",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/SKILL.md",
+      "ownerPluginSha256": "49d002df7c7954d43ea363310df34326e19d4996173256d3a608c80a13af77bb"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-aes/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/security-aes/GUIDE.md",
+      "sourceSha256": "ceafe7d15fcf23e1fe978c9c4640fb31cd545f585badf10cb45ad43cc6718571",
+      "sha256": "ceafe7d15fcf23e1fe978c9c4640fb31cd545f585badf10cb45ad43cc6718571",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-aes/GUIDE.md",
+      "ownerPluginSha256": "ceafe7d15fcf23e1fe978c9c4640fb31cd545f585badf10cb45ad43cc6718571"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-crc/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/security-crc/GUIDE.md",
+      "sourceSha256": "f5215a2e1ddfce6d4a97aef3157ef6148c676b62e8f66bb5c2356d0153da73e4",
+      "sha256": "f5215a2e1ddfce6d4a97aef3157ef6148c676b62e8f66bb5c2356d0153da73e4",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-crc/GUIDE.md",
+      "ownerPluginSha256": "f5215a2e1ddfce6d4a97aef3157ef6148c676b62e8f66bb5c2356d0153da73e4"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-firmware-signing/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/security-firmware-signing/GUIDE.md",
+      "sourceSha256": "ac56cd182e9e8512d270ee754aa43d0e337b9b5293248f2a769121245a25b059",
+      "sha256": "ac56cd182e9e8512d270ee754aa43d0e337b9b5293248f2a769121245a25b059",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-firmware-signing/GUIDE.md",
+      "ownerPluginSha256": "ac56cd182e9e8512d270ee754aa43d0e337b9b5293248f2a769121245a25b059"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-rsa/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/security-rsa/GUIDE.md",
+      "sourceSha256": "c93361cfe0db25f6f92e3b1760a6f19207ced19ef2e495983f4d426bf246a0e6",
+      "sha256": "c93361cfe0db25f6f92e3b1760a6f19207ced19ef2e495983f4d426bf246a0e6",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-rsa/GUIDE.md",
+      "ownerPluginSha256": "c93361cfe0db25f6f92e3b1760a6f19207ced19ef2e495983f4d426bf246a0e6"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/system-bootloader/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/system-bootloader/GUIDE.md",
+      "sourceSha256": "35d58c23651dd76c627fdb98e02f75ea7b7c276918bc425cbda6b92cfa62b334",
+      "sha256": "35d58c23651dd76c627fdb98e02f75ea7b7c276918bc425cbda6b92cfa62b334",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/system-bootloader/GUIDE.md",
+      "ownerPluginSha256": "35d58c23651dd76c627fdb98e02f75ea7b7c276918bc425cbda6b92cfa62b334"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/system-low-power/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/system-low-power/GUIDE.md",
+      "sourceSha256": "b8dba7edc2cf7ee9ac2d778006b60f5ba6380ab91c8c54186313056b89150238",
+      "sha256": "b8dba7edc2cf7ee9ac2d778006b60f5ba6380ab91c8c54186313056b89150238",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/system-low-power/GUIDE.md",
+      "ownerPluginSha256": "b8dba7edc2cf7ee9ac2d778006b60f5ba6380ab91c8c54186313056b89150238"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/system-watchdog/GUIDE.md",
+      "packagePath": "skills/service/service_system/references/capabilities/system-watchdog/GUIDE.md",
+      "sourceSha256": "dd9ccacaecbf7dff08989919093e091caf217d5542eed3e45814c08ae3e4f4c1",
+      "sha256": "dd9ccacaecbf7dff08989919093e091caf217d5542eed3e45814c08ae3e4f4c1",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/system-watchdog/GUIDE.md",
+      "ownerPluginSha256": "dd9ccacaecbf7dff08989919093e091caf217d5542eed3e45814c08ae3e4f4c1"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capability-index.md",
+      "packagePath": "skills/service/service_system/references/capability-index.md",
+      "sourceSha256": "d39acfa30e58c0478104659dc3ebb349935e7e448f4cf0d0da5989696114d74e",
+      "sha256": "d39acfa30e58c0478104659dc3ebb349935e7e448f4cf0d0da5989696114d74e",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capability-index.md",
+      "ownerPluginSha256": "26af8034a0ba55811ceb6aae9a013f0c807518ea518e9858e60fccfd3bdeda4a"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/crypto-source-baseline.md",
+      "packagePath": "skills/service/service_system/references/crypto-source-baseline.md",
+      "sourceSha256": "7cdcbccf3760f158ce71a1f7b0ca144ff52f72bf7493adaa697109ae404e9fb8",
+      "sha256": "7cdcbccf3760f158ce71a1f7b0ca144ff52f72bf7493adaa697109ae404e9fb8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/crypto-source-baseline.md",
+      "ownerPluginSha256": "7cdcbccf3760f158ce71a1f7b0ca144ff52f72bf7493adaa697109ae404e9fb8"
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/SKILL.md",
+      "packagePath": "skills/tools/tools-build/SKILL.md",
+      "sourceSha256": "0e1f4b5b1b2f26247faa71dd5bd5e87c68eb072c60103920a25793e68924d08c",
+      "sha256": "0e1f4b5b1b2f26247faa71dd5bd5e87c68eb072c60103920a25793e68924d08c",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/GUIDE.md",
+      "sourceSha256": "ec878993c7e229a413d7919dd612f80be42ce0184d68bde8cbee773dfc6d30d1",
+      "sha256": "469165e8fb86f21e5290e429dd1a3b89bc52e5fa96ccbdba4667b8ee0d8cc0da",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/references/usage.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/references/usage.md",
+      "sourceSha256": "d2033f324689b33c61f18f73dd4daa05a1dd6254f3fb2a733915564d9bffb2a8",
+      "sha256": "d2033f324689b33c61f18f73dd4daa05a1dd6254f3fb2a733915564d9bffb2a8",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py",
+      "sourceSha256": "8799fd283063bcb9d4176d9fe0af8c6a11d6edc4a0e2e933860a65f385ab27fd",
+      "sha256": "8799fd283063bcb9d4176d9fe0af8c6a11d6edc4a0e2e933860a65f385ab27fd",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/GUIDE.md",
+      "sourceSha256": "6d246c48fadc2891695a3b92163c1c11947375f8356113c05e596bc5b827ee8b",
+      "sha256": "9d314c6c4f424bc9d12d72a118dadbc4e087fae431715d512ce3ea445d8997ca",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/references/usage.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/references/usage.md",
+      "sourceSha256": "33941128d9982016544b636a5c7264f18692cf9fb3e7db96293de2dc7bca4280",
+      "sha256": "33941128d9982016544b636a5c7264f18692cf9fb3e7db96293de2dc7bca4280",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py",
+      "sourceSha256": "cd9d19ff2ee1b3e33c688f134f3887bafd706a7fa7c9edaccee999c007cd424f",
+      "sha256": "cd9d19ff2ee1b3e33c688f134f3887bafd706a7fa7c9edaccee999c007cd424f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/GUIDE.md",
+      "sourceSha256": "63c01db63c342ba06296bc847e07e47a6655f5a2f284834d796d31be1d805824",
+      "sha256": "f8cfb307802cdc07e0d4055a5785e1c6aed679df4b03ee689a15e76b1d219ff2",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/references/usage.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/references/usage.md",
+      "sourceSha256": "d38514c100ef3a649ff4e7725526da43fac9c5755c020cbf046b22664220787a",
+      "sha256": "d38514c100ef3a649ff4e7725526da43fac9c5755c020cbf046b22664220787a",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py",
+      "sourceSha256": "23a320abd80115ef0284aeb56405cd94d779021860f1e49a3c3ac38155e831b7",
+      "sha256": "23a320abd80115ef0284aeb56405cd94d779021860f1e49a3c3ac38155e831b7",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-keil/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-keil/GUIDE.md",
+      "sourceSha256": "2a98355a4ed489540aef2ded507915a1ab3f476a8592cf54060995942f217bde",
+      "sha256": "2a98355a4ed489540aef2ded507915a1ab3f476a8592cf54060995942f217bde",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/GUIDE.md",
+      "sourceSha256": "b42b7638984539ec094638f0fcf3f78b2dd982d49e334760945c4a550c0481d8",
+      "sha256": "84377fa9a4b37112c4578d13850fe78dc30c0456420ca3f34613932f96efe7fd",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/references/usage.md",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/references/usage.md",
+      "sourceSha256": "aab0394dae9061db645d0ee6bc8b08c876e4a82841e54898586e47471185bdcf",
+      "sha256": "aab0394dae9061db645d0ee6bc8b08c876e4a82841e54898586e47471185bdcf",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py",
+      "packagePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py",
+      "sourceSha256": "0840ce3b0feace0d4d2c63ababc19f3a4a53a1f47935aacba45ae31fa595edc6",
+      "sha256": "0840ce3b0feace0d4d2c63ababc19f3a4a53a1f47935aacba45ae31fa595edc6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capability-index.md",
+      "packagePath": "skills/tools/tools-build/references/capability-index.md",
+      "sourceSha256": "0d4aef2cf04d2c237816d6bf6501bd2d8341fe88b12e194d7e5129432ef518de",
+      "sha256": "0d4aef2cf04d2c237816d6bf6501bd2d8341fe88b12e194d7e5129432ef518de",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/source-baseline.md",
+      "packagePath": "skills/tools/tools-build/references/source-baseline.md",
+      "sourceSha256": "b135d6469cec5169102740b4441b5d6328d7448c4c50fbc26d1c1070c3c425b3",
+      "sha256": "b135d6469cec5169102740b4441b5d6328d7448c4c50fbc26d1c1070c3c425b3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-cmake/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/tool-build-cmake/GUIDE.md",
+      "sourceSha256": "c0a3359bbf3ef3e19f17b60b3750b5f95e13d0afa09478b260bb461793a215d1",
+      "sha256": "c0a3359bbf3ef3e19f17b60b3750b5f95e13d0afa09478b260bb461793a215d1",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-esp-idf/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/tool-build-esp-idf/GUIDE.md",
+      "sourceSha256": "25ea06b30cbb7b7452974d1a102459835a40cce9230c44d8d0a6b4c8268e73bf",
+      "sha256": "25ea06b30cbb7b7452974d1a102459835a40cce9230c44d8d0a6b4c8268e73bf",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-iar/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/tool-build-iar/GUIDE.md",
+      "sourceSha256": "42df0400ee50d224b035f4cfa76e7db8efeaa7c71359e15fbe69ab1752b0a9c2",
+      "sha256": "42df0400ee50d224b035f4cfa76e7db8efeaa7c71359e15fbe69ab1752b0a9c2",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-keil/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/tool-build-keil/GUIDE.md",
+      "sourceSha256": "2a98355a4ed489540aef2ded507915a1ab3f476a8592cf54060995942f217bde",
+      "sha256": "2a98355a4ed489540aef2ded507915a1ab3f476a8592cf54060995942f217bde",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-platformio/GUIDE.md",
+      "packagePath": "skills/tools/tools-build/references/tool-build-platformio/GUIDE.md",
+      "sourceSha256": "fd4dc168e3b89ed72e41b1646dc3cf3ad46e50f69f9d590895ef87447d165698",
+      "sha256": "fd4dc168e3b89ed72e41b1646dc3cf3ad46e50f69f9d590895ef87447d165698",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/SKILL.md",
+      "packagePath": "skills/tools/tools-debug/SKILL.md",
+      "sourceSha256": "b57a406b00a24435c862016aaf00a10ef3b4ad6c649d639665862ec5b95a7a1a",
+      "sha256": "b2b9d4ec637acdb76d97940b569925553d95aea3bb72572e66cb2d5cb1007eb7",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-crash-backtrace/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-crash-backtrace/GUIDE.md",
+      "sourceSha256": "9ab71f3b42259246bb997f1bc4cd983faa2b40ce68324139d8faa2737277695f",
+      "sha256": "9ab71f3b42259246bb997f1bc4cd983faa2b40ce68324139d8faa2737277695f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-diagnostic-framework/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-diagnostic-framework/GUIDE.md",
+      "sourceSha256": "1e96eb55b9a46f52648c09bd883cf1707a4dfd863c551be2df7a91886b76c881",
+      "sha256": "1e96eb55b9a46f52648c09bd883cf1707a4dfd863c551be2df7a91886b76c881",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/GUIDE.md",
+      "sourceSha256": "cdbbd3da5a37dfc59b4eabbe9289faa593d9a2087ac092442b4167093340f2d0",
+      "sha256": "0cad1c167f38e26abe6540b48df3f84145d979d06af22db98653fbd7485df4ed",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/references/debug-playbook.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/references/debug-playbook.md",
+      "sourceSha256": "db766309de8bdbb0879e240291140b6e49f4d3b679c295b0d6a8d6e6fd050bee",
+      "sha256": "db766309de8bdbb0879e240291140b6e49f4d3b679c295b0d6a8d6e6fd050bee",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/references/usage.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/references/usage.md",
+      "sourceSha256": "8e3c17686d42dcb06d84b4743cf3870f739648c417a52c7f3f483cded9841fdc",
+      "sha256": "8e3c17686d42dcb06d84b4743cf3870f739648c417a52c7f3f483cded9841fdc",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py",
+      "sourceSha256": "47c3b63b99bd0b95ac3a0c8c8afe816c25f0558210060e52621d413add34fe9b",
+      "sha256": "47c3b63b99bd0b95ac3a0c8c8afe816c25f0558210060e52621d413add34fe9b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-offline-breakpoint/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-offline-breakpoint/GUIDE.md",
+      "sourceSha256": "b4fd3c4dc625b9fecd7512bd306fdfd955fa22d2f7fa04bb16162b0a3296df15",
+      "sha256": "b4fd3c4dc625b9fecd7512bd306fdfd955fa22d2f7fa04bb16162b0a3296df15",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-ozone/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-ozone/GUIDE.md",
+      "sourceSha256": "2c4a5fb6825ce7f785ee3927e660c2ac408e419959ccf70e4b98245ad7fadf3b",
+      "sha256": "2c4a5fb6825ce7f785ee3927e660c2ac408e419959ccf70e4b98245ad7fadf3b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-platformio/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-platformio/GUIDE.md",
+      "sourceSha256": "d60c8621782b1f6c3b35729431869c8af286264df037da510492c646f580e172",
+      "sha256": "ff00b8f1af135e49481c68273e29c385f8d2a2ff051034d122e069cb869911e1",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-platformio/references/usage.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-platformio/references/usage.md",
+      "sourceSha256": "bdd9387259546e8835c3aa4a3fe69a8d3c265bf288b5ed5490e5a31ba0512953",
+      "sha256": "bdd9387259546e8835c3aa4a3fe69a8d3c265bf288b5ed5490e5a31ba0512953",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-rtos/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/capabilities/debug-rtos/GUIDE.md",
+      "sourceSha256": "45f18f3b0fc22a261b2a2a27dafff0f99819d2a15adca370bb75e522c9da3fd3",
+      "sha256": "45f18f3b0fc22a261b2a2a27dafff0f99819d2a15adca370bb75e522c9da3fd3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capability-index.md",
+      "packagePath": "skills/tools/tools-debug/references/capability-index.md",
+      "sourceSha256": "fabe7d53e10d0af353543f86844db0b321483bec8db8947ecb1751c21de089df",
+      "sha256": "6506d048f2057142917300bf685f08a7330bebfb61530afe1ed4d9537ca84fc3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-crash-backtrace/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-crash-backtrace/GUIDE.md",
+      "sourceSha256": "9ab71f3b42259246bb997f1bc4cd983faa2b40ce68324139d8faa2737277695f",
+      "sha256": "9ab71f3b42259246bb997f1bc4cd983faa2b40ce68324139d8faa2737277695f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-diagnostic-framework/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-diagnostic-framework/GUIDE.md",
+      "sourceSha256": "1e96eb55b9a46f52648c09bd883cf1707a4dfd863c551be2df7a91886b76c881",
+      "sha256": "1e96eb55b9a46f52648c09bd883cf1707a4dfd863c551be2df7a91886b76c881",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-gdb-openocd/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-gdb-openocd/GUIDE.md",
+      "sourceSha256": "71a153b3281cd28bf2db7dc8b5f130739f4bc85211b0ace2008283d7b9a88d89",
+      "sha256": "71a153b3281cd28bf2db7dc8b5f130739f4bc85211b0ace2008283d7b9a88d89",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-offline-breakpoint/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-offline-breakpoint/GUIDE.md",
+      "sourceSha256": "b4fd3c4dc625b9fecd7512bd306fdfd955fa22d2f7fa04bb16162b0a3296df15",
+      "sha256": "b4fd3c4dc625b9fecd7512bd306fdfd955fa22d2f7fa04bb16162b0a3296df15",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-ozone/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-ozone/GUIDE.md",
+      "sourceSha256": "2c4a5fb6825ce7f785ee3927e660c2ac408e419959ccf70e4b98245ad7fadf3b",
+      "sha256": "2c4a5fb6825ce7f785ee3927e660c2ac408e419959ccf70e4b98245ad7fadf3b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-platformio/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-platformio/GUIDE.md",
+      "sourceSha256": "7c8cebbfd1ac9309688c33cf19ec2937fab20537e87b11c4e65fac2c638484c6",
+      "sha256": "7c8cebbfd1ac9309688c33cf19ec2937fab20537e87b11c4e65fac2c638484c6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-rtos/GUIDE.md",
+      "packagePath": "skills/tools/tools-debug/references/debug-rtos/GUIDE.md",
+      "sourceSha256": "45f18f3b0fc22a261b2a2a27dafff0f99819d2a15adca370bb75e522c9da3fd3",
+      "sha256": "45f18f3b0fc22a261b2a2a27dafff0f99819d2a15adca370bb75e522c9da3fd3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/openocd-cmbacktrace.md",
+      "packagePath": "skills/tools/tools-debug/references/openocd-cmbacktrace.md",
+      "sourceSha256": "f38f03663ebc0d09f76cde7420065589ccf5fdb00e69aa6bc5378754dd61a61a",
+      "sha256": "f38f03663ebc0d09f76cde7420065589ccf5fdb00e69aa6bc5378754dd61a61a",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/SKILL.md",
+      "packagePath": "skills/tools/tools-observability/SKILL.md",
+      "sourceSha256": "b851111890f506e7ba5b84ef3086ed67ac127023b9dc62dc1f82fe2c1df9a89c",
+      "sha256": "ba798cf71101cb831b9dabc3ed9ed47583e3c3f8dc3973b75ea6a34be8d55981",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-breadcrumb/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-breadcrumb/GUIDE.md",
+      "sourceSha256": "a3106b1eae0f3ff892b0ad81869650a3f36a52acb788c1e22d793e96f7816f88",
+      "sha256": "a3106b1eae0f3ff892b0ad81869650a3f36a52acb788c1e22d793e96f7816f88",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-elog/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-elog/GUIDE.md",
+      "sourceSha256": "e9c06613cb607181e2ba23b31bb6ba01d06eeb1e9195a35fb1a83e3de482503f",
+      "sha256": "e9c06613cb607181e2ba23b31bb6ba01d06eeb1e9195a35fb1a83e3de482503f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-rtt-monitor/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-rtt-monitor/GUIDE.md",
+      "sourceSha256": "a1f072314590ef4bd9a84e89788034d85dab4bf3d00d498de198abc052003f6b",
+      "sha256": "a1f072314590ef4bd9a84e89788034d85dab4bf3d00d498de198abc052003f6b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-rtt-porting/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-rtt-porting/GUIDE.md",
+      "sourceSha256": "9db1e13bc79c5b19b7d40c08d36ee7be52c37723d18eff008262c15cda802f68",
+      "sha256": "9db1e13bc79c5b19b7d40c08d36ee7be52c37723d18eff008262c15cda802f68",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/GUIDE.md",
+      "sourceSha256": "d24ecafac427fc74ccde92e6662fad360c4afb46f6940594c9084dbb9b9a1074",
+      "sha256": "7db3609ef568e6db44a9da3ea75aa394ca9ed16190e39a248253e97e45005f5f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/references/usage.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/references/usage.md",
+      "sourceSha256": "9e03dfc36ad0d33ffe0e8684a3dbd199ca946646daec7fcf777ead5c8048b64f",
+      "sha256": "9e03dfc36ad0d33ffe0e8684a3dbd199ca946646daec7fcf777ead5c8048b64f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py",
+      "sourceSha256": "24b1024906a5345cd16cc32b4c265b8279bf2fbe5723c0900283528baa4bb517",
+      "sha256": "24b1024906a5345cd16cc32b4c265b8279bf2fbe5723c0900283528baa4bb517",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-swv-itm/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-swv-itm/GUIDE.md",
+      "sourceSha256": "efb88a18e4585509d11e7b0307177bb38ace46c7a27c1f086ea74886c2eeebbe",
+      "sha256": "efb88a18e4585509d11e7b0307177bb38ace46c7a27c1f086ea74886c2eeebbe",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-systemview/GUIDE.md",
+      "packagePath": "skills/tools/tools-observability/references/capabilities/observability-systemview/GUIDE.md",
+      "sourceSha256": "ecb336c263d0432e07c690e42821f7b29a5238b7e490c3d49241b6c06af9bdd7",
+      "sha256": "ecb336c263d0432e07c690e42821f7b29a5238b7e490c3d49241b6c06af9bdd7",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capability-index.md",
+      "packagePath": "skills/tools/tools-observability/references/capability-index.md",
+      "sourceSha256": "236a6d903dd21557eff40edcca1a277e86da182b9799dbf4dc817fe6373fdaaf",
+      "sha256": "6ab7957feb3e5cd3751aed0891923a68df1b1ebd33845390dd8e675d489b7347",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/debugcomponent-rtt-case.md",
+      "packagePath": "skills/tools/tools-observability/references/debugcomponent-rtt-case.md",
+      "sourceSha256": "dc6c4eb8c8dca2d81907de7685f92f1ed6407e1edf03aabfbc42a7c4e7222500",
+      "sha256": "dc6c4eb8c8dca2d81907de7685f92f1ed6407e1edf03aabfbc42a7c4e7222500",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/upstream-source-baseline.md",
+      "packagePath": "skills/tools/tools-observability/references/upstream-source-baseline.md",
+      "sourceSha256": "d576f066cbcc58726cea415d325caba3184c240b725b3fb717eb4d203a027aec",
+      "sha256": "d576f066cbcc58726cea415d325caba3184c240b725b3fb717eb4d203a027aec",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/SKILL.md",
+      "packagePath": "skills/tools/tools-quality/SKILL.md",
+      "sourceSha256": "80f4a6bd5d9f5edd8900fa3949a37bd78fb0301f3fa1ce9e184ab7d752474c0e",
+      "sha256": "87385e6f5519adcfa52d9f3799490170230754bcd32250f46cd30a038114d3f7",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md",
+      "packagePath": "skills/tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md",
+      "sourceSha256": "16f688ef210415e9c4c5f696dc57c2f65e915c8c77da7b64e319c92b35c9c04c",
+      "sha256": "16f688ef210415e9c4c5f696dc57c2f65e915c8c77da7b64e319c92b35c9c04c",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-format-check/.clang-format",
+      "packagePath": "skills/tools/tools-quality/references/capabilities/quality-format-check/.clang-format",
+      "sourceSha256": "9a21756c48b7e8f2fb2993f9eda977a2f4ee27d6d5ec900cb1767028883ff35f",
+      "sha256": "9a21756c48b7e8f2fb2993f9eda977a2f4ee27d6d5ec900cb1767028883ff35f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-format-check/GUIDE.md",
+      "packagePath": "skills/tools/tools-quality/references/capabilities/quality-format-check/GUIDE.md",
+      "sourceSha256": "68806066e9059bf58aaffc9ab8047309874087715bdb4f6dace95c365b2163d6",
+      "sha256": "68806066e9059bf58aaffc9ab8047309874087715bdb4f6dace95c365b2163d6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-map-analysis/GUIDE.md",
+      "packagePath": "skills/tools/tools-quality/references/capabilities/quality-map-analysis/GUIDE.md",
+      "sourceSha256": "d9af9bb25779f242d984c4e60bd755111dfd43a93493fad77932ab0c38a8481d",
+      "sha256": "d9af9bb25779f242d984c4e60bd755111dfd43a93493fad77932ab0c38a8481d",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-static-analysis/misra-rule-metadata.json",
+      "packagePath": "skills/tools/tools-quality/references/capabilities/quality-static-analysis/misra-rule-metadata.json",
+      "sourceSha256": "d1d9d362ea741df96f8e2502767b98681bbd4a71fb7452f989ecdba6b8c464ae",
+      "sha256": "d1d9d362ea741df96f8e2502767b98681bbd4a71fb7452f989ecdba6b8c464ae",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-unity-testing/references/aht21-unity-pattern.md",
+      "packagePath": "skills/tools/tools-quality/references/capabilities/quality-unity-testing/references/aht21-unity-pattern.md",
+      "sourceSha256": "70f0bb411dbfa9eb149002739c93003971f17db557da5172df1d360990892336",
+      "sha256": "70f0bb411dbfa9eb149002739c93003971f17db557da5172df1d360990892336",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capability-index.md",
+      "packagePath": "skills/tools/tools-quality/references/capability-index.md",
+      "sourceSha256": "eb7eb229b572b45250a94cc6d59cdfef201a6dd202063794a70118ce96ddf2f2",
+      "sha256": "eb7eb229b572b45250a94cc6d59cdfef201a6dd202063794a70118ce96ddf2f2",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/quality-mode-contract.md",
+      "packagePath": "skills/tools/tools-quality/references/quality-mode-contract.md",
+      "sourceSha256": "b2fb1bf807793586077bf2f0e4905ee544ca092c61717021eda3dacb995be4cd",
+      "sha256": "b2fb1bf807793586077bf2f0e4905ee544ca092c61717021eda3dacb995be4cd",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/quality-static-analysis/GUIDE.md",
+      "packagePath": "skills/tools/tools-quality/references/quality-static-analysis/GUIDE.md",
+      "sourceSha256": "ffa52f8fb3041f12ab93be25798278ea2b73fae9c85546d6c8294a5b1edd3b6d",
+      "sha256": "ffa52f8fb3041f12ab93be25798278ea2b73fae9c85546d6c8294a5b1edd3b6d",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/quality-unity-testing/GUIDE.md",
+      "packagePath": "skills/tools/tools-quality/references/quality-unity-testing/GUIDE.md",
+      "sourceSha256": "366e99619010b66a582592432a0bcb370dbd08ec0af41e21c15189298898d4c6",
+      "sha256": "366e99619010b66a582592432a0bcb370dbd08ec0af41e21c15189298898d4c6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/review-gates.md",
+      "packagePath": "skills/tools/tools-quality/references/review-gates.md",
+      "sourceSha256": "4020ba7ec990b2aba51de802b805775b62c1a17e37252cafcebcce70b0716090",
+      "sha256": "4020ba7ec990b2aba51de802b805775b62c1a17e37252cafcebcce70b0716090",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/style-profile.md",
+      "packagePath": "skills/tools/tools-quality/references/style-profile.md",
+      "sourceSha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "sha256": "056f78fd0ada5f126faef817f9c64862eebe206b840df479eed3bc9f9dec182b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/upstream-source-baseline.md",
+      "packagePath": "skills/tools/tools-quality/references/upstream-source-baseline.md",
+      "sourceSha256": "60820f7d684bd07b6e2565f03c78e8ba659f85d080e49e44ac5d5e03fe24bd41",
+      "sha256": "60820f7d684bd07b6e2565f03c78e8ba659f85d080e49e44ac5d5e03fe24bd41",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/SKILL.md",
+      "packagePath": "skills/tools/tools-release/SKILL.md",
+      "sourceSha256": "aebf40fdb9bfcad923a0d33644c74836f186adfecfedb438f2ae598b42a4930d",
+      "sha256": "aebf40fdb9bfcad923a0d33644c74836f186adfecfedb438f2ae598b42a4930d",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/capabilities/release-ota-package/GUIDE.md",
+      "packagePath": "skills/tools/tools-release/references/capabilities/release-ota-package/GUIDE.md",
+      "sourceSha256": "2e2dc3e3e27c2e963cf82acb474b0c8030c10bb5cecaafc83fce8874e4daf9fa",
+      "sha256": "2e2dc3e3e27c2e963cf82acb474b0c8030c10bb5cecaafc83fce8874e4daf9fa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/capabilities/release-ota-update/GUIDE.md",
+      "packagePath": "skills/tools/tools-release/references/capabilities/release-ota-update/GUIDE.md",
+      "sourceSha256": "1b4574d1fbab15a5f9fa32cb06c36211149fe6f494ebd970f9fa1b65a42104aa",
+      "sha256": "1b4574d1fbab15a5f9fa32cb06c36211149fe6f494ebd970f9fa1b65a42104aa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/capability-index.md",
+      "packagePath": "skills/tools/tools-release/references/capability-index.md",
+      "sourceSha256": "05d83f1424c39dff65615207d9c03483da02488bad45a9a53228518d1a3b5ff0",
+      "sha256": "05d83f1424c39dff65615207d9c03483da02488bad45a9a53228518d1a3b5ff0",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/release-ota-package/GUIDE.md",
+      "packagePath": "skills/tools/tools-release/references/release-ota-package/GUIDE.md",
+      "sourceSha256": "2e2dc3e3e27c2e963cf82acb474b0c8030c10bb5cecaafc83fce8874e4daf9fa",
+      "sha256": "2e2dc3e3e27c2e963cf82acb474b0c8030c10bb5cecaafc83fce8874e4daf9fa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/release-ota-update/GUIDE.md",
+      "packagePath": "skills/tools/tools-release/references/release-ota-update/GUIDE.md",
+      "sourceSha256": "1b4574d1fbab15a5f9fa32cb06c36211149fe6f494ebd970f9fa1b65a42104aa",
+      "sha256": "1b4574d1fbab15a5f9fa32cb06c36211149fe6f494ebd970f9fa1b65a42104aa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-verification/SKILL.md",
+      "packagePath": "skills/tools/tools-verification/SKILL.md",
+      "sourceSha256": "073ab708da4b9fe46f5de2abf735dbbbc0e0fdc1b5ac5150eabba3f0b9eee3c6",
+      "sha256": "073ab708da4b9fe46f5de2abf735dbbbc0e0fdc1b5ac5150eabba3f0b9eee3c6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-verification/references/capability-index.md",
+      "packagePath": "skills/tools/tools-verification/references/capability-index.md",
+      "sourceSha256": "c4d583da92549af627d978043296765cdd545efadaca607eacea54e85667d13e",
+      "sha256": "c4d583da92549af627d978043296765cdd545efadaca607eacea54e85667d13e",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/vendor/references/vendor-content-contract.md",
+      "packagePath": "skills/vendor/references/vendor-content-contract.md",
+      "sourceSha256": "c772c555613c37cbbafa75f8ca06d9a58c24af142f20f63d364a1899a924f634",
+      "sha256": "c772c555613c37cbbafa75f8ca06d9a58c24af142f20f63d364a1899a924f634",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/vendor/references/vendor_mapping.md",
+      "packagePath": "skills/vendor/references/vendor_mapping.md",
+      "sourceSha256": "53c1e89d281bbde5ee11b08c3e7ab029479ed155e440472b715558d78e39b366",
+      "sha256": "53c1e89d281bbde5ee11b08c3e7ab029479ed155e440472b715558d78e39b366",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/SKILL.md",
+      "packagePath": "skills/vendor/vendor_lvgl/SKILL.md",
+      "sourceSha256": "48df60a9ca4f0dc138d7c83ef68a9d403140c288db454957eab7b32e8c798fac",
+      "sha256": "48df60a9ca4f0dc138d7c83ef68a9d403140c288db454957eab7b32e8c798fac",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/SKILL.md",
+      "ownerPluginSha256": "82130cae4cda166a1285308ac54591966e8d03f0e018533cf7caab5ab14c287e"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/config-build-validation.md",
+      "packagePath": "skills/vendor/vendor_lvgl/references/config-build-validation.md",
+      "sourceSha256": "975e6c94cf27f5212f920aff5a5c48354f5c42ad7a498ed23f5d6624a5db52fa",
+      "sha256": "975e6c94cf27f5212f920aff5a5c48354f5c42ad7a498ed23f5d6624a5db52fa",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/config-build-validation.md",
+      "ownerPluginSha256": "975e6c94cf27f5212f920aff5a5c48354f5c42ad7a498ed23f5d6624a5db52fa"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.json",
+      "packagePath": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.json",
+      "sourceSha256": "a353188a1427708d3289582c31ed6371702f5da9f4fc4358d7a1a37c0174f964",
+      "sha256": "a353188a1427708d3289582c31ed6371702f5da9f4fc4358d7a1a37c0174f964",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/lvgl-knowledge-graph.json",
+      "ownerPluginSha256": "a353188a1427708d3289582c31ed6371702f5da9f4fc4358d7a1a37c0174f964"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.md",
+      "packagePath": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.md",
+      "sourceSha256": "929a1bfc0d3c0144502b6486f98b3d6a8815a7b91cf327258af753875ca85ec8",
+      "sha256": "929a1bfc0d3c0144502b6486f98b3d6a8815a7b91cf327258af753875ca85ec8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/lvgl-knowledge-graph.md",
+      "ownerPluginSha256": "ce769c7455326b2dae1d2cc164c76ba5602eb5c8dd32a27fd504b44fb68f04e8"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/porting-contract.md",
+      "packagePath": "skills/vendor/vendor_lvgl/references/porting-contract.md",
+      "sourceSha256": "60424c71377b2b82599e267e932b696e91fcfa2d9e78332a0f84813815f95ca6",
+      "sha256": "60424c71377b2b82599e267e932b696e91fcfa2d9e78332a0f84813815f95ca6",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/porting-contract.md",
+      "ownerPluginSha256": "60424c71377b2b82599e267e932b696e91fcfa2d9e78332a0f84813815f95ca6"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/ui-runtime-performance.md",
+      "packagePath": "skills/vendor/vendor_lvgl/references/ui-runtime-performance.md",
+      "sourceSha256": "5ddac69ee7feccc5122ccf6c537cdeb0e4b1ae6489af14314cda695f6073269d",
+      "sha256": "5ddac69ee7feccc5122ccf6c537cdeb0e4b1ae6489af14314cda695f6073269d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/ui-runtime-performance.md",
+      "ownerPluginSha256": "5ddac69ee7feccc5122ccf6c537cdeb0e4b1ae6489af14314cda695f6073269d"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/version-compatibility.md",
+      "packagePath": "skills/vendor/vendor_lvgl/references/version-compatibility.md",
+      "sourceSha256": "1d26c940cdad9abc50767f327223b2f7c73a60d58bbf53949f29a4300d16d6e4",
+      "sha256": "1d26c940cdad9abc50767f327223b2f7c73a60d58bbf53949f29a4300d16d6e4",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/version-compatibility.md",
+      "ownerPluginSha256": "1d26c940cdad9abc50767f327223b2f7c73a60d58bbf53949f29a4300d16d6e4"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/SKILL.md",
+      "packagePath": "skills/vendor/vendor_mcu/SKILL.md",
+      "sourceSha256": "79bce92d21c2dfa2c5ef0d53954de9e01a412e9b8029b275037ad987acb9fc30",
+      "sha256": "1d73ee0d679a298e94f5997be911a747b3d83f394601c3251683d3aaa4d3da77",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/SKILL.md",
+      "ownerPluginSha256": "359549b7650b4c9aad96ff21d8c89c910606a9284292e46636abff1625d81adc"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md",
+      "sourceSha256": "b6e83ae5147b66fd561d3023c9b338174856c239b9882432de735b7ec203ec68",
+      "sha256": "e7652f9a32aaab26471eecc2fe267ec42a21ccd281ecf1b7513311634dc4ac3f",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md",
+      "ownerPluginSha256": "80198e8ae935a0173b3d5845126f40c49375684dc85cfd3f4fef0d166d8b5b64"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.c",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.c",
+      "sourceSha256": "b231a52ea2abc621551ddaa7314e5fe1f603daf7f98431661295e613077beb67",
+      "sha256": "b231a52ea2abc621551ddaa7314e5fe1f603daf7f98431661295e613077beb67",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.c",
+      "ownerPluginSha256": "b231a52ea2abc621551ddaa7314e5fe1f603daf7f98431661295e613077beb67"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.h",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.h",
+      "sourceSha256": "6c25f5d99b56f0ff608e030aece6ed49bb20cffa04575bcc10919267324011b7",
+      "sha256": "6c25f5d99b56f0ff608e030aece6ed49bb20cffa04575bcc10919267324011b7",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.h",
+      "ownerPluginSha256": "6c25f5d99b56f0ff608e030aece6ed49bb20cffa04575bcc10919267324011b7"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/core-guidelines.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/core-guidelines.md",
+      "sourceSha256": "5b927f5a51ba534db4f0c12a2210a579138c2441fb553bcfdf20a9b09c3308de",
+      "sha256": "5b927f5a51ba534db4f0c12a2210a579138c2441fb553bcfdf20a9b09c3308de",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/core-guidelines.md",
+      "ownerPluginSha256": "5b927f5a51ba534db4f0c12a2210a579138c2441fb553bcfdf20a9b09c3308de"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/hal-quick-reference.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/hal-quick-reference.md",
+      "sourceSha256": "6498e314c70d273e7d6430db7ef3a3e2da7702afdf020f68ac7877eec94f157b",
+      "sha256": "6498e314c70d273e7d6430db7ef3a3e2da7702afdf020f68ac7877eec94f157b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/hal-quick-reference.md",
+      "ownerPluginSha256": "6498e314c70d273e7d6430db7ef3a3e2da7702afdf020f68ac7877eec94f157b"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/peripheral-driver-guide.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/peripheral-driver-guide.md",
+      "sourceSha256": "1b6d94a4af2b2ff065d1039991ac1167583196031d3fe311d1ad26b1ac720695",
+      "sha256": "1b6d94a4af2b2ff065d1039991ac1167583196031d3fe311d1ad26b1ac720695",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/peripheral-driver-guide.md",
+      "ownerPluginSha256": "1b6d94a4af2b2ff065d1039991ac1167583196031d3fe311d1ad26b1ac720695"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/troubleshooting-guide.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/troubleshooting-guide.md",
+      "sourceSha256": "780a4511ddf9f3e62ee1cd71f28102e2b116b53a7ec78c51a1061d20bff284e0",
+      "sha256": "780a4511ddf9f3e62ee1cd71f28102e2b116b53a7ec78c51a1061d20bff284e0",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/troubleshooting-guide.md",
+      "ownerPluginSha256": "780a4511ddf9f3e62ee1cd71f28102e2b116b53a7ec78c51a1061d20bff284e0"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/usage-examples.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/usage-examples.md",
+      "sourceSha256": "41294ea9918cb8c4606c8c00b0934b862326a4eb4fc003331e0d14fab1a6e9a8",
+      "sha256": "41294ea9918cb8c4606c8c00b0934b862326a4eb4fc003331e0d14fab1a6e9a8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/usage-examples.md",
+      "ownerPluginSha256": "41294ea9918cb8c4606c8c00b0934b862326a4eb4fc003331e0d14fab1a6e9a8"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-spl/GUIDE.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-spl/GUIDE.md",
+      "sourceSha256": "c6b3b931925da32d64b511706a30c4114a01f76fd0d5823be04d3e828e3df668",
+      "sha256": "c6b3b931925da32d64b511706a30c4114a01f76fd0d5823be04d3e828e3df668",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-spl/GUIDE.md",
+      "ownerPluginSha256": "c6b3b931925da32d64b511706a30c4114a01f76fd0d5823be04d3e828e3df668"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capability-index.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/capability-index.md",
+      "sourceSha256": "46bd6a629536dbdbfbb60c2bca0457608bdbe530fb86cd3f805c1089c9522841",
+      "sha256": "46bd6a629536dbdbfbb60c2bca0457608bdbe530fb86cd3f805c1089c9522841",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capability-index.md",
+      "ownerPluginSha256": "1e01f8e701fc8da5e0ad5d7f90b0a876ab667512fdb74ce4d8d328b6426be7ba"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/vendor-source-matrix.md",
+      "packagePath": "skills/vendor/vendor_mcu/references/vendor-source-matrix.md",
+      "sourceSha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b",
+      "sha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/vendor-source-matrix.md",
+      "ownerPluginSha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_rtos/SKILL.md",
+      "packagePath": "skills/vendor/vendor_rtos/SKILL.md",
+      "sourceSha256": "2ad650684e43f30289a6d5658697277325f952048d699b387b64c3b557ccb3fa",
+      "sha256": "baef7cf76441fd2776b74e69ef3f1d7e171dd9d25e188ee3f3b0fc5fda7057f5",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_rtos/SKILL.md",
+      "ownerPluginSha256": "942c5f149349dc45eb361d08648e76bcb2087331ee5c320aea3a8185628a564c"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "sourcePath": "skills/app/app-architecture/SKILL.md",
+      "sourceSha256": "0b45f227927c77a6603f9f001f30c6c1994a6f14116f5e35126564e74d70286c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/app-architecture/SKILL.md",
+      "ownerPluginSha256": "bd38bad42285e842feb6522c4539f64fae576e1e2b35d35b2f4404eec9fafeb5"
+    },
+    {
+      "sourcePath": "skills/app/app-architecture/references/app-architecture-evidence.md",
+      "sourceSha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/app-architecture/references/app-architecture-evidence.md",
+      "ownerPluginSha256": "05ba412e51efe3205e92acb0a1b3515b0d4ebb0ca4981cf37128054c5fd57275"
+    },
+    {
+      "sourcePath": "skills/bsp/references/bsp-aht21-case.md",
+      "sourceSha256": "219b13bb09217888cdf96bf5649220e7530ded61a88934731d3fc83891e36a2a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/bsp/references/bsp-architecture-contract.md",
+      "sourceSha256": "100b94d4998cc2c96c39c860c3ed6152e5b12d707eda6cc90f620e7437367b41",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/bsp/references/common-error-patterns.md",
+      "sourceSha256": "d0509396181d42b7b496fa44477dfac44d32a46e6d5e2f5953867f548359ea0c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/bsp/references/gpio-output-peripheral-checklist.md",
+      "sourceSha256": "7842d27d6b27831d347492b264d2dd009fd6158f973e038500a1e6500990ad4a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/SKILL.md",
+      "sourceSha256": "67b5e2a84e6a16b6859c3144a0437eb37696e96fd81daf3fcc2daa100c0b51e0",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/SKILL.md",
+      "ownerPluginSha256": "3f7aee4d95e375861acc422d67afbd9b862afe871c5c713dca88d3b51d6c5896"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/bsp-layer-evidence.md",
+      "sourceSha256": "18121527d317e11175fc556f8961659cf8cc86dbca74a2c6b1b34c38f35930a6",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/bsp-layer-evidence.md",
+      "ownerPluginSha256": "370102e6a2805a5f7b2bcd6e5e820d2f46c09c856d43c0bd8564d48b40269963"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-device-adaptation/GUIDE.md",
+      "sourceSha256": "0c7a6653bd9345fb54e8d320a59d37d4e161d6dd025ef805f9c3c4636684281d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-device-adaptation/GUIDE.md",
+      "ownerPluginSha256": "9a5ff9dbc9c50fa4c0d222f7df6fa17c17e4dfd760b98dd22a4ecf5acdc2542d"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md",
+      "sourceSha256": "dd541400e2a6b52e5ab0de51fa3977c5e9837d201dc77dec3a7c86c0d07f0433",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/GUIDE.md",
+      "ownerPluginSha256": "2bcf8280ca7048539e72d3d2ffd0755d3f3e61925f7596cc1865bef5a00fb964"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/aht21-adapter-pattern.md",
+      "sourceSha256": "bd4ef3528a32d5114f78fbef5afe1775485fed8bbb519ac48c84f7aff4ea0f39",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/references/aht21-adapter-pattern.md",
+      "ownerPluginSha256": "bd4ef3528a32d5114f78fbef5afe1775485fed8bbb519ac48c84f7aff4ea0f39"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/mpu6050-adapter-pattern.md",
+      "sourceSha256": "7616b01947f75047a97bea5e4cba5705ab0b674855217ceeec80cbb489237ea8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/references/mpu6050-adapter-pattern.md",
+      "ownerPluginSha256": "7616b01947f75047a97bea5e4cba5705ab0b674855217ceeec80cbb489237ea8"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capabilities/bsp-platform-adapter/references/w25qxx-adapter-pattern.md",
+      "sourceSha256": "f662cbc85cc6c205084f1de3c5a2904dd2ac37f4571a0f82c2b75d63c6adce34",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capabilities/bsp-platform-adapter/references/w25qxx-adapter-pattern.md",
+      "ownerPluginSha256": "f662cbc85cc6c205084f1de3c5a2904dd2ac37f4571a0f82c2b75d63c6adce34"
+    },
+    {
+      "sourcePath": "skills/impl/impl_board/references/capability-index.md",
+      "sourceSha256": "ac60060a6c0599dfd0a66f92699c71829ce9530c190f1494da242d547d92481c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_board/references/capability-index.md",
+      "ownerPluginSha256": "db8a94ffee27c85decd58de4444431bd04b91ec7bce383b1fe3028cbcac39aaa"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/SKILL.md",
+      "sourceSha256": "fd466a77494f5b79158d99d5f3e4919274f78256abda73d80f0b35235949d52b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/SKILL.md",
+      "ownerPluginSha256": "fae4fdbe8fad46847ded0b0a69938bccc81d7172c77f9022151ddbad30fe85c7"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/api-policy.md",
+      "sourceSha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/api-policy.md",
+      "ownerPluginSha256": "ffa66e59929dd2f96a53282074a05b18362594397dc9b3a6f9ddd6e60d3f56cb"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md",
+      "sourceSha256": "dbf56775c5c60d9191a0240ac0acf6edb6ee51da3418c5854e7dfeecc2f50c50",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/GUIDE.md",
+      "ownerPluginSha256": "4df1b4944eee89f63b1fa51786dd46d15b2f4b3952da4e9d4bd5edc9409ff14f"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/aht21-driver-pattern.md",
+      "sourceSha256": "f86fd5814bdee1da7b938235341bb0f242395c526fe87db144841efa97d1278c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/references/aht21-driver-pattern.md",
+      "ownerPluginSha256": "f86fd5814bdee1da7b938235341bb0f242395c526fe87db144841efa97d1278c"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md",
+      "sourceSha256": "23bddb282fcac30e5a3137f8addcf969592bd3b083c6e75fbb35ea51933c2e34",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/references/mpu6050-driver-pattern.md",
+      "ownerPluginSha256": "23bddb282fcac30e5a3137f8addcf969592bd3b083c6e75fbb35ea51933c2e34"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md",
+      "sourceSha256": "c5061440ce88403b198404a90808049dc2d27a20d12d8cce8c1e7063d643faec",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-driver/references/w25qxx-driver-pattern.md",
+      "ownerPluginSha256": "c5061440ce88403b198404a90808049dc2d27a20d12d8cce8c1e7063d643faec"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md",
+      "sourceSha256": "1beee2b46c46f168629a46dbe6d56e9e17c8a080b47596000d6feb476910aa3d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/GUIDE.md",
+      "ownerPluginSha256": "44932d2d03c22cfb9b68ebb5cef00d805743cebe05e8fce0c1488e29096d60b6"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/aht21-handler-pattern.md",
+      "sourceSha256": "953be8b6cb485ea38bce600827fa08432a34a8849e3d3b9d4dbc15b9cb49520a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/references/aht21-handler-pattern.md",
+      "ownerPluginSha256": "953be8b6cb485ea38bce600827fa08432a34a8849e3d3b9d4dbc15b9cb49520a"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/mpu6050-handler-pattern.md",
+      "sourceSha256": "857765bc532426166f642aca32cbc5de9578648d2cfea91839f7f92f75e7e49d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/references/mpu6050-handler-pattern.md",
+      "ownerPluginSha256": "857765bc532426166f642aca32cbc5de9578648d2cfea91839f7f92f75e7e49d"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capabilities/bsp-device-service/references/w25qxx-handler-pattern.md",
+      "sourceSha256": "c90f7a1e4c0fa9908b0a590a98e4209b2c51551757a303f6c4f3e84e81043637",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capabilities/bsp-device-service/references/w25qxx-handler-pattern.md",
+      "ownerPluginSha256": "c90f7a1e4c0fa9908b0a590a98e4209b2c51551757a303f6c4f3e84e81043637"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/capability-index.md",
+      "sourceSha256": "188f56cf4cbaa56211acacd878d9d0b7baf8641af7dcc7fa74720fecc1caf8ac",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/capability-index.md",
+      "ownerPluginSha256": "b13522a8011c914049d4a7c773d0ae154b19538af3d255c1d741499fa8f1ee7d"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/hal-driver-evidence.md",
+      "sourceSha256": "f5a235e26d489802c1e9f95feea51d8423cca879111b76ed7bafe922ebd41129",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/hal-driver-evidence.md",
+      "ownerPluginSha256": "d7242d1ed5bbed15f7455d7a1cb3cfc9d3429a6e0d5fa97d5779229e7ce48166"
+    },
+    {
+      "sourcePath": "skills/impl/impl_bsp/references/handler-evidence.md",
+      "sourceSha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_bsp/references/handler-evidence.md",
+      "ownerPluginSha256": "32f7fc05b6ab7fe174f009b9db0f3c366edf713154f0ebde662861941d778c36"
+    },
+    {
+      "sourcePath": "skills/impl/impl_mcu/SKILL.md",
+      "sourceSha256": "c08adda043f018e7218e44950835f64a6f33cfeb93450c041011095a3856808b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_mcu/SKILL.md",
+      "ownerPluginSha256": "dc61bd53d469c66d561d8c097c087147dbf233b96b2794dc0795153025c5ad18"
+    },
+    {
+      "sourcePath": "skills/impl/impl_middleware/SKILL.md",
+      "sourceSha256": "45af4d881d8c631f33e46bb7a827677e57ef9c8fcdff2c8a0834a7376aa5df47",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_middleware/SKILL.md",
+      "ownerPluginSha256": "45af4d881d8c631f33e46bb7a827677e57ef9c8fcdff2c8a0834a7376aa5df47"
+    },
+    {
+      "sourcePath": "skills/impl/impl_os/SKILL.md",
+      "sourceSha256": "c798ccfc9f3229879f87a347915fa0e0dfbcdb1006bf979364aa602e8eba6112",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_os/SKILL.md",
+      "ownerPluginSha256": "f524e5c143216a567bed86243dbba451c2f171a03bd4e0907f0a38e8d9fa912e"
+    },
+    {
+      "sourcePath": "skills/impl/impl_os/references/freertos-api-quickref.md",
+      "sourceSha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_os/references/freertos-api-quickref.md",
+      "ownerPluginSha256": "4bf9d5a1a6ef047b7b108e176400419eb96cebdb4cbbfbd385ba1d8ab2508873"
+    },
+    {
+      "sourcePath": "skills/impl/impl_os/references/freertos-source-map.md",
+      "sourceSha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/impl_os/references/freertos-source-map.md",
+      "ownerPluginSha256": "a42770afb37edc7644865eb6d76b2d982eccbb2c82b08861751614f3c4f013d9"
+    },
+    {
+      "sourcePath": "skills/platform/platform_bsp/SKILL.md",
+      "sourceSha256": "5149ea9ea9a88654116f33cef20ca1758572b8e1710ef4f15ae107f41a961e2b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_bsp/SKILL.md",
+      "ownerPluginSha256": "90c3a3050cf96d8a681be8aa36e579672f0461b3de49edaab61003804c0e62ab"
+    },
+    {
+      "sourcePath": "skills/platform/platform_bsp/references/device-model-example.md",
+      "sourceSha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_bsp/references/device-model-example.md",
+      "ownerPluginSha256": "e427122f823314f92dc2e99c29142e16424a77a153dec81b43f805e875494948"
+    },
+    {
+      "sourcePath": "skills/platform/platform_common/SKILL.md",
+      "sourceSha256": "3c55b69ff20fd1d85b2cc54db835873c3e060a250c5bd43ee6d4d0d1dbd19537",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_common/SKILL.md",
+      "ownerPluginSha256": "f02be2c2ebd0e77ce33248be1832cbdf67138c33beecf7875595b7d44f19734e"
+    },
+    {
+      "sourcePath": "skills/platform/platform_common/references/diag-log-flow.md",
+      "sourceSha256": "0fd1ee79c634eef1a215db91a716fc615cb408fa2307954c76bb4bc0b5751523",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_common/references/diag-log-flow.md",
+      "ownerPluginSha256": "0fd1ee79c634eef1a215db91a716fc615cb408fa2307954c76bb4bc0b5751523"
+    },
+    {
+      "sourcePath": "skills/platform/platform_common/references/object-four-tuple-template.md",
+      "sourceSha256": "25b6b4a81f57fe60db8b2d8dd325d7a4d44feab2b92eb1d1fac941e38f66a771",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_common/references/object-four-tuple-template.md",
+      "ownerPluginSha256": "25b6b4a81f57fe60db8b2d8dd325d7a4d44feab2b92eb1d1fac941e38f66a771"
+    },
+    {
+      "sourcePath": "skills/platform/platform_mcu/SKILL.md",
+      "sourceSha256": "b90174d82b49519420e63d33f16859aeabd9a3ac506a299173b7f0e5d5034641",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_mcu/SKILL.md",
+      "ownerPluginSha256": "991c3a71ac0d9df0a43ef27f007d51ee42a8a463301a179bc41f9d7efda6f703"
+    },
+    {
+      "sourcePath": "skills/platform/platform_middleware/SKILL.md",
+      "sourceSha256": "2336f24a152a0f8a751898978c316bb0dcdda45be2cf91f62093d43f119e8d94",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_middleware/SKILL.md",
+      "ownerPluginSha256": "33b8fccb81f708a290606a02cafb36334bf5c4bd7c23f22f72ef2bf54a32f70b"
+    },
+    {
+      "sourcePath": "skills/platform/platform_os/SKILL.md",
+      "sourceSha256": "931fed903dc5170abba6ead55467c8e0b143b79974f47fbbb6ff3910bef0e581",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_os/SKILL.md",
+      "ownerPluginSha256": "24ce3dc63c96c7c3bec6875b743c3df0b2c0a84a8f8b0aacf15dfd50518c39c0"
+    },
+    {
+      "sourcePath": "skills/platform/platform_os/references/platform-os-contract.md",
+      "sourceSha256": "6c5243619c4e5cf894b3d95acd600c7981fdd2e4454827411f24c8e5636ee0ad",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_os/references/platform-os-contract.md",
+      "ownerPluginSha256": "fecb12eb4cfb743f6725b785c9002a63a67dd0ae6ad4e40fa98fcd632c347804"
+    },
+    {
+      "sourcePath": "skills/platform/platform_os/references/platform-os-freertos-case.md",
+      "sourceSha256": "ab7e098a76b7d65c3c2a9354341dacb92133fb42ce7bd9e301dbdf636ef26fd9",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/platform_os/references/platform-os-freertos-case.md",
+      "ownerPluginSha256": "2b5722a0e56e9fbeb094faa062a6c6d4b8f9b548444bfb25481c93dc99a6d8c5"
+    },
+    {
+      "sourcePath": "skills/service/service_diagnosis/SKILL.md",
+      "sourceSha256": "e2e8a08b5cefc877b270c994a6f364e1a013618862816d1203e968462b97873c",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_diagnosis/SKILL.md",
+      "ownerPluginSha256": "37b04f270ef781656d149e2eb1ae59e31ed985bf03d61c5f3820d2dca867d3c9"
+    },
+    {
+      "sourcePath": "skills/service/service_log/SKILL.md",
+      "sourceSha256": "f2cb77de934996aaf7829ee8a424dc364063d828dabbb5d25ab60adb21ef513a",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_log/SKILL.md",
+      "ownerPluginSha256": "1eae2851c98a9b8422b5893540b3fb64298bd88795d4ed39df51298b2d8da97c"
+    },
+    {
+      "sourcePath": "skills/service/service_system/SKILL.md",
+      "sourceSha256": "12f79c6ad9421f15cc9aa8dc27a33fff9dc3d9e56a6d9c08f5e2d18773a0403e",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/SKILL.md",
+      "ownerPluginSha256": "49d002df7c7954d43ea363310df34326e19d4996173256d3a608c80a13af77bb"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-aes/GUIDE.md",
+      "sourceSha256": "ceafe7d15fcf23e1fe978c9c4640fb31cd545f585badf10cb45ad43cc6718571",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-aes/GUIDE.md",
+      "ownerPluginSha256": "ceafe7d15fcf23e1fe978c9c4640fb31cd545f585badf10cb45ad43cc6718571"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-crc/GUIDE.md",
+      "sourceSha256": "f5215a2e1ddfce6d4a97aef3157ef6148c676b62e8f66bb5c2356d0153da73e4",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-crc/GUIDE.md",
+      "ownerPluginSha256": "f5215a2e1ddfce6d4a97aef3157ef6148c676b62e8f66bb5c2356d0153da73e4"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-firmware-signing/GUIDE.md",
+      "sourceSha256": "ac56cd182e9e8512d270ee754aa43d0e337b9b5293248f2a769121245a25b059",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-firmware-signing/GUIDE.md",
+      "ownerPluginSha256": "ac56cd182e9e8512d270ee754aa43d0e337b9b5293248f2a769121245a25b059"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/security-rsa/GUIDE.md",
+      "sourceSha256": "c93361cfe0db25f6f92e3b1760a6f19207ced19ef2e495983f4d426bf246a0e6",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/security-rsa/GUIDE.md",
+      "ownerPluginSha256": "c93361cfe0db25f6f92e3b1760a6f19207ced19ef2e495983f4d426bf246a0e6"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/system-bootloader/GUIDE.md",
+      "sourceSha256": "35d58c23651dd76c627fdb98e02f75ea7b7c276918bc425cbda6b92cfa62b334",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/system-bootloader/GUIDE.md",
+      "ownerPluginSha256": "35d58c23651dd76c627fdb98e02f75ea7b7c276918bc425cbda6b92cfa62b334"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/system-low-power/GUIDE.md",
+      "sourceSha256": "b8dba7edc2cf7ee9ac2d778006b60f5ba6380ab91c8c54186313056b89150238",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/system-low-power/GUIDE.md",
+      "ownerPluginSha256": "b8dba7edc2cf7ee9ac2d778006b60f5ba6380ab91c8c54186313056b89150238"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capabilities/system-watchdog/GUIDE.md",
+      "sourceSha256": "dd9ccacaecbf7dff08989919093e091caf217d5542eed3e45814c08ae3e4f4c1",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capabilities/system-watchdog/GUIDE.md",
+      "ownerPluginSha256": "dd9ccacaecbf7dff08989919093e091caf217d5542eed3e45814c08ae3e4f4c1"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/capability-index.md",
+      "sourceSha256": "d39acfa30e58c0478104659dc3ebb349935e7e448f4cf0d0da5989696114d74e",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/capability-index.md",
+      "ownerPluginSha256": "26af8034a0ba55811ceb6aae9a013f0c807518ea518e9858e60fccfd3bdeda4a"
+    },
+    {
+      "sourcePath": "skills/service/service_system/references/crypto-source-baseline.md",
+      "sourceSha256": "7cdcbccf3760f158ce71a1f7b0ca144ff52f72bf7493adaa697109ae404e9fb8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/service_system/references/crypto-source-baseline.md",
+      "ownerPluginSha256": "7cdcbccf3760f158ce71a1f7b0ca144ff52f72bf7493adaa697109ae404e9fb8"
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/SKILL.md",
+      "sourceSha256": "0e1f4b5b1b2f26247faa71dd5bd5e87c68eb072c60103920a25793e68924d08c",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/GUIDE.md",
+      "sourceSha256": "ec878993c7e229a413d7919dd612f80be42ce0184d68bde8cbee773dfc6d30d1",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/references/usage.md",
+      "sourceSha256": "d2033f324689b33c61f18f73dd4daa05a1dd6254f3fb2a733915564d9bffb2a8",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-cmake/scripts/cmake_builder.py",
+      "sourceSha256": "8799fd283063bcb9d4176d9fe0af8c6a11d6edc4a0e2e933860a65f385ab27fd",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/GUIDE.md",
+      "sourceSha256": "6d246c48fadc2891695a3b92163c1c11947375f8356113c05e596bc5b827ee8b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/references/usage.md",
+      "sourceSha256": "33941128d9982016544b636a5c7264f18692cf9fb3e7db96293de2dc7bca4280",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-esp-idf/scripts/idf_builder.py",
+      "sourceSha256": "cd9d19ff2ee1b3e33c688f134f3887bafd706a7fa7c9edaccee999c007cd424f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/GUIDE.md",
+      "sourceSha256": "63c01db63c342ba06296bc847e07e47a6655f5a2f284834d796d31be1d805824",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/references/usage.md",
+      "sourceSha256": "d38514c100ef3a649ff4e7725526da43fac9c5755c020cbf046b22664220787a",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-iar/scripts/iar_builder.py",
+      "sourceSha256": "23a320abd80115ef0284aeb56405cd94d779021860f1e49a3c3ac38155e831b7",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-keil/GUIDE.md",
+      "sourceSha256": "2a98355a4ed489540aef2ded507915a1ab3f476a8592cf54060995942f217bde",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/GUIDE.md",
+      "sourceSha256": "b42b7638984539ec094638f0fcf3f78b2dd982d49e334760945c4a550c0481d8",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/references/usage.md",
+      "sourceSha256": "aab0394dae9061db645d0ee6bc8b08c876e4a82841e54898586e47471185bdcf",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capabilities/tool-build-platformio/scripts/platformio_builder.py",
+      "sourceSha256": "0840ce3b0feace0d4d2c63ababc19f3a4a53a1f47935aacba45ae31fa595edc6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/capability-index.md",
+      "sourceSha256": "0d4aef2cf04d2c237816d6bf6501bd2d8341fe88b12e194d7e5129432ef518de",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/source-baseline.md",
+      "sourceSha256": "b135d6469cec5169102740b4441b5d6328d7448c4c50fbc26d1c1070c3c425b3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-cmake/GUIDE.md",
+      "sourceSha256": "c0a3359bbf3ef3e19f17b60b3750b5f95e13d0afa09478b260bb461793a215d1",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-esp-idf/GUIDE.md",
+      "sourceSha256": "25ea06b30cbb7b7452974d1a102459835a40cce9230c44d8d0a6b4c8268e73bf",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-iar/GUIDE.md",
+      "sourceSha256": "42df0400ee50d224b035f4cfa76e7db8efeaa7c71359e15fbe69ab1752b0a9c2",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-keil/GUIDE.md",
+      "sourceSha256": "2a98355a4ed489540aef2ded507915a1ab3f476a8592cf54060995942f217bde",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-build/references/tool-build-platformio/GUIDE.md",
+      "sourceSha256": "fd4dc168e3b89ed72e41b1646dc3cf3ad46e50f69f9d590895ef87447d165698",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/SKILL.md",
+      "sourceSha256": "b57a406b00a24435c862016aaf00a10ef3b4ad6c649d639665862ec5b95a7a1a",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-crash-backtrace/GUIDE.md",
+      "sourceSha256": "9ab71f3b42259246bb997f1bc4cd983faa2b40ce68324139d8faa2737277695f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-diagnostic-framework/GUIDE.md",
+      "sourceSha256": "1e96eb55b9a46f52648c09bd883cf1707a4dfd863c551be2df7a91886b76c881",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/GUIDE.md",
+      "sourceSha256": "cdbbd3da5a37dfc59b4eabbe9289faa593d9a2087ac092442b4167093340f2d0",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/references/debug-playbook.md",
+      "sourceSha256": "db766309de8bdbb0879e240291140b6e49f4d3b679c295b0d6a8d6e6fd050bee",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/references/usage.md",
+      "sourceSha256": "8e3c17686d42dcb06d84b4743cf3870f739648c417a52c7f3f483cded9841fdc",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-gdb-openocd/scripts/gdb_debugger.py",
+      "sourceSha256": "47c3b63b99bd0b95ac3a0c8c8afe816c25f0558210060e52621d413add34fe9b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-offline-breakpoint/GUIDE.md",
+      "sourceSha256": "b4fd3c4dc625b9fecd7512bd306fdfd955fa22d2f7fa04bb16162b0a3296df15",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-ozone/GUIDE.md",
+      "sourceSha256": "2c4a5fb6825ce7f785ee3927e660c2ac408e419959ccf70e4b98245ad7fadf3b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-platformio/GUIDE.md",
+      "sourceSha256": "d60c8621782b1f6c3b35729431869c8af286264df037da510492c646f580e172",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-platformio/references/usage.md",
+      "sourceSha256": "bdd9387259546e8835c3aa4a3fe69a8d3c265bf288b5ed5490e5a31ba0512953",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capabilities/debug-rtos/GUIDE.md",
+      "sourceSha256": "45f18f3b0fc22a261b2a2a27dafff0f99819d2a15adca370bb75e522c9da3fd3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/capability-index.md",
+      "sourceSha256": "fabe7d53e10d0af353543f86844db0b321483bec8db8947ecb1751c21de089df",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-crash-backtrace/GUIDE.md",
+      "sourceSha256": "9ab71f3b42259246bb997f1bc4cd983faa2b40ce68324139d8faa2737277695f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-diagnostic-framework/GUIDE.md",
+      "sourceSha256": "1e96eb55b9a46f52648c09bd883cf1707a4dfd863c551be2df7a91886b76c881",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-gdb-openocd/GUIDE.md",
+      "sourceSha256": "71a153b3281cd28bf2db7dc8b5f130739f4bc85211b0ace2008283d7b9a88d89",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-offline-breakpoint/GUIDE.md",
+      "sourceSha256": "b4fd3c4dc625b9fecd7512bd306fdfd955fa22d2f7fa04bb16162b0a3296df15",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-ozone/GUIDE.md",
+      "sourceSha256": "2c4a5fb6825ce7f785ee3927e660c2ac408e419959ccf70e4b98245ad7fadf3b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-platformio/GUIDE.md",
+      "sourceSha256": "7c8cebbfd1ac9309688c33cf19ec2937fab20537e87b11c4e65fac2c638484c6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/debug-rtos/GUIDE.md",
+      "sourceSha256": "45f18f3b0fc22a261b2a2a27dafff0f99819d2a15adca370bb75e522c9da3fd3",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-debug/references/openocd-cmbacktrace.md",
+      "sourceSha256": "f38f03663ebc0d09f76cde7420065589ccf5fdb00e69aa6bc5378754dd61a61a",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/SKILL.md",
+      "sourceSha256": "b851111890f506e7ba5b84ef3086ed67ac127023b9dc62dc1f82fe2c1df9a89c",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-breadcrumb/GUIDE.md",
+      "sourceSha256": "a3106b1eae0f3ff892b0ad81869650a3f36a52acb788c1e22d793e96f7816f88",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-elog/GUIDE.md",
+      "sourceSha256": "e9c06613cb607181e2ba23b31bb6ba01d06eeb1e9195a35fb1a83e3de482503f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-rtt-monitor/GUIDE.md",
+      "sourceSha256": "a1f072314590ef4bd9a84e89788034d85dab4bf3d00d498de198abc052003f6b",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-rtt-porting/GUIDE.md",
+      "sourceSha256": "9db1e13bc79c5b19b7d40c08d36ee7be52c37723d18eff008262c15cda802f68",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/GUIDE.md",
+      "sourceSha256": "d24ecafac427fc74ccde92e6662fad360c4afb46f6940594c9084dbb9b9a1074",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/references/usage.md",
+      "sourceSha256": "9e03dfc36ad0d33ffe0e8684a3dbd199ca946646daec7fcf777ead5c8048b64f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-serial-monitor/scripts/serial_monitor.py",
+      "sourceSha256": "24b1024906a5345cd16cc32b4c265b8279bf2fbe5723c0900283528baa4bb517",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-swv-itm/GUIDE.md",
+      "sourceSha256": "efb88a18e4585509d11e7b0307177bb38ace46c7a27c1f086ea74886c2eeebbe",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capabilities/observability-systemview/GUIDE.md",
+      "sourceSha256": "ecb336c263d0432e07c690e42821f7b29a5238b7e490c3d49241b6c06af9bdd7",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/capability-index.md",
+      "sourceSha256": "236a6d903dd21557eff40edcca1a277e86da182b9799dbf4dc817fe6373fdaaf",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/debugcomponent-rtt-case.md",
+      "sourceSha256": "dc6c4eb8c8dca2d81907de7685f92f1ed6407e1edf03aabfbc42a7c4e7222500",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-observability/references/upstream-source-baseline.md",
+      "sourceSha256": "d576f066cbcc58726cea415d325caba3184c240b725b3fb717eb4d203a027aec",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/SKILL.md",
+      "sourceSha256": "80f4a6bd5d9f5edd8900fa3949a37bd78fb0301f3fa1ce9e184ab7d752474c0e",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-code-review/GUIDE.md",
+      "sourceSha256": "16f688ef210415e9c4c5f696dc57c2f65e915c8c77da7b64e319c92b35c9c04c",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-format-check/.clang-format",
+      "sourceSha256": "9a21756c48b7e8f2fb2993f9eda977a2f4ee27d6d5ec900cb1767028883ff35f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-format-check/GUIDE.md",
+      "sourceSha256": "68806066e9059bf58aaffc9ab8047309874087715bdb4f6dace95c365b2163d6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-map-analysis/GUIDE.md",
+      "sourceSha256": "d9af9bb25779f242d984c4e60bd755111dfd43a93493fad77932ab0c38a8481d",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-static-analysis/misra-rule-metadata.json",
+      "sourceSha256": "d1d9d362ea741df96f8e2502767b98681bbd4a71fb7452f989ecdba6b8c464ae",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capabilities/quality-unity-testing/references/aht21-unity-pattern.md",
+      "sourceSha256": "70f0bb411dbfa9eb149002739c93003971f17db557da5172df1d360990892336",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/capability-index.md",
+      "sourceSha256": "eb7eb229b572b45250a94cc6d59cdfef201a6dd202063794a70118ce96ddf2f2",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/quality-mode-contract.md",
+      "sourceSha256": "b2fb1bf807793586077bf2f0e4905ee544ca092c61717021eda3dacb995be4cd",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/quality-static-analysis/GUIDE.md",
+      "sourceSha256": "ffa52f8fb3041f12ab93be25798278ea2b73fae9c85546d6c8294a5b1edd3b6d",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/quality-unity-testing/GUIDE.md",
+      "sourceSha256": "366e99619010b66a582592432a0bcb370dbd08ec0af41e21c15189298898d4c6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/review-gates.md",
+      "sourceSha256": "4020ba7ec990b2aba51de802b805775b62c1a17e37252cafcebcce70b0716090",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/style-profile.md",
+      "sourceSha256": "da1a91f88cb39f53612562eb03f8e4489c1758f6092e54e7bf8c02d281cdca0f",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-quality/references/upstream-source-baseline.md",
+      "sourceSha256": "60820f7d684bd07b6e2565f03c78e8ba659f85d080e49e44ac5d5e03fe24bd41",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/SKILL.md",
+      "sourceSha256": "aebf40fdb9bfcad923a0d33644c74836f186adfecfedb438f2ae598b42a4930d",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/capabilities/release-ota-package/GUIDE.md",
+      "sourceSha256": "2e2dc3e3e27c2e963cf82acb474b0c8030c10bb5cecaafc83fce8874e4daf9fa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/capabilities/release-ota-update/GUIDE.md",
+      "sourceSha256": "1b4574d1fbab15a5f9fa32cb06c36211149fe6f494ebd970f9fa1b65a42104aa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/capability-index.md",
+      "sourceSha256": "05d83f1424c39dff65615207d9c03483da02488bad45a9a53228518d1a3b5ff0",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/release-ota-package/GUIDE.md",
+      "sourceSha256": "2e2dc3e3e27c2e963cf82acb474b0c8030c10bb5cecaafc83fce8874e4daf9fa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-release/references/release-ota-update/GUIDE.md",
+      "sourceSha256": "1b4574d1fbab15a5f9fa32cb06c36211149fe6f494ebd970f9fa1b65a42104aa",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-verification/SKILL.md",
+      "sourceSha256": "073ab708da4b9fe46f5de2abf735dbbbc0e0fdc1b5ac5150eabba3f0b9eee3c6",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/tools/tools-verification/references/capability-index.md",
+      "sourceSha256": "c4d583da92549af627d978043296765cdd545efadaca607eacea54e85667d13e",
+      "ownerPlugin": "repository-shared-or-unassigned",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/vendor/references/vendor-content-contract.md",
+      "sourceSha256": "c772c555613c37cbbafa75f8ca06d9a58c24af142f20f63d364a1899a924f634",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/vendor/references/vendor_mapping.md",
+      "sourceSha256": "53c1e89d281bbde5ee11b08c3e7ab029479ed155e440472b715558d78e39b366",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": null,
+      "ownerPluginSha256": null
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/SKILL.md",
+      "sourceSha256": "48df60a9ca4f0dc138d7c83ef68a9d403140c288db454957eab7b32e8c798fac",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/SKILL.md",
+      "ownerPluginSha256": "82130cae4cda166a1285308ac54591966e8d03f0e018533cf7caab5ab14c287e"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/config-build-validation.md",
+      "sourceSha256": "975e6c94cf27f5212f920aff5a5c48354f5c42ad7a498ed23f5d6624a5db52fa",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/config-build-validation.md",
+      "ownerPluginSha256": "975e6c94cf27f5212f920aff5a5c48354f5c42ad7a498ed23f5d6624a5db52fa"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.json",
+      "sourceSha256": "a353188a1427708d3289582c31ed6371702f5da9f4fc4358d7a1a37c0174f964",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/lvgl-knowledge-graph.json",
+      "ownerPluginSha256": "a353188a1427708d3289582c31ed6371702f5da9f4fc4358d7a1a37c0174f964"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/lvgl-knowledge-graph.md",
+      "sourceSha256": "929a1bfc0d3c0144502b6486f98b3d6a8815a7b91cf327258af753875ca85ec8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/lvgl-knowledge-graph.md",
+      "ownerPluginSha256": "ce769c7455326b2dae1d2cc164c76ba5602eb5c8dd32a27fd504b44fb68f04e8"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/porting-contract.md",
+      "sourceSha256": "60424c71377b2b82599e267e932b696e91fcfa2d9e78332a0f84813815f95ca6",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/porting-contract.md",
+      "ownerPluginSha256": "60424c71377b2b82599e267e932b696e91fcfa2d9e78332a0f84813815f95ca6"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/ui-runtime-performance.md",
+      "sourceSha256": "5ddac69ee7feccc5122ccf6c537cdeb0e4b1ae6489af14314cda695f6073269d",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/ui-runtime-performance.md",
+      "ownerPluginSha256": "5ddac69ee7feccc5122ccf6c537cdeb0e4b1ae6489af14314cda695f6073269d"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_lvgl/references/version-compatibility.md",
+      "sourceSha256": "1d26c940cdad9abc50767f327223b2f7c73a60d58bbf53949f29a4300d16d6e4",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_lvgl/references/version-compatibility.md",
+      "ownerPluginSha256": "1d26c940cdad9abc50767f327223b2f7c73a60d58bbf53949f29a4300d16d6e4"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/SKILL.md",
+      "sourceSha256": "79bce92d21c2dfa2c5ef0d53954de9e01a412e9b8029b275037ad987acb9fc30",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/SKILL.md",
+      "ownerPluginSha256": "359549b7650b4c9aad96ff21d8c89c910606a9284292e46636abff1625d81adc"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md",
+      "sourceSha256": "b6e83ae5147b66fd561d3023c9b338174856c239b9882432de735b7ec203ec68",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/GUIDE.md",
+      "ownerPluginSha256": "80198e8ae935a0173b3d5845126f40c49375684dc85cfd3f4fef0d166d8b5b64"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.c",
+      "sourceSha256": "b231a52ea2abc621551ddaa7314e5fe1f603daf7f98431661295e613077beb67",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.c",
+      "ownerPluginSha256": "b231a52ea2abc621551ddaa7314e5fe1f603daf7f98431661295e613077beb67"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.h",
+      "sourceSha256": "6c25f5d99b56f0ff608e030aece6ed49bb20cffa04575bcc10919267324011b7",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/assets/bsp-template.h",
+      "ownerPluginSha256": "6c25f5d99b56f0ff608e030aece6ed49bb20cffa04575bcc10919267324011b7"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/core-guidelines.md",
+      "sourceSha256": "5b927f5a51ba534db4f0c12a2210a579138c2441fb553bcfdf20a9b09c3308de",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/core-guidelines.md",
+      "ownerPluginSha256": "5b927f5a51ba534db4f0c12a2210a579138c2441fb553bcfdf20a9b09c3308de"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/hal-quick-reference.md",
+      "sourceSha256": "6498e314c70d273e7d6430db7ef3a3e2da7702afdf020f68ac7877eec94f157b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/hal-quick-reference.md",
+      "ownerPluginSha256": "6498e314c70d273e7d6430db7ef3a3e2da7702afdf020f68ac7877eec94f157b"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/peripheral-driver-guide.md",
+      "sourceSha256": "1b6d94a4af2b2ff065d1039991ac1167583196031d3fe311d1ad26b1ac720695",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/peripheral-driver-guide.md",
+      "ownerPluginSha256": "1b6d94a4af2b2ff065d1039991ac1167583196031d3fe311d1ad26b1ac720695"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/troubleshooting-guide.md",
+      "sourceSha256": "780a4511ddf9f3e62ee1cd71f28102e2b116b53a7ec78c51a1061d20bff284e0",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/troubleshooting-guide.md",
+      "ownerPluginSha256": "780a4511ddf9f3e62ee1cd71f28102e2b116b53a7ec78c51a1061d20bff284e0"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-hal/references/usage-examples.md",
+      "sourceSha256": "41294ea9918cb8c4606c8c00b0934b862326a4eb4fc003331e0d14fab1a6e9a8",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-hal/references/usage-examples.md",
+      "ownerPluginSha256": "41294ea9918cb8c4606c8c00b0934b862326a4eb4fc003331e0d14fab1a6e9a8"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capabilities/platform-stm32-spl/GUIDE.md",
+      "sourceSha256": "c6b3b931925da32d64b511706a30c4114a01f76fd0d5823be04d3e828e3df668",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capabilities/platform-stm32-spl/GUIDE.md",
+      "ownerPluginSha256": "c6b3b931925da32d64b511706a30c4114a01f76fd0d5823be04d3e828e3df668"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/capability-index.md",
+      "sourceSha256": "46bd6a629536dbdbfbb60c2bca0457608bdbe530fb86cd3f805c1089c9522841",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/capability-index.md",
+      "ownerPluginSha256": "1e01f8e701fc8da5e0ad5d7f90b0a876ab667512fdb74ce4d8d328b6426be7ba"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_mcu/references/vendor-source-matrix.md",
+      "sourceSha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_mcu/references/vendor-source-matrix.md",
+      "ownerPluginSha256": "a2ca2adc9beb0ca9fac47680d405e242fa468148595ac0a6e22ee2b4fd0dff8b"
+    },
+    {
+      "sourcePath": "skills/vendor/vendor_rtos/SKILL.md",
+      "sourceSha256": "2ad650684e43f30289a6d5658697277325f952048d699b387b64c3b557ccb3fa",
+      "ownerPlugin": "mcu-workbench-architecture",
+      "ownerPluginSourcePath": "plugins/mcu-workbench-architecture/skills/vendor_rtos/SKILL.md",
+      "ownerPluginSha256": "942c5f149349dc45eb361d08648e76bcb2087331ee5c320aea3a8185628a564c"
+    }
+  ],
+  "skillLinks": [
+    {
+      "packagePath": "skills/workflow-requirements-router/SKILL.md",
+      "sourcePath": "skills/workflow/workflow-requirements-router/SKILL.md",
+      "sourceSha256": "b7d83c23dbbc6532592fe1e9d01923d72283134776b1a32dd8771623b4ffe001",
+      "sha256": "ca6f726391f8657132ac23eebf087bced45200dadad017e00b9dfe87a816fb27"
+    },
+    {
+      "packagePath": "skills/workflow-review-gate/SKILL.md",
+      "sourcePath": "skills/workflow/workflow-review-gate/SKILL.md",
+      "sourceSha256": "b94e2f5b33bb571fcd4e9face00cf64c1215170393ff92bb15966a766af545d7",
+      "sha256": "922c3444deff0fe680b2eff3139e75ea28db30223bfeb626231b641e69c6eeab"
+    },
+    {
+      "packagePath": "skills/workflow-review-gate/references/capability-index.md",
+      "sourcePath": "skills/workflow/workflow-review-gate/references/capability-index.md",
+      "sourceSha256": "98c37d5ed0c22c3829bed7250e268e4d9353b18900b656c3c66b89b6416d4a44",
+      "sha256": "9f02e401c93d603e4868b48ba3737d4cff46e62e1fab7ef7253a6f30172a02c2"
+    },
+    {
+      "packagePath": "skills/workflow-review-gate/references/software-architecture-knowledge-graph.md",
+      "sourcePath": "skills/workflow/workflow-review-gate/references/software-architecture-knowledge-graph.md",
+      "sourceSha256": "e3974ef146984249cdfdb6afdb90658080c35a489203e73e22c41891c5fbcabf",
+      "sha256": "585fb25ed0f4dddbf9ce9655503680db8a5ad90cb5c1edd32cc8ac4cb3bdbe9f"
+    },
+    {
+      "packagePath": "skills/workflow-integration-plan/SKILL.md",
+      "sourcePath": "skills/workflow/workflow-integration-plan/SKILL.md",
+      "sourceSha256": "08a875d22f94e60c26366b95557aaf6a6fa3494c0ee343138535db76802ba21c",
+      "sha256": "9aaeccf16d08bc90f39d6794e2a14be4a950ece6f1c05137e1835628ce4c9839"
+    },
+    {
+      "packagePath": "skills/workflow-integration-plan/references/capability-index.md",
+      "sourcePath": "skills/workflow/workflow-integration-plan/references/capability-index.md",
+      "sourceSha256": "e1b1b81846bf7fd4dc9b34711aab869ec2d19844551d87968a82261f1fb81f67",
+      "sha256": "2aa4b70ae886055645c8c84c08c99d21e7f8d9cde0d9dd5e30a852971239d294"
+    },
+    {
+      "packagePath": "skills/workflow-task-breakdown/SKILL.md",
+      "sourcePath": "skills/workflow/workflow-task-breakdown/SKILL.md",
+      "sourceSha256": "48da9e8fadedfc078e4cd4595d1d95d46514ba556fab7d9791d12b778f4e66f7",
+      "sha256": "f35bd124635b9109bc6226516ae0708d1761ecd2d098d85c7e81e5f079c51f7f"
+    },
+    {
+      "packagePath": "skills/workflow-final-review/SKILL.md",
+      "sourcePath": "skills/workflow/workflow-final-review/SKILL.md",
+      "sourceSha256": "e532ab9d2b1890a9d8d107d956cd7e3a56fa9ccbb81422a20bbd677ee686aa56",
+      "sha256": "9e7ca436259e3ffe10db21973635e21b06b506a3b61cebe8b36b41c9b9838c2a"
+    },
+    {
+      "packagePath": "skills/workflow-final-review/references/capability-index.md",
+      "sourcePath": "skills/workflow/workflow-final-review/references/capability-index.md",
+      "sourceSha256": "f606a6f4cd46e9bdea2c60974ed5b3643b1c1ee24e1b87b1fb580e6033f05121",
+      "sha256": "cbc8af102a76a99b98f0be471754a404c485232dd09e7101accd383a5668d18e"
+    },
+    {
+      "packagePath": "skills/embed-ai-tool/CONTRIBUTING.md",
+      "sourcePath": "skills/embed-ai-tool/CONTRIBUTING.md",
+      "sourceSha256": "2a60095e83ca3eed110c86e9c96ac3b13b1eb49a981fce17c4993c7e0fd2fbcb",
+      "sha256": "1fc84622b00382487bc92ebaf596579b042c002354812a71fb5577da36a04f36"
+    },
+    {
+      "packagePath": "skills/embed-ai-tool/README.md",
+      "sourcePath": "skills/embed-ai-tool/README.md",
+      "sourceSha256": "90934787854239b9e6dd17d47799ea0bfa196f7aa2596a27e9d15d264ff2a9cf",
+      "sha256": "eebc3f8157abe47935dd091dec93b1348ecf76f8f4506952c84ea77d45d10282"
+    },
+    {
+      "packagePath": "skills/embed-ai-tool/README_EN.md",
+      "sourcePath": "skills/embed-ai-tool/README_EN.md",
+      "sourceSha256": "d06b60a10569acbedfcd6f6687c7ed7109b35666876abc82fc6afd63f6da9582",
+      "sha256": "ab50372729cc04bbfe4bd7c90d05bbbfc732b1a467d18f949445e462a91e8a09"
+    },
+    {
+      "packagePath": "skills/embed-ai-tool/shared/contracts.md",
+      "sourcePath": "skills/embed-ai-tool/shared/contracts.md",
+      "sourceSha256": "411da9e6e4c7811445867647e85532f3602f5afcdad0eb86cebe2526a2b13792",
+      "sha256": "8534082cd39d560316eaf66c5a05f0b00329ad7c4cef5e42d480b583e4af18fb"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Embedded Test Desktop-App"
+  short_description: "Generate a generic PySide6 desktop scaffold."
+  default_prompt: "Use $embedded-production-test-tool to generate a generic PySide6 desktop application scaffold. Use the bundled create_pyside6_scaffold.py script and report the generated path plus next commands. Do not produce development-solution reports or hardware-specific plans as part of this skill."

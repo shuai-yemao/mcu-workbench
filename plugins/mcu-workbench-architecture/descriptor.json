@@ -1,0 +1,10 @@
+{
+  "id": "mcu-workbench-architecture",
+  "version": "1.0.0",
+  "capabilities": [],
+  "dependencies": [],
+  "lifecycle": {
+    "load": "load-architecture",
+    "dispose": "dispose-architecture"
+  }
+}

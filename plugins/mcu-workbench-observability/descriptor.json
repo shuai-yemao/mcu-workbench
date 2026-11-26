@@ -1,0 +1,17 @@
+{
+  "id": "mcu-workbench-observability",
+  "version": "1.0.0",
+  "capabilities": [
+    {
+      "id": "observability-debug",
+      "ownerPlugin": "mcu-workbench-observability",
+      "version": "1.0.0",
+      "permissions": ["read-project-evidence", "run-host-check"]
+    }
+  ],
+  "dependencies": [],
+  "lifecycle": {
+    "load": "load-observability",
+    "dispose": "dispose-observability"
+  }
+}

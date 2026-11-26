@@ -1,0 +1,47 @@
+{
+  "name": "mcu-workbench-local",
+  "plugins": [
+    {
+      "name": "mcu-workbench-architecture",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-architecture" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench Architecture" },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "mcu-workbench-devops",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-devops" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench DevOps" },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "mcu-workbench-observability",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-observability" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench Observability" },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "mcu-workbench-verification",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-verification" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench Verification" },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "mcu-workbench-workflow",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-workflow" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench Workflow" },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "mcu-workbench-project-management",
+      "source": { "source": "local", "path": "./plugins/mcu-workbench-project-management" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "interface": { "displayName": "MCU Workbench Project Management" },
+      "category": "Developer Tools"
+    }
+  ]
+}

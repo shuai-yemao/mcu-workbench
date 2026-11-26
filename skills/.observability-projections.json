@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0.0",
+  "plugin": "mcu-workbench-observability",
+  "generatedAt": "2026-11-24T12:36:09.057Z",
+  "files": [
+    {
+      "path": "skills/can-debug/SKILL.md",
+      "source": "plugins/mcu-workbench-observability/skills/can-debug/SKILL.md",
+      "sourceSha256": "2497fc51c0dfa89e6e7a91d0541c9e203ba3bfe2d1083603331ff459753fda43",
+      "sha256": "2497fc51c0dfa89e6e7a91d0541c9e203ba3bfe2d1083603331ff459753fda43"
+    },
+    {
+      "path": "skills/can-debug/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-observability/skills/can-debug/agents/openai.yaml",
+      "sourceSha256": "14c370262feff449d88c3e517c040ffe58232a68f713d9ef8dbd81a5838af84c",
+      "sha256": "14c370262feff449d88c3e517c040ffe58232a68f713d9ef8dbd81a5838af84c"
+    },
+    {
+      "path": "skills/can-debug/references/usage.md",
+      "source": "plugins/mcu-workbench-observability/skills/can-debug/references/usage.md",
+      "sourceSha256": "b10ad7b15037415ed29a08527ce4be2bd4732fb8e4c4b149ec4d1ebed7001c10",
+      "sha256": "b10ad7b15037415ed29a08527ce4be2bd4732fb8e4c4b149ec4d1ebed7001c10"
+    },
+    {
+      "path": "skills/can-debug/scripts/can_tool.py",
+      "source": "plugins/mcu-workbench-observability/skills/can-debug/scripts/can_tool.py",
+      "sourceSha256": "9abdc7fcb4d3e38979ca3a38101575c8890ea140fd8b7aa67873f715de601c57",
+      "sha256": "9abdc7fcb4d3e38979ca3a38101575c8890ea140fd8b7aa67873f715de601c57"
+    },
+    {
+      "path": "skills/modbus-debug/SKILL.md",
+      "source": "plugins/mcu-workbench-observability/skills/modbus-debug/SKILL.md",
+      "sourceSha256": "ee136ff836fcea36b5af931d89b5d795806bbc6b63a7e2689ab2c760db7c9945",
+      "sha256": "ee136ff836fcea36b5af931d89b5d795806bbc6b63a7e2689ab2c760db7c9945"
+    },
+    {
+      "path": "skills/modbus-debug/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-observability/skills/modbus-debug/agents/openai.yaml",
+      "sourceSha256": "a41d2b873853510cf6fb23072179b8de2efa60a3633488cead1963821d18d948",
+      "sha256": "a41d2b873853510cf6fb23072179b8de2efa60a3633488cead1963821d18d948"
+    },
+    {
+      "path": "skills/modbus-debug/references/usage.md",
+      "source": "plugins/mcu-workbench-observability/skills/modbus-debug/references/usage.md",
+      "sourceSha256": "1b6df8c60d5aa6ebf89fd8810eff227e1eb187d3a946dcf43a05fb099ae9ae62",
+      "sha256": "1b6df8c60d5aa6ebf89fd8810eff227e1eb187d3a946dcf43a05fb099ae9ae62"
+    },
+    {
+      "path": "skills/modbus-debug/scripts/modbus_tool.py",
+      "source": "plugins/mcu-workbench-observability/skills/modbus-debug/scripts/modbus_tool.py",
+      "sourceSha256": "4abfd553b310fda7fbd5d087c2429238e4e78af4cd69820f53dfb3c88ff82500",
+      "sha256": "4abfd553b310fda7fbd5d087c2429238e4e78af4cd69820f53dfb3c88ff82500"
+    },
+    {
+      "path": "skills/visa-debug/SKILL.md",
+      "source": "plugins/mcu-workbench-observability/skills/visa-debug/SKILL.md",
+      "sourceSha256": "9ae88ed7c008c85cab5bbd9f21c97508e052b93b61cf323bca4e139dff42bae0",
+      "sha256": "9ae88ed7c008c85cab5bbd9f21c97508e052b93b61cf323bca4e139dff42bae0"
+    },
+    {
+      "path": "skills/visa-debug/agents/openai.yaml",
+      "source": "plugins/mcu-workbench-observability/skills/visa-debug/agents/openai.yaml",
+      "sourceSha256": "6812ec8507f76e3a27683c0a256cb87aab12349c5930d5022bd07cb1bc29aad5",
+      "sha256": "6812ec8507f76e3a27683c0a256cb87aab12349c5930d5022bd07cb1bc29aad5"
+    },
+    {
+      "path": "skills/visa-debug/references/usage.md",
+      "source": "plugins/mcu-workbench-observability/skills/visa-debug/references/usage.md",
+      "sourceSha256": "92e23952f776f5f5d99840b130f19d59f43015454ddfdd548bcca106b2234d44",
+      "sha256": "92e23952f776f5f5d99840b130f19d59f43015454ddfdd548bcca106b2234d44"
+    },
+    {
+      "path": "skills/visa-debug/scripts/visa_tool.py",
+      "source": "plugins/mcu-workbench-observability/skills/visa-debug/scripts/visa_tool.py",
+      "sourceSha256": "c00fa44c4161c81c0c7ffcb8f6453375acd72b107633d4544c3c1e2830fa9d8d",
+      "sha256": "c00fa44c4161c81c0c7ffcb8f6453375acd72b107633d4544c3c1e2830fa9d8d"
+    }
+  ]
+}

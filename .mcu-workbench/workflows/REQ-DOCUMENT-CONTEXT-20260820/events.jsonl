@@ -1,0 +1,11 @@
+{"event":"request_created","request_id":"REQ-DOCUMENT-CONTEXT-20260820","status":"awaiting_user_review","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"requirements_confirmed","request_id":"REQ-DOCUMENT-CONTEXT-20260820","decisions":["draft_first_promotion","archive_without_delete","optimistic_revision_check","active_request_binding","cross_request_shared_decisions","budgeted_minimal_context"],"recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"spec_generated","request_id":"REQ-DOCUMENT-CONTEXT-20260820","spec_version":"v0.1","status":"awaiting_user_review","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"spec_approved","request_id":"REQ-DOCUMENT-CONTEXT-20260820","spec_version":"v0.1","status":"approved-for-integration-plan","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"plan_options_generated","request_id":"REQ-DOCUMENT-CONTEXT-20260820","options":["A","B"],"status":"awaiting_user_choice","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"plan_option_selected","request_id":"REQ-DOCUMENT-CONTEXT-20260820","selected_option":"B","status":"awaiting_plan_review","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"plan_generated","request_id":"REQ-DOCUMENT-CONTEXT-20260820","plan_version":"v0.1","status":"awaiting_user_review","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"plan_approved","request_id":"REQ-DOCUMENT-CONTEXT-20260820","plan_version":"v0.1","status":"approved","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"task_breakdown_completed","request_id":"REQ-DOCUMENT-CONTEXT-20260820","task_version":"v0.1","task_count":9,"status":"ready_for_execution","recorded_at":"2026-08-20T00:00:00+08:00"}
+{"event":"task_execution_completed","request_id":"REQ-DOCUMENT-CONTEXT-20260820","task_version":"v0.1","task_count":9,"status":"passed","evidence_level":"static_and_host","recorded_at":"2026-08-20T23:59:00+08:00"}
+{"event":"final_verify_completed","request_id":"REQ-DOCUMENT-CONTEXT-20260820","spec_version":"v0.1","plan_version":"v0.1","task_version":"v0.1","status":"passed","acceptance_ids":["V-01","V-02","V-03","V-04","V-05","V-06","V-07","V-08","V-09","V-10","V-11","V-12","V-13","V-14","V-15"],"evidence_level":"static_and_host","unverified":["real_host_auto_trigger","target_build","target_runtime","hardware_measurement","host_token_counter"],"recorded_at":"2026-08-20T23:59:00+08:00"}

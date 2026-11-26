@@ -1,0 +1,22 @@
+:project:
+  :use_exceptions: FALSE
+  :use_test_preprocessor: TRUE
+  :use_auxiliary_dependencies: TRUE
+  :build_root: build
+
+:paths:
+  :test:
+    - +:test/**
+  :source:
+    - src/**
+  :include:
+    - include/**
+
+:plugins:
+  :enabled:
+    - stdout_pretty_tests_report
+    - module_generator
+
+:cmock:
+  :mock_prefix: mock_
+  :when_no_prototypes: :warn

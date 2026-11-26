@@ -11,15 +11,19 @@ description: 负责嵌入式工程配置、编译、构建产物定位和构建�
 
 ## 变体
 
-- CMake：读取 [`tool-build-cmake`](references/tool-build-cmake/GUIDE.md)。
-- ESP-IDF：读取 [`tool-build-esp-idf`](references/tool-build-esp-idf/GUIDE.md)。
-- IAR：读取 [`tool-build-iar`](references/tool-build-iar/GUIDE.md)。
-- Keil：读取 [`tool-build-keil`](references/tool-build-keil/GUIDE.md)。
-- PlatformIO：读取 [`tool-build-platformio`](references/tool-build-platformio/GUIDE.md)。
+- CMake：读取 [`tool-build-cmake`](./references/tool-build-cmake/GUIDE.md)。
+- ESP-IDF：读取 [`tool-build-esp-idf`](./references/tool-build-esp-idf/GUIDE.md)。
+- IAR：读取 [`tool-build-iar`](./references/tool-build-iar/GUIDE.md)。
+- Keil：读取 [`tool-build-keil`](./references/tool-build-keil/GUIDE.md)。
+- PlatformIO：读取 [`tool-build-platformio`](./references/tool-build-platformio/GUIDE.md)。
 
-CMake 和 ESP-IDF 的源码版本、路径及工程证据见 [`source-baseline.md`](references/source-baseline.md)。
-所有构建变体的完整流程、脚本和参考资料汇总在 [`capability-index.md`](references/capability-index.md)。
+CMake 和 ESP-IDF 的源码版本、路径及工程证据见 [`source-baseline.md`](./references/source-baseline.md)。
+所有构建变体的完整流程、脚本和参考资料汇总在 [`capability-index.md`](./references/capability-index.md)。
 
 ## 输出
 
 给出构建前置条件、实际命令、产物路径、首个根因和可复现验证步骤。不要把烧录、在线调试或 OTA 逻辑混入构建流程。
+
+## 分层改造构建门禁
+
+每层改动后运行目标工程自身的配置与构建命令；Driver、Wrapper 和 Core Backend 的主机 Fake 测试独立于固件构建。构建成功只证明编译链接，不替代架构门禁、运行时证据或实物验证。

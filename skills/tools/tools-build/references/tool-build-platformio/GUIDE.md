@@ -29,8 +29,8 @@ version: "1.0.0"
 
 ## 执行步骤
 
-1. 先阅读 [references/usage.md](references/usage.md)，确认本次是环境探测、列出环境、执行构建，还是仅扫描产物。
-2. 若不确定环境是否就绪，先运行自带脚本 [scripts/platformio_builder.py](scripts/platformio_builder.py) 的 `--detect` 模式确认。
+1. 先阅读 [usage.md](../capabilities/tool-build-platformio/references/usage.md)，确认本次是环境探测、列出环境、执行构建，还是仅扫描产物。
+2. 若不确定环境是否就绪，先运行自带脚本 [platformio_builder.py](../capabilities/tool-build-platformio/scripts/platformio_builder.py) 的 `--detect` 模式确认。
 3. 使用 `--list-envs --project-dir <dir>` 确认可用环境，再用 `--project-dir` + `--env` 执行构建。
 4. 读取脚本输出的构建结果和产物扫描报告，重点关注首选产物（ELF > HEX > BIN）和失败分类。
 5. 将构建环境、产物路径和板卡信息写回 `Project Profile`，并在需要时交给下游 skill。

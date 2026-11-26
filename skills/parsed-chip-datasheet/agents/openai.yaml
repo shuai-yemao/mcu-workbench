@@ -1,0 +1,4 @@
+interface:
+  display_name: "已解析芯片资料查询"
+  short_description: "高效查询已解析的芯片 datasheet 资料包。"
+  default_prompt: "使用 $parsed-chip-datasheet 从这个已解析芯片 datasheet 资料包中回答问题。"

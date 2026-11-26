@@ -1,0 +1,2454 @@
+FAIL tests/layer-contract.test.js (21.268 s)
+  ● generated layer contract validator › accepts a generated Core and BSP slice
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:44:18)
+
+  ● generated layer contract validator › rejects a generated file whose version tag is removed instead of skipping validation
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:49:18)
+
+  ● generated layer contract validator › rejects a generated header whose actual type section is removed
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:67:18)
+
+  ● generated layer contract validator › rejects a generated function when its Doxygen block is removed
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:82:18)
+
+  ● generated layer contract validator › rejects a generated source whose secondary partition width is wrong
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:95:18)
+
+  ● generated layer contract validator › rejects a generated source whose assignment columns are not aligned
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:109:18)
+
+  ● generated layer contract validator › rejects a generated header whose declaration columns are not aligned
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:123:18)
+
+  ● generated layer contract validator › rejects a generated type whose trailing comments are not aligned
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:137:18)
+
+  ● generated layer contract validator › rejects a generated macro when its preceding comment is removed
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:154:18)
+
+  ● generated layer contract validator › accepts an SSD1306 display slice with OSAL mutex injection and style profile documentation
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_i2c.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/layer-contract.test.js:173:17)
+
+  ● generated layer contract validator › generates the Port as the resource, Driver, Handle, and Platform Model composition root
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:191:18)
+
+  ● generated layer contract validator › checks the generated Handle path and requires effective injected Ops calls
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:207:18)
+
+  ● generated layer contract validator › rejects generated sources that retain injected Ops but never call them
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:233:18)
+
+  ● generated layer contract validator › rejects a Port that omits the resource operation binding
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:249:18)
+
+  ● generated layer contract validator › does not require a legacy Port callback bridge
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:259:18)
+
+  ● generated layer contract validator › rejects a Port that omits direct Handle binding
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:266:18)
+
+  ● generated layer contract validator › rejects a Port that omits Platform Model registration
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:276:18)
+
+  ● generated layer contract validator › rejects a Port that omits Driver construction
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:286:18)
+
+  ● generated layer contract validator › reports a Core vendor leak, extra Port export, and forbidden Model include
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:296:18)
+
+  ● generated layer contract validator › reports a Handle that no longer selects from its Driver set
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:308:18)
+
+  ● generated layer contract validator › rejects a generated file whose comments are written in English
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:533:18)
+
+FAIL tests/codegen.test.js
+  ● Unified Codegen Runtime › generates Core output through the unified request interface
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_gpio.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at Object.generateCorePeripheral [as render] (lib/codegen/renderers/platform-mcu-core.js:227:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:50:25)
+
+  ● Unified Codegen Runtime › generates the platform_common foundation from its explicit file contract
+
+    Failed to format generated file 03_Platform/platform_common/core/platform_type.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-common-foundation.js:4:34)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-common-foundation.js:762:10)
+      at Object.generatePlatformCommon [as render] (lib/codegen/renderers/platform-common-foundation.js:770:23)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:68:25)
+
+  ● Unified Codegen Runtime › generates an impl_board composition root that only calls Port registration
+
+    Failed to format generated file 04_Impl/impl_board/Inc/impl_board_stm32f411ceu6_bsp.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-board-composition.js:4:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-board-composition.js:99:10)
+      at Object.generateImplBoard [as render] (lib/codegen/renderers/impl-board-composition.js:107:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:98:25)
+
+  ● Unified Codegen Runtime › generates BSP output through the unified request interface
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at Object.generateBspDriver [as render] (lib/codegen/renderers/impl-bsp-model-first.js:560:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:147:25)
+
+  ● Unified Codegen Runtime › generates the bsp_model BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/platform-bsp-model.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › generates the bsp_driver BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/impl-bsp-driver.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › generates the bsp_handle BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/impl-bsp-handle.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › generates the bsp_port BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/impl-bsp-port.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › orchestrates multiple layer requests and emits one manifest
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_gpio.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at Object.generateCorePeripheral [as render] (lib/codegen/renderers/platform-mcu-core.js:227:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:187:25)
+
+  ● Unified Codegen Runtime › rejects duplicate generated paths across renderers
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "CODEGEN_OUTPUT_COLLISION",
+    +   "code": "FORMAT",
+      }
+
+      208 |         { kind: 'core', peripheral: 'gpio', platform: 'stm32f4' }
+      209 |       ]
+    > 210 |     })).rejects.toMatchObject({ code: 'CODEGEN_OUTPUT_COLLISION' });
+          |                 ^
+      211 |   });
+      212 |
+      213 |   test('rejects unsupported layers before invoking a renderer', async () => {
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:218:22)
+      at Object.toMatchObject (tests/codegen.test.js:210:17)
+
+FAIL tests/sync-codex-skills.test.js (44.363 s)
+  ● Codex skill synchronization › migrates legacy directories, installs the complete catalog and creates a backup
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 22
+    Received length: 23
+    Received array:  [{"column": 91, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 33, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 332, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 45, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 48, "file": "academic-paper/references/abstract_writing_guide.md", "line": 15, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 74, "file": "academic-paper/references/abstract_writing_guide.md", "line": 30, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 36, "file": "academic-paper/references/abstract_writing_guide.md", "line": 59, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 208, "file": "academic-paper/references/anti_leakage_protocol.md", "line": 61, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/compliance_checkpoint_protocol.md#canonical-gap-tag-vocabulary"}, {"column": 643, "file": "academic-paper/SKILL.md", "line": 650, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../shared/output_language_pair.md"}, {"column": 65, "file": "academic-paper/templates/bilingual_abstract_template.md", "line": 14, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 69, "file": "academic-pipeline/references/adapters/overview.md", "line": 6, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/literature_corpus_entry.schema.json"}, {"column": 59, "file": "academic-pipeline/references/adapters/overview.md", "line": 7, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/rejection_log.schema.json"}, …]
+
+      59 |
+      60 |     const links = validateSkillLinks({ root: target, boundaryRoot: target });
+    > 61 |     expect(links.findings).toHaveLength(22);
+         |                            ^
+      62 |     expect(links.findings.filter((finding) => (
+      63 |       finding.file.startsWith('academic-paper/') || finding.file.startsWith('academic-pipeline/')
+      64 |     ))).toHaveLength(22);
+
+      at Object.toHaveLength (tests/sync-codex-skills.test.js:61:28)
+
+PASS tests/agents.test.js (23.688 s)
+FAIL tests/workflow-gate.test.js (5.043 s)
+  ● validate-workflow-gate › passes a complete workflow chain without internal Markdown artifacts
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:112:20)
+
+  ● validate-workflow-gate › blocks when the internal workflow state is missing
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:125:20)
+
+  ● validate-workflow-gate › blocks a non-approved Spec status
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:133:20)
+
+  ● validate-workflow-gate › blocks when the user has not approved the Spec gate
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:140:20)
+
+  ● validate-workflow-gate › blocks when the user has not approved or selected the Plan
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:147:20)
+
+  ● validate-workflow-gate › blocks a request ID mismatch in the internal state
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:158:20)
+
+  ● validate-workflow-gate › blocks when the first task is not complete
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:165:20)
+
+  ● validate-workflow-gate › accepts three-digit task identifiers for automatic execution
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:172:20)
+
+  ● validate-workflow-gate › accepts the task_id header used by the formal task document
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:183:20)
+
+  ● validate-workflow-gate › blocks when final Verify requires a Spec revision
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:190:20)
+
+  ● validate-workflow-gate › reports invalid input for a missing project root
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:197:20)
+
+FAIL tests/codex-plugin.test.js (10.79 s)
+  ● Codex plugin adapter › Claude manifest lists only tracked skill directories
+
+    spawnSync git EPERM
+
+      47 |       const directory = path.join(ROOT, skillPath.slice(2));
+      48 |       expect(fs.statSync(directory).isDirectory()).toBe(true);
+    > 49 |       const tracked = execFileSync('git', ['ls-files', '--', `${skillPath.slice(2)}**`], {
+         |                       ^
+      50 |         cwd: ROOT,
+      51 |         encoding: 'utf8'
+      52 |       }).trim();
+
+      at Object.execFileSync (tests/codex-plugin.test.js:49:23)
+
+PASS tests/learning-tutor-skill.test.js (11.729 s)
+FAIL tests/generator.test.js
+  ● Generator Module › generates exactly one Core C/H pair for an MCU peripheral
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_i2c.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:15:25)
+
+  ● Generator Module › generates a pin-level GPIO Core pair without transaction semantics
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_gpio.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:25:25)
+
+  ● Generator Module › emits double-underscore-free guards and platform error baseline
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_i2c.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:45:25)
+
+  ● Generator Module › generates the fixed layered BSP output under the numbered hierarchy
+
+    Failed to format generated file 03_Platform/platform_bsp/externflash/Inc/platform_externflash_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at Object.generateModelFirstBsp [as generateBspDriver] (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/generator.js:77:62)
+      at Object.generateBspDriver (tests/generator.test.js:58:25)
+
+  ● Generator Module › enforces known device profiles and requires custom opt-in for unknown devices
+
+    expect(received).resolves.toHaveLength()
+
+    Received promise rejected instead of resolved
+    Rejected to value: [Error: Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM]
+
+      81 |       deviceType: 'sensor', device: 'CUSTOM01', cores: ['i2c'], platform: 'stm32f4'
+      82 |     })).rejects.toThrow('Unknown device');
+    > 83 |     await expect(generateBspDriver({
+         |           ^
+      84 |       deviceType: 'sensor', device: 'CUSTOM01', cores: ['i2c'], platform: 'stm32f4', allowCustomDevice: true
+      85 |     })).resolves.toHaveLength(9);
+      86 |   });
+
+      at expect (node_modules/expect/build/index.js:113:15)
+      at Object.expect (tests/generator.test.js:83:11)
+
+  ● Generator Module › generates the SSD1306 display slice with a manifest and context-first layers
+
+    Failed to format generated file 03_Platform/platform_bsp/display/Inc/platform_display_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:529:10)
+      at Object.generateSsd1306Display [as generateBspDriver] (lib/codegen/renderers/impl-bsp-model-first.js:550:12)
+      at generateBspDriver (lib/generator.js:77:62)
+      at Object.generateBspDriver (tests/generator.test.js:89:25)
+
+  ● Generator Module › formats every generated file with the universal tab and Allman layout
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:124:17)
+
+  ● Generator Module › preserves existing Doxygen meaning while completing missing API tags
+
+    Failed to format generated file demo.c with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:176:23)
+
+  ● Generator Module › regenerates existing comment widths and aligns type-member comments
+
+    Failed to format generated file demo.c with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:201:23)
+
+  ● Generator Module › does not add generic phase comments to existing functions
+
+    Failed to format generated file demo.c with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:230:23)
+
+  ● Generator Module › generates complete semantic comments without documenting calls as functions
+
+    Failed to format generated file 03_Platform/platform_bsp/externflash/Inc/platform_externflash_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at Object.generateModelFirstBsp [as generateBspDriver] (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/generator.js:77:62)
+      at Object.generateBspDriver (tests/generator.test.js:237:25)
+
+  ● Generator Module › uses semantic member comments and padded section banners
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:255:25)
+
+  ● Generator Module › documents public headers and core C functions without documenting trivial helpers
+
+    Failed to format generated file Inc/demo.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:279:26)
+
+FAIL tests/workflow-dashboard.test.js (6.226 s)
+  ● workflow-dashboard snapshot core › provides a render CLI entry point
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: null
+
+      306 |     ], { encoding: 'utf8', windowsHide: true });
+      307 |
+    > 308 |     expect(result.status).toBe(0);
+          |                           ^
+      309 |     expect(result.stdout).toContain('00_Docs');
+      310 |   });
+      311 |
+
+      at Object.toBe (tests/workflow-dashboard.test.js:308:27)
+
+PASS tests/skills.test.js (14.663 s)
+PASS tests/claude-layering.test.js (6.618 s)
+PASS tests/embedded-architecture-skills.test.js
+PASS tests/plugin-refresh.test.js
+PASS tests/cursor-plugin.test.js
+PASS tests/document-context.test.js
+PASS tests/validate-architecture-cli.test.js
+PASS tests/agent-domains.test.js
+PASS tests/workflow-output-contract.test.js
+PASS tests/tools-git-skill.test.js
+PASS tests/validate-bsp-contract.test.js
+PASS tests/monitor.test.js
+PASS tests/verification-skill-projection.test.js
+PASS tests/validate-architecture.test.js
+PASS tests/verification-external-skills.test.js
+PASS tests/agent-artifacts.test.js
+PASS tests/lvgl-skill.test.js
+PASS tests/workflow-dashboard-manager.test.js
+PASS tests/flasher.test.js
+PASS tests/platform.test.js
+PASS tests/codegen-runtime.test.js
+PASS tests/session-runner.test.js
+PASS tests/version-sync.test.js
+PASS tests/debugger.test.js
+PASS tests/observability-manifest.test.js
+PASS tests/software-architecture-graph.test.js
+PASS tests/devops-catalog.test.js
+PASS tests/verification-catalog.test.js
+PASS tests/builder.test.js
+PASS tests/document-context-context.test.js
+PASS tests/document-context-cli.test.js
+PASS tests/workflow-execution-contract.test.js
+PASS tests/observability-plugin.test.js
+PASS tests/skill-links.test.js
+PASS tests/plugin-contracts.test.js
+PASS tests/codex-local-dev.test.js
+PASS tests/flash-algorithm-profile.test.js
+PASS tests/codex-compat.test.js
+PASS tests/workflow-state.test.js
+PASS tests/ai-collab-skills.test.js
+PASS tests/document-context-store.test.js
+PASS tests/verification-pilot.test.js
+PASS tests/quality-style-onboarding.test.js
+PASS tests/document-context-lifecycle.test.js
+PASS tests/quality-format-profile.test.js
+PASS tests/workflows.test.js
+PASS tests/verification-plugin.test.js
+PASS tests/workflow-final-review-contract.test.js
+PASS tests/capability-resolver.test.js
+PASS tests/plugin-runtime.test.js
+PASS tests/document-context-readme.test.js
+PASS tests/devops-external-skills.test.js
+PASS tests/devops-plugin.test.js
+PASS tests/devops-projection.test.js
+PASS tests/devops-skills.test.js
+
+Summary of all failing tests
+FAIL tests/layer-contract.test.js (21.268 s)
+  ● generated layer contract validator › accepts a generated Core and BSP slice
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:44:18)
+
+  ● generated layer contract validator › rejects a generated file whose version tag is removed instead of skipping validation
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:49:18)
+
+  ● generated layer contract validator › rejects a generated header whose actual type section is removed
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:67:18)
+
+  ● generated layer contract validator › rejects a generated function when its Doxygen block is removed
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:82:18)
+
+  ● generated layer contract validator › rejects a generated source whose secondary partition width is wrong
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:95:18)
+
+  ● generated layer contract validator › rejects a generated source whose assignment columns are not aligned
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:109:18)
+
+  ● generated layer contract validator › rejects a generated header whose declaration columns are not aligned
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:123:18)
+
+  ● generated layer contract validator › rejects a generated type whose trailing comments are not aligned
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:137:18)
+
+  ● generated layer contract validator › rejects a generated macro when its preceding comment is removed
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:154:18)
+
+  ● generated layer contract validator › accepts an SSD1306 display slice with OSAL mutex injection and style profile documentation
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_i2c.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/layer-contract.test.js:173:17)
+
+  ● generated layer contract validator › generates the Port as the resource, Driver, Handle, and Platform Model composition root
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:191:18)
+
+  ● generated layer contract validator › checks the generated Handle path and requires effective injected Ops calls
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:207:18)
+
+  ● generated layer contract validator › rejects generated sources that retain injected Ops but never call them
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:233:18)
+
+  ● generated layer contract validator › rejects a Port that omits the resource operation binding
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:249:18)
+
+  ● generated layer contract validator › does not require a legacy Port callback bridge
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:259:18)
+
+  ● generated layer contract validator › rejects a Port that omits direct Handle binding
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:266:18)
+
+  ● generated layer contract validator › rejects a Port that omits Platform Model registration
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:276:18)
+
+  ● generated layer contract validator › rejects a Port that omits Driver construction
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:286:18)
+
+  ● generated layer contract validator › reports a Core vendor leak, extra Port export, and forbidden Model include
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:296:18)
+
+  ● generated layer contract validator › reports a Handle that no longer selects from its Driver set
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:308:18)
+
+  ● generated layer contract validator › rejects a generated file whose comments are written in English
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at generateCorePeripheral (tests/layer-contract.test.js:15:15)
+      at Object.<anonymous> (tests/layer-contract.test.js:533:18)
+
+FAIL tests/codegen.test.js
+  ● Unified Codegen Runtime › generates Core output through the unified request interface
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_gpio.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at Object.generateCorePeripheral [as render] (lib/codegen/renderers/platform-mcu-core.js:227:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:50:25)
+
+  ● Unified Codegen Runtime › generates the platform_common foundation from its explicit file contract
+
+    Failed to format generated file 03_Platform/platform_common/core/platform_type.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-common-foundation.js:4:34)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-common-foundation.js:762:10)
+      at Object.generatePlatformCommon [as render] (lib/codegen/renderers/platform-common-foundation.js:770:23)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:68:25)
+
+  ● Unified Codegen Runtime › generates an impl_board composition root that only calls Port registration
+
+    Failed to format generated file 04_Impl/impl_board/Inc/impl_board_stm32f411ceu6_bsp.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-board-composition.js:4:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-board-composition.js:99:10)
+      at Object.generateImplBoard [as render] (lib/codegen/renderers/impl-board-composition.js:107:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:98:25)
+
+  ● Unified Codegen Runtime › generates BSP output through the unified request interface
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at Object.generateBspDriver [as render] (lib/codegen/renderers/impl-bsp-model-first.js:560:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:147:25)
+
+  ● Unified Codegen Runtime › generates the bsp_model BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/platform-bsp-model.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › generates the bsp_driver BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/impl-bsp-driver.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › generates the bsp_handle BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/impl-bsp-handle.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › generates the bsp_port BSP part independently
+
+    Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/codegen/renderers/bsp-part.js:26:27)
+      at Object.generateBspPart [as render] (lib/codegen/renderers/impl-bsp-port.js:8:24)
+      at render (lib/codegen/index.js:70:34)
+      at generate (tests/codegen.test.js:169:25)
+
+  ● Unified Codegen Runtime › orchestrates multiple layer requests and emits one manifest
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_gpio.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at Object.generateCorePeripheral [as render] (lib/codegen/renderers/platform-mcu-core.js:227:30)
+      at render (lib/codegen/index.js:70:34)
+      at Object.generate (tests/codegen.test.js:187:25)
+
+  ● Unified Codegen Runtime › rejects duplicate generated paths across renderers
+
+    expect(received).rejects.toMatchObject(expected)
+
+    - Expected  - 1
+    + Received  + 1
+
+      Object {
+    -   "code": "CODEGEN_OUTPUT_COLLISION",
+    +   "code": "FORMAT",
+      }
+
+      208 |         { kind: 'core', peripheral: 'gpio', platform: 'stm32f4' }
+      209 |       ]
+    > 210 |     })).rejects.toMatchObject({ code: 'CODEGEN_OUTPUT_COLLISION' });
+          |                 ^
+      211 |   });
+      212 |
+      213 |   test('rejects unsupported layers before invoking a renderer', async () => {
+
+      at Object.toMatchObject (node_modules/expect/build/index.js:218:22)
+      at Object.toMatchObject (tests/codegen.test.js:210:17)
+
+FAIL tests/sync-codex-skills.test.js (44.363 s)
+  ● Codex skill synchronization › migrates legacy directories, installs the complete catalog and creates a backup
+
+    expect(received).toHaveLength(expected)
+
+    Expected length: 22
+    Received length: 23
+    Received array:  [{"column": 91, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 33, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 332, "file": "academic-paper/agents/abstract_bilingual_agent.md", "line": 45, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 48, "file": "academic-paper/references/abstract_writing_guide.md", "line": 15, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 74, "file": "academic-paper/references/abstract_writing_guide.md", "line": 30, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/references/word_count_conventions.md"}, {"column": 36, "file": "academic-paper/references/abstract_writing_guide.md", "line": 59, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 208, "file": "academic-paper/references/anti_leakage_protocol.md", "line": 61, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/compliance_checkpoint_protocol.md#canonical-gap-tag-vocabulary"}, {"column": 643, "file": "academic-paper/SKILL.md", "line": 650, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../shared/output_language_pair.md"}, {"column": 65, "file": "academic-paper/templates/bilingual_abstract_template.md", "line": 14, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../shared/output_language_pair.md"}, {"column": 69, "file": "academic-pipeline/references/adapters/overview.md", "line": 6, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/literature_corpus_entry.schema.json"}, {"column": 59, "file": "academic-pipeline/references/adapters/overview.md", "line": 7, "message": "Relative Markdown link target does not exist.", "ruleId": "LINK_NOT_FOUND", "severity": "error", "target": "../../../shared/contracts/passport/rejection_log.schema.json"}, …]
+
+      59 |
+      60 |     const links = validateSkillLinks({ root: target, boundaryRoot: target });
+    > 61 |     expect(links.findings).toHaveLength(22);
+         |                            ^
+      62 |     expect(links.findings.filter((finding) => (
+      63 |       finding.file.startsWith('academic-paper/') || finding.file.startsWith('academic-pipeline/')
+      64 |     ))).toHaveLength(22);
+
+      at Object.toHaveLength (tests/sync-codex-skills.test.js:61:28)
+
+FAIL tests/workflow-gate.test.js (5.043 s)
+  ● validate-workflow-gate › passes a complete workflow chain without internal Markdown artifacts
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:112:20)
+
+  ● validate-workflow-gate › blocks when the internal workflow state is missing
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:125:20)
+
+  ● validate-workflow-gate › blocks a non-approved Spec status
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:133:20)
+
+  ● validate-workflow-gate › blocks when the user has not approved the Spec gate
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:140:20)
+
+  ● validate-workflow-gate › blocks when the user has not approved or selected the Plan
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:147:20)
+
+  ● validate-workflow-gate › blocks a request ID mismatch in the internal state
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:158:20)
+
+  ● validate-workflow-gate › blocks when the first task is not complete
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:165:20)
+
+  ● validate-workflow-gate › accepts three-digit task identifiers for automatic execution
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:172:20)
+
+  ● validate-workflow-gate › accepts the task_id header used by the formal task document
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:183:20)
+
+  ● validate-workflow-gate › blocks when final Verify requires a Spec revision
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:190:20)
+
+  ● validate-workflow-gate › reports invalid input for a missing project root
+
+    SyntaxError: "undefined" is not valid JSON
+        at JSON.parse (<anonymous>)
+
+       96 |   return {
+       97 |     code: result.status,
+    >  98 |     report: JSON.parse(result.stdout),
+          |                  ^
+       99 |     stderr: result.stderr
+      100 |   };
+      101 | }
+
+      at parse (tests/workflow-gate.test.js:98:18)
+      at Object.runGate (tests/workflow-gate.test.js:197:20)
+
+FAIL tests/codex-plugin.test.js (10.79 s)
+  ● Codex plugin adapter › Claude manifest lists only tracked skill directories
+
+    spawnSync git EPERM
+
+      47 |       const directory = path.join(ROOT, skillPath.slice(2));
+      48 |       expect(fs.statSync(directory).isDirectory()).toBe(true);
+    > 49 |       const tracked = execFileSync('git', ['ls-files', '--', `${skillPath.slice(2)}**`], {
+         |                       ^
+      50 |         cwd: ROOT,
+      51 |         encoding: 'utf8'
+      52 |       }).trim();
+
+      at Object.execFileSync (tests/codex-plugin.test.js:49:23)
+
+FAIL tests/generator.test.js
+  ● Generator Module › generates exactly one Core C/H pair for an MCU peripheral
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_i2c.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:15:25)
+
+  ● Generator Module › generates a pin-level GPIO Core pair without transaction semantics
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_gpio.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:25:25)
+
+  ● Generator Module › emits double-underscore-free guards and platform error baseline
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_i2c.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:45:25)
+
+  ● Generator Module › generates the fixed layered BSP output under the numbered hierarchy
+
+    Failed to format generated file 03_Platform/platform_bsp/externflash/Inc/platform_externflash_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at Object.generateModelFirstBsp [as generateBspDriver] (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/generator.js:77:62)
+      at Object.generateBspDriver (tests/generator.test.js:58:25)
+
+  ● Generator Module › enforces known device profiles and requires custom opt-in for unknown devices
+
+    expect(received).resolves.toHaveLength()
+
+    Received promise rejected instead of resolved
+    Rejected to value: [Error: Failed to format generated file 03_Platform/platform_bsp/sensor/Inc/platform_sensor_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM]
+
+      81 |       deviceType: 'sensor', device: 'CUSTOM01', cores: ['i2c'], platform: 'stm32f4'
+      82 |     })).rejects.toThrow('Unknown device');
+    > 83 |     await expect(generateBspDriver({
+         |           ^
+      84 |       deviceType: 'sensor', device: 'CUSTOM01', cores: ['i2c'], platform: 'stm32f4', allowCustomDevice: true
+      85 |     })).resolves.toHaveLength(9);
+      86 |   });
+
+      at expect (node_modules/expect/build/index.js:113:15)
+      at Object.expect (tests/generator.test.js:83:11)
+
+  ● Generator Module › generates the SSD1306 display slice with a manifest and context-first layers
+
+    Failed to format generated file 03_Platform/platform_bsp/display/Inc/platform_display_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at generateModelFirstBsp (lib/codegen/renderers/impl-bsp-model-first.js:529:10)
+      at Object.generateSsd1306Display [as generateBspDriver] (lib/codegen/renderers/impl-bsp-model-first.js:550:12)
+      at generateBspDriver (lib/generator.js:77:62)
+      at Object.generateBspDriver (tests/generator.test.js:89:25)
+
+  ● Generator Module › formats every generated file with the universal tab and Allman layout
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:124:17)
+
+  ● Generator Module › preserves existing Doxygen meaning while completing missing API tags
+
+    Failed to format generated file demo.c with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:176:23)
+
+  ● Generator Module › regenerates existing comment widths and aligns type-member comments
+
+    Failed to format generated file demo.c with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:201:23)
+
+  ● Generator Module › does not add generic phase comments to existing functions
+
+    Failed to format generated file demo.c with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:230:23)
+
+  ● Generator Module › generates complete semantic comments without documenting calls as functions
+
+    Failed to format generated file 03_Platform/platform_bsp/externflash/Inc/platform_externflash_model.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at Object.map [as formatGeneratedFiles] (lib/codegen/formatter.js:869:27)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:5:34)
+      at formatGeneratedFiles (lib/codegen/renderers/impl-bsp-model-first.js:525:10)
+      at Object.generateModelFirstBsp [as generateBspDriver] (lib/codegen/renderers/impl-bsp-model-first.js:552:10)
+      at generateBspDriver (lib/generator.js:77:62)
+      at Object.generateBspDriver (tests/generator.test.js:237:25)
+
+  ● Generator Module › uses semantic member comments and padded section banners
+
+    Failed to format generated file 03_Platform/platform_mcu/Inc/platform_spi.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at formatGeneratedCode (lib/codegen/formatter.js:871:14)
+          at Array.map (<anonymous>)
+      at map (lib/codegen/formatter.js:869:27)
+      at Object.formatGeneratedFiles [as generateCorePeripheral] (lib/codegen/renderers/platform-mcu-core.js:216:10)
+      at generateCorePeripheral (lib/generator.js:69:59)
+      at Object.generateCorePeripheral (tests/generator.test.js:255:25)
+
+  ● Generator Module › documents public headers and core C functions without documenting trivial helpers
+
+    Failed to format generated file Inc/demo.h with C:\Users\shuaitan2\Downloads\mcu-workbench-host_ai\mcu-workbench-host_ai\skills\tools\tools-quality\references\capabilities\quality-format-check\.clang-format. C:\Program Files\LLVM\bin\clang-format.exe: status=null error=spawnSync C:\Program Files\LLVM\bin\clang-format.exe EPERM; clang-format: status=null error=spawnSync clang-format EPERM
+
+      22 |
+      23 | function formatterError(message, code = 'FORMAT') {
+    > 24 |   const error = new Error(message);
+         |                 ^
+      25 |   error.code = code;
+      26 |   return error;
+      27 | }
+
+      at formatterError (lib/codegen/formatter.js:24:17)
+      at formatterError (lib/codegen/formatter.js:857:9)
+      at Object.formatGeneratedCode [as formatExistingCode] (lib/codegen/formatter.js:865:10)
+      at formatExistingCode (lib/generator.js:65:41)
+      at Object.formatExistingCode (tests/generator.test.js:279:26)
+
+FAIL tests/workflow-dashboard.test.js (6.226 s)
+  ● workflow-dashboard snapshot core › provides a render CLI entry point
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: null
+
+      306 |     ], { encoding: 'utf8', windowsHide: true });
+      307 |
+    > 308 |     expect(result.status).toBe(0);
+          |                           ^
+      309 |     expect(result.stdout).toContain('00_Docs');
+      310 |   });
+      311 |
+
+      at Object.toBe (tests/workflow-dashboard.test.js:308:27)
+
+
+Test Suites: 7 failed, 57 passed, 64 total
+Tests:       58 failed, 318 passed, 376 total
+Snapshots:   0 total
+Time:        228.16 s, estimated 343 s

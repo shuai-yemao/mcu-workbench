@@ -1,0 +1,7 @@
+{
+  "id": "mcu-workbench-workflow",
+  "version": "1.0.0",
+  "capabilities": [],
+  "dependencies": [],
+  "lifecycle": { "load": "load-workflow", "dispose": "dispose-workflow" }
+}
